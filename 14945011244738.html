@@ -1,0 +1,376 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Scrapy抓取Ajax动态页面 - 独自一人
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+				 	<div class="profilepic">
+						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
+					</div>
+            	
+					
+					<h1><a href="index.html">独自一人</a></h1>
+					<p class="subtitle">独自一人,独自Coding...</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="self" href="index.html">Home</a></li>
+						
+						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Scrapy抓取Ajax动态页面</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<blockquote>
+<p>一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦。</p>
+</blockquote>
+
+<p>这次我们要抓取的网站是<a href="https://mm.taobao.com">淘女郎</a>的页面,全站都是通过Ajax获取数据然后重新渲染生产的。</p>
+
+<p>这篇文章的代码已上传至我的<a href="https://github.com/mylonly/Spiders">Github</a>,由于后面有部分内容并没有提供完整代码，所以贴上地址供各位参考。</p>
+
+<h3 id="toc_0">分析工作</h3>
+
+<p>用Chrome打开淘女郎的首页中的<a href="https://mm.taobao.com/search_tstar_model.htm">美人库</a>，这个页面毫无疑问是会展示所有的模特的信息，同时打开Debug工具，在network选项中查看浏览器发送了哪些请求？</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:11:01.jpg" alt="2016-07-04_16:11:01.jpg"/></p>
+
+<p>在截图的左下角可以看到总共产生了86个请求，那么有什么办法可以快速定位到Ajax请求的链接了，利用Network当中提供的Filter功能，选中Filter，最后选择右边的XHR过滤(XHR时XMLHttpRequest对象，一般Ajax请求的数据都是结构化数据)，这样就剩下了为数不多的几个请求，剩下的就靠我们自己一个一个的检查吧</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:22:18.jpg" alt="2016-07-04_16:22:18.jpg"/></p>
+
+<p>很幸运，通过分析每个接口返回的request和response信息，发现最后一个请求就是我们需要的接口url</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:25:56.jpg" alt="2016-07-04_16:25:56.jpg"/></p>
+
+<p>Request中得参数很简单,根据英文意思就可以猜出意义,由于我们要抓取所有模特的信息，所以不需要定制这些参数，后面直接将这些参数post给接口就行了</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:29:06.jpg" alt="2016-07-04_16:29:06.jpg"/></p>
+
+<p>在Response中可以获得到的有用数据有两个:所有模特信息的列表<code>searchDOList</code>、以及总页数<code>totolPage</code></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:35:05.jpg" alt="2016-07-04_16:35:05.jpg"/></p>
+
+<p>searchDOList列表中得对象都有如上图所示的json格式，它也正是我们需要的模特信息的数据</p>
+
+<h3 id="toc_1">Scrapy编码</h3>
+
+<ol>
+<li><p>定义Item</p>
+
+<pre><code class="language-Python">class tbModelItem(scrapy.Item):
+    avatarUrl = scrapy.Field()
+    cardUrl = scrapy.Field()
+    city = scrapy.Field()
+    height = scrapy.Field()
+    identityUrl = scrapy.Field()
+    modelUrl = scrapy.Field()
+    realName = scrapy.Field()
+    totalFanNum = scrapy.Field()
+    totalFavorNum = scrapy.Field()
+    userId = scrapy.Field()
+    viewFlag = scrapy.Field()
+    weight = scrapy.Field()
+</code></pre>
+
+<p>根据上面的分析得到的json格式，我们可以很轻松的定义出item</p></li>
+<li><p>Spider编写</p>
+
+<pre><code class="language-Python">import urllib2
+import os
+import re
+import codecs
+import json
+import sys
+from scrapy import Spider
+from scrapy.selector import Selector
+from MySpider.items import tbModelItem,tbThumbItem
+from scrapy.http import Request
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
+
+reload(sys)
+sys.setdefaultencoding(&#39;utf8&#39;)
+
+class tbmmSpider(Spider):
+    name = &quot;tbmm&quot;
+    allow_domians = [&quot;mm.taobao.com&quot;]
+
+    custom_settings = {
+        &quot;DEFAULT_REQUEST_HEADERS&quot;:{
+            &#39;authority&#39;:&#39;mm.taobao.com&#39;,
+            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,
+            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,
+            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,
+            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,
+            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,
+            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,
+            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,
+            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;
+        },
+        &quot;ITEM_PIPELINES&quot;:{
+            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300
+        }
+    } 
+
+    def start_requests(self):
+        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;
+        requests = []
+        for i in range(1,60):
+            formdata = {&quot;q&quot;:&quot;&quot;,
+                        &quot;viewFlag&quot;:&quot;A&quot;,
+                        &quot;sortType&quot;:&quot;default&quot;,
+                        &quot;searchStyle&quot;:&quot;&quot;,
+                        &quot;searchRegion&quot;:&quot;city:&quot;,
+                        &quot;searchFansNum&quot;:&quot;&quot;,
+                        &quot;currentPage&quot;:str(i),
+                        &quot;pageSize&quot;:&quot;100&quot;}
+            request = FormRequest(url,callback=self.parse_model,formdata=formdata)
+            requests.append(request)
+        return requests
+
+    def parse_model(self,response):
+        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))
+        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]
+        modelItems = []
+        for dict in models:
+            modelItem = tbModelItem()
+            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]
+            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]
+            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]
+            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]
+            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]
+            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]
+            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]
+            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]
+            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]
+            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]
+            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]
+            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]
+            modelItems.append(modelItem)
+        return modelItems  
+</code></pre>
+
+<p>代码不长，一点一点来分析:</p>
+
+<ol>
+<li>由于分析这个页面并不需要递归遍历网页，所以就不要crawlSpider了，只继承最简单的spider</li>
+<li>custome_setting可用于自定义每个spider的设置，而setting.py中的都是全局属性的，当你的scrapy工程里有多个spider的时候这个custom_setting就显得很有用了</li>
+<li>ITEM_PIPELINES，自定义管道模块，当item获取到数据后会调用你指定的管道处理命令，这个后面会贴上代码，因为这个不影响本文的内容，数据的处理可以因人而异。</li>
+<li>依然重写start_request,带上必要的参数请求我们分析得到的借口url，这里我省了一个懒，只遍历了前60页的数据，各位当然可以先调用1次借口确定总的页数(totalPage)之后再写这个for循环。</li>
+<li>parse函数里利用json库解析了返回来得数据，赋值给item的相应字段</li>
+</ol></li>
+<li><p>数据后续处理</p>
+
+<p>数据处理也就是我上面配置ITEM_PIPELINES的目的，这里，我将获取到的item数据存储到了本地的mysql数据中，各位也可以通过FEED_URL参数直接输出json格式文本文件</p>
+
+<pre><code class="language-Python">import MySQLdb
+
+class tbModelPipeline(object):
+    def process_item(self,item,spider):
+        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)
+        cursor = db.cursor()
+        db.set_character_set(&#39;utf8&#39;)
+        cursor.execute(&#39;SET NAMES utf8;&#39;)
+        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
+        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
+
+        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\
+                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\
+                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])
+        try:
+                print sql
+                cursor.execute(sql)
+                db.commit()
+        except MySQLdb.Error,e:
+                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
+        db.close()
+        return item
+</code></pre></li>
+</ol>
+
+<h3 id="toc_2">更重要的内容</h3>
+
+<p>获取所有的淘女郎的基本信息并不是<a href="https://mm.taobao.com">淘女郎</a>这个网站的全部内容，还有一些更有意思的数据,比如:</p>
+
+<p>点击进入模特的页面之后发现左侧会有有个相册选项卡，点击后右边出现了各种相册，而每个相册里面都是各种各样的模特照片</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:04:22.jpg" alt="2016-07-04_17:04:22.jpg"/></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:04:49.jpg" alt="2016-07-04_17:04:49.jpg"/></p>
+
+<p>通过network的分析，这些页面的数据通通都是Ajax请求获得的，具体的接口如下:</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:09:51.jpg" alt="2016-07-04_17:09:51.jpg"/></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:10:16.jpg" alt="2016-07-04_17:10:16.jpg"/></p>
+
+<ol>
+<li><p>获取相册列表的接口是一个GET请求，其中只有一个很重要的user_id，而这个user_id在上面拿去模特的基本信息已经拿到了，还有个page参数用于标识获取的是第几页数据(由于这个是第一页，并没有在url中显现出来，可以通过返回的html中包含的totalPage元素获得)不过这个接口的返回就不是标准的json格式了，而是一段html，这时候又到了利用scrapy中提供的强大的xpath功能了</p>
+
+<pre><code class="language-Python">def parse_album(self,response):
+   sel = Selector(response)
+   tbThumbItems = []
+   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       
+   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()
+   user_id = response.meta[&#39;user_id&#39;]
+   for i in range(0,len(thumb_url_list)-1):
+       thumbItem = tbThumbItem()
+       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)
+       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]
+       thumbItem[&#39;thumb_userId&#39;] = str(user_id)
+       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])
+       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]
+       tbThumbItems.append(thumbItem)
+   return tbThumbItems
+</code></pre></li>
+<li><p>获取相册里照片的接口就是一个完全的json格式的接口了,其中参数包括我们已经拿到的user_id以及album_id，page的最大范围totalPage依然可以通过第一次返回的response中的totalPage字段获得</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:25:23.jpg" alt="2016-07-04_17:25:23.jpg"/></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:25:46.jpg" alt="2016-07-04_17:25:46.jpg"/></p></li>
+</ol>
+
+<h3 id="toc_3">总结</h3>
+
+<ol>
+<li>这种通过分析Ajax接口直接调用获取原始数据应该是效率最高的抓取数据方式，但并不是所有的Ajax页面都适用，还是要具体对待，比如我们上面获取相册列表当中就要去分析html来获得相册的基本信息。</li>
+<li>获取相册和相册里的照片列表写的比较简略，基本没展示什么代码，这样写是有原因的:一个是因为我已经挂了代码的链接,而且后面这两部分的原理和我主要讲的第一部分获取模特信息的原理基本类似，不想花太多的篇幅花在这种重复的内容上，另外一个我希望想掌握Scrapy的同学能在明白我第一部分的讲解下自己能顺利完成后面的工作，遇到不明白的时候可以看看我Github上的源码，看看有什么不对的地方，只有自己写一遍才能掌握，这是编程界的硬道理。</li>
+</ol>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Swift学习要点-基础部分 - 独自一人
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+				 	<div class="profilepic">
+						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
+					</div>
+            	
+					
+					<h1><a href="index.html">独自一人</a></h1>
+					<p class="subtitle">独自一人,独自Coding...</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="self" href="index.html">Home</a></li>
+						
+						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Swift学习要点-基础部分</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
+
+<blockquote>
+<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
+</blockquote>
+
+<ol>
+<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+
+<pre><code class="language-Swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
+print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print
+print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
+</code></pre></li>
+<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+
+<pre><code class="language-Swift">let paddedDouble = 000123.456
+let oneMillion = 1_000_000
+let justOverOneMillion = 1_000_000.000_000_1
+</code></pre></li>
+<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+
+<pre><code class="language-Swift">typealias AudioSample = UInt16
+var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
+</code></pre></li>
+<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+
+<pre><code class="language-Swift">var maxValue = UInt8.max
+var max64Value = Int64.max
+
+max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;
+max64Value = Int64(maxValue) //Ok
+
+let number = 3
+var str1 = String(number) //str1 = &quot;3&quot;
+var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
+</code></pre></li>
+<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
+
+<pre><code class="language-Swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
+let (justTheStatusCode, _) = http404Error
+print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
+</code></pre></li>
+<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
+
+<pre><code class="language-Swift">var serverResponseCode: Int? = 404
+// serverResponseCode 包含一个可选的 Int 值 404
+serverResponseCode = nil
+// serverResponseCode 现在不包含值
+</code></pre></li>
+<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
+
+<pre><code class="language-Swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
+var str = &quot;\(option)&quot; //输出:&quot;nil&quot;
+str = &quot;\(option!)&quot;    //Error
+</code></pre></li>
+<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
+
+<pre><code class="language-Swift">let const_a:String
+if (condition){
+    const_a = &quot;a&quot;
+}else{
+    const_a = &quot;b&quot;
+}
+</code></pre></li>
+</ol>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

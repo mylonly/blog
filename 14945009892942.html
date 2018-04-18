@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	利用Github的Webhook功能和Node.js完成项目的自动部署 - 独自一人
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+				 	<div class="profilepic">
+						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
+					</div>
+            	
+					
+					<h1><a href="index.html">独自一人</a></h1>
+					<p class="subtitle">独自一人,独自Coding...</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="self" href="index.html">Home</a></li>
+						
+						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">利用Github的Webhook功能和Node.js完成项目的自动部署</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
+
+<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
+
+<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
+var createHandler = require(&#39;github-webhook-handler&#39;)
+var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
+// 上面的 secret 保持和 GitHub 后台设置的一致
+
+function run_cmd(cmd, args, callback) {
+  var spawn = require(&#39;child_process&#39;).spawn;
+  var child = spawn(cmd, args);
+  var resp = &quot;&quot;;
+
+  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
+  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
+}
+
+http.createServer(function (req, res) {
+  handler(req, res, function (err) {
+    res.statusCode = 404
+    res.end(&#39;no such location&#39;)
+  })
+}).listen(7777)
+
+handler.on(&#39;error&#39;, function (err) {
+  console.error(&#39;Error:&#39;, err.message)
+})
+
+handler.on(&#39;push&#39;, function (event) {
+  console.log(&#39;Received a push event for %s to %s&#39;,
+    event.payload.repository.name,
+    event.payload.ref);
+    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
+})
+</code></pre>
+
+<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
+
+<p>还有代码这行:<br/>
+<code><br/>
+var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
+</code><br/>
+其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
+
+<h3 id="toc_1">完成deploy.sh脚本</h3>
+
+<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
+
+<pre><code class="language-Bash"> #!/bin/bash
+
+WEB_PATH=&#39;/root/tools/&#39;$1
+WEB_USER=&#39;root&#39;
+WEB_USERGROUP=&#39;root&#39;
+
+echo &quot;Start deployment&quot;
+cd $WEB_PATH
+echo &quot;pulling source code...&quot;
+git reset --hard origin/master
+git clean -f
+git pull
+git checkout master
+echo &quot;changing permissions...&quot;
+chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
+echo &quot;Finished.&quot;
+</code></pre>
+
+<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
+
+<blockquote>
+<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
+你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
+</blockquote>
+
+<h3 id="toc_2">后台运行deploy.js</h3>
+
+<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
+
+<pre><code>nohup node deploy.js &gt; deploy.log &amp;
+</code></pre>
+
+<h3 id="toc_3">去Github后台添加webhook</h3>
+
+<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
+<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

