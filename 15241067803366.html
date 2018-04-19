@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	独自一人
+  	在wxc-rich-text以及wxc-special-rich-text的思路上实现类似QQ表情的富文本多行排版 - 独自一人
   	
 	</title>
 
@@ -120,24 +120,10 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-19T10:59:40+08:00" itemprop="datePublished">2018/4/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Weex.html'>Weex</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15241067803366.html" itemprop="url">
-		在wxc-rich-text以及wxc-special-rich-text的思路上实现类似QQ表情的富文本多行排版</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">在wxc-rich-text以及wxc-special-rich-text的思路上实现类似QQ表情的富文本多行排版</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
 			<h2 id="toc_0">先上效果图:</h2>
 
 <p><img src="https://pic.mylonly.com/2018-03-30-093130.jpg" alt=""/></p>
@@ -380,358 +366,26 @@ export default emotionFunc;
 
 <p>最后，愿世界和平！！！</p>
 
-
-			
-			
 		</div>
-
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-12-07T21:30:15+08:00" itemprop="datePublished">2017/12/7</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15126534156721.html" itemprop="url">
-		Ubuntu 安装uwsgi</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
-然后利用pip3 安装uwsgi</p>
-
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-tar -xvf Python-3.6.3.tar.xz
-cd Python-3.6.3/
-
-apt-get install zlib1g-dev
-apt-get install libssl-dev
-apt-get install sqlite3
-
-
-./configure --enable-loadable-sqlite-extensions
-
-make &amp;&amp; sudo make install
-
-
-pip3 install uwsgi
-
-uwsgi -i /data/web/xxxx.ini
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-11-29T22:42:48+08:00" itemprop="datePublished">2017/11/29</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15119665687635.html" itemprop="url">
-		Django 发送html格式的邮件</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
-
-<h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
-
-<pre><code class="language-Python">EMAIL_USE_SSL = True    
-EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
-EMAIL_PORT = 465
-EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
-EMAIL_HOST_PASSWORD = &#39;password&#39;  # 密码
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-</code></pre>
-
-<h5 id="toc_1">2. 引用mail库发送邮件</h5>
-
-<pre><code class="language-Python">from django.core.mail import EmailMessage
-from Across.settings import EMAIL_HOST_USER
-
-msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
-msg.send()
-</code></pre>
-
-<h5 id="toc_2">3.发送html模板邮件</h5>
-
-<p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
-
-<pre><code class="language-Python">TEMPLATES = [
-    {
-        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
-        &#39;DIRS&#39;: [
-            os.path.join(BASE_DIR,&#39;templates&#39;)  ##你的模板目录
-        ],
-        &#39;APP_DIRS&#39;: True,
-        &#39;OPTIONS&#39;: {
-            &#39;context_processors&#39;: [
-                &#39;django.template.context_processors.debug&#39;,
-                &#39;django.template.context_processors.request&#39;,
-                &#39;django.contrib.auth.context_processors.auth&#39;,
-                &#39;django.contrib.messages.context_processors.messages&#39;,
-            ],
-        },
-    },
-]
-</code></pre>
-
-<p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
-
-<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
-msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
-msg.content_subtype = &quot;html&quot; # Main content is now text/html
-msg.send()
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-11-27T20:52:04+08:00" itemprop="datePublished">2017/11/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15117871248079.html" itemprop="url">
-		Django扩展默认的User Model</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
-
-<blockquote>
-<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
-</blockquote>
-
-<p>在models.py中新建一个model继承自AbstractUser</p>
-
-<pre><code>from django.db import models
-
-# Create your models here.
-from django.contrib.auth.models import AbstractUser
-from enum import Enum
-
-
-class UserProfile(AbstractUser):
-
-    GENDER = [
-        (0,&quot;未知&quot;),
-        (1,&quot;男性&quot;),
-        (2,&quot;女性&quot;)
-    ]
-
-    nickname = models.CharField(max_length=50)
-    intro = models.CharField(max_length=500)
-    mobile = models.CharField(max_length=13)
-    gender = models.IntegerField(choices=GENDER,default=0)
-
-    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
-
-</code></pre>
-
-<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
-
-<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-09-12T15:07:09+08:00" itemprop="datePublished">2017/9/12</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15052000291680.html" itemprop="url">
-		利用Scrapy-Splash抓取JS动态渲染的网页数据</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
-
-<ol>
-<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
-<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
-</ol>
-
-<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
-
-<h3 id="toc_0">准备工作</h3>
-
-<ol>
-<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
-<blockquote>
-<p>为什么要安装Docker?<br/>
-因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
-</blockquote></li>
-<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
-<li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
-docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
-</code></pre></li>
-</ol>
-
-<h3 id="toc_1">Scrapy配置</h3>
-
-<p>在Scrapy项目的setting.py中加入如下内容：</p>
-
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
-
-DOWNLOADER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
-&#39;scrapy_splash.SplashMiddleware&#39;: 725,
-&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
-}
-
-SPIDER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
-}
-
-DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
-
-HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
-
-</code></pre>
-
-<h3 id="toc_2">实际代码解析</h3>
-
-<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
-
-<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
-<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
-
-<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
-<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
-
-<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
-<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
-
-<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
-
-<pre><code class="language-Python">import scrapy
-from FinancialInfoSpider.items import ArticleItem
-from scrapy_splash import SplashRequest
-from w3lib.html import remove_tags
-import re
-from bs4 import BeautifulSoup
-
-class TencentStockSpider(scrapy.Spider):
-    name = &quot;TencentStock&quot;
-    def start_requests(self):
-        urls = [
-           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
-        ]
-
-        for url in urls:
-            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-
-    def parse(self,response):
-
-        sel = scrapy.Selector(response)
-        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
-        requests = []
-        
-        for link in links:
-            request = scrapy.Request(link, callback =self.parse_article)
-            requests.append(request)
-        return requests
-
-    def parse_article(self,response):
-
-        sel = scrapy.Selector(response)
-
-        article = ArticleItem()
-        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
-        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
-        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
-        
-        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
-        article[&#39;content&#39;] = self.remove_html_tags(html_content)
-        return article
-
-
-    def remove_html_tags(self,html):
-        
-        soup = BeautifulSoup(html)
-        [s.extract() for s in soup(&#39;script&#39;)]
-        [s.extract() for s in soup(&#39;style&#39;)] 
-         
-        content = &#39;&#39;
-        for substring in soup.stripped_strings:
-            content = content + substring
-
-        return content       
-</code></pre>
-
-<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
-
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-</code></pre>
-
-<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
-
-<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
-<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
-
-<p>输出结果:</p>
-
-<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
-
-
-			
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
-	 
-	 <a class="next" href="all_1.html">Next</a> 
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
-
-</nav>
-
-</div>
-
-
-
-        </div>
+	<div class="share-comment">
+	 <!--PC和WAP自适应版-->
+<div id="SOHUCS" ></div> 
+<script type="text/javascript"> 
+(function(){ 
+var appid = 'cytztSWS2'; 
+var conf = 'prod_b4255ea3b300e547eb51db263247f76f'; 
+var width = window.innerWidth || document.documentElement.clientWidth; 
+if (width < 960) { 
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2014
 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
