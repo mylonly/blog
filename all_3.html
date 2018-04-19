@@ -126,6 +126,133 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2016-07-13T15:39:33+08:00" itemprop="datePublished">2016/7/13</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010337427.html" itemprop="url">
+		利用树莓派搭建迅雷远程下载服务器</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p>树莓派系统为Raspberry Pi</p>
+</blockquote>
+
+<ol>
+<li><p>树莓派安装迅雷路由器固件<br/>
+可以在迅雷论坛上下载到最新的固件:<a href="http://luyou.xunlei.com/">官网论坛</a>,记得要下arm版本的固件<code>armel_v5te_glibc</code><br/>
+或者下载我共享的这个<a href="http://pan.baidu.com/s/1nvvoX7b">Xware1.0.31_armel_v5te_glibc</a> 提取码:e223<br/>
+在树莓派上解压到某个目录，例如我的是<code>/root/xunlei</code>下面</p>
+
+<pre><code class="language-Shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
+</code></pre>
+
+<p>进入<code>/root/xunlei</code>目录 执行:</p>
+
+<pre><code class="language-Shell">./portal
+</code></pre>
+
+<p>稍等片刻，会在最后输出一个激活码，类似下图中涂红的部分</p>
+
+<p><img src="https://pic.mylonly.com/2016-07-13_15:19:59.jpg" alt="2016-07-13_15:19:59.jpg"/> </p></li>
+<li><p>在迅雷远程下载页面绑定树莓派<br/>
+登录<a href="http://yuancheng.xunlei.com/">迅雷远程下载主页</a>,登录之后，左侧会有一个添加按钮，点击添加按钮，弹出如下界面:<br/>
+<img src="https://pic.mylonly.com/2016-07-13_15:22:45.jpg" alt="2016-07-13_15:22:45.jpg"/></p>
+
+<p>将树莓派上获得的激活码填入框中，点击<code>绑定</code>后左侧就会出现树莓派对应的设备列表了，但是，如果我们此时就在右侧点击<code>新建</code>之后会发现,弹出的新建页面中会提示找不到挂载磁盘，如下图：</p>
+
+<p><img src="http://pic.mylonly.com/2016-07-13_15:25:18.jpg" alt="2016-07-13_15:25:18.jpg"/></p></li>
+<li><p>自定义迅雷的下载目录</p>
+
+<p>进入<code>/mnt</code>目录，创建目录TDDOWNLOAD(名字随意)<br/>
+执行命令:</p>
+
+<pre><code class="language-Shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
+</code></pre>
+
+<p>其中/data/TDDOWNLOAD就是自定义的下载目录，你可以指定为其他任何目录。</p>
+
+<p>然后再刚刚迅雷固件的解压目录下创建目录<code>etc</code>,同时创建文件<code>thunder_mounts.cfg</code>,编辑此文件</p>
+
+<pre><code class="language-Shell">vim /root/xunlei/etc/thunder_mounts.cfg
+</code></pre>
+
+<p>内容为:</p>
+
+<pre><code class="language-Shell">avaliable_mount_path_pattern
+{
+    /mnt/TDDOWNLOAD
+}
+</code></pre>
+
+<p>保存后重启迅雷路由器固件:</p>
+
+<pre><code class="language-Shell">./root/xunlei/portal
+</code></pre>
+
+<p>再进入远程下载界面新建下载就没有了没挂载磁盘的提示了</p></li>
+<li><p>迅雷路由器固件开机启动</p>
+
+<p>在/etc/init.d/下新建xunlei脚本，写入:</p>
+
+<pre><code>```Shell
+#!/bin/sh
+#
+# Xunlei initscript
+#
+### BEGIN INIT INFO
+# Provides:          xunlei
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop::    $network $local_fs $remote_fs
+# Should-Start:      $all
+# Should-Stop:       $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start xunlei at boot time
+# Description:       A downloader
+### END INIT INFO
+
+do_start()
+{
+        ./root/xunlei/portal
+}
+
+do_stop()
+{
+        ./root/xunlei/portal -s
+}
+
+case &quot;$1&quot; in
+  start)
+    do_start
+    ;;
+  stop)
+    do_stop
+    ;;
+esac
+``` 
+</code></pre>
+
+<p>然后将该脚本加入默认自启动中</p>
+
+<pre><code class="language-Shell">update-rc.d xunlei defaults
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-07-04T19:12:04+08:00" itemprop="datePublished">2016/7/4</time>
 			</div>
 			<div class="tags">posted in 
@@ -785,197 +912,6 @@ def main():
 
 if __name__ == &#39;__main__&#39;:
     main()
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-30T19:12:12+08:00" itemprop="datePublished">2016/5/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011328774.html" itemprop="url">
-		Scrapy模拟登陆知乎</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
-感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
-</a></p>
-
-<p>利用Scrapy提供的cookie中间价很容易做到网页的模拟登陆,下面就来介绍怎么利用这个cookie中间件来登陆知乎。</p>
-
-<h3 id="toc_0">前期分析工作</h3>
-
-<ul>
-<li><p>打开<a href="https://www.zhihu.com,%E5%88%A9%E7%94%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84Debug%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%AE%9A%E4%BD%8D%E5%88%B0%E7%99%BB%E9%99%86%E6%A1%86%E6%89%80%E5%9C%A8%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E6%89%80%E7%A4%BA">https://www.zhihu.com,利用Chrome浏览器的Debug功能，定位到登陆框所在的位置，如下图所示</a><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14645980407304.jpg" alt="2016-06-29_14645980407304.jpg"/><br/>
-利用scrapy提供的xpath能很方便的获取到这个值(//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;)</p></li>
-<li><p>选中Debug窗口的Network选项，同时在输完账号密码后点击登陆，获取登陆操作后的post请求，见下图:</p></li>
-</ul>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14645982403637.jpg" alt="2016-06-29_14645982403637.jpg"/><br/>
-点击这个链接，确认这个链接就是提交登陆的url<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14645983258011.jpg" alt="2016-06-29_14645983258011.jpg"/><br/>
-从FormData里面可以看到<a href="https://www.zhihu.com/email/login%E5%B0%B1%E6%98%AF%E7%99%BB%E9%99%86POST%E8%AF%B7%E6%B1%82%E7%9A%84url%EF%BC%8C%E9%9C%80%E8%A6%81%E6%8F%90%E4%BA%A44%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%8C%E5%85%B6%E4%B8%AD_xsrf%E5%B0%B1%E6%98%AF%E9%A6%96%E9%A1%B5%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E9%9A%90%E8%97%8F%E8%A1%A8%E5%8D%95%E5%8F%82%E6%95%B0%EF%BC%8Cremember_me%E6%98%AF%E6%98%AF%E5%90%A6%E8%AE%B0%E4%BD%8Fcookie%E7%9A%84%E5%BC%80%E5%85%B3%EF%BC%8Cemail%E5%92%8Cpassword%E5%AF%B9%E5%BA%94%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81">https://www.zhihu.com/email/login就是登陆POST请求的url，需要提交4个参数，其中_xsrf就是首页可以获取到的隐藏表单参数，remember_me是是否记住cookie的开关，email和password对应账号和密码</a></p>
-
-<blockquote>
-<p>此处可能有不一样的地方，因为我的知乎账号是email注册的，根据这个url的特征推测别的账号类型可能存在不一样的Url</p>
-</blockquote>
-
-<h3 id="toc_1">编写蜘蛛代码</h3>
-
-<p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
-
-<pre><code class="language-Python">def start_requests(self):
-        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
-</code></pre>
-
-<p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
-
-<pre><code class="language-Pythoh">headers = {
-    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
-    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
-    &quot;Connection&quot;: &quot;keep-alive&quot;,
-    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
-    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
-    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
-}
-</code></pre>
-
-<p>meta中的cookiejar是Scrapy的Cookie中间件的关键字，具体可参考scrapy文档，这里因为只需要保存一个cookie，所以直接写1(注意:<code>并不是1个cookie才写的1，仅仅是个key，后面通过这个1这个key找到cookiejar中保存的cookie</code>)</p>
-
-<p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
-
-<pre><code class="language-Python">def post_login(self,response):
-        self.log(&quot;preparing login...&quot;)
-        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
-        self.log(xsrf)
-        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:1},
-                                          headers = self.headers,
-                                          formdata = {
-                                             &#39;_xsrf&#39;:xsrf,
-                                             &#39;password&#39;:&#39;xgBKQTx7VnVLK9tv&#39;,
-                                             &#39;email&#39;:&#39;tianxianggen@gmail.com&#39;,
-                                             &#39;remember_me&#39;:&#39;true&#39;,
-                                          },
-                                          callback = self.after_login,
-                                          )
-</code></pre>
-
-<ol>
-<li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
-</ol>
-
-<pre><code class="language-Python">def after_login(self,response):
-        for url in self.start_urls:
-            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
-</code></pre>
-
-<p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
-
-<pre><code class="language-Pythoh">rules = (
-        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
-    )
-</code></pre>
-
-<p>同时提供request_question函数</p>
-
-<pre><code class="language-Python">def request_question(self,request):
-        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
-</code></pre>
-
-<p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
-
-<pre><code class="language-Python">def parse_question(self,response):
-        sel = Selector(response)
-        item = zhihuItem()
-        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
-        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
-        return item
-</code></pre>
-
-<blockquote>
-<p>这个parse_question方法仅仅是获取问题名称和问题下面的所有图片链接。</p>
-</blockquote>
-
-<h3 id="toc_2">完整代码</h3>
-
-<pre><code class="language-Python">import urllib2
-import os
-import re
-import codecs
-
-
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from MySpider.items import zhihuItem
-from scrapy.http import Request
-from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
-
-
-class zhihuSpider(CrawlSpider):
-    name = &quot;zhihu&quot;
-    allow_domians = [&quot;zhihu.com&quot;]
-    start_urls = [&quot;https://www.zhihu.com/collection/38624707&quot;]
-    rules = (
-        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
-    )
-    
-    headers = {
-    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
-    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
-    &quot;Connection&quot;: &quot;keep-alive&quot;,
-    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
-    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
-    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
-    }
-    
-    def start_requests(self):
-        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
-        
-    def post_login(self,response):
-        self.log(&quot;preparing login...&quot;)
-        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
-        self.log(xsrf)
-        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:response.meta[&#39;cookiejar&#39;]},
-                                          headers = self.headers,
-                                          formdata = {
-                                             &#39;_xsrf&#39;:xsrf,
-                                             &#39;password&#39;:&#39;差点就忘了删了&#39;,
-                                             &#39;email&#39;:&#39;邮箱也不能暴露&#39;,
-                                             &#39;remember_me&#39;:&#39;true&#39;,
-                                          },
-                                          callback = self.after_login,
-                                          )
-                                                      
-    def after_login(self,response):
-        for url in self.start_urls:
-            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
-   
-    def request_question(self,request):
-        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
-        
-    def parse_question(self,response):
-        sel = Selector(response)
-        item = zhihuItem()
-        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
-        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
-        return item
 </code></pre>
 
 

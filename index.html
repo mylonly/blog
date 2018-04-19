@@ -126,6 +126,249 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-04-19T12:02:15+08:00" itemprop="datePublished">2018/4/19</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='tools.html'>Tools</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15241105353902.html" itemprop="url">
+		利用GitLab提供的GitLab-CI以及GitLab-Runner搭建持续集成/部署环境</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">简介</h2>
+
+<ol>
+<li><p>GitLab</p>
+
+<blockquote>
+<p>是一套基于Ruby开发的开源Git项目管理应用，其提供的功能和Github类似，不同的是GitLab提供一个GitLab CE社区版本，用户可以将其部署在自己的服务器上，这样就可以用于团队内部的项目代码托管仓库。</p>
+</blockquote></li>
+<li><p>GitLab CI</p>
+
+<blockquote>
+<p>是GitLab 提供的持续集成服务(从8.0版本之后，GitLab CI已经集成在GitLab中了)，只要在你的仓库根目录下创建一个.gitlab-ci.yml 文件， 并为该项目指派一个Runner，当有合并请求或者Push操作时，你写在.gitlab-ci.yml中的构建脚本就会开始执行。</p>
+</blockquote></li>
+<li><p>GitLab Runner</p>
+
+<blockquote>
+<p>是配合GitLab CI进行构建任务的应用程序，GitLab CI负责yml文件中各种阶段流程的执行，而GitLab Runner就是具体的负责执行每个阶段的脚本执行，一般来说GitLab Runner需要安装在单独的机器上通过其提供的注册操作跟GitLab CI进行绑定，当然，你也可以让其和GitLab安装在一起，只是有的情况下，你代码的构建过程对资源消耗十分严重的时候，会拖累GitLab给其他用户提供政策的Git服务。</p>
+</blockquote></li>
+<li><p>持续集成/部署环境</p>
+
+<blockquote>
+<p>持续集成是程序开发人员在频繁的提交代码之后，能有相应的环境能对其提交的代码自动执行构建(Build)、测试(Test),然后根据测试结果判断新提交的代码能否合并加入主分支当中,而持续部署也就是在持续集成之后自动将代码部署(Deploy)到生成环境上</p>
+</blockquote></li>
+</ol>
+
+<h2 id="toc_1">开启GitLab CI功能</h2>
+
+<p>在GitLab 8.0版本之后,你可以通过如下两部启用GitLab CI功能</p>
+
+<ol>
+<li> 新建一个<code>.gitlab-ci.yml</code>文件在你项目的根目录</li>
+<li> 为你的项目配置一个GitLab Runner</li>
+</ol>
+
+<h4 id="toc_2">配置一个<code>.gitlab-ci.yml</code>文件</h4>
+
+<p><code>.gitlab-ci.yml</code>文件是用来配置GitLab CI进行构建流程的配置文件，其采用YAML语法,所以你需要额外注意要用空格来代替缩进，而不是Tabs。下面通过我自己项目中的<code>.gitlab-ci.yml</code>文件来具体介绍其规则</p>
+
+<pre><code class="language-YAML">stages:
+  - init
+  - check
+  - build
+  - deploy
+
+cache:
+  key: ${CI_BUILD_REF_NAME}
+  paths:
+  - node_modules/
+  - dist/
+
+#定义一个叫init的Job任务
+init:
+  stage: init
+  script:
+  -  cnpm install
+
+#master_check Job:检查master分支上关键内容
+master_check:
+  stage: check
+  script:
+  - echo &quot;Start Check Eros Config ...&quot;
+  - bash check.sh release 
+  only:
+  - master
+  
+#dev_check Job: 检查dev分支上关键内容
+dev_check:
+  stage: check
+  script:
+  - echo &quot;Start Check Eros Config ...&quot;
+  - bash check.sh debug
+  only:
+  - dev
+
+js_build:
+  stage: build
+  script:
+  - eros build
+
+master_deploy:
+  stage: deploy
+  script:
+  - bash deploy.sh release
+  only:
+  - master
+
+dev_deploy:
+  stage: deploy
+  script:
+  - bash deploy.sh debug
+  only:
+  - dev
+
+</code></pre>
+
+<p>在上面的例子中，我们利用<code>stages</code>关键字来定义持续构建过程中的四个阶段init、chec、build、deploy</p>
+
+<blockquote>
+<p>关于GitLab CI中的stages,有如下几个特点:</p>
+</blockquote>
+
+<pre><code>1. 所有 Stages 会按照顺序运行，即当一个 Stage 完成后，下一个 Stage 才会开始
+2. 只有当所有 Stages 完成后，该构建任务 (Pipeline) 才会成功
+3. 如果任何一个 Stage 失败，那么后面的 Stages 不会执行，该构建任务 (Pipeline) 失败
+</code></pre>
+
+<p>然后我们利用<code>caches</code>字段来指定下面将要进行的job任务中需要共享的文件目录,如果没有，每个Job开始的时候，GitLab Runner都会删掉<code>.gitignore</code>里面的文件</p>
+
+<p>紧接着，我们定义了一个叫做<code>init</code>的job，其通过stage字段声明属于<code>init</code>阶段，因此，这个job会第一个执行，我们在这个job当中，执行一些环境的初始化工作。</p>
+
+<p>接下来是<code>check</code>阶段,用来检查代码的一些基础错误(代码规范之类不会被编译器发现的问题)，以及一些配置文件的检查，我将其命名为<code>master_check</code>和<code>dev_check</code>,通过only字段来告诉GitLab CI 只有当对应的分支有push操作的时候才会触发这个job。</p>
+
+<p>然后就是代码的<code>build</code>阶段，由于此阶段不像上个极端，没有需要区分不同分支的命令，所以就只需要定义一个job就够了</p>
+
+<p>最后的<code>deploy</code>，因为不同的分支需要发布到不同的环境，所以依然通过only来区分两个job。</p>
+
+<blockquote>
+<p>关于GitLab CI中的Jobs,也有如下几个特点:</p>
+</blockquote>
+
+<pre><code>1. 相同 Stage 中的 Jobs 会并行执行
+2. 相同 Stage 中的 Jobs 都执行成功时，该 Stage 才会成功
+3. 如果任何一个 Job 失败，那么该 Stage 失败，即该构建任务 (Pipeline) 失败
+</code></pre>
+
+<p>在我的这个构建任务当中，根据我的业务情况只用到了少许关键字,还有更多的类似于<code>before_script</code>、<code>after_script</code>等关键字，具体的可以参阅<a href="https://docs.gitlab.com/ce/ci/yaml/README.html">GitLab的官方文档</a></p>
+
+<p>在我们完成<code>.gitlab-ci.yml</code>的流程编写之后，就可以将其放在项目的根目录下，然后push到我们的GitLab上，这时，如果你打开项目首页的Piplines标签页，会发现一个状态标识为<code>pending</code>的构建任务，如下图所示：<br/>
+<img src="https://pic.mylonly.com/2018-04-19-075009.jpg" alt=""/><br/>
+这时由于这个构建任务还有找到可用的GitLab Runner来执行其构建脚本，等我们接下来为我们的项目接入GitLab Runner之后，这些任务的状态就会由<code>pendding</code>变成<code>running</code>了</p>
+
+<h4 id="toc_3">安装GitLab Runner</h4>
+
+<p>找一台适合安装GitLab Runner的机器，无论是Windows或者Mac还是Linux都行，最好是那种比较空闲的能24小时开启的机器，我们在<a href="https://docs.gitlab.com/runner/install/">GitLab Runner的官网</a>找到我们平台的安装文件，以及对应的安装流程。由于笔者我准备安装GitLab Runner是一台闲置的iMac电脑，因此我就在演示MacOS下GitLab Runner的安装：</p>
+
+<blockquote>
+<p>GitLab Runner 在macOS和Linux/UNIX下安装流程是一样的，都是直接下载已编译好的二进制包</p>
+</blockquote>
+
+<ol>
+<li><p>下载对应GitLab 版本的GitLab Runner</p>
+
+<ul>
+<li>如果你的GitLab是10.0之后的版本，GitLab Runner可执行文件改名为<code>gitlab-runner</code></li>
+</ul>
+
+<pre><code>sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-runner
+</code></pre>
+
+<ul>
+<li>9.0~10.0之间的版本</li>
+</ul>
+
+<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+
+<ul>
+<li>9.0 之前,由于9.0之后启用全新的API4接口，所以如果你的GitLab是9.0以前的版本,需要下载下面的版本,否则会导致你的GitLab Runner注册不上</li>
+</ul>
+
+<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runnerhttps://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/v1.11.1/binaries/gitlab-ci-multi-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+
+<blockquote>
+<p>不知道各位有没有注意到上面下载地址链接当中的v1.11.1,这个就是对应的Gitlab Runner,如果你的GitLab是9.0之前的版本，使用GitLab Runner v1.11.1这个版本仍然注册不上，可以尝试使用降几个版本的GitLab Runner,所有GitLab Runner发行的版本可以在<a href="https://gitlab.com/gitlab-org/gitlab-runner/tags">GitLab Runner Tags</a>找到</p>
+</blockquote>
+
+<p>假如你遇到不能通过登录服务器来确定GitLab版本号时，可以通过直接访问gitlab的首页，后面加上help，如下图：<br/>
+<img src="https://pic.mylonly.com/2018-04-19-083100.png" alt=""/></p></li>
+<li><p>注册GitLab Runner</p>
+
+<p>执行下面命令，</p>
+
+<pre><code>sudo gitlab-ci-multi-runner register
+</code></pre>
+
+<p>如果你的终端提示找不到命令，请通过<code>export PATH=/usr/local/bin:$PATH</code>将/usr/local/bin目录加入环境变量,或者你遗漏了上面的chmod命令导致文件不可执行。</p>
+
+<p>执行完上面的命令之后，会让你输入下面的信息:</p>
+
+<ul>
+<li>Please enter the gitlab-ci coordinator URL:</li>
+<li>Please enter the gitlab-ci token for this runner:</li>
+<li>Please enter the gitlab-ci description for this runner</li>
+<li>Please enter the gitlab-ci tags for this runner (comma separated):</li>
+<li>Whether to run untagged builds [true/false]:</li>
+<li>Please enter the executor:</li>
+</ul>
+
+<p>其中coordinator URL和token可以在你需要进行持续集成的项目的Runner标签页中找到<br/>
+<img src="https://pic.mylonly.com/2018-04-19-084819.jpg" alt=""/><br/>
+description和tags可以自己定义，是否build没有tag的提交这个也是根据你自己的需求来选择，默认是false，executer选择shell</p>
+
+<p>填写完成之后如果提示<code>Registering runner... succeeded</code>表明这个Runner已经被注册成功了，之后你在返回进入项目的Runners页面，会发现下面多了一个处于Active状态的Runner</p>
+
+<p>紧接着最后一步，启动我们刚注册的Runner</p>
+
+<pre><code>sudo  gitlab-ci-multi-runner start
+</code></pre>
+
+<p>现在，我们切回项目的Pipelines当中，肯定会发现之前处于peding状态的任务已经开始running了，我们可以通过点击这个状态按钮来实时查看每个阶段的输出日志<br/>
+<img src="https://pic.mylonly.com/2018-04-19-085612.jpg" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_4">开启构建状态的邮件提醒</h2>
+
+<p>如果你想收到关于每个构建任务的实时状态的邮件，你可以在在项目中的service标签野种启用Build Emails这个服务。</p>
+
+<p><img src="https://pic.mylonly.com/2018-04-19-085906.png" alt=""/></p>
+
+<h2 id="toc_5">结语</h2>
+
+<p>搭建一个快速方便的持续集成、持续部署环境对于项目的开发来说是一个很重要的举措，无论你是采用大名鼎鼎的jenkins还是本文介绍的GitLab CI,它不仅仅可以帮助我们节省大量的时间在调试发布部署当中，也减少了我们因为人为因素导致的发布过程中出现的意外，有效的较低了项目开发当中的风险。</p>
+
+<h4 id="toc_6">如果你想和我交流，可以关注我的订阅号:</h4>
+
+<p><img src="https://pic.mylonly.com/2018-04-19-wechat-mylonly.jpg" alt=""/></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-04-19T10:59:40+08:00" itemprop="datePublished">2018/4/19</time>
 			</div>
 			<div class="tags">posted in 
@@ -556,160 +799,6 @@ class UserProfile(AbstractUser):
 
 <pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
 </code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-09-12T15:07:09+08:00" itemprop="datePublished">2017/9/12</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15052000291680.html" itemprop="url">
-		利用Scrapy-Splash抓取JS动态渲染的网页数据</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
-
-<ol>
-<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
-<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
-</ol>
-
-<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
-
-<h3 id="toc_0">准备工作</h3>
-
-<ol>
-<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
-<blockquote>
-<p>为什么要安装Docker?<br/>
-因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
-</blockquote></li>
-<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
-<li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
-docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
-</code></pre></li>
-</ol>
-
-<h3 id="toc_1">Scrapy配置</h3>
-
-<p>在Scrapy项目的setting.py中加入如下内容：</p>
-
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
-
-DOWNLOADER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
-&#39;scrapy_splash.SplashMiddleware&#39;: 725,
-&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
-}
-
-SPIDER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
-}
-
-DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
-
-HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
-
-</code></pre>
-
-<h3 id="toc_2">实际代码解析</h3>
-
-<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
-
-<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
-<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
-
-<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
-<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
-
-<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
-<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
-
-<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
-
-<pre><code class="language-Python">import scrapy
-from FinancialInfoSpider.items import ArticleItem
-from scrapy_splash import SplashRequest
-from w3lib.html import remove_tags
-import re
-from bs4 import BeautifulSoup
-
-class TencentStockSpider(scrapy.Spider):
-    name = &quot;TencentStock&quot;
-    def start_requests(self):
-        urls = [
-           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
-        ]
-
-        for url in urls:
-            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-
-    def parse(self,response):
-
-        sel = scrapy.Selector(response)
-        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
-        requests = []
-        
-        for link in links:
-            request = scrapy.Request(link, callback =self.parse_article)
-            requests.append(request)
-        return requests
-
-    def parse_article(self,response):
-
-        sel = scrapy.Selector(response)
-
-        article = ArticleItem()
-        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
-        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
-        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
-        
-        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
-        article[&#39;content&#39;] = self.remove_html_tags(html_content)
-        return article
-
-
-    def remove_html_tags(self,html):
-        
-        soup = BeautifulSoup(html)
-        [s.extract() for s in soup(&#39;script&#39;)]
-        [s.extract() for s in soup(&#39;style&#39;)] 
-         
-        content = &#39;&#39;
-        for substring in soup.stripped_strings:
-            content = content + substring
-
-        return content       
-</code></pre>
-
-<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
-
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-</code></pre>
-
-<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
-
-<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
-<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
-
-<p>输出结果:</p>
-
-<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
 
 
 			
