@@ -126,6 +126,41 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-04-18T10:58:44+08:00" itemprop="datePublished">2018/4/18</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='timeline.html'>碎碎念</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15240203246194.html" itemprop="url">
+		修行进度表</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ul>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> OpenRestry
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Kali Linux 渗透测试
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Weex
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Swift
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Python/Django
+</li>
+</ul>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-03-07T10:03:55+08:00" itemprop="datePublished">2018/3/7</time>
 			</div>
 			<div class="tags">posted in 
@@ -330,160 +365,6 @@ class UserProfile(AbstractUser):
 
 <pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
 </code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-09-12T15:07:09+08:00" itemprop="datePublished">2017/9/12</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15052000291680.html" itemprop="url">
-		利用Scrapy-Splash抓取JS动态渲染的网页数据</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
-
-<ol>
-<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
-<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
-</ol>
-
-<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
-
-<h3 id="toc_0">准备工作</h3>
-
-<ol>
-<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
-<blockquote>
-<p>为什么要安装Docker?<br/>
-因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
-</blockquote></li>
-<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
-<li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
-docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
-</code></pre></li>
-</ol>
-
-<h3 id="toc_1">Scrapy配置</h3>
-
-<p>在Scrapy项目的setting.py中加入如下内容：</p>
-
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
-
-DOWNLOADER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
-&#39;scrapy_splash.SplashMiddleware&#39;: 725,
-&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
-}
-
-SPIDER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
-}
-
-DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
-
-HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
-
-</code></pre>
-
-<h3 id="toc_2">实际代码解析</h3>
-
-<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
-
-<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
-<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
-
-<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
-<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
-
-<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
-<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
-
-<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
-
-<pre><code class="language-Python">import scrapy
-from FinancialInfoSpider.items import ArticleItem
-from scrapy_splash import SplashRequest
-from w3lib.html import remove_tags
-import re
-from bs4 import BeautifulSoup
-
-class TencentStockSpider(scrapy.Spider):
-    name = &quot;TencentStock&quot;
-    def start_requests(self):
-        urls = [
-           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
-        ]
-
-        for url in urls:
-            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-
-    def parse(self,response):
-
-        sel = scrapy.Selector(response)
-        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
-        requests = []
-        
-        for link in links:
-            request = scrapy.Request(link, callback =self.parse_article)
-            requests.append(request)
-        return requests
-
-    def parse_article(self,response):
-
-        sel = scrapy.Selector(response)
-
-        article = ArticleItem()
-        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
-        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
-        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
-        
-        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
-        article[&#39;content&#39;] = self.remove_html_tags(html_content)
-        return article
-
-
-    def remove_html_tags(self,html):
-        
-        soup = BeautifulSoup(html)
-        [s.extract() for s in soup(&#39;script&#39;)]
-        [s.extract() for s in soup(&#39;style&#39;)] 
-         
-        content = &#39;&#39;
-        for substring in soup.stripped_strings:
-            content = content + substring
-
-        return content       
-</code></pre>
-
-<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
-
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-</code></pre>
-
-<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
-
-<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
-<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
-
-<p>输出结果:</p>
-
-<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
 
 
 			

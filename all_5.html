@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Ubuntu 安装uwsgi - 独自一人
+  	独自一人
   	
 	</title>
 
@@ -120,52 +120,74 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
 
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Ubuntu 安装uwsgi</h1>
+
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-11T18:12:56+08:00" itemprop="datePublished">2016/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944975766543.html" itemprop="url">
+		CocoaPods master仓库替换为国内源</a></h1>
 		<div class="entry-content" itemprop="articleBody">
-			<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
-然后利用pip3 安装uwsgi</p>
+			
+			<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
+国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
 
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-tar -xvf Python-3.6.3.tar.xz
-cd Python-3.6.3/
+<ol>
+<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
+<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
+</ol>
 
-apt-get install zlib1g-dev
-apt-get install libssl-dev
-apt-get install sqlite3
+<p>执行如下命令替换Pods源</p>
 
-
-./configure --enable-loadable-sqlite-extensions
-
-make &amp;&amp; sudo make install
-
-
-pip3 install uwsgi
-
-uwsgi -i /data/web/xxxx.ini
+<pre><code class="language-Bash">$ pod repo remove master
+$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
 </code></pre>
 
+<p> <br/>
+仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
+
+<pre><code class="language-Bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
+Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
+</code></pre>
+
+<p> <br/>
+这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
+
+<pre><code class="language- Bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
+platform :ios, &#39;6.0&#39;
+pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
+</code></pre>
+
+
+			
+			
 		</div>
+
 	</article>
-	<div class="share-comment">
-	 <!--PC和WAP自适应版-->
-<div id="SOHUCS" ></div> 
-<script type="text/javascript"> 
-(function(){ 
-var appid = 'cytztSWS2'; 
-var conf = 'prod_b4255ea3b300e547eb51db263247f76f'; 
-var width = window.innerWidth || document.documentElement.clientWidth; 
-if (width < 960) { 
-window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  
+
+</div>
+<nav id="pagenavi">
+	 <a class="prev" href="all_4.html">Prev</a>  
+	
+	<div class="center"><a href="archives.html">Blog Archives</a></div>
+
+</nav>
+
+</div>
 
 
-	  
 
-	  
-
-	</div>
-</div>        </div>
+        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2014
 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>

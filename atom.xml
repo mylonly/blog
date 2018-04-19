@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[独自一人]]></title>
-  <link href="https://www.mylonly.com/atom.xml" rel="self"/>
-  <link href="https://www.mylonly.com/"/>
-  <updated>2017-09-12T16:24:10+08:00</updated>
-  <id>https://www.mylonly.com/</id>
+  <link href="https://blog.mylonly.com/atom.xml" rel="self"/>
+  <link href="https://blog.mylonly.com/"/>
+  <updated>2018-04-18T23:31:14+08:00</updated>
+  <id>https://blog.mylonly.com/</id>
   <author>
     <name><![CDATA[]]></name>
     
@@ -14,10 +14,32 @@
 
   
   <entry>
+    <title type="html"><![CDATA[修行进度表]]></title>
+    <link href="https://blog.mylonly.com/15240203246194.html"/>
+    <updated>2018-04-18T10:58:44+08:00</updated>
+    <id>https://blog.mylonly.com/15240203246194.html</id>
+    <content type="html"><![CDATA[
+<ul>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> OpenRestry
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Kali Linux 渗透测试
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Weex
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Swift
+</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Python/Django
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[1234TV Weex重构之路]]></title>
-    <link href="https://www.mylonly.com/15203882358232.html"/>
+    <link href="https://blog.mylonly.com/15203882358232.html"/>
     <updated>2018-03-07T10:03:55+08:00</updated>
-    <id>https://www.mylonly.com/15203882358232.html</id>
+    <id>https://blog.mylonly.com/15203882358232.html</id>
     <content type="html"><![CDATA[
 <h2 id="toc_0">目录索引</h2>
 
@@ -40,9 +62,9 @@
   
   <entry>
     <title type="html"><![CDATA[Ubuntu 安装uwsgi]]></title>
-    <link href="https://www.mylonly.com/15126534156721.html"/>
+    <link href="https://blog.mylonly.com/15126534156721.html"/>
     <updated>2017-12-07T21:30:15+08:00</updated>
-    <id>https://www.mylonly.com/15126534156721.html</id>
+    <id>https://blog.mylonly.com/15126534156721.html</id>
     <content type="html"><![CDATA[
 <p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
 然后利用pip3 安装uwsgi</p>
@@ -71,9 +93,9 @@ uwsgi -i /data/web/xxxx.ini
   
   <entry>
     <title type="html"><![CDATA[Django 发送html格式的邮件]]></title>
-    <link href="https://www.mylonly.com/15119665687635.html"/>
+    <link href="https://blog.mylonly.com/15119665687635.html"/>
     <updated>2017-11-29T22:42:48+08:00</updated>
-    <id>https://www.mylonly.com/15119665687635.html</id>
+    <id>https://blog.mylonly.com/15119665687635.html</id>
     <content type="html"><![CDATA[
 <p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
 
@@ -132,9 +154,9 @@ msg.send()
   
   <entry>
     <title type="html"><![CDATA[Django扩展默认的User Model]]></title>
-    <link href="https://www.mylonly.com/15117871248079.html"/>
+    <link href="https://blog.mylonly.com/15117871248079.html"/>
     <updated>2017-11-27T20:52:04+08:00</updated>
-    <id>https://www.mylonly.com/15117871248079.html</id>
+    <id>https://blog.mylonly.com/15117871248079.html</id>
     <content type="html"><![CDATA[
 <p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
 
@@ -178,9 +200,9 @@ class UserProfile(AbstractUser):
   
   <entry>
     <title type="html"><![CDATA[利用Scrapy-Splash抓取JS动态渲染的网页数据]]></title>
-    <link href="https://www.mylonly.com/15052000291680.html"/>
+    <link href="https://blog.mylonly.com/15052000291680.html"/>
     <updated>2017-09-12T15:07:09+08:00</updated>
-    <id>https://www.mylonly.com/15052000291680.html</id>
+    <id>https://blog.mylonly.com/15052000291680.html</id>
     <content type="html"><![CDATA[
 <p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
 
@@ -319,9 +341,9 @@ class TencentStockSpider(scrapy.Spider):
   
   <entry>
     <title type="html"><![CDATA[CentOS6 安装部署Zabbix]]></title>
-    <link href="https://www.mylonly.com/14972546183511.html"/>
+    <link href="https://blog.mylonly.com/14972546183511.html"/>
     <updated>2017-06-12T16:03:38+08:00</updated>
-    <id>https://www.mylonly.com/14972546183511.html</id>
+    <id>https://blog.mylonly.com/14972546183511.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p>Zabbix是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题。</p>
@@ -463,9 +485,9 @@ chkconfig zabbix_agentd on
   
   <entry>
     <title type="html"><![CDATA[Swift3.0 利用泛型设置基类属性的动态类型]]></title>
-    <link href="https://www.mylonly.com/14957025459875.html"/>
+    <link href="https://blog.mylonly.com/14957025459875.html"/>
     <updated>2017-05-25T16:55:45+08:00</updated>
-    <id>https://www.mylonly.com/14957025459875.html</id>
+    <id>https://blog.mylonly.com/14957025459875.html</id>
     <content type="html"><![CDATA[
 <p>在MVVM架构的项目中，我们一般会写一个viewModel的基类和一个controller的基类，在controller的对象中持有viewModel,如下代码</p>
 
@@ -553,9 +575,9 @@ class Sub1Controller:Controller&lt;Sub1ViewModel&gt;{
   
   <entry>
     <title type="html"><![CDATA[基于BarrageRender自定义弹幕动画]]></title>
-    <link href="https://www.mylonly.com/14951753262754.html"/>
+    <link href="https://blog.mylonly.com/14951753262754.html"/>
     <updated>2017-05-19T14:28:46+08:00</updated>
-    <id>https://www.mylonly.com/14951753262754.html</id>
+    <id>https://blog.mylonly.com/14951753262754.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p><a href="https://github.com/unash/BarrageRenderer">BarrageRender</a> 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，<code>BarrageFloatSprite</code>和<code>BarrageWalkSprite</code>。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程。</p>
@@ -987,9 +1009,9 @@ return origin;
   
   <entry>
     <title type="html"><![CDATA[树莓派3安装Node.js]]></title>
-    <link href="https://www.mylonly.com/14945010672564.html"/>
+    <link href="https://blog.mylonly.com/14945010672564.html"/>
     <updated>2017-05-11T19:11:07+08:00</updated>
-    <id>https://www.mylonly.com/14945010672564.html</id>
+    <id>https://blog.mylonly.com/14945010672564.html</id>
     <content type="html"><![CDATA[
 <p>(树莓派官方系统)<br/>
 <img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
@@ -1010,9 +1032,9 @@ node --version
   
   <entry>
     <title type="html"><![CDATA[树莓派3命令行连接WiFi和蓝牙设备]]></title>
-    <link href="https://www.mylonly.com/14945010588526.html"/>
+    <link href="https://blog.mylonly.com/14945010588526.html"/>
     <updated>2017-05-11T19:10:58+08:00</updated>
-    <id>https://www.mylonly.com/14945010588526.html</id>
+    <id>https://blog.mylonly.com/14945010588526.html</id>
     <content type="html"><![CDATA[
 <p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
 
@@ -1106,9 +1128,9 @@ sudo apt-get install pulseaudio pulseaudio-module-bluetooth<br/>
   
   <entry>
     <title type="html"><![CDATA[Swift要点]]></title>
-    <link href="https://www.mylonly.com/14944977278738.html"/>
+    <link href="https://blog.mylonly.com/14944977278738.html"/>
     <updated>2017-05-11T18:15:27+08:00</updated>
-    <id>https://www.mylonly.com/14944977278738.html</id>
+    <id>https://blog.mylonly.com/14944977278738.html</id>
     <content type="html"><![CDATA[
 <p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
 
@@ -1263,9 +1285,9 @@ test.simpleDescription()
   
   <entry>
     <title type="html"><![CDATA[Swift学习要点-基础部分]]></title>
-    <link href="https://www.mylonly.com/14944977101213.html"/>
+    <link href="https://blog.mylonly.com/14944977101213.html"/>
     <updated>2017-05-11T18:15:10+08:00</updated>
-    <id>https://www.mylonly.com/14944977101213.html</id>
+    <id>https://blog.mylonly.com/14944977101213.html</id>
     <content type="html"><![CDATA[
 <p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
 
@@ -1338,9 +1360,9 @@ if (condition){
   
   <entry>
     <title type="html"><![CDATA[各种程序的安装]]></title>
-    <link href="https://www.mylonly.com/14945010480752.html"/>
+    <link href="https://blog.mylonly.com/14945010480752.html"/>
     <updated>2017-05-11T19:10:48+08:00</updated>
-    <id>https://www.mylonly.com/14945010480752.html</id>
+    <id>https://blog.mylonly.com/14945010480752.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li>源码安装nginx</li>
@@ -1385,9 +1407,9 @@ make install
   
   <entry>
     <title type="html"><![CDATA[Linux常用命令]]></title>
-    <link href="https://www.mylonly.com/14944978089747.html"/>
+    <link href="https://blog.mylonly.com/14944978089747.html"/>
     <updated>2017-05-11T18:16:48+08:00</updated>
-    <id>https://www.mylonly.com/14944978089747.html</id>
+    <id>https://blog.mylonly.com/14944978089747.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li>磁盘挂载</li>
@@ -1428,9 +1450,9 @@ cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
   
   <entry>
     <title type="html"><![CDATA[利用树莓派搭建迅雷远程下载服务器]]></title>
-    <link href="https://www.mylonly.com/14945010337427.html"/>
+    <link href="https://blog.mylonly.com/14945010337427.html"/>
     <updated>2017-05-11T19:10:33+08:00</updated>
-    <id>https://www.mylonly.com/14945010337427.html</id>
+    <id>https://blog.mylonly.com/14945010337427.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p>树莓派系统为Raspberry Pi</p>
@@ -1542,9 +1564,9 @@ esac
   
   <entry>
     <title type="html"><![CDATA[Scrapy抓取Ajax动态页面]]></title>
-    <link href="https://www.mylonly.com/14945011244738.html"/>
+    <link href="https://blog.mylonly.com/14945011244738.html"/>
     <updated>2017-05-11T19:12:04+08:00</updated>
-    <id>https://www.mylonly.com/14945011244738.html</id>
+    <id>https://blog.mylonly.com/14945011244738.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p>一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦。</p>
@@ -1768,9 +1790,9 @@ class tbModelPipeline(object):
   
   <entry>
     <title type="html"><![CDATA[利用Github的Webhook功能和Node.js完成项目的自动部署]]></title>
-    <link href="https://www.mylonly.com/14945009892942.html"/>
+    <link href="https://blog.mylonly.com/14945009892942.html"/>
     <updated>2017-05-11T19:09:49+08:00</updated>
-    <id>https://www.mylonly.com/14945009892942.html</id>
+    <id>https://blog.mylonly.com/14945009892942.html</id>
     <content type="html"><![CDATA[
 <p><u>本文对任何提供Webhook的git仓库都适用</u></p>
 
@@ -1865,9 +1887,9 @@ echo &quot;Finished.&quot;
   
   <entry>
     <title type="html"><![CDATA[利用pxssh暴力破解ssh密码]]></title>
-    <link href="https://www.mylonly.com/14945011465578.html"/>
+    <link href="https://blog.mylonly.com/14945011465578.html"/>
     <updated>2017-05-11T19:12:26+08:00</updated>
-    <id>https://www.mylonly.com/14945011465578.html</id>
+    <id>https://blog.mylonly.com/14945011465578.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p><mark>关于pxssh</mark><br/>
@@ -1976,9 +1998,9 @@ if __name__ == &#39;__main__&#39;:
   
   <entry>
     <title type="html"><![CDATA[Python利用Pexpect模拟ssh交互]]></title>
-    <link href="https://www.mylonly.com/14945011027951.html"/>
+    <link href="https://blog.mylonly.com/14945011027951.html"/>
     <updated>2017-05-11T19:11:42+08:00</updated>
-    <id>https://www.mylonly.com/14945011027951.html</id>
+    <id>https://blog.mylonly.com/14945011027951.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p><mark>关于Pexpect</mark><br/>
@@ -2154,184 +2176,6 @@ def main():
 
 if __name__ == &#39;__main__&#39;:
     main()
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Scrapy模拟登陆知乎]]></title>
-    <link href="https://www.mylonly.com/14945011328774.html"/>
-    <updated>2017-05-11T19:12:12+08:00</updated>
-    <id>https://www.mylonly.com/14945011328774.html</id>
-    <content type="html"><![CDATA[
-<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
-感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
-</a></p>
-
-<p>利用Scrapy提供的cookie中间价很容易做到网页的模拟登陆,下面就来介绍怎么利用这个cookie中间件来登陆知乎。</p>
-
-<h3 id="toc_0">前期分析工作</h3>
-
-<ul>
-<li><p>打开<a href="https://www.zhihu.com,%E5%88%A9%E7%94%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84Debug%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%AE%9A%E4%BD%8D%E5%88%B0%E7%99%BB%E9%99%86%E6%A1%86%E6%89%80%E5%9C%A8%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E6%89%80%E7%A4%BA">https://www.zhihu.com,利用Chrome浏览器的Debug功能，定位到登陆框所在的位置，如下图所示</a><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14645980407304.jpg" alt="2016-06-29_14645980407304.jpg"/><br/>
-利用scrapy提供的xpath能很方便的获取到这个值(//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;)</p></li>
-<li><p>选中Debug窗口的Network选项，同时在输完账号密码后点击登陆，获取登陆操作后的post请求，见下图:</p></li>
-</ul>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14645982403637.jpg" alt="2016-06-29_14645982403637.jpg"/><br/>
-点击这个链接，确认这个链接就是提交登陆的url<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14645983258011.jpg" alt="2016-06-29_14645983258011.jpg"/><br/>
-从FormData里面可以看到<a href="https://www.zhihu.com/email/login%E5%B0%B1%E6%98%AF%E7%99%BB%E9%99%86POST%E8%AF%B7%E6%B1%82%E7%9A%84url%EF%BC%8C%E9%9C%80%E8%A6%81%E6%8F%90%E4%BA%A44%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%8C%E5%85%B6%E4%B8%AD_xsrf%E5%B0%B1%E6%98%AF%E9%A6%96%E9%A1%B5%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E9%9A%90%E8%97%8F%E8%A1%A8%E5%8D%95%E5%8F%82%E6%95%B0%EF%BC%8Cremember_me%E6%98%AF%E6%98%AF%E5%90%A6%E8%AE%B0%E4%BD%8Fcookie%E7%9A%84%E5%BC%80%E5%85%B3%EF%BC%8Cemail%E5%92%8Cpassword%E5%AF%B9%E5%BA%94%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81">https://www.zhihu.com/email/login就是登陆POST请求的url，需要提交4个参数，其中_xsrf就是首页可以获取到的隐藏表单参数，remember_me是是否记住cookie的开关，email和password对应账号和密码</a></p>
-
-<blockquote>
-<p>此处可能有不一样的地方，因为我的知乎账号是email注册的，根据这个url的特征推测别的账号类型可能存在不一样的Url</p>
-</blockquote>
-
-<h3 id="toc_1">编写蜘蛛代码</h3>
-
-<p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
-
-<pre><code class="language-Python">def start_requests(self):
-        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
-</code></pre>
-
-<p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
-
-<pre><code class="language-Pythoh">headers = {
-    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
-    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
-    &quot;Connection&quot;: &quot;keep-alive&quot;,
-    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
-    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
-    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
-}
-</code></pre>
-
-<p>meta中的cookiejar是Scrapy的Cookie中间件的关键字，具体可参考scrapy文档，这里因为只需要保存一个cookie，所以直接写1(注意:<code>并不是1个cookie才写的1，仅仅是个key，后面通过这个1这个key找到cookiejar中保存的cookie</code>)</p>
-
-<p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
-
-<pre><code class="language-Python">def post_login(self,response):
-        self.log(&quot;preparing login...&quot;)
-        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
-        self.log(xsrf)
-        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:1},
-                                          headers = self.headers,
-                                          formdata = {
-                                             &#39;_xsrf&#39;:xsrf,
-                                             &#39;password&#39;:&#39;xgBKQTx7VnVLK9tv&#39;,
-                                             &#39;email&#39;:&#39;tianxianggen@gmail.com&#39;,
-                                             &#39;remember_me&#39;:&#39;true&#39;,
-                                          },
-                                          callback = self.after_login,
-                                          )
-</code></pre>
-
-<ol>
-<li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
-</ol>
-
-<pre><code class="language-Python">def after_login(self,response):
-        for url in self.start_urls:
-            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
-</code></pre>
-
-<p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
-
-<pre><code class="language-Pythoh">rules = (
-        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
-    )
-</code></pre>
-
-<p>同时提供request_question函数</p>
-
-<pre><code class="language-Python">def request_question(self,request):
-        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
-</code></pre>
-
-<p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
-
-<pre><code class="language-Python">def parse_question(self,response):
-        sel = Selector(response)
-        item = zhihuItem()
-        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
-        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
-        return item
-</code></pre>
-
-<blockquote>
-<p>这个parse_question方法仅仅是获取问题名称和问题下面的所有图片链接。</p>
-</blockquote>
-
-<h3 id="toc_2">完整代码</h3>
-
-<pre><code class="language-Python">import urllib2
-import os
-import re
-import codecs
-
-
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from MySpider.items import zhihuItem
-from scrapy.http import Request
-from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
-
-
-class zhihuSpider(CrawlSpider):
-    name = &quot;zhihu&quot;
-    allow_domians = [&quot;zhihu.com&quot;]
-    start_urls = [&quot;https://www.zhihu.com/collection/38624707&quot;]
-    rules = (
-        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
-    )
-    
-    headers = {
-    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
-    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
-    &quot;Connection&quot;: &quot;keep-alive&quot;,
-    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
-    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
-    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
-    }
-    
-    def start_requests(self):
-        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
-        
-    def post_login(self,response):
-        self.log(&quot;preparing login...&quot;)
-        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
-        self.log(xsrf)
-        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:response.meta[&#39;cookiejar&#39;]},
-                                          headers = self.headers,
-                                          formdata = {
-                                             &#39;_xsrf&#39;:xsrf,
-                                             &#39;password&#39;:&#39;差点就忘了删了&#39;,
-                                             &#39;email&#39;:&#39;邮箱也不能暴露&#39;,
-                                             &#39;remember_me&#39;:&#39;true&#39;,
-                                          },
-                                          callback = self.after_login,
-                                          )
-                                                      
-    def after_login(self,response):
-        for url in self.start_urls:
-            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
-   
-    def request_question(self,request):
-        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
-        
-    def parse_question(self,response):
-        sel = Selector(response)
-        item = zhihuItem()
-        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
-        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
-        return item
 </code></pre>
 
 ]]></content>
