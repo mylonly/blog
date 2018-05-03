@@ -126,306 +126,238 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2017-09-12T15:07:09+08:00" itemprop="datePublished">2017/9/12</time>
+				<time datetime="2018-04-19T12:02:15+08:00" itemprop="datePublished">2018/4/19</time>
 			</div>
 			<div class="tags">posted in 
 			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
+			    <a class='category' href='tools.html'>Tools</a>&nbsp;
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="15052000291680.html" itemprop="url">
-		利用Scrapy-Splash抓取JS动态渲染的网页数据</a></h1>
+		<h1 class="title" itemprop="name"><a href="15241105353902.html" itemprop="url">
+		利用GitLab提供的GitLab-CI以及GitLab-Runner搭建持续集成/部署环境</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
+			<h2 id="toc_0">简介</h2>
 
 <ol>
-<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
-<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
-</ol>
-
-<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
-
-<h3 id="toc_0">准备工作</h3>
-
-<ol>
-<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
+<li><p>GitLab</p>
 
 <blockquote>
-<p>为什么要安装Docker?<br/>
-因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
+<p>是一套基于Ruby开发的开源Git项目管理应用，其提供的功能和Github类似，不同的是GitLab提供一个GitLab CE社区版本，用户可以将其部署在自己的服务器上，这样就可以用于团队内部的项目代码托管仓库。</p>
 </blockquote></li>
-<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
-<li><p>安装运行Splash</p>
+<li><p>GitLab CI</p>
 
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
-docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
-</code></pre></li>
+<blockquote>
+<p>是GitLab 提供的持续集成服务(从8.0版本之后，GitLab CI已经集成在GitLab中了)，只要在你的仓库根目录下创建一个.gitlab-ci.yml 文件， 并为该项目指派一个Runner，当有合并请求或者Push操作时，你写在.gitlab-ci.yml中的构建脚本就会开始执行。</p>
+</blockquote></li>
+<li><p>GitLab Runner</p>
+
+<blockquote>
+<p>是配合GitLab CI进行构建任务的应用程序，GitLab CI负责yml文件中各种阶段流程的执行，而GitLab Runner就是具体的负责执行每个阶段的脚本执行，一般来说GitLab Runner需要安装在单独的机器上通过其提供的注册操作跟GitLab CI进行绑定，当然，你也可以让其和GitLab安装在一起，只是有的情况下，你代码的构建过程对资源消耗十分严重的时候，会拖累GitLab给其他用户提供政策的Git服务。</p>
+</blockquote></li>
+<li><p>持续集成/部署环境</p>
+
+<blockquote>
+<p>持续集成是程序开发人员在频繁的提交代码之后，能有相应的环境能对其提交的代码自动执行构建(Build)、测试(Test),然后根据测试结果判断新提交的代码能否合并加入主分支当中,而持续部署也就是在持续集成之后自动将代码部署(Deploy)到生成环境上</p>
+</blockquote></li>
 </ol>
 
-<h3 id="toc_1">Scrapy配置</h3>
+<h2 id="toc_1">开启GitLab CI功能</h2>
 
-<p>在Scrapy项目的setting.py中加入如下内容：</p>
+<p>在GitLab 8.0版本之后,你可以通过如下两部启用GitLab CI功能</p>
 
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
+<ol>
+<li> 新建一个<code>.gitlab-ci.yml</code>文件在你项目的根目录</li>
+<li> 为你的项目配置一个GitLab Runner</li>
+</ol>
 
-DOWNLOADER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
-&#39;scrapy_splash.SplashMiddleware&#39;: 725,
-&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
-}
+<h4 id="toc_2">配置一个<code>.gitlab-ci.yml</code>文件</h4>
 
-SPIDER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
-}
+<p><code>.gitlab-ci.yml</code>文件是用来配置GitLab CI进行构建流程的配置文件，其采用YAML语法,所以你需要额外注意要用空格来代替缩进，而不是Tabs。下面通过我自己项目中的<code>.gitlab-ci.yml</code>文件来具体介绍其规则</p>
 
-DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
+<pre><code class="language-YAML">stages:
+  - init
+  - check
+  - build
+  - deploy
 
-HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
+cache:
+  key: ${CI_BUILD_REF_NAME}
+  paths:
+  - node_modules/
+  - dist/
+
+#定义一个叫init的Job任务
+init:
+  stage: init
+  script:
+  -  cnpm install
+
+#master_check Job:检查master分支上关键内容
+master_check:
+  stage: check
+  script:
+  - echo &quot;Start Check Eros Config ...&quot;
+  - bash check.sh release 
+  only:
+  - master
+  
+#dev_check Job: 检查dev分支上关键内容
+dev_check:
+  stage: check
+  script:
+  - echo &quot;Start Check Eros Config ...&quot;
+  - bash check.sh debug
+  only:
+  - dev
+
+js_build:
+  stage: build
+  script:
+  - eros build
+
+master_deploy:
+  stage: deploy
+  script:
+  - bash deploy.sh release
+  only:
+  - master
+
+dev_deploy:
+  stage: deploy
+  script:
+  - bash deploy.sh debug
+  only:
+  - dev
 
 </code></pre>
 
-<h3 id="toc_2">实际代码解析</h3>
+<p>在上面的例子中，我们利用<code>stages</code>关键字来定义持续构建过程中的四个阶段init、chec、build、deploy</p>
 
-<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
-
-<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
-<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
-
-<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
-<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
-
-<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
-<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
-
-<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
-
-<pre><code class="language-Python">import scrapy
-from FinancialInfoSpider.items import ArticleItem
-from scrapy_splash import SplashRequest
-from w3lib.html import remove_tags
-import re
-from bs4 import BeautifulSoup
-
-class TencentStockSpider(scrapy.Spider):
-    name = &quot;TencentStock&quot;
-    def start_requests(self):
-        urls = [
-           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
-        ]
-
-        for url in urls:
-            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-
-    def parse(self,response):
-
-        sel = scrapy.Selector(response)
-        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
-        requests = []
-        
-        for link in links:
-            request = scrapy.Request(link, callback =self.parse_article)
-            requests.append(request)
-        return requests
-
-    def parse_article(self,response):
-
-        sel = scrapy.Selector(response)
-
-        article = ArticleItem()
-        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
-        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
-        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
-        
-        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
-        article[&#39;content&#39;] = self.remove_html_tags(html_content)
-        return article
-
-
-    def remove_html_tags(self,html):
-        
-        soup = BeautifulSoup(html)
-        [s.extract() for s in soup(&#39;script&#39;)]
-        [s.extract() for s in soup(&#39;style&#39;)] 
-         
-        content = &#39;&#39;
-        for substring in soup.stripped_strings:
-            content = content + substring
-
-        return content       
-</code></pre>
-
-<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
-
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-</code></pre>
-
-<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
-
-<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
-<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
-
-<p>输出结果:</p>
-
-<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-06-12T16:03:38+08:00" itemprop="datePublished">2017/6/12</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14972546183511.html" itemprop="url">
-		CentOS6 安装部署Zabbix</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p>Zabbix是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题。</p>
+<blockquote>
+<p>关于GitLab CI中的stages,有如下几个特点:</p>
 </blockquote>
 
-<h2 id="toc_0">部署LAMP|LNMP环境</h2>
-
-<p>由于Zabbix的Web管理页面是由php写的，所以需要服务器PHP环境的支持，Linux部署LAMP或者LNMP的教程很多，在此就不在赘述。<br/>
-需要注意的是:Zabbix支持的PHP最低版本是PHP5.4,而目前CentOS6中通过yum安装的php版本为5.3，所以最好采用源码编译安装。<br/>
-当然，如果你觉得自己搞不定源码安装的各种编译参数，本文也给出一种yum安装php5.5版本的方法</p>
-
-<h3 id="toc_1">Yum 安装PHP5.5</h3>
-
-<ol>
-<li>CentOS6安装PHP5.5源
-<code>rpm -ivh http://mirror.webtatic.com/yum/el6/latest.rpm</code></li>
-<li>安装php5.5
-<code>yum install php55w php55w-gd php55w-mbstring php55w-mysql php55w-fpm php55w-bcmath php55w-xmlreader php55w-xmlwriter</code></li>
-</ol>
-
-<p>修改PHP配置，编辑/etc/php.ini,修改下列参数</p>
-
-<pre><code>max_execution_time = 300
-max_input_time = 300
-memory_limit = 128M
-post_max_size = 32M
-date.timezone = Asia/Shanghai
+<pre><code>1. 所有 Stages 会按照顺序运行，即当一个 Stage 完成后，下一个 Stage 才会开始
+2. 只有当所有 Stages 完成后，该构建任务 (Pipeline) 才会成功
+3. 如果任何一个 Stage 失败，那么后面的 Stages 不会执行，该构建任务 (Pipeline) 失败
 </code></pre>
 
-<h2 id="toc_2">zabbix数据库</h2>
+<p>然后我们利用<code>caches</code>字段来指定下面将要进行的job任务中需要共享的文件目录,如果没有，每个Job开始的时候，GitLab Runner都会删掉<code>.gitignore</code>里面的文件</p>
 
-<ol>
-<li>从<a href="http://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/3.2.6/zabbix-3.2.6.tar.gz/download%5D">zabbix-3.2.6</a>下载最新版本的zabbix源码并解压至当前目录</li>
-<li>进入mysql数据库  <code>mysql -u root -p</code></li>
-<li>创建zabbix数据库 <code>create database zabbix character set utf8;</code></li>
-<li>创建zabbix用户并给与进入zabbix数据库的权限（用户名:zabbix,密码:123456） `grant all privileges on zabbix.* to zabbix@&#39;%&#39; identified by &#39;123456&#39;;</li>
-<li>刷新系统权限表 <code>flush privileges;</code></li>
-<li><p>进入之前下载的zabbix源码目录，找到database文件夹，里面有<code>schema.sql</code>、<code>images.sql</code>、<code>data.sql</code>，将这三个sql文件依次导入之前创建好的zabbix数据库中（PS,请按照schema-&gt;images-&gt;data的顺序依次导入，否则会出错）</p>
+<p>紧接着，我们定义了一个叫做<code>init</code>的job，其通过stage字段声明属于<code>init</code>阶段，因此，这个job会第一个执行，我们在这个job当中，执行一些环境的初始化工作。</p>
 
-<pre><code>mysql&gt; use zabbix;
-mysql&gt; source /root/zabbix-3.2.6/database/schema.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/images.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/data.sql;
-</code></pre></li>
-</ol>
+<p>接下来是<code>check</code>阶段,用来检查代码的一些基础错误(代码规范之类不会被编译器发现的问题)，以及一些配置文件的检查，我将其命名为<code>master_check</code>和<code>dev_check</code>,通过only字段来告诉GitLab CI 只有当对应的分支有push操作的时候才会触发这个job。</p>
 
-<h2 id="toc_3">添加zabbix用户和组</h2>
+<p>然后就是代码的<code>build</code>阶段，由于此阶段不像上个极端，没有需要区分不同分支的命令，所以就只需要定义一个job就够了</p>
 
-<pre><code>groupadd zabbix
-useradd -g zabbix -m zabbix
+<p>最后的<code>deploy</code>，因为不同的分支需要发布到不同的环境，所以依然通过only来区分两个job。</p>
+
+<blockquote>
+<p>关于GitLab CI中的Jobs,也有如下几个特点:</p>
+</blockquote>
+
+<pre><code>1. 相同 Stage 中的 Jobs 会并行执行
+2. 相同 Stage 中的 Jobs 都执行成功时，该 Stage 才会成功
+3. 如果任何一个 Job 失败，那么该 Stage 失败，即该构建任务 (Pipeline) 失败
 </code></pre>
 
-<h2 id="toc_4">安装zabbix其他依赖包</h2>
+<p>在我的这个构建任务当中，根据我的业务情况只用到了少许关键字,还有更多的类似于<code>before_script</code>、<code>after_script</code>等关键字，具体的可以参阅<a href="https://docs.gitlab.com/ce/ci/yaml/README.html">GitLab的官方文档</a></p>
 
-<pre><code>yum install net-snmp-devel curl curl-devel mysql-devel
+<p>在我们完成<code>.gitlab-ci.yml</code>的流程编写之后，就可以将其放在项目的根目录下，然后push到我们的GitLab上，这时，如果你打开项目首页的Piplines标签页，会发现一个状态标识为<code>pending</code>的构建任务，如下图所示：<br/>
+<img src="https://pic.mylonly.com/2018-04-19-075009.jpg" alt=""/><br/>
+这时由于这个构建任务还有找到可用的GitLab Runner来执行其构建脚本，等我们接下来为我们的项目接入GitLab Runner之后，这些任务的状态就会由<code>pendding</code>变成<code>running</code>了</p>
+
+<h4 id="toc_3">安装GitLab Runner</h4>
+
+<p>找一台适合安装GitLab Runner的机器，无论是Windows或者Mac还是Linux都行，最好是那种比较空闲的能24小时开启的机器，我们在<a href="https://docs.gitlab.com/runner/install/">GitLab Runner的官网</a>找到我们平台的安装文件，以及对应的安装流程。由于笔者我准备安装GitLab Runner是一台闲置的iMac电脑，因此我就在演示MacOS下GitLab Runner的安装：</p>
+
+<blockquote>
+<p>GitLab Runner 在macOS和Linux/UNIX下安装流程是一样的，都是直接下载已编译好的二进制包</p>
+</blockquote>
+
+<ol>
+<li><p>下载对应GitLab 版本的GitLab Runner</p>
+
+<ul>
+<li>如果你的GitLab是10.0之后的版本，GitLab Runner可执行文件改名为<code>gitlab-runner</code></li>
+</ul>
+
+<pre><code>sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-runner
 </code></pre>
 
-<h2 id="toc_5">编译安装zabbix</h2>
+<ul>
+<li>9.0~10.0之间的版本</li>
+</ul>
 
-<ol>
-<li><p>进入zabbix源码根目录，生成makefile</p>
-
-<pre><code>./configure --prefix=/usr/local/zabbix --with-mysql --with-net-snmp --with-libcurl --enable-server --enable-agent --enable-proxy
-</code></pre></li>
-<li><p>安装</p>
-
-<pre><code>make
-make install
-</code></pre></li>
-</ol>
-
-<h2 id="toc_6">添加zabbix服务对应的端口</h2>
-
-<pre><code>vim /etc/services ##在文件中加入以下端口
-zabbix-agent 10050/tcp # Zabbix Agent
-zabbix-agent 10050/udp # Zabbix Agent
-zabbix-trapper 10051/tcp # Zabbix Trapper
-zabbix-trapper 10051/udp # Zabbix Trapper
+<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
 </code></pre>
 
-<h2 id="toc_7">修改zabbix配置</h2>
+<ul>
+<li>9.0 之前,由于9.0之后启用全新的API4接口，所以如果你的GitLab是9.0以前的版本,需要下载下面的版本,否则会导致你的GitLab Runner注册不上</li>
+</ul>
 
-<ol>
-<li><p>修改 /usr/local/zabbix/etc/zabbix_server.conf</p>
+<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runnerhttps://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/v1.11.1/binaries/gitlab-ci-multi-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
 
-<pre><code>DBName=zabbix #数据库名称
+<blockquote>
+<p>不知道各位有没有注意到上面下载地址链接当中的v1.11.1,这个就是对应的Gitlab Runner,如果你的GitLab是9.0之前的版本，使用GitLab Runner v1.11.1这个版本仍然注册不上，可以尝试使用降几个版本的GitLab Runner,所有GitLab Runner发行的版本可以在<a href="https://gitlab.com/gitlab-org/gitlab-runner/tags">GitLab Runner Tags</a>找到</p>
+</blockquote>
 
-DBUser=zabbix #数据库用户名
+<p>假如你遇到不能通过登录服务器来确定GitLab版本号时，可以通过直接访问gitlab的首页，后面加上help，如下图：<br/>
+<img src="https://pic.mylonly.com/2018-04-19-083100.png" alt=""/></p></li>
+<li><p>注册GitLab Runner</p>
 
-DBPassword=123456 #数据库密码
+<p>执行下面命令，</p>
 
-ListenIP=127.0.0.1 #数据库ip地址
+<pre><code>sudo gitlab-ci-multi-runner register
+</code></pre>
 
-AlertScriptsPath=/usr/local/zabbix/share/zabbix/alertscripts #zabbix运行脚本存放目录
-</code></pre></li>
-<li><p>修改 /usr/local/zabbix/etc/zabbix_agentd.conf</p>
+<p>如果你的终端提示找不到命令，请通过<code>export PATH=/usr/local/bin:$PATH</code>将/usr/local/bin目录加入环境变量,或者你遗漏了上面的chmod命令导致文件不可执行。</p>
 
-<pre><code>Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/
-</code></pre></li>
+<p>执行完上面的命令之后，会让你输入下面的信息:</p>
+
+<ul>
+<li>Please enter the gitlab-ci coordinator URL:</li>
+<li>Please enter the gitlab-ci token for this runner:</li>
+<li>Please enter the gitlab-ci description for this runner</li>
+<li>Please enter the gitlab-ci tags for this runner (comma separated):</li>
+<li>Whether to run untagged builds [true/false]:</li>
+<li>Please enter the executor:</li>
+</ul>
+
+<p>其中coordinator URL和token可以在你需要进行持续集成的项目的Runner标签页中找到<br/>
+<img src="https://pic.mylonly.com/2018-04-19-084819.jpg" alt=""/><br/>
+description和tags可以自己定义，是否build没有tag的提交这个也是根据你自己的需求来选择，默认是false，executer选择shell</p>
+
+<p>填写完成之后如果提示<code>Registering runner... succeeded</code>表明这个Runner已经被注册成功了，之后你在返回进入项目的Runners页面，会发现下面多了一个处于Active状态的Runner</p>
+
+<p>紧接着最后一步，启动我们刚注册的Runner</p>
+
+<pre><code>sudo  gitlab-ci-multi-runner start
+</code></pre>
+
+<p>现在，我们切回项目的Pipelines当中，肯定会发现之前处于peding状态的任务已经开始running了，我们可以通过点击这个状态按钮来实时查看每个阶段的输出日志<br/>
+<img src="https://pic.mylonly.com/2018-04-19-085612.jpg" alt=""/></p></li>
 </ol>
 
-<h2 id="toc_8">让zabbix开机启动</h2>
+<h2 id="toc_4">开启构建状态的邮件提醒</h2>
 
-<ol>
-<li><p>拷贝可执行文件至init.d目录</p>
+<p>如果你想收到关于每个构建任务的实时状态的邮件，你可以在在项目中的service标签野种启用Build Emails这个服务。</p>
 
-<pre><code>cp /usr/local/zabbix/sbin/zabbix_server /etc/rc.d/init.d/zabbix_server  #服务端
-cp /usr/local/zabbix/sbin/zabbix_agentd /etc/rc.d/init.d/zabbix_agentd  #客户端
-</code></pre></li>
-<li><p>添加脚本执行权限</p>
+<p><img src="https://pic.mylonly.com/2018-04-19-085906.png" alt=""/></p>
 
-<pre><code>chmod +x /etc/rc.d/init.d/zabbix_server
-chmod +x /etc/rc.d/init.d/zabbix_agentd 
-</code></pre></li>
-<li><p>加入开机启动</p>
+<h2 id="toc_5">结语</h2>
 
-<pre><code>chkconfig zabbix_server on
-chkconfig zabbix_agentd on
-</code></pre></li>
-<li><p>修改开启启动脚本中zabbix的安装路径,分别用vim打开/etc/rc.d/init.d/zabbix_server和/etc/rc.d/init.d/zabbix_agentd,修改BASEDIR参数为/usr/local/zabbix</p>
+<p>搭建一个快速方便的持续集成、持续部署环境对于项目的开发来说是一个很重要的举措，无论你是采用大名鼎鼎的jenkins还是本文介绍的GitLab CI,它不仅仅可以帮助我们节省大量的时间在调试发布部署当中，也减少了我们因为人为因素导致的发布过程中出现的意外，有效的较低了项目开发当中的风险。</p>
 
-<pre><code>BASEDIR=/usr/local/zabbix/ #zabbix安装目录
-</code></pre></li>
-</ol>
+<h4 id="toc_6">如果你想和我交流，可以关注我的订阅号:</h4>
 
-<h2 id="toc_9">安装zabbix web管理页面</h2>
-
-<ol>
-<li><p>拷贝zabbix源码当中的frontends/php下面的所有文件至web服务器的根目录，重启web服务器，如果你的LNMP环境或者LAMP环境没有问题的话，浏览器中输入服务器地址应该会出现zabbix的setup页面</p></li>
-<li><p>点击next按钮，之后会检测zabbix所需要的条件是否完全支持(PS:缺少什么就安装什么，一定要全部OK才可继续下去)</p></li>
-<li><p>之后会出现连接数据库的页面,填入之前创建zabbix数据库时的信息</p></li>
-<li><p>第4步出现当前zabbix服务器的一些基本信息，name填一下</p></li>
-<li><p>安装向导会自动在服务器根目录下的conf下创建一个zabbix.conf.php文件,如果你的根目录权限设置不正确导致向导无法写入文件，这时就需要你手动将这个文件上传到服务器的正确目录</p></li>
-<li><p>一切OK之后就会出现登录页面，初始用户名admin,初始密码zabbix</p></li>
-</ol>
+<p><img src="https://pic.mylonly.com/2018-04-19-wechat-mylonly.jpg" alt=""/></p>
 
 
 			
@@ -437,545 +369,259 @@ chkconfig zabbix_agentd on
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2017-05-25T16:55:45+08:00" itemprop="datePublished">2017/5/25</time>
+				<time datetime="2018-04-19T10:59:40+08:00" itemprop="datePublished">2018/4/19</time>
 			</div>
 			<div class="tags">posted in 
 			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			    <a class='category' href='Weex.html'>Weex</a>&nbsp;
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="14957025459875.html" itemprop="url">
-		Swift3.0 利用泛型设置基类属性的动态类型</a></h1>
+		<h1 class="title" itemprop="name"><a href="15241067803366.html" itemprop="url">
+		在wxc-rich-text以及wxc-special-rich-text的思路上实现类似QQ表情的富文本多行排版</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<p>在MVVM架构的项目中，我们一般会写一个viewModel的基类和一个controller的基类，在controller的对象中持有viewModel,如下代码</p>
+			<h2 id="toc_0">先上效果图:</h2>
 
-<pre><code class="language-Swift">class ViewModel{
-    
-}
-class Controller {
+<p><img src="https://pic.mylonly.com/2018-03-30-093130.jpg" alt=""/></p>
 
-    var viewModel:ViewModel
-    
-    init(viewModel:ViewModel) {
-        self.viewModel = viewModel
-    }
-}
+<h2 id="toc_1">wxc-rich-text和wxc-special-rich-text的实现思路</h2>
+
+<p>weex-ui中为我们提供了<code>wxc-rich-text</code>和<code>wxc-special-rich-text</code>两种富文本控件，其中，<code>wxc-rich-text</code> 只支持单行富文本显示,而<code>wxc-special-rich-text</code>只能支持最多两行特定种类的图文混排(<code>标签+文本</code>以及<code>图标+文本</code>) </p>
+
+<p>首先我们来分析<code>wxc-rich-text</code>的源码来看看为什么这个控件不支持多行的样式</p>
+
+<p>在<code>wxc-rich-text.vue</code>的代码中，我们找到这样一段css的样式,下图红色箭头所指处</p>
+
+<p><img src="https://pic.mylonly.com/2018-03-30-093159.jpg" alt=""/></p>
+
+<p>这个样式中并没有指定flex-wrap属性，而在flex布局中，flex-wrap的默认属性就是<code>nowrap</code>不换行。</p>
+
+<pre><code>是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
+如果真是这样，那么weex-ui的开发者为什么不把flex-wrap属性设置为wrap而提供一个支持多行的`wxc-rich-text`控件呢？
 </code></pre>
 
-<p>然后在每一个具体的页面上，都会写一个对应的viewModel和controller分别继承自上面两个基类</p>
+<p>带着这个疑问，我们手动在<code>wxc-rich-text.vue</code>中将flex-wrap属性加上，这段css样式改为:</p>
 
-<pre><code class="language-Swift">class Sub1ViewModel:ViewModel{
-    
-    let desc = &quot;Sub1&quot;
-
-}
-class Sub1Controller:Controller{
-    
-}
-</code></pre>
-
-<p>这时如果我想在Sub1Controller中访问Sub1ViewModel中的desc变量，只能在Sub1Controller中这样写</p>
-
-<pre><code class="language-Swift">class Sub1Controller:Controller{
-    var description{
-        let viewModel = self.viewModel as! Sub1ViewModel
-        return viewModel.desc
-    }
-}
-</code></pre>
-
-<p>由于Swift是强类型语言，不能像OC那样通过类型的强制转换来使基类的属性变成子类的类型，所以你每次使用基类的属性的时候都必须要用as强制转换成子类的类型之后才能访问子类的属性或者方法，当然你可以将这个强制转换包装成一个函数，或者提供另一个变量返回强制转换过的类型。</p>
-
-<pre><code class="language-Swift">class Sub1Controller:Controller{
-    var sub1ViewModel:Sub1ViewModel{
-        return self.viewModel as! Sub1ViewModel
-    }
-    var description{
-    //  let viewModel = self.viewModel as! Sub1ViewModel
-        return self.sub1ViewModel.desc  // Or: return self.sub1ViewModel().desc
-    }
-    
-    func sub1ViewModel() -&gt; Sub1ViewModel{
-        return self.viewModel as! Sub1ViewModel
-    }
+<pre><code class="language-css">.wxc-rich-text {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
 } 
-
 </code></pre>
 
-<p>但是这两种方法仍然不够优雅，产生了很多冗余的代码，笔者在实践中尝试着使用泛型来是基类的属性类型动态化，是代码看起来更优雅</p>
+<p>好了，我们尝试输入一个多行的文本来看看效果:<br/>
+<img src="https://pic.mylonly.com/2018-03-30-093213.jpg" alt=""/></p>
 
-<pre><code class="language-Swift">
-class ViewModel{
-}
+<p>在上图中我们发现，虽然整个控件的内容虽然确实有两行了，但是并不是我们想要的效果，文字部分并没有紧接着前面一个文字或者图片的后面，我想这也是为什么weex-ui的开发者在<code>wxc-rich-text</code>控件中不将flex-wrap属性设置为wrap的原因了。</p>
 
-class Controller&lt;ModelType:ViewModel&gt; {
-    var viewModel:ModelType
-    init(viewModel:ModelType) {
-        self.viewModel = viewModel
-    }
-}
+<p>好了，分析完<code>wxc-rich-text</code>不支持多行的原因，我们再来看看为什么<code>wxc-special-rich-text</code>可以支持两行的富文本呢？</p>
 
-class Sub1ViewModel:ViewModel{  
-    let desc = &quot;Sub1&quot;
-}
+<p>当然还是先看源码,在<code>wxc-special-rich-text.vue</code>中，有下面一段代码:<br/>
+<img src="https://pic.mylonly.com/2018-03-30-093224.jpg" alt=""/></p>
 
-class Sub1Controller:Controller&lt;Sub1ViewModel&gt;{
-      var description{
-        return self.viewModel.desc
-    }
-}
-</code></pre>
+<p>代码当中有两个text控件，且两个text控件分别读取了newList[0]和newList[1]中的数据,为什么要如此呢，我们来看下面的js代码，在vue的computed当中，我们找到了名为<code>newList</code>的计算属性，代码有点长，我分别截了两张图<br/>
+<img src="https://pic.mylonly.com/2018-03-30-093720.png" alt=""/><img src="https://pic.mylonly.com/2018-03-30-093640.png" alt=""/></p>
 
-<p>通过ModelType泛型类型，使得在Sub1Controller中直接通过viewModel就能访问到Sub1ViewModel的属性</p>
+<p>如果你不想看上面的代码，可以直接看下面的结论：</p>
 
+<p><code>这个newList中，就是将configLis中有的text文本内容切割成了两段文本分别放进两个text控件当中（依据前面已有的icon或者tag控件来计算第一行可以塞下的字符长度，其余字符就是第二行的文本内容）</code></p>
 
-			
-			
-		</div>
+<p>好了，这下知道为什么<code>wxc-special-rich-text.vue</code>只能显示不超过两行的的富文本了吧，而且该富文本还必须要是<code>icon+text</code>或者<code>tag+text</code>的格式。</p>
 
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-19T14:28:46+08:00" itemprop="datePublished">2017/5/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14951753262754.html" itemprop="url">
-		基于BarrageRender自定义弹幕动画</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><a href="https://github.com/unash/BarrageRenderer">BarrageRender</a> 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，<code>BarrageFloatSprite</code>和<code>BarrageWalkSprite</code>。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程。</p>
-</blockquote>
+<h2 id="toc_2">我的多行富文本实现思路</h2>
 
-<p><mark><em>BarrageRender目前已更新到2.0.1,自定义弹幕的机制有改变，本篇文章的代码在2.0.1下不起作用，如果想按照本文中用的方法，请使用1.9.1版本的BarrageRender。后续会更新2.0.1版本下的自定义弹幕</em></mark></p>
+<p>既然<code>wxc-special-rich-text</code>通过将文本内容切割成两段文本来实现两行富文本的功能，那我能否通过将文本切割成粒度更小的的内容来解决多行富文本呢，这个粒度又是多少才最合适呢，我想，作为程序员，粒度为1应该是很容易想出来的一个数字，我也是如此。在粒度为1的情况下是不会存在<code>wxc-rich-text</code>中出现的因为第一行排列不下而将自己移至第二行从而导致第一行末端出现大量空白的情况。</p>
 
-<h3 id="toc_0">先展示效果</h3>
+<p>那我们就在这个思路下实现我们自己的多行富文本</p>
 
-<p><img src="https://pic.mylonly.com/2017-05-19-1234.gif" alt="弹幕效果"/></p>
+<p>首先第一步，在<code>wxc-rich-text.vue</code>当中设置flex-wrap为wrap值，如上面文章所示。</p>
 
-<h3 id="toc_1">再介绍BarrageWalkSprite原理</h3>
+<p>如果你是用npm包的方式引入的weex-ui，那你可能就需要将wxc-rich-text.vue的代码拷贝一份，重新起个别的名字的控件了，然后再将flex-wrap属性设置成wrap。</p>
 
-<blockquote>
-<p>BarrageWalkSprite和本文将要实现的自定义Sprite有一定的关联性，所以就通过分析BarrageWalkSprite的源码来展示BarrageRender渲染弹幕的原理，另外一个BarrageFloatSprite的渲染方式稍有不同，但是如果你能搞清楚BarrageWalkSprite的原理，理解FloatSprite的渲染方式也是很轻松的。</p>
-</blockquote>
+<p>第二步，将你的富文本内容切割成最小粒度的config，塞入<code>wxc-rich-text</code>的configList当中，我的实现如下:</p>
 
-<h4 id="toc_2">弹幕的初始位置</h4>
-
-<p>BarrageRender在BarrageDispatcher的调度下触发activeWithContext方法，而在此方法中，BarrageRender调用了Sprite的originInBounds:withSprite方法来确定每个精灵的初始位置</p>
-
-<pre><code class="language-Objc">   - (void)activeWithContext:(NSDictionary *)context
-    {
-        CGRect rect = [[context objectForKey:kBarrageRendererContextCanvasBounds]CGRectValue];
-        NSArray * sprites = [context objectForKey:kBarrageRendererContextRelatedSpirts];
-        NSTimeInterval timestamp = [[context objectForKey:kBarrageRendererContextTimestamp]doubleValue];
-        _timestamp = timestamp;
-        _view = [self bindingView];
-        [self configView];
-        [_view sizeToFit];
-        if (!CGSizeEqualToSize(_mandatorySize, CGSizeZero)) {
-            _view.frame = CGRectMake(0, 0, _mandatorySize.width, _mandatorySize.height);
+<pre><code class="language-javascript"> addNormalMessage:function(msg_id,sender,sender_level,title,message){
+        console.log(&quot;normal message:&quot;,msg_id,sender,sender_level,title,message)
+        var configList = []
+        var config = this.addGrade(sender_level,title)
+        if (config != {}){
+          configList.push(config)
         }
-        _origin = [self originInBounds:rect withSprites:sprites];
-        _view.frame = CGRectMake(_origin.x, _origin.y, self.size.width, self.size.height);
-    }
+        configList.push( {
+          type: &#39;text&#39;,
+          value: sender+&quot;:&quot;,
+          theme: &#39;blue&#39;
+        })
+
+        var message_list = this.addMessage(message)
+
+        message_list.forEach(config =&gt; {
+          configList.push(config)
+        })     
+        this.messages.push(configList)
+        this.messagesDict[msg_id] = this.messages.length - 1
+        this.scroolToEnd()
+    },
 </code></pre>
 
-<p>BarrageWalkSpirte在originInBounds:withSprite方法中,根据当前屏幕上已经存在的Sprite来计算自己的初始位置。</p>
+<p>代码当中有三个部分的内容，addGrade是增加徽标的config，此处代码有点啰嗦，因为当时应该是直接复制拷贝的，可以通过设置value，color等等一些变量让代码精简很多。</p>
 
-<pre><code class="language-Objc">    
-- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
-{
-   // 获取同方向精灵
-   NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
-   for (BarrageWalkSprite * sprite in sprites) {
-       if (sprite.direction == _direction &amp;&amp; sprite.side == self.side) { // 找寻同道中人
-           [synclasticSprites addObject:sprite];
-       }
-   }
-   
-   static BOOL const AVAERAGE_STRATEGY = YES; // YES:条纹平均精灵策略(体验会好一些); NO:最快时间策略
-   NSTimeInterval stripMaxActiveTimes[STRIP_NUM]={0}; // 每一条网格 已有精灵中最后退出屏幕的时间
-   NSUInteger stripSpriteNumbers[STRIP_NUM]={0}; // 每一条网格 包含精灵的数目
-   NSUInteger stripNum = MIN(STRIP_NUM, MAX(self.trackNumber, 1)); // between (1,STRIP_NUM)
-   CGFloat stripHeight = rect.size.height/stripNum; // 水平条高度
-   CGFloat stripWidth = rect.size.width/stripNum; // 竖直条宽度
-   BOOL oritation = _direction == BarrageWalkDirectionL2R || _direction == BarrageWalkDirectionR2L; // 方向, YES代表水平弹幕
-   BOOL rotation = self.side == [self defaultSideWithDirection:_direction];
-   /// 计算数据结构,便于应用算法
-   NSUInteger overlandStripNum = 1; // 横跨网格条数目
-   if (oritation) { // 水平
-       overlandStripNum = (NSUInteger)ceil((double)self.size.height/stripHeight);
-   }
-   else // 竖直
-   {
-       overlandStripNum = (NSUInteger)ceil((double)self.size.width/stripWidth);
-   }
-   /// 当前精灵需要的时间,左边碰到边界, 不是真实的活跃时间
-   NSTimeInterval maxActiveTime = oritation?rect.size.width/self.speed:rect.size.height/self.speed;
-   NSUInteger availableFrom = 0;
-   NSUInteger leastActiveTimeStrip = 0; // 最小时间的行
-   NSUInteger leastActiveSpriteStrip = 0; // 最小网格的行
-   
-   for (NSUInteger i = 0; i &lt; stripNum; i++) {
-       //寻找当前行里包含的sprites
-       CGFloat stripFrom = i * (oritation?stripHeight:stripWidth);
-       CGFloat stripTo = stripFrom + (oritation?stripHeight:stripWidth);
-       if (!rotation) {
-           CGFloat preStripFrom = stripFrom;
-           stripFrom = (oritation?rect.size.height:rect.size.width) - stripTo;
-           stripTo = (oritation?rect.size.height:rect.size.width) - preStripFrom;
-       }
-       CGFloat lastDistanceAllOut = YES;
-       for (BarrageWalkSprite * sprite in synclasticSprites) {
-           CGFloat spriteFrom = oritation?sprite.origin.y:sprite.origin.x;
-           CGFloat spriteTo = spriteFrom + (oritation?sprite.size.height:sprite.size.width);
-           if ((spriteTo-spriteFrom)+(stripTo-stripFrom)&gt;MAX(stripTo-spriteFrom, spriteTo-stripFrom)) { // 在条条里
-               stripSpriteNumbers[i]++;
-               NSTimeInterval activeTime = [sprite estimateActiveTime];
-               if (activeTime &gt; stripMaxActiveTimes[i]){ // 获取最慢的那个
-                   stripMaxActiveTimes[i] = activeTime;
-                   CGFloat distance = oritation?fabs(sprite.position.x-sprite.origin.x):fabs(sprite.position.y-sprite.origin.y);
-                   lastDistanceAllOut = distance &gt; (oritation?sprite.size.width:sprite.size.height);
-               }
-           }
-       }
-       if (stripMaxActiveTimes[i]&gt;maxActiveTime || !lastDistanceAllOut) {
-           availableFrom = i+1;
-       }
-       else if (i - availableFrom &gt;= overlandStripNum - 1){
-           break; // eureka!
-       }
-       if (i &lt;= stripNum - overlandStripNum) {
-           if (stripMaxActiveTimes[i] &lt; stripMaxActiveTimes[leastActiveTimeStrip]) {
-               leastActiveTimeStrip = i;
-           }
-           if (stripSpriteNumbers[i] &lt; stripSpriteNumbers[leastActiveSpriteStrip]) {
-               leastActiveSpriteStrip = i;
-           }
-       }
-   }
-   if (availableFrom &gt; stripNum - overlandStripNum) { // 那就是没有找到喽
-       availableFrom = AVAERAGE_STRATEGY?leastActiveSpriteStrip:leastActiveTimeStrip; // 使用最小个数 or 使用最短时间
-   }
-   
-   CGPoint origin = CGPointZero;
-   if (oritation) { // 水平
-       _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-       origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-       _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width:rect.origin.x - self.size.width;
-   }
-   else
-   {
-       _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-       origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-       _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height:rect.origin.y - self.size.height;
-   }
-   return origin;
-}
-</code></pre>
-
-<p>代码虽然很长，但是主要就是为了实现下面几个逻辑:</p>
-
-<pre><code>1. BarrageWalkSprite先获取了同方向的所有精灵
-2. 根据屏幕轨道的frame范围找到每一个轨道内的所有精灵
-3. 在同一轨道内的所有精灵中找到存活时间最长的精灵(速度最慢)
-4. 判断速度最慢的那个精灵的尾部是否已经完全进入弹幕显示区域
-5. 如果速度最慢的精灵尾部已经进入弹幕显示区域，则可以确定自己的可以紧跟在后面出现，如果还没有完全进入弹幕显示区域，则继续在下一个轨道获取合适的位置
-6. 根据计算得到的自己可以出现的轨道，加上该轨道上最后一个精灵的位置，得到自己的起始位置
-</code></pre>
-
-<h4 id="toc_3">弹幕的运动轨迹</h4>
-
-<p>BarrageRender绘制每个精灵的运动轨迹的方式非常简单，在BarrageRender中，内置的时钟引擎<code>BarrageClock</code>负责在间隔时间内调用所有已经激活精灵基类<code>BarrageSprite</code>中的updateWithTime方法。</p>
-
-<pre><code class="language-Objc">   - (void)initClock
-    {
-        __weak id weakSelf = self;
-        _clock = [BarrageClock clockWithHandler:^(NSTimeInterval time){
-            BarrageRenderer * strongSelf = weakSelf;
-            strongSelf-&gt;_time = time;
-            [strongSelf update];
-        }];
-    }
-    
-    /// 每个刷新周期执行一次
-    - (void)update
-    {
-        [_dispatcher dispatchSprites]; // 分发精灵
-        for (BarrageSprite * sprite in _dispatcher.activeSprites) {
-            [sprite updateWithTime:_time];
-        }
-    }
-
-</code></pre>
-
-<p>而在<code>BarrageSprite</code>的updateWithTime方法中, 每个精灵重新更改了自身的frame属性，以此来达到动画位移的效果。其中<code>_valid</code>属性是Sprite存活的唯一标志，标记为NO之后，Sprite就会从队列中彻底移除</p>
-
-<pre><code class="language-Objc">     //BarrageSprite
-   - (void)updateWithTime:(NSTimeInterval)time
-    {
-        _valid = [self validWithTime:time];
-        _view.frame = [self rectWithTime:time];
-    }
-</code></pre>
-
-<p>BarrageWalkSprite通过属性speed来实时改变自己的frame位置,同时计算剩下的destination和speed来算出自己的存活时间以用来标记valid属性</p>
-
-<pre><code class="language-Objc">  //BarrageWalkSprite
-  
-  - (BOOL)validWithTime:(NSTimeInterval)time
-    {
-        return [self estimateActiveTime] &gt; 0;
-    }
-    
-  - (NSTimeInterval)estimateActiveTime
-    {
-        CGFloat activeDistance = 0;
-        switch (_direction) {
-            case BarrageWalkDirectionR2L:
-                activeDistance = self.position.x - _destination.x;
-                break;
-            case BarrageWalkDirectionL2R:
-                activeDistance = _destination.x - self.position.x;
-                break;
-            case BarrageWalkDirectionT2B:
-                activeDistance = _destination.y - self.position.y;
-                break;
-            case BarrageWalkDirectionB2T:
-                activeDistance = self.position.y - _destination.y;
-            default:
-                break;
-        }
-        return activeDistance/self.speed;
-    }
-  
-  - (CGRect)rectWithTime:(NSTimeInterval)time
-    {
-        CGFloat X = self.destination.x - self.origin.x;
-        CGFloat Y = self.destination.y - self.origin.y;
-        CGFloat L = sqrt(X*X + Y*Y);
-        NSTimeInterval duration = time - self.timestamp;
-        CGPoint position = CGPointMake(self.origin.x + duration * self.speed * X/L, self.origin.y + duration * self.speed * Y/L);
-        return CGRectMake(position.x, position.y, self.size.width, self.size.height);
-    }
-    
-</code></pre>
-
-<h4 id="toc_4">弹幕终点</h4>
-
-<p>BarrageWalkSprite的终点计算很简单，弹幕的显示的距离加上Sprite自身的宽度就是整个精灵需要位移的距离，这个destination的计算已经体现在了起点位置的获取当中</p>
-
-<pre><code class="language-Objc">CGPoint origin = CGPointZero;
-if (oritation) { // 水平
-   _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-   origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-   _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width:rect.origin.x - self.size.width;
-}
-else
-{
-   _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-   origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-   _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height:rect.origin.y - self.size.height;
-}
-return origin;
-</code></pre>
-
-<h3 id="toc_5">自定义Sprite</h3>
-
-<blockquote>
-<p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite有很多重合之处，所以自定义的BarrageBubblingSprite直接继承BarrageWalkSprite以获取其direction,side,speed,trackNumber等多个属性，当然还需要另外加上加速度speedUp和停留时间stay属性</p>
-</blockquote>
-
-<pre><code class="language-Objc">@interface BarrrageBubblingSprite : BarrageWalkSprite
-
-@property (nonatomic,assign) CGFloat speedUp; //加速度
-
-@property (nonatomic,assign) CGFloat stay; //到达终点后的停留时间
-
-@end
-</code></pre>
-
-<h4 id="toc_6">起点位置</h4>
-
-<p>BubblingSprite的起点位置的获取逻辑和WalkSprite的起点逻辑类似，不同的地方在于:</p>
-
-<ol>
-<li><em>即使轨道内最慢的那个精灵已经完全进入弹幕显示区域，只要该精灵仍然存活，就不能紧跟其后,而是要另外找寻其他轨道</em></li>
-<li><em>当所有轨道都已经有精灵占据的时候，找到存活时间最短的那个精灵，通过将其的stay属性设置为0让其直接消失，然后让自己占据该精灵所在轨道</em></li>
-</ol>
-
-<pre><code class="language-Objc">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
-{
-    // 获取同方向精灵
-    NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
-    for (BarrageWalkSprite * sprite in sprites) {
-        if (sprite.direction == self.direction &amp;&amp; sprite.side == self.side) { // 找寻同道中人
-            [synclasticSprites addObject:sprite];
-        }
-    }
-    
-    NSUInteger stripNum = MIN(STRIP_NUM, MAX(self.trackNumber, 1)); // between (1,STRIP_NUM)
-    CGFloat stripHeight = rect.size.height/stripNum; // 水平条高度
-    CGFloat stripWidth = rect.size.width/stripNum; // 竖直条宽度
-    BOOL oritation = self.direction == BarrageWalkDirectionL2R || self.direction == BarrageWalkDirectionR2L; // 方向, YES代表水平弹幕
-    BOOL rotation = self.side == [self defaultSideWithDirection:self.direction];
-    /// 计算数据结构,便于应用算法
-    NSUInteger overlandStripNum = 1; // 横跨网格条数目
-    if (oritation) { // 水平
-        overlandStripNum = (NSUInteger)ceil((double)self.size.height/stripHeight);
-    }
-    else // 竖直
-    {
-        overlandStripNum = (NSUInteger)ceil((double)self.size.width/stripWidth);
-    }
-
-    NSUInteger availableFrom = 0;
-    BarrrageBubblingSprite* lastTimeSprite = self;
-    NSInteger lastSpriteIndex = 0;
-    
-    
-    for (NSUInteger i = 0; i &lt; stripNum; i++) {
-        //寻找当前行里包含的sprites
-        CGFloat stripFrom = i * (oritation?stripHeight:stripWidth);
-        CGFloat stripTo = stripFrom + (oritation?stripHeight:stripWidth);
-        if (!rotation) {
-            CGFloat preStripFrom = stripFrom;
-            stripFrom = (oritation?rect.size.height:rect.size.width) - stripTo;
-            stripTo = (oritation?rect.size.height:rect.size.width) - preStripFrom;
-        }
-        CGFloat exsitSprite = NO;
-        for (BarrrageBubblingSprite * sprite in synclasticSprites) {
-            CGFloat spriteFrom = oritation?sprite.origin.y:sprite.origin.x;
-            CGFloat spriteTo = spriteFrom + (oritation?sprite.size.height:sprite.size.width);
-            if ((spriteTo-spriteFrom)+(stripTo-stripFrom)&gt;MAX(stripTo-spriteFrom, spriteTo-stripFrom)) { // 在条条里
-                exsitSprite = YES;
-              
-                if (sprite.timestamp &lt; lastTimeSprite.timestamp){
-                    lastTimeSprite = sprite;
-                    lastSpriteIndex = i;
+<pre><code class="language-javascript">addGrade(sender_level,title){
+          console.log(&quot;grade:&quot;,sender_level,title)
+          var config = {}
+            if (sender_level == 500){
+              config = {
+                  type: &#39;tag&#39;,
+                  value: &#39;讲师&#39;,
+                  style: {
+                    fontSize: 30,
+                    color: &#39;#ffffff&#39;,
+                    borderColor: &#39;#2d9b3a&#39;,
+                    backgroundColor: &#39;#2d9b3a&#39;,
+                    height: 40
+                  }
+              }
+            }else if(sender_level == 900){
+              config = {
+                type:&#39;tag&#39;,
+                value:&#39;管理&#39;,
+                style: {
+                  fontSize: 30,
+                  color: &#39;#ffffff&#39;,
+                  borderColor: &#39;#ec24dd&#39;,
+                  backgroundColor: &#39;#ec24dd&#39;,
+                  height: 40
                 }
-                break;
+              }
+            }else if(sender_level == 2000){
+              config = {
+                type:&#39;tag&#39;,
+                value:&#39;室主&#39;,
+                style:{
+                  fontSize:30,
+                  color: &#39;#ffffff&#39;,
+                  borderColor: &#39;#e80c19&#39;,
+                  backgroundColor: &#39;#e80c19&#39;,
+                  height: 40
+                }
+              }
+            }else{
+              if(title &gt;= 0){
+                config = {
+                  type:&#39;icon&#39;,
+                  src:&quot;bmlocal://assets/grade/Grade_&quot;+title+&quot;.png&quot;,
+                  style: {
+                    width: 90,
+                    height: 40
+                  }
+                }
+              }
             }
-        }
-        if (exsitSprite) {
-            availableFrom = i+1;
-        }else{ //第一行就是空的
-            break;
-        }
-        
-    }
-    if (availableFrom == stripNum) { // 超出最大的轨道数，挤掉最上层精灵
-        availableFrom = lastSpriteIndex;
-        lastTimeSprite.stay = 0;
-    }
+            return config
+        },
+</code></pre>
+
+<p>然后加上发送人的姓名，最后加上聊天的内容addMessage,在addMessage当中我实现了QQ表情的匹配已经文本内容的切割</p>
+
+<pre><code>addMessage(message){
+      var char_list = []
+      var chars = message.split(&#39;&#39;)
+      var startIndex = -1
+      chars.forEach((char,index,array) =&gt; {
+        if(char == &#39;[&#39;){
+          startIndex = index
+        }else if(char == &#39;]&#39;){
+          if(startIndex != -1){
+            var emotionStr = array.slice(startIndex,index+1).join(&quot;&quot;)
     
-    CGPoint origin = CGPointZero;
-    if (oritation) { // 水平
-        _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-        origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-        _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width - self.size.width :rect.origin.x + self.size.width;
-    }
-    else
-    {
-        _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-        origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-        _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height - self.size.height:rect.origin.y + self.size.height;
-    }
-    return origin;
-
-</code></pre>
-
-<h4 id="toc_7">运动轨迹</h4>
-
-<p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite的运动轨迹不同的地方在于，BarrageWalkSprite是匀速前进，二BarrageBubblingSprite是加速前进，这样，在计算某个时段Sprite的位置就需要考虑加速度的存在。</p>
-
-<pre><code class="language-Objc">- (CGRect)rectWithTime:(NSTimeInterval)time{
-    CGFloat X = self.destination.x - self.origin.x;
-    CGFloat Y = self.destination.y - self.origin.y;
+            if (emotionStr.indexOf(&quot;http&quot;) &gt; -1){  //图文消息
+              var imageUrl = emotionStr.slice(1,index)
+              char_list.push(this.oneImageConfig(imageUrl))
+            }else{//表情文字
+              char_list.push(this.oneEmojConfig(emotionStr))
+            }
+    
+            startIndex = -1
         
-    CGFloat L = sqrt(X*X + Y*Y);
-    NSTimeInterval duration = time - self.timestamp;
-    CGPoint position = CGPointMake(self.origin.x + duration * self.speed * X/L, self.origin.y + duration * self.speed * Y/L);
-    if (position.x &gt;= self.destination.x) {
-        position.x = self.destination.x;
-    }else{
-        self.destinationStamp = time;
-        self.speed = duration*self.speedUp;
-    }
-    if(position.y &gt;= self.destination.y) {
-        position.y = self.destination.y;
-      
-    }else{
-        self.destinationStamp = time;
-        self.speed = duration*self.speedUp;
-    }
-    return CGRectMake(position.x, position.y, self.size.width, self.size.height);
-}
+          }else{
+            char_list.push(this.oneCharConfig(char))
+          }
+        }else{
+          if (startIndex == -1){
+            char_list.push(this.oneCharConfig(char))
+          }
+        }
+      });
+      return char_list
+    },
 </code></pre>
 
-<p>在存活时间上，与BarrageWalkSprite不同的地方在于，BarrageWalkSprite在位移到终点的时候消失，而BarrageBubblingSprite在到达终点之后仍然需要停留stay的时间。这里引入了currentStamp和destinationStamp时间戳用于来计算stay时间是否已经到达。</p>
+<p>我们的业务当中，和大部分公司类似，我们的QQ表情是类似于[微笑][害羞]这种格式的。其中在查找表情的代码中，也许你们会疑问，为什么我不使用正则去匹配QQ表情，其实在我之前未重构之前的项目中（使用swift的作为开发语言），此处业务逻辑就是通过正则将QQ表情替换出来，但是在此处，由于要切割字符串为每个字符串返回一个配置，字符串的逐个遍历已经不可避免，如果在加上正则匹配，时间负责度反而会增加一倍，所以我直接在遍历循环中加入了查找QQ表情的代码，希望能减轻少许我这种投机取巧的方法实现多行富文本样式带来的性能损耗。</p>
 
-<pre><code class="language-Objc">//计算精灵的剩余存活时间
-
-- (double)countTimeByDistance:(CGFloat)distance{
-    CGFloat a = 0.5*self.speedUp;
-    CGFloat b = self.speed;
-    CGFloat c = -distance;
-    CGFloat delt = sqrt(b*b - 4*a*c);
-    double t = (-b+delt)/(2*a);
-    return t;
-}
-
-- (NSTimeInterval)estimateActiveTime
-{
-    CGFloat activeDistance = 0;
-    switch (self.direction) {
-        case BarrageWalkDirectionR2L:
-            activeDistance = self.position.x - _destination.x;
-            break;
-        case BarrageWalkDirectionL2R:
-            activeDistance = _destination.x - self.position.x;
-            break;
-        case BarrageWalkDirectionT2B:
-            activeDistance = _destination.y - self.position.y;
-            break;
-        case BarrageWalkDirectionB2T:
-            activeDistance = self.position.y - _destination.y;
-        default:
-            break;
+<pre><code class="language-javascript">oneEmojConfig(emojName){
+  var localPath = emotion.emojLocalPath(emojName)
+  console.log(&quot;localpath:&quot;,localPath)
+  if( localPath != null){
+    return {
+      type:&#39;icon&#39;,
+      src:localPath,
+      style:{
+        width:40,
+        height:40
+      }
     }
-    NSTimeInterval leftTime = 0.0;
-    CGFloat time = [self countTimeByDistance:activeDistance];
-    if (time &gt; 0){
-        leftTime = time + self.stay;
-    }else{
-        leftTime = self.stay - (self.currentStamp - self.destinationStamp);
+  }else{
+    return {
+      type:&#39;text&#39;,
+      value:emojName,
+      theme:&quot;yellow&quot;
     }
-    return leftTime;
-}
-
-- (BOOL)validWithTime:(NSTimeInterval)time{
-    self.currentStamp = time;
-    return  [self estimateActiveTime] &gt; 0;
-}
+  }
+},
 </code></pre>
 
-<h4 id="toc_8">自定义弹幕样式</h4>
+<p>在设置QQ表情的config当中，我写了一个emotion.js的工具函数，用来返回QQ表情名字所对应的本地图片的路径</p>
 
-<p>类似BarrageWalkImageSprite，我们也通过继承BarrageSpirte的bindingView 来将自定义的弹幕view返回给BarrageRender</p>
+<p><code>emotion.js</code></p>
 
-<h3 id="toc_9">完整代码</h3>
+<pre><code class="language-javascript">/**
+ * 表情转换工具类
+ * @authors Root (root@mylonly.com)
+ * @date    2018-03-30 08:48:19
+ * @version 1.0.0
+ */
 
-<p><a href="https://github.com/mylonly/BarrageRender-BubblingSprite">BarrageRender-BubblingSprite</a></p>
+
+
+let emotionFunc = {
+    emotionArray : [&quot;[微笑]&quot;,&quot;[撇嘴]&quot;,&quot;[色]&quot;,&quot;[发呆]&quot;,&quot;[得意]&quot;,&quot;[流泪]&quot;,&quot;[害羞]&quot;,&quot;[闭嘴]&quot;,&quot;[睡]&quot;,&quot;[大哭]&quot;,&quot;[尴尬]&quot;,&quot;[发怒]&quot;,&quot;[调皮]&quot;,&quot;[呲牙]&quot;,&quot;[惊讶]&quot;,&quot;[难过]&quot;,&quot;[酷]&quot;,&quot;[冷汗]&quot;,&quot;[抓狂]&quot;,&quot;[吐]&quot;,&quot;[偷笑]&quot;,&quot;[可爱]&quot;,
+&quot;[白眼]&quot;,&quot;[傲慢]&quot;,&quot;[饥饿]&quot;,&quot;[困]&quot;,&quot;[惊恐]&quot;,&quot;[流汗]&quot;,&quot;[憨笑]&quot;,&quot;[大兵]&quot;,&quot;[奋斗]&quot;,&quot;[咒骂]&quot;,&quot;[疑问]&quot;,&quot;[嘘]&quot;,&quot;[晕]&quot;,&quot;[折磨]&quot;,&quot;[衰]&quot;,&quot;[骷髅]&quot;,&quot;[敲打]&quot;,&quot;[再见]&quot;,&quot;[擦汗]&quot;,&quot;[抠鼻]&quot;,&quot;[鼓掌]&quot;,&quot;[糗大了]&quot;,&quot;[坏笑]&quot;,&quot;[左哼哼]&quot;,&quot;[右哼哼]&quot;,&quot;[哈欠]&quot;,
+&quot;[鄙视]&quot;,&quot;[委屈]&quot;,&quot;[快哭了]&quot;,&quot;[阴险]&quot;,&quot;[亲亲]&quot;,&quot;[吓]&quot;,&quot;[可怜]&quot;,&quot;[菜刀]&quot;,&quot;[西瓜]&quot;,&quot;[啤酒]&quot;,&quot;[篮球]&quot;,&quot;[乒乓]&quot;,&quot;[咖啡]&quot;,&quot;[饭]&quot;,&quot;[猪头]&quot;,&quot;[玫瑰]&quot;,&quot;[凋谢]&quot;,&quot;[示爱]&quot;,&quot;[爱心]&quot;,&quot;[心碎]&quot;,&quot;[蛋糕]&quot;,&quot;[闪电]&quot;,&quot;[炸弹]&quot;,&quot;[刀]&quot;,&quot;[握手]&quot;,&quot;[胜利]&quot;,
+&quot;[便便]&quot;,&quot;[NO]&quot;,&quot;[OK]&quot;,&quot;[抱拳]&quot;,&quot;[弱]&quot;,&quot;[强]&quot;],
+
+    emojLocalPath:function(emoj_name){
+      var index = this.emotionArray.indexOf(emoj_name)
+      if (index &gt; -1){
+          return &quot;bmlocal://assets/emotions/&quot;+index+&quot;@2x.png&quot;
+      }
+      return null
+    },
+    emojName:function(index){
+        if (index &lt; this.emotionArray.length){
+            return this.emotionArray[index]
+        }
+        return null
+    }
+}
+
+export default emotionFunc;
+
+</code></pre>
+
+<p>至此，我的整个实现已经完全呈现出来了，如果你能看懂我上面所写，正好你也正好有和我类似的需求，相信你也能在我的思路下实现自己的业务代码。</p>
+
+<p>最后，愿世界和平！！！</p>
 
 
 			
@@ -987,7 +633,7 @@ return origin;
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2017-05-11T19:11:07+08:00" itemprop="datePublished">2017/5/11</time>
+				<time datetime="2017-12-07T21:30:15+08:00" itemprop="datePublished">2017/12/7</time>
 			</div>
 			<div class="tags">posted in 
 			
@@ -995,22 +641,163 @@ return origin;
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="14945010672564.html" itemprop="url">
-		树莓派3安装Node.js</a></h1>
+		<h1 class="title" itemprop="name"><a href="15126534156721.html" itemprop="url">
+		Ubuntu 安装uwsgi</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<p>(树莓派官方系统)<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
+			<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
+然后利用pip3 安装uwsgi</p>
 
-<pre><code class="language-Bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
-tar zxvf node-v5.2.0-linux-armv7l.tar.gz
-cd node-v5.2.0-linux-armv7l
-sudo cp bin/* /usr/bin/ -r
-sudo cp include/ /usr/include/ -r
-sudo cp lib/ /usr/lib/ -r
-sudo cp share/ /usr/share/ -r
-cd ..
-node --version
+<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+tar -xvf Python-3.6.3.tar.xz
+cd Python-3.6.3/
+
+apt-get install zlib1g-dev
+apt-get install libssl-dev
+apt-get install sqlite3
+
+
+./configure --enable-loadable-sqlite-extensions
+
+make &amp;&amp; sudo make install
+
+
+pip3 install uwsgi
+
+uwsgi -i /data/web/xxxx.ini
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2017-11-29T22:42:48+08:00" itemprop="datePublished">2017/11/29</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15119665687635.html" itemprop="url">
+		Django 发送html格式的邮件</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
+
+<h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
+
+<pre><code class="language-Python">EMAIL_USE_SSL = True    
+EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
+EMAIL_PORT = 465
+EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
+EMAIL_HOST_PASSWORD = &#39;password&#39;  # 密码
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+</code></pre>
+
+<h5 id="toc_1">2. 引用mail库发送邮件</h5>
+
+<pre><code class="language-Python">from django.core.mail import EmailMessage
+from Across.settings import EMAIL_HOST_USER
+
+msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
+msg.send()
+</code></pre>
+
+<h5 id="toc_2">3.发送html模板邮件</h5>
+
+<p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
+
+<pre><code class="language-Python">TEMPLATES = [
+    {
+        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
+        &#39;DIRS&#39;: [
+            os.path.join(BASE_DIR,&#39;templates&#39;)  ##你的模板目录
+        ],
+        &#39;APP_DIRS&#39;: True,
+        &#39;OPTIONS&#39;: {
+            &#39;context_processors&#39;: [
+                &#39;django.template.context_processors.debug&#39;,
+                &#39;django.template.context_processors.request&#39;,
+                &#39;django.contrib.auth.context_processors.auth&#39;,
+                &#39;django.contrib.messages.context_processors.messages&#39;,
+            ],
+        },
+    },
+]
+</code></pre>
+
+<p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
+
+<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
+msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
+msg.content_subtype = &quot;html&quot; # Main content is now text/html
+msg.send()
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2017-11-27T20:52:04+08:00" itemprop="datePublished">2017/11/27</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15117871248079.html" itemprop="url">
+		Django扩展默认的User Model</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
+
+<blockquote>
+<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
+</blockquote>
+
+<p>在models.py中新建一个model继承自AbstractUser</p>
+
+<pre><code>from django.db import models
+
+# Create your models here.
+from django.contrib.auth.models import AbstractUser
+from enum import Enum
+
+
+class UserProfile(AbstractUser):
+
+    GENDER = [
+        (0,&quot;未知&quot;),
+        (1,&quot;男性&quot;),
+        (2,&quot;女性&quot;)
+    ]
+
+    nickname = models.CharField(max_length=50)
+    intro = models.CharField(max_length=500)
+    mobile = models.CharField(max_length=13)
+    gender = models.IntegerField(choices=GENDER,default=0)
+
+    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
+
+</code></pre>
+
+<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
+
+<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
 </code></pre>
 
 

@@ -126,45 +126,522 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2016-05-11T18:12:56+08:00" itemprop="datePublished">2016/5/11</time>
+				<time datetime="2016-05-30T19:12:12+08:00" itemprop="datePublished">2016/5/30</time>
 			</div>
 			<div class="tags">posted in 
 			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			    <a class='category' href='python.html'>Python</a>&nbsp;
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="14944975766543.html" itemprop="url">
-		CocoaPods master仓库替换为国内源</a></h1>
+		<h1 class="title" itemprop="name"><a href="14945011328774.html" itemprop="url">
+		Scrapy模拟登陆知乎</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
-国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
+			<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
+感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
+</a></p>
+
+<p>利用Scrapy提供的cookie中间价很容易做到网页的模拟登陆,下面就来介绍怎么利用这个cookie中间件来登陆知乎。</p>
+
+<h3 id="toc_0">前期分析工作</h3>
+
+<ul>
+<li><p>打开<a href="https://www.zhihu.com,%E5%88%A9%E7%94%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84Debug%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%AE%9A%E4%BD%8D%E5%88%B0%E7%99%BB%E9%99%86%E6%A1%86%E6%89%80%E5%9C%A8%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E6%89%80%E7%A4%BA">https://www.zhihu.com,利用Chrome浏览器的Debug功能，定位到登陆框所在的位置，如下图所示</a><br/>
+<img src="https://pic.mylonly.com/2016-06-29_14645980407304.jpg" alt="2016-06-29_14645980407304.jpg"/><br/>
+利用scrapy提供的xpath能很方便的获取到这个值(//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;)</p></li>
+<li><p>选中Debug窗口的Network选项，同时在输完账号密码后点击登陆，获取登陆操作后的post请求，见下图:</p></li>
+</ul>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14645982403637.jpg" alt="2016-06-29_14645982403637.jpg"/><br/>
+点击这个链接，确认这个链接就是提交登陆的url<br/>
+<img src="https://pic.mylonly.com/2016-06-29_14645983258011.jpg" alt="2016-06-29_14645983258011.jpg"/><br/>
+从FormData里面可以看到<a href="https://www.zhihu.com/email/login%E5%B0%B1%E6%98%AF%E7%99%BB%E9%99%86POST%E8%AF%B7%E6%B1%82%E7%9A%84url%EF%BC%8C%E9%9C%80%E8%A6%81%E6%8F%90%E4%BA%A44%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%8C%E5%85%B6%E4%B8%AD_xsrf%E5%B0%B1%E6%98%AF%E9%A6%96%E9%A1%B5%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E9%9A%90%E8%97%8F%E8%A1%A8%E5%8D%95%E5%8F%82%E6%95%B0%EF%BC%8Cremember_me%E6%98%AF%E6%98%AF%E5%90%A6%E8%AE%B0%E4%BD%8Fcookie%E7%9A%84%E5%BC%80%E5%85%B3%EF%BC%8Cemail%E5%92%8Cpassword%E5%AF%B9%E5%BA%94%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81">https://www.zhihu.com/email/login就是登陆POST请求的url，需要提交4个参数，其中_xsrf就是首页可以获取到的隐藏表单参数，remember_me是是否记住cookie的开关，email和password对应账号和密码</a></p>
+
+<blockquote>
+<p>此处可能有不一样的地方，因为我的知乎账号是email注册的，根据这个url的特征推测别的账号类型可能存在不一样的Url</p>
+</blockquote>
+
+<h3 id="toc_1">编写蜘蛛代码</h3>
+
+<p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
+
+<pre><code class="language-Python">def start_requests(self):
+        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+</code></pre>
+
+<p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
+
+<pre><code class="language-Pythoh">headers = {
+    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
+    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
+    &quot;Connection&quot;: &quot;keep-alive&quot;,
+    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
+    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
+    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+}
+</code></pre>
+
+<p>meta中的cookiejar是Scrapy的Cookie中间件的关键字，具体可参考scrapy文档，这里因为只需要保存一个cookie，所以直接写1(注意:<code>并不是1个cookie才写的1，仅仅是个key，后面通过这个1这个key找到cookiejar中保存的cookie</code>)</p>
+
+<p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
+
+<pre><code class="language-Python">def post_login(self,response):
+        self.log(&quot;preparing login...&quot;)
+        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
+        self.log(xsrf)
+        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:1},
+                                          headers = self.headers,
+                                          formdata = {
+                                             &#39;_xsrf&#39;:xsrf,
+                                             &#39;password&#39;:&#39;xgBKQTx7VnVLK9tv&#39;,
+                                             &#39;email&#39;:&#39;tianxianggen@gmail.com&#39;,
+                                             &#39;remember_me&#39;:&#39;true&#39;,
+                                          },
+                                          callback = self.after_login,
+                                          )
+</code></pre>
 
 <ol>
-<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
-<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
+<li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
 </ol>
 
-<p>执行如下命令替换Pods源</p>
+<pre><code class="language-Python">def after_login(self,response):
+        for url in self.start_urls:
+            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
+</code></pre>
 
-<pre><code class="language-Bash">$ pod repo remove master
-$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
+<p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
+
+<pre><code class="language-Pythoh">rules = (
+        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
+    )
+</code></pre>
+
+<p>同时提供request_question函数</p>
+
+<pre><code class="language-Python">def request_question(self,request):
+        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
+</code></pre>
+
+<p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
+
+<pre><code class="language-Python">def parse_question(self,response):
+        sel = Selector(response)
+        item = zhihuItem()
+        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
+        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
+        return item
+</code></pre>
+
+<blockquote>
+<p>这个parse_question方法仅仅是获取问题名称和问题下面的所有图片链接。</p>
+</blockquote>
+
+<h3 id="toc_2">完整代码</h3>
+
+<pre><code class="language-Python">import urllib2
+import os
+import re
+import codecs
+
+
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from MySpider.items import zhihuItem
+from scrapy.http import Request
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
+
+
+class zhihuSpider(CrawlSpider):
+    name = &quot;zhihu&quot;
+    allow_domians = [&quot;zhihu.com&quot;]
+    start_urls = [&quot;https://www.zhihu.com/collection/38624707&quot;]
+    rules = (
+        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
+    )
+    
+    headers = {
+    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
+    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
+    &quot;Connection&quot;: &quot;keep-alive&quot;,
+    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
+    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
+    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+    }
+    
+    def start_requests(self):
+        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+        
+    def post_login(self,response):
+        self.log(&quot;preparing login...&quot;)
+        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
+        self.log(xsrf)
+        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:response.meta[&#39;cookiejar&#39;]},
+                                          headers = self.headers,
+                                          formdata = {
+                                             &#39;_xsrf&#39;:xsrf,
+                                             &#39;password&#39;:&#39;差点就忘了删了&#39;,
+                                             &#39;email&#39;:&#39;邮箱也不能暴露&#39;,
+                                             &#39;remember_me&#39;:&#39;true&#39;,
+                                          },
+                                          callback = self.after_login,
+                                          )
+                                                      
+    def after_login(self,response):
+        for url in self.start_urls:
+            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
+   
+    def request_question(self,request):
+        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
+        
+    def parse_question(self,response):
+        sel = Selector(response)
+        item = zhihuItem()
+        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
+        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
+        return item
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-28T19:12:56+08:00" itemprop="datePublished">2016/5/28</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='tools.html'>Tools</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011765615.html" itemprop="url">
+		VSCode1.0更换回英文版本</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>VSCode1.0更新之后带来了本地语言的支持，但是，你怎么能连命令行的命令都汉化了？<br/>
+<img src="https://pic.mylonly.com/2016-05-04-14623468922061.jpg" alt=""/><br/>
+<code>表示实在受不了每次同步代码 选中git:拉的感觉，还有安装插件的命令也不再是install extension了，而是安装扩展</code></p>
+
+<h3 id="toc_0">将VSCode的语言修改为英文</h3>
+
+<p><a href="https://code.visualstudio.com/docs/customization/locales">官方文档设置语言</a></p>
+
+<p>快捷键Command+Shift+P（Win下为Control）打开命令行工具,输入<code>设置语言</code>，会打开一个locale.json的文件，如下面所示</p>
+
+<pre><code>{
+    // 定义 VSCode 的显示语言。
+    // 请参阅 http://go.microsoft.com/fwlink/?LinkId=761051，了解支持的语言列表。
+    // 要更改值需要重启 VSCode。
+    &quot;locale&quot;:&quot;zh-CN&quot; 
+}
+</code></pre>
+
+<p>将locale的值改为en-US之后重启VSCode就恢复到英文版本的了!</p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-11T19:12:34+08:00" itemprop="datePublished">2016/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011548149.html" itemprop="url">
+		简单Scrapy爬虫</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>只是个小小的demo，自己测试了下，总共down了20几张图片</p>
+
+<pre><code class="language-Python">#coding: utf-8 #############################################################
+# File Name: spiders/wallpaper.py
+# Author: mylonly
+# mail: tianxianggen@gmail.com
+#Blog:www.mylonly.com
+# Created Time: 2014年09月01日 星期一 14时20分07秒
+#########################################################################
+#!/usr/bin/python
+import urllib2
+import os
+ 
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from mylonly.items import wallpaperItem
+from scrapy.http import Request
+ 
+class wallpaper(CrawlSpider):
+    name = &quot;wallpaperSpider&quot;
+    allowed_domains = [&#39;sj.zol.com.cn&#39;]
+    start_urls = [&#39;http://sj.zol.com.cn/&#39;]
+    number = 0
+    rules = (
+    Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback =     &#39;parse_image&#39;,follow=True),)
+    def parse_image(self,response):
+        self.log(&#39;hi,this is an item page! %s&#39; % response.url)
+        sel = Selector(response)
+        sites = sel.xpath(&quot;//div[@class=&#39;wrapper        mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()
+        for site in sites:
+        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
+        print &#39;one page:&#39;,url
+        return Request(url,callback = self.parse_href)
+    def parse_href(self,response):
+        print &#39;I am in:&#39;,response.url
+        sel = Selector(response)
+        src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
+        self.download(src)
+ 
+    def download(self,url):
+        self.number += 1
+        savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
+        print &#39;正在下载...&#39;,url
+        try:
+            u = urllib2.urlopen(url)
+            r = u.read()
+            downloadFile = open(savePath,&#39;wb&#39;)
+            downloadFile.write(r)
+            u.close()
+            downloadFile.close()
+        except:
+            print savePath,&#39;can not download.&#39;
+ 
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-11T19:11:56+08:00" itemprop="datePublished">2016/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011166438.html" itemprop="url">
+		Scrapy——crawlSpider爬虫</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
+ <br/>
+要利用crawSpider和BaseSpider的区别在于crawSpider提供了一组Rule对象列表，这些Rule对象规定了爬虫抓取链接的行为，Rule规定的链接才会被抓取，交给相应的callback函数去处理。<br/>
+  <br/>
+在rules中通过SmglLinkExtractor提取希望获取的链接。<br/>
+ <br/>
+我此次的demo中rule只有一个，如下：</p>
+
+<pre><code class="language-python">allowed_domains = [&#39;sj.zol.com.cn&#39;]
+start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
+number = 0
+rules = (
+            Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
+            )
+</code></pre>
+
+<p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
+ <br/>
+SmglLinkExtractor主要参数：<br/>
+ <br/>
+- allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。<br/>
+- deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。<br/>
+- allow_domains：会被提取的链接的domains。<br/>
+- deny_domains：一定不会被提取链接的domains。<br/>
+- restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
+ <br/>
+下面的内容就是利用Selector解析获得的response并赋值个item就行了：</p>
+
+<pre><code class="language-python">#coding: utf-8 #############################################################
+# File Name: spiders/wallpaper.py
+# Author: mylonly
+# mail: tianxianggen@gmail.com
+#Blog:www.mylonly.com
+# Created Time: 2014年09月01日 星期一 14时20分07秒
+#########################################################################
+#!/usr/bin/python
+import urllib2
+import os
+import re
+ 
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from mylonly.items import wallpaperItem
+from scrapy.http import Request
+ 
+class wallpaper(CrawlSpider):
+        name = &quot;wallpaperSpider&quot;
+        allowed_domains = [&#39;sj.zol.com.cn&#39;]
+        start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
+        number = 0
+        rules = (
+                        Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
+                        )
+        def parse_image(self,response):
+                self.log(&#39;hi,this is an item page! %s&#39; % response.url)
+                sel = Selector(response)
+                sites = sel.xpath(&quot;//div[@class=&#39;wrapper mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()       
+                for site in sites:
+                        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
+                        print &#39;one page:&#39;,url
+                        item = wallpaperItem()
+                        item[&#39;size&#39;] = re.search(&#39;\d*x\d*&#39;,site).group()
+                        item[&#39;altInfo&#39;] = sel.xpath(&quot;//h1//a/text()&quot;).extract()[0]
+                        return Request(url,meta = {&#39;item&#39;:item},callback = self.parse_href)
+        def parse_href(self,response):
+                print &#39;I am in:&#39;,response.url
+                item = response.meta[&#39;item&#39;]
+                items = []
+                sel = Selector(response)
+                src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
+                item[&#39;imgSrc&#39;] = src
+                items.append(item)
+                return items
+                #self.download(src)
+        def download(self,url):
+                self.number += 1
+                savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
+                print &#39;正在下载...&#39;,url
+                try:
+                        u = urllib2.urlopen(url)
+                        r = u.read()
+                        downloadFile = open(savePath,&#39;wb&#39;)
+                        downloadFile.write(r)
+                        u.close()
+                        downloadFile.close()
+                except:
+                        print savePath,&#39;can not download.&#39;
 </code></pre>
 
 <p> <br/>
-仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
+ <br/>
+ <br/>
+接下来看看我的Item.py的代码：</p>
 
-<pre><code class="language-Bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
-Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
+<pre><code class="language-python">class wallpaperItem(scrapy.Item):
+        size = scrapy.Field()
+        altInfo = scrapy.Field()
+        imgSrc = scrapy.Field()
 </code></pre>
 
 <p> <br/>
-这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
+还有pipilines.py:</p>
 
-<pre><code class="language- Bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
-platform :ios, &#39;6.0&#39;
-pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+ 
+# Define your item pipelines here
+#
+# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
+# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import MySQLdb
+ 
+ 
+class MylonlyPipeline(object):
+    def process_item(self, item, spider):
+        return item
+ 
+class wallpaperPipeline(object):
+        def process_item(self,item,spider):
+                print &#39;imgSrc:&#39;,item[&#39;imgSrc&#39;]
+                db = MySQLdb.connect(&quot;rdsauvva2auvva2.mysql.rds.aliyuncs.com&quot;,&quot;mylonly&quot;,&quot;703003659txg&quot;,&quot;wallpaper&quot;)
+                cursor = db.cursor()
+                db.set_character_set(&#39;utf8&#39;)
+                cursor.execute(&#39;SET NAMES utf8;&#39;)
+                cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
+                cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
+ 
+                sql =&quot;INSERT INTO mobile_download(wallpaper_size,wallpaper_info,wallpaper_src)\
+                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;size&#39;],item[&#39;altInfo&#39;],item[&#39;imgSrc&#39;])
+                try:
+                        print sql
+                        cursor.execute(sql)
+                        db.commit()
+                except MySQLdb.Error,e:
+                        print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
+                db.close()
+                return item
+</code></pre>
+
+<p> <br/>
+ <br/>
+ <br/>
+本例中我将传回的items数据存放到了数据库中，如果你不想这样，可以将我注释掉的self.download()取消注释，不反悔items，就可以将找到的所有图片链接全部下载下来，不过要找个大点的地方存储，因为总共有5W多条：<br/>
+<img src="https://pic.mylonly.com/2016-06-29_061712481319744.png" alt="2016-06-29_061712481319744.png"/></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-11T19:10:15+08:00" itemprop="datePublished">2016/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010159790.html" itemprop="url">
+		CentOS中添加Swap交换文件</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>1.先检查是否存在Swap文件</p>
+
+<pre><code class="language-Bash">swapon -s #返回的信息为空，说明没有其他交换文件
+</code></pre>
+
+<p>2.创建一个Swap文件，使用dd命令</p>
+
+<pre><code class="language-Bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
+dd if=/dev/zero of=/home/swap bs=1024 count=1024000
+</code></pre>
+
+<p>3.将swap文件转换成swap格式</p>
+
+<pre><code class="language-Bash">mkswap /home/swap
+</code></pre>
+
+<p>4.将swap文件挂载成swap分区</p>
+
+<pre><code class="language-Bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
+</code></pre>
+
+<p>5.让swap文件自动挂载</p>
+
+<pre><code class="language-Bash">vim /etc/fstab 
+#在文件末尾加上下面的命令
+/home/swap swap swap default 0 0 
 </code></pre>
 
 
@@ -178,7 +655,7 @@ pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
 </div>
 <nav id="pagenavi">
 	 <a class="prev" href="all_4.html">Prev</a>  
-	
+	 <a class="next" href="all_6.html">Next</a> 
 	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
 </nav>

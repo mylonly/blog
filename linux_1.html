@@ -126,6 +126,66 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2016-09-11T19:10:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010480752.html" itemprop="url">
+		各种程序的安装</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>源码安装nginx</li>
+</ol>
+
+<pre><code>#安装编译nginx必须的依赖
+yum install gcc-c++
+yum install pcre pcre-devel  
+yum install zlib zlib-devel 
+yum install openssl openssl--devel
+
+#下载nginx源码
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+
+#解压
+tar -zvxf nginx-1.9.15.tar.gz -C ../document/
+
+#编译安装
+cd ../document/nginx-1.9.15
+./configure
+make
+make install
+</code></pre>
+
+<ol>
+<li>setuptools 安装</li>
+</ol>
+
+<pre><code>wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+
+</code></pre>
+
+<ol>
+<li>pip源码安装</li>
+</ol>
+
+<pre><code>[pip官网安装](https://pypi.python.org/pypi/pip)
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-09-11T18:16:48+08:00" itemprop="datePublished">2016/9/11</time>
 			</div>
 			<div class="tags">posted in 

