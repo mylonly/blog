@@ -126,6 +126,94 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-05-31T22:25:43+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277767431151.html" itemprop="url">
+		uwsgi重启shell脚本</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<pre><code>#!/bin/bash
+if [ ! -n &quot;$1&quot; ]
+then
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+    exit 0
+fi
+
+if [ $1 = start ]
+then
+    psid=`ps aux | grep &quot;uwsgi&quot; | grep -v &quot;grep&quot; | wc -l`
+    if [ $psid -gt 4 ]
+    then
+        echo &quot;uwsgi is running!&quot;
+        exit 0
+    else
+        uwsgi /etc/uwsgi.ini
+        echo &quot;Start uwsgi service [OK]&quot;
+    fi
+    
+
+elif [ $1 = stop ];then
+    killall -9 uwsgi
+    echo &quot;Stop uwsgi service [OK]&quot;
+elif [ $1 = restart ];then
+    killall -9 uwsgi
+    /usr/bin/uwsgi --ini /etc/uwsgi.ini #修改成自己业务的配置文件或命令
+    echo &quot;Restart uwsgi service [OK]&quot;
+
+else
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+fi
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-31T22:18:14+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277762940932.html" itemprop="url">
+		Linux问题集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>CentOS python升级之后yum无法使用解决</p>
+
+<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
+
+<pre><code>vim /usr/bin/yum
+</code></pre>
+
+<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-04-26T14:24:32+08:00" itemprop="datePublished">2018/4/26</time>
 			</div>
 			<div class="tags">posted in 
@@ -191,6 +279,11 @@ make &amp;&amp; sudo make install
 pip3 install uwsgi
 
 uwsgi -i /data/web/xxxx.ini
+</code></pre>
+
+<p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
+
+<pre><code>py-autoreload = 1
 </code></pre>
 
 
@@ -356,151 +449,6 @@ chkconfig zabbix_agentd on
 		</div>
 
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-11T19:11:07+08:00" itemprop="datePublished">2017/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945010672564.html" itemprop="url">
-		树莓派3安装Node.js</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>(树莓派官方系统)<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<pre><code class="language-Bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
-tar zxvf node-v5.2.0-linux-armv7l.tar.gz
-cd node-v5.2.0-linux-armv7l
-sudo cp bin/* /usr/bin/ -r
-sudo cp include/ /usr/include/ -r
-sudo cp lib/ /usr/lib/ -r
-sudo cp share/ /usr/share/ -r
-cd ..
-node --version
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-11T19:10:58+08:00" itemprop="datePublished">2017/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945010588526.html" itemprop="url">
-		树莓派3命令行连接WiFi和蓝牙设备</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<h3 id="toc_0">WiFi连接</h3>
-
-<pre><code>pi@raspi3:~ $ iwlist scan
-wlan0 Scan completed :
-Cell 01 - Address: 00:1E:20:50:AA:BB
-Channel:8
-Frequency:2.447 GHz (Channel 8)
-Quality=70/70 Signal level=-32 dBm
-Encryption key:on
-ESSID:&quot;WIFINAME&quot;
-Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
-9 Mb/s; 12 Mb/s; 18 Mb/s
-Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
-Mode:Master
-Extra:tsf=0000000000000000
-Extra: Last beacon: 2157000ms ago
-IE: Unknown: 000546616E6379
-IE: Unknown: 010882848B960C121824
-IE: Unknown: 030108
-IE: Unknown: 050401020000
-IE: Unknown: 0706303020010B14
-IE: Unknown: 2A0100
-IE: Unknown: 32043048606C
-IE: IEEE 802.11i/WPA2 Version 1
-Group Cipher : TKIP
-Pairwise Ciphers (2) : CCMP TKIP
-Authentication Suites (1) : PSK
-IE: Unknown: 7F080000000000000040
-IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
- 
-可以看到周围的wifi热点信息
-配置连接到某个热点:
- 
-# 编辑wifi文件
-sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
-# 在该文件最后添加下面的话
-network={
-  ssid=&quot;WIFINAME&quot;
-  psk=&quot;password&quot;
-}
-# 引号部分分别为wifi的名字和密码
-# 保存文件后几秒钟应该就会自动连接到该wifi
-# 查看是否连接成功
-ifconfig wlan0
-
-</code></pre>
-
-<h3 id="toc_1">蓝牙连接</h3>
-
-<pre><code>pi@raspi3:~ $ sudo bluetoothctl
-[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
-[bluetooth]# list
-Controller BB:27:EB:0D:9D:DD raspi3 [default]
-[bluetooth]# power on
-Changing power on succeeded
-[bluetooth]# scan on
-Discovery started
-[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
-[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
-[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
-[bluetooth]# agent on
-Agent registered
-[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
-[bluetooth]# pair E8:07:BF:3A:25:AA
-Attempting to pair with E8:07:BF:3A:25:AA
-[CHG] Device E8:07:BF:3A:25:AA Connected: yes
-[CHG] Device E8:07:BF:3A:25:AA UUIDs:
-    00001108-0000-1000-8000-00805f9b34ff
-[CHG] Device E8:07:BF:3A:25:AA Paired: yes
-Pairing successful
-[CHG] Device E8:07:BF:3A:25:AA Connected: no
-[bluetooth]# trust E8:07:BF:3A:25:AA
-[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
-Changing E8:07:BF:3A:25:AA trust succeeded
-[bluetooth]# connect E8:07:BF:3A:25:AA
-
-</code></pre>
-
-<p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
- <code><br/>
-sudo apt-get install pulseaudio pulseaudio-module-bluetooth<br/>
-</code></p>
-
-
-			
-			
-		</div>
-
-	</article>
   
 
 </div>
@@ -527,14 +475,6 @@ Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank 
     
 
 
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+
 </body>
 </html>

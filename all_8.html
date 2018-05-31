@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Swift学习要点-基础部分 - 独自一人
+  	独自一人
   	
 	</title>
 
@@ -120,87 +120,100 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
 
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Swift学习要点-基础部分</h1>
+
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2013-05-31T21:04:59+08:00" itemprop="datePublished">2013/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277718994557.html" itemprop="url">
+		Mimetic库分析1——安装和使用mimetic</a></h1>
 		<div class="entry-content" itemprop="articleBody">
-			<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
-
-<blockquote>
-<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
+			
+			<blockquote>
+<p>Mimetic库是开源的MIME格式解析库，利用mimetic不仅可以解析标准的邮件文件(message/rfc822)，也可以用来解析某些协议中用到的MIME编码。例如webmail，其http报文中就有大量用MIME格式编码的信息。<br/>
+       mimetic库的项目主页是<a href="http://www.codesink.org/mimetic_mime_library.html%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%9C%A8%E4%B8%8A%E9%9D%A2%E4%B8%8B%E8%BD%BD%E5%88%B0%E6%9C%80%E6%96%B0%E7%9A%84mimetic%E5%BA%93%E3%80%82">http://www.codesink.org/mimetic_mime_library.html，可以在上面下载到最新的mimetic库。</a><br/>
+       目前最新的mimetic-0.9.7的下载地址如下:<a href="http://www.codesink.org/download/mimetic-0.9.7.tar.gz">http://www.codesink.org/download/mimetic-0.9.7.tar.gz</a></p>
 </blockquote>
 
-<ol>
-<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+<h2 id="toc_0">安装</h2>
 
-<pre><code class="language-Swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
-print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print
-print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
-</code></pre></li>
-<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+<p>将下载好的mimetic-0.9.7.tar.gz包放到指定目录,解压：</p>
 
-<pre><code class="language-Swift">let paddedDouble = 000123.456
-let oneMillion = 1_000_000
-let justOverOneMillion = 1_000_000.000_000_1
-</code></pre></li>
-<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+<pre><code> tar -zvxf mimetic-0.9.7.tar.gz
+ cd mimetic
+ ./configure
+ make
+ make install
+</code></pre>
 
-<pre><code class="language-Swift">typealias AudioSample = UInt16
-var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
-</code></pre></li>
-<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+<h2 id="toc_1">初步使用</h2>
 
-<pre><code class="language-Swift">var maxValue = UInt8.max
-var max64Value = Int64.max
+<p>安装好mimetic后就可以在程序中使用mimetic提供的库函数了,可以用官方提供的小例子测试下是否能正常使用</p>
 
-max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;
-max64Value = Int64(maxValue) //Ok
+<pre><code>#include&lt;iostream&gt;
+#include&lt;mimetic/mimetic.h&gt;
 
-let number = 3
-var str1 = String(number) //str1 = &quot;3&quot;
-var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
-</code></pre></li>
-<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
-
-<pre><code class="language-Swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
-let (justTheStatusCode, _) = http404Error
-print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
-</code></pre></li>
-<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
-
-<pre><code class="language-Swift">var serverResponseCode: Int? = 404
-// serverResponseCode 包含一个可选的 Int 值 404
-serverResponseCode = nil
-// serverResponseCode 现在不包含值
-</code></pre></li>
-<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
-
-<pre><code class="language-Swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
-var str = &quot;\(option)&quot; //输出:&quot;nil&quot;
-str = &quot;\(option!)&quot;    //Error
-</code></pre></li>
-<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
-
-<pre><code class="language-Swift">let const_a:String
-if (condition){
-    const_a = &quot;a&quot;
-}else{
-    const_a = &quot;b&quot;
+using namespace mimetic;
+using namespace std;
+intmain()
+{
+    MimeEntity me;
+    me.header().from(&quot;me &lt;me@domain.com&gt;&quot;);
+    me.header().to(&quot;you &lt;you@domain.com&gt;&quot;);
+    me.header().subject(&quot;my first mimetic msg&quot;);
+    me.body().assign(&quot;hello there!&quot;);
+    cout &lt;&lt; me &lt;&lt; endl;
+    return0;
 }
-</code></pre></li>
-</ol>
+</code></pre>
 
+<p>编译好后运行，如果可以正常输出，说明可以正确使用mimetic库了。</p>
+
+<blockquote>
+<p>如果运行提示找不到libmimetic.so.o，将/usr/local/lib下的libmimetic.so.o拷贝到/usr/lib下就可以正常运行)。</p>
+</blockquote>
+
+<h2 id="toc_2">mimetic帮助</h2>
+
+<p>mimetic的在线帮助地址如下:<a href="http://www.codesink.org/data/mimetic/docs/html/index.html">http://www.codesink.org/data/mimetic/docs/html/index.html</a><br/>
+  如果你想生成本地的mimetic文档，可以执行如下操作</p>
+
+<pre><code>  cd mimetic-0.9.7/doc #进入mimetic帮助目录
+  make docs #生成doc文档
+</code></pre>
+
+<p>会生成一份html文档的本地帮助</p>
+
+
+			
+			
 		</div>
+
 	</article>
-	<div class="share-comment">
-	 
+  
 
-	  
+</div>
+<nav id="pagenavi">
+	 <a class="prev" href="all_7.html">Prev</a>  
+	
+	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-	  
+</nav>
 
-	</div>
-</div>        </div>
+</div>
+
+
+
+        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2014
 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>

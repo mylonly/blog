@@ -255,7 +255,13 @@ CORS_ALLOW_HEADERS = (
 <pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
 axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
 axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
-</code></pre></li>
+</code></pre>
+
+<blockquote>
+<p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
+</blockquote>
+
+<p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
 <li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
 
 <p>需要两步：</p>
@@ -279,6 +285,22 @@ if user is not None:
   return ErosResponse()
 else:
   return ErosResponse(status=ErosResponseStatus.INVALID_USER)
+</code></pre></li>
+<li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
+
+<p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
+
+<pre><code class="language-Python">from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+</code></pre></li>
+<li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
+
+<p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
+
+<pre><code>mysql -u root -p
+use mysql；
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
+FLUSH PRIVILEGES; 
 </code></pre></li>
 </ol>
 
@@ -447,14 +469,6 @@ Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank 
     
 
 
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+
 </body>
 </html>

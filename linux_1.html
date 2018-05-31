@@ -126,6 +126,151 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2017-05-11T19:11:07+08:00" itemprop="datePublished">2017/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010672564.html" itemprop="url">
+		树莓派3安装Node.js</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>(树莓派官方系统)<br/>
+<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
+
+<pre><code class="language-Bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
+tar zxvf node-v5.2.0-linux-armv7l.tar.gz
+cd node-v5.2.0-linux-armv7l
+sudo cp bin/* /usr/bin/ -r
+sudo cp include/ /usr/include/ -r
+sudo cp lib/ /usr/lib/ -r
+sudo cp share/ /usr/share/ -r
+cd ..
+node --version
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2017-05-11T19:10:58+08:00" itemprop="datePublished">2017/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010588526.html" itemprop="url">
+		树莓派3命令行连接WiFi和蓝牙设备</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
+
+<h3 id="toc_0">WiFi连接</h3>
+
+<pre><code>pi@raspi3:~ $ iwlist scan
+wlan0 Scan completed :
+Cell 01 - Address: 00:1E:20:50:AA:BB
+Channel:8
+Frequency:2.447 GHz (Channel 8)
+Quality=70/70 Signal level=-32 dBm
+Encryption key:on
+ESSID:&quot;WIFINAME&quot;
+Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
+9 Mb/s; 12 Mb/s; 18 Mb/s
+Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
+Mode:Master
+Extra:tsf=0000000000000000
+Extra: Last beacon: 2157000ms ago
+IE: Unknown: 000546616E6379
+IE: Unknown: 010882848B960C121824
+IE: Unknown: 030108
+IE: Unknown: 050401020000
+IE: Unknown: 0706303020010B14
+IE: Unknown: 2A0100
+IE: Unknown: 32043048606C
+IE: IEEE 802.11i/WPA2 Version 1
+Group Cipher : TKIP
+Pairwise Ciphers (2) : CCMP TKIP
+Authentication Suites (1) : PSK
+IE: Unknown: 7F080000000000000040
+IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
+ 
+可以看到周围的wifi热点信息
+配置连接到某个热点:
+ 
+# 编辑wifi文件
+sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+# 在该文件最后添加下面的话
+network={
+  ssid=&quot;WIFINAME&quot;
+  psk=&quot;password&quot;
+}
+# 引号部分分别为wifi的名字和密码
+# 保存文件后几秒钟应该就会自动连接到该wifi
+# 查看是否连接成功
+ifconfig wlan0
+
+</code></pre>
+
+<h3 id="toc_1">蓝牙连接</h3>
+
+<pre><code>pi@raspi3:~ $ sudo bluetoothctl
+[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# list
+Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
+[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
+[bluetooth]# agent on
+Agent registered
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
+[bluetooth]# pair E8:07:BF:3A:25:AA
+Attempting to pair with E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Connected: yes
+[CHG] Device E8:07:BF:3A:25:AA UUIDs:
+    00001108-0000-1000-8000-00805f9b34ff
+[CHG] Device E8:07:BF:3A:25:AA Paired: yes
+Pairing successful
+[CHG] Device E8:07:BF:3A:25:AA Connected: no
+[bluetooth]# trust E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
+Changing E8:07:BF:3A:25:AA trust succeeded
+[bluetooth]# connect E8:07:BF:3A:25:AA
+
+</code></pre>
+
+<p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
+ <code><br/>
+sudo apt-get install pulseaudio pulseaudio-module-bluetooth<br/>
+</code></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-09-11T19:10:48+08:00" itemprop="datePublished">2016/9/11</time>
 			</div>
 			<div class="tags">posted in 
@@ -365,172 +510,12 @@ esac
 		</div>
 
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-07-02T19:09:49+08:00" itemprop="datePublished">2016/7/2</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945009892942.html" itemprop="url">
-		利用Github的Webhook功能和Node.js完成项目的自动部署</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
-
-<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
-
-<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
-var createHandler = require(&#39;github-webhook-handler&#39;)
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
-// 上面的 secret 保持和 GitHub 后台设置的一致
-
-function run_cmd(cmd, args, callback) {
-  var spawn = require(&#39;child_process&#39;).spawn;
-  var child = spawn(cmd, args);
-  var resp = &quot;&quot;;
-
-  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
-  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
-}
-
-http.createServer(function (req, res) {
-  handler(req, res, function (err) {
-    res.statusCode = 404
-    res.end(&#39;no such location&#39;)
-  })
-}).listen(7777)
-
-handler.on(&#39;error&#39;, function (err) {
-  console.error(&#39;Error:&#39;, err.message)
-})
-
-handler.on(&#39;push&#39;, function (event) {
-  console.log(&#39;Received a push event for %s to %s&#39;,
-    event.payload.repository.name,
-    event.payload.ref);
-    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
-})
-</code></pre>
-
-<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
-
-<p>还有代码这行:<br/>
-<code><br/>
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
-</code><br/>
-其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
-
-<h3 id="toc_1">完成deploy.sh脚本</h3>
-
-<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
-
-<pre><code class="language-Bash"> #!/bin/bash
-
-WEB_PATH=&#39;/root/tools/&#39;$1
-WEB_USER=&#39;root&#39;
-WEB_USERGROUP=&#39;root&#39;
-
-echo &quot;Start deployment&quot;
-cd $WEB_PATH
-echo &quot;pulling source code...&quot;
-git reset --hard origin/master
-git clean -f
-git pull
-git checkout master
-echo &quot;changing permissions...&quot;
-chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
-echo &quot;Finished.&quot;
-</code></pre>
-
-<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
-
-<blockquote>
-<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
-你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
-</blockquote>
-
-<h3 id="toc_2">后台运行deploy.js</h3>
-
-<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
-
-<pre><code>nohup node deploy.js &gt; deploy.log &amp;
-</code></pre>
-
-<h3 id="toc_3">去Github后台添加webhook</h3>
-
-<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T19:10:15+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945010159790.html" itemprop="url">
-		CentOS中添加Swap交换文件</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>1.先检查是否存在Swap文件</p>
-
-<pre><code class="language-Bash">swapon -s #返回的信息为空，说明没有其他交换文件
-</code></pre>
-
-<p>2.创建一个Swap文件，使用dd命令</p>
-
-<pre><code class="language-Bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
-dd if=/dev/zero of=/home/swap bs=1024 count=1024000
-</code></pre>
-
-<p>3.将swap文件转换成swap格式</p>
-
-<pre><code class="language-Bash">mkswap /home/swap
-</code></pre>
-
-<p>4.将swap文件挂载成swap分区</p>
-
-<pre><code class="language-Bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
-</code></pre>
-
-<p>5.让swap文件自动挂载</p>
-
-<pre><code class="language-Bash">vim /etc/fstab 
-#在文件末尾加上下面的命令
-/home/swap swap swap default 0 0 
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
   
 
 </div>
 <nav id="pagenavi">
 	 <a class="prev" href="linux.html">Prev</a>  
-	
+	 <a class="next" href="linux_2.html">Next</a> 
 	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
 </nav>
@@ -551,14 +536,6 @@ Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank 
     
 
 
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+
 </body>
 </html>

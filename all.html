@@ -126,98 +126,7 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2018-05-03T22:28:47+08:00" itemprop="datePublished">2018/5/3</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Weex.html'>Weex</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15253577270506.html" itemprop="url">
-		Weex 问题集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>weex中通过ref访问组件的两种情况:</p>
-
-<pre><code>&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
-</code></pre>
-
-<p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-
-<pre><code>&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
-</code></pre>
-
-<p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-29T11:03:16+08:00" itemprop="datePublished">2018/4/29</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15249709962104.html" itemprop="url">
-		解决VSCode编写Django代码时经常提示objects属性等不存在的错误</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
-
-<pre><code>App.objects.all()
-</code></pre>
-
-<p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
-
-<blockquote>
-<p>Django使用了大量的元编程思想，其中会有大量的修改对象属性和行为的操作，pylint提示的不存在的属性和方法会在程序运行中被django动态的加入，所以并不会影响程序运行。</p>
-</blockquote>
-
-<p>所以在网上稍微找了下，发现这个叫做<code>pylint-django</code>的<code>pylint</code>的插件可以去掉这些恼人的提示。</p>
-
-<p>安装很简单,和pylint一样</p>
-
-<pre><code>pip3 install pylint-django
-</code></pre>
-
-<p>然后通过pylint加载这个插件</p>
-
-<pre><code>pylint --load-plugins pylint_django 
-</code></pre>
-
-<p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
-
-<pre><code>&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
-</code></pre>
-
-<p>然后重启VSCode就好了</p>
-
-<p>参考:<br/>
-<a href="https://blog.landscape.io/using-pylint-on-django-projects-with-pylint-django.html">blog.landscape.io</a></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-26T14:24:32+08:00" itemprop="datePublished">2018/4/26</time>
+				<time datetime="2018-05-31T22:25:43+08:00" itemprop="datePublished">2018/5/31</time>
 			</div>
 			<div class="tags">posted in 
 			
@@ -225,129 +134,143 @@
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="15247238721302.html" itemprop="url">
-		nginx 相关技巧</a></h1>
+		<h1 class="title" itemprop="name"><a href="15277767431151.html" itemprop="url">
+		uwsgi重启shell脚本</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<ol>
-<li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
+			<pre><code>#!/bin/bash
+if [ ! -n &quot;$1&quot; ]
+then
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+    exit 0
+fi
 
-<pre><code>  server {
-      listen 80 default;
-      server_name _;
-      rewrite ^(.*) http://www.mylonly.com permanent;
-    }
-</code></pre></li>
-</ol>
+if [ $1 = start ]
+then
+    psid=`ps aux | grep &quot;uwsgi&quot; | grep -v &quot;grep&quot; | wc -l`
+    if [ $psid -gt 4 ]
+    then
+        echo &quot;uwsgi is running!&quot;
+        exit 0
+    else
+        uwsgi /etc/uwsgi.ini
+        echo &quot;Start uwsgi service [OK]&quot;
+    fi
+    
 
+elif [ $1 = stop ];then
+    killall -9 uwsgi
+    echo &quot;Stop uwsgi service [OK]&quot;
+elif [ $1 = restart ];then
+    killall -9 uwsgi
+    /usr/bin/uwsgi --ini /etc/uwsgi.ini #修改成自己业务的配置文件或命令
+    echo &quot;Restart uwsgi service [OK]&quot;
 
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-23T15:06:52+08:00" itemprop="datePublished">2018/4/23</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15244672126240.html" itemprop="url">
-		Django问题集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Csrf验证</p>
-
-<pre><code>需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
-</code></pre></li>
-<li><p>Django允许跨域</p>
-
-<p>安装<code>django-cors-headers</code></p>
-
-<pre><code>pip install django-cors-headers
+else
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+fi
 </code></pre>
 
-<p>在setting.py中增加如下代码</p>
 
-<pre><code>INSTALLED_APPS = [
-...
-&#39;corsheaders&#39;，
-...
- ] 
+			
+			
+		</div>
 
-MIDDLEWARE_CLASSES = (
-    ...
-    &#39;corsheaders.middleware.CorsMiddleware&#39;,
-    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序
-    ...
-)
-#跨域增加忽略
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    &#39;*&#39;
-)
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-31T22:18:14+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277762940932.html" itemprop="url">
+		Linux问题集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>CentOS python升级之后yum无法使用解决</p>
 
-CORS_ALLOW_METHODS = (
-    &#39;DELETE&#39;,
-    &#39;GET&#39;,
-    &#39;OPTIONS&#39;,
-    &#39;PATCH&#39;,
-    &#39;POST&#39;,
-    &#39;PUT&#39;,
-    &#39;VIEW&#39;,
-)
+<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
 
-CORS_ALLOW_HEADERS = (
-    &#39;XMLHttpRequest&#39;,
-    &#39;X_FILENAME&#39;,
-    &#39;accept-encoding&#39;,
-    &#39;authorization&#39;,
-    &#39;content-type&#39;,
-    &#39;dnt&#39;,
-    &#39;origin&#39;,
-    &#39;user-agent&#39;,
-    &#39;x-csrftoken&#39;,
-    &#39;x-requested-with&#39;,
-    &#39;Pragma&#39;,
-)
-</code></pre></li>
-<li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
+<pre><code>vim /usr/bin/yum
+</code></pre>
 
-<pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
-axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
-axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
-</code></pre></li>
-<li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
+<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+</ol>
 
-<p>需要两步：</p>
 
-<ul>
-<li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
-<li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
-</ul>
+			
+			
+		</div>
 
-<pre><code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
-class login(views.APIView):
-authentication_classes = (BasicAuthentication,)
-def post(self, request, *args, **kwargs):
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-31T16:15:11+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277545119360.html" itemprop="url">
+		Pyplot相关</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>subplot</p>
 
-username = request.data.get(&quot;username&quot;)
-password = request.data.get(&quot;password&quot;)
+<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
+plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
+</code></pre>
 
-user = auth.authenticate(request, username=username, password=password)
-if user is not None:
-  auth.login(request, user)
-  return ErosResponse()
-else:
-  return ErosResponse(status=ErosResponseStatus.INVALID_USER)
+<p>subplot(numRows, numCols, plotNum)<br/>
+如果3个参数都小于10的话，可以统一成一个整数<br/>
+subplot(221) = subplot(2,2,1)</p></li>
+<li><p><img src="media/15277545119360/15277557443176.jpg" alt=""/></p></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-30T16:47:02+08:00" itemprop="datePublished">2018/5/30</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15276700222671.html" itemprop="url">
+		Pandas相关</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>Pandas 读取列数据</p>
+
+<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
+
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
+data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
 </code></pre></li>
 </ol>
 
@@ -361,32 +284,24 @@ else:
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2018-04-23T11:35:12+08:00" itemprop="datePublished">2018/4/23</time>
+				<time datetime="2018-05-28T14:29:43+08:00" itemprop="datePublished">2018/5/28</time>
 			</div>
 			<div class="tags">posted in 
 			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
+			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
 			 
 			</div>
 		</div>
-		<h1 class="title" itemprop="name"><a href="15244545128606.html" itemprop="url">
-		Python 错误集锦</a></h1>
+		<h1 class="title" itemprop="name"><a href="15274889837567.html" itemprop="url">
+		Tensorflow错误集锦</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
 			<ol>
-<li><p>ValueError: unknown locale: UTF-8 <br/>
-<img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
+<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
+加入以下代码</p>
 
-<p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
-export LC_ALL=
+<pre><code>import os 
+os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
 </code></pre></li>
 </ol>
 
@@ -422,14 +337,6 @@ Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank 
     
 
 
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?6d4f2f6760a5d2778c062a1a7df8c960";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+
 </body>
 </html>
