@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	独自一人
+  	Kali渗透测试 - 独自一人
   	
 	</title>
 
@@ -252,170 +252,12 @@ cryptsetup luksClose /dev/mapper/usb
 		</div>
 
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-31T22:25:43+08:00" itemprop="datePublished">2018/5/31</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15277767431151.html" itemprop="url">
-		uwsgi重启shell脚本</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<pre><code>#!/bin/bash
-if [ ! -n &quot;$1&quot; ]
-then
-    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
-    exit 0
-fi
-
-if [ $1 = start ]
-then
-    psid=`ps aux | grep &quot;uwsgi&quot; | grep -v &quot;grep&quot; | wc -l`
-    if [ $psid -gt 4 ]
-    then
-        echo &quot;uwsgi is running!&quot;
-        exit 0
-    else
-        uwsgi /etc/uwsgi.ini
-        echo &quot;Start uwsgi service [OK]&quot;
-    fi
-    
-
-elif [ $1 = stop ];then
-    killall -9 uwsgi
-    echo &quot;Stop uwsgi service [OK]&quot;
-elif [ $1 = restart ];then
-    killall -9 uwsgi
-    /usr/bin/uwsgi --ini /etc/uwsgi.ini #修改成自己业务的配置文件或命令
-    echo &quot;Restart uwsgi service [OK]&quot;
-
-else
-    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
-fi
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-31T22:18:14+08:00" itemprop="datePublished">2018/5/31</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15277762940932.html" itemprop="url">
-		Linux问题集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>CentOS python升级之后yum无法使用解决</p>
-
-<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-
-<pre><code>vim /usr/bin/yum
-</code></pre>
-
-<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-31T16:15:11+08:00" itemprop="datePublished">2018/5/31</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15277545119360.html" itemprop="url">
-		Pyplot相关</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>subplot</p>
-
-<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
-plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
-plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
-</code></pre>
-
-<p>subplot(numRows, numCols, plotNum)<br/>
-如果3个参数都小于10的话，可以统一成一个整数<br/>
-subplot(221) = subplot(2,2,1)</p></li>
-<li><p><img src="media/15277545119360/15277557443176.jpg" alt=""/></p></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-30T16:47:02+08:00" itemprop="datePublished">2018/5/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15276700222671.html" itemprop="url">
-		Pandas相关</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Pandas 读取列数据</p>
-
-<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
-
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
-data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
   
 
 </div>
 <nav id="pagenavi">
 	 
-	 <a class="next" href="all_1.html">Next</a> 
+	
 	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
 </nav>

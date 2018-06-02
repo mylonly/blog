@@ -126,6 +126,65 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2017-11-27T20:52:04+08:00" itemprop="datePublished">2017/11/27</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15117871248079.html" itemprop="url">
+		Django扩展默认的User Model</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
+
+<blockquote>
+<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
+</blockquote>
+
+<p>在models.py中新建一个model继承自AbstractUser</p>
+
+<pre><code>from django.db import models
+
+# Create your models here.
+from django.contrib.auth.models import AbstractUser
+from enum import Enum
+
+
+class UserProfile(AbstractUser):
+
+    GENDER = [
+        (0,&quot;未知&quot;),
+        (1,&quot;男性&quot;),
+        (2,&quot;女性&quot;)
+    ]
+
+    nickname = models.CharField(max_length=50)
+    intro = models.CharField(max_length=500)
+    mobile = models.CharField(max_length=13)
+    gender = models.IntegerField(choices=GENDER,default=0)
+
+    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
+
+</code></pre>
+
+<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
+
+<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2017-09-12T15:07:09+08:00" itemprop="datePublished">2017/9/12</time>
 			</div>
 			<div class="tags">posted in 
@@ -976,42 +1035,6 @@ return origin;
 <h3 id="toc_9">完整代码</h3>
 
 <p><a href="https://github.com/mylonly/BarrageRender-BubblingSprite">BarrageRender-BubblingSprite</a></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-11T19:11:07+08:00" itemprop="datePublished">2017/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945010672564.html" itemprop="url">
-		树莓派3安装Node.js</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>(树莓派官方系统)<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<pre><code class="language-Bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
-tar zxvf node-v5.2.0-linux-armv7l.tar.gz
-cd node-v5.2.0-linux-armv7l
-sudo cp bin/* /usr/bin/ -r
-sudo cp include/ /usr/include/ -r
-sudo cp lib/ /usr/lib/ -r
-sudo cp share/ /usr/share/ -r
-cd ..
-node --version
-</code></pre>
 
 
 			

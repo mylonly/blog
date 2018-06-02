@@ -126,6 +126,37 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-05-28T14:29:43+08:00" itemprop="datePublished">2018/5/28</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15274889837567.html" itemprop="url">
+		Tensorflow错误集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
+加入以下代码</p>
+
+<pre><code>import os 
+os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-05-03T22:28:47+08:00" itemprop="datePublished">2018/5/3</time>
 			</div>
 			<div class="tags">posted in 
@@ -370,45 +401,6 @@ from rest_framework.filters import OrderingFilter
 use mysql；
 ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
 FLUSH PRIVILEGES; 
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-23T11:35:12+08:00" itemprop="datePublished">2018/4/23</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15244545128606.html" itemprop="url">
-		Python 错误集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>ValueError: unknown locale: UTF-8 <br/>
-<img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
-
-<p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
-export LC_ALL=
 </code></pre></li>
 </ol>
 

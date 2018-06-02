@@ -126,6 +126,42 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2017-05-11T19:11:07+08:00" itemprop="datePublished">2017/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010672564.html" itemprop="url">
+		树莓派3安装Node.js</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>(树莓派官方系统)<br/>
+<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
+
+<pre><code class="language-Bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
+tar zxvf node-v5.2.0-linux-armv7l.tar.gz
+cd node-v5.2.0-linux-armv7l
+sudo cp bin/* /usr/bin/ -r
+sudo cp include/ /usr/include/ -r
+sudo cp lib/ /usr/lib/ -r
+sudo cp share/ /usr/share/ -r
+cd ..
+node --version
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2017-05-11T19:10:58+08:00" itemprop="datePublished">2017/5/11</time>
 			</div>
 			<div class="tags">posted in 
@@ -541,62 +577,6 @@ make install
 </ol>
 
 <pre><code>[pip官网安装](https://pypi.python.org/pypi/pip)
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-09-11T18:16:48+08:00" itemprop="datePublished">2016/9/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14944978089747.html" itemprop="url">
-		Linux常用命令</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li>磁盘挂载</li>
-</ol>
-
-<pre><code>fdisk -l #查看磁盘信息
-mount /dev/xvdb1 /mnt #挂载磁盘
-</code></pre>
-
-<ol>
-<li>设置开机自动加载磁盘</li>
-</ol>
-
-<pre><code>vim /etc/fstab
-写入 /dev/xvdb1 /mnt ext4 default 1 1
-</code></pre>
-
-<ol>
-<li>修改主机名</li>
-</ol>
-
-<pre><code>vim /etc/sysconfig/network #修改里面的HOSTNAME值
-</code></pre>
-
-<ol>
-<li>设置ssh自动认证</li>
-</ol>
-
-<pre><code>ssh-keygen -t rsa #在客户机生成秘钥，
-scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
-#将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
-最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
-cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
 </code></pre>
 
 

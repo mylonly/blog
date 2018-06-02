@@ -126,6 +126,56 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2016-05-11T19:10:15+08:00" itemprop="datePublished">2016/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010159790.html" itemprop="url">
+		CentOS中添加Swap交换文件</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>1.先检查是否存在Swap文件</p>
+
+<pre><code class="language-Bash">swapon -s #返回的信息为空，说明没有其他交换文件
+</code></pre>
+
+<p>2.创建一个Swap文件，使用dd命令</p>
+
+<pre><code class="language-Bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
+dd if=/dev/zero of=/home/swap bs=1024 count=1024000
+</code></pre>
+
+<p>3.将swap文件转换成swap格式</p>
+
+<pre><code class="language-Bash">mkswap /home/swap
+</code></pre>
+
+<p>4.将swap文件挂载成swap分区</p>
+
+<pre><code class="language-Bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
+</code></pre>
+
+<p>5.让swap文件自动挂载</p>
+
+<pre><code class="language-Bash">vim /etc/fstab 
+#在文件末尾加上下面的命令
+/home/swap swap swap default 0 0 
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-05-11T18:12:56+08:00" itemprop="datePublished">2016/5/11</time>
 			</div>
 			<div class="tags">posted in 
@@ -166,6 +216,45 @@ Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPod
 platform :ios, &#39;6.0&#39;
 pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
 </code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2015-06-01T08:50:40+08:00" itemprop="datePublished">2015/6/1</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15278142400055.html" itemprop="url">
+		Objective-C语言特性——强引用、弱引用（Strong、Weak）</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>编写Objective-C代码的很大一部分工作是管理可执行代码保持的对象引用，还有被引用对象保持的对另外一个对象的引用。在ARC出现之前，Objective-C在IOS中使用手动内存管理，在OS X中还可使用垃圾回收机制。这两个方法都有他们各自的优缺点。现在Objective-C使用ARC，其结合了这两种方法最好的一面。<br/>
+ARC，中文简称自动引用计数，是一种编译器机制，在编译期间编译器将手动内存管理的调用插入到代码中。这段内存管理代码通过判断一旦对象没有任何进来的强引用，它将被释放，如果它是最后一个持有另一些对象强引用的对象，则这些对象也会被释放，对它们的其他对象的处理以此类推,编译器非常智能，ARC代码被优化的很好。尽管ARC将开发者从编写手动内存管理代码的工作中解放出来，但如同使用垃圾回收的平台，它仍然不能打破引用循环。因为这个原因，开发者需要给编译器某些指导以避免引用循环。下图展示了一个引用循环：</p>
+
+<p><img src="https://pic.mylonly.com/2018-06-01-BA81AC12-9449-492E-8798-A04AB3FB2E31.jpg" alt=""/></p>
+
+<p>只有对象C释放了对象A后其才能被释放，而只要对象B有一个对它的强引用那么对象C就永远不会被释放。最后，除非对象A被释放否则对象B永远不会被释放。这就是一个引用循环，将导致引用程序发生内存泄漏。<br/>
+但是，如果我们在上图中将对象C持有的对象A的引用（在途中用实线表示）被替换成一个弱引用（用虚线表示），如下图</p>
+
+<p><img src="media/15278142400055/633E3597-FBF7-4111-A7B2-77124042975D.jpg" alt="633E3597-FBF7-4111-A7B2-77124042975D"/></p>
+
+<p>弱引用不阻止对象被释放，所以对象A被释放，接着是对象B，最后是对象C。<br/>
+如果熟悉C或C++，你可能会注意到一个使用弱引用的问题。如果对象可在任何时候被释放，并且你有一个该对象的弱引用，那么最终会得到一个悬空指针（这个指针的地址指向的地址仍然存在，但是对象已经被释放）。在ARC中，这个现象不会存在，一旦对象被释放则指向这些对象的弱引用将会变为nil。<br/>
+Objective-C中，默认情况下，没有使用任何关键字的声明的实例变量和局部变量都是强引用，将变量声明为弱引用需使用weak关键字。<br/>
+如何在写代码的时候判断变量是该用强引用还是弱引用？</p>
+
+<p>一个常见的方法就是将强引用和弱引用分别想象为“拥有”和“被拥有”。如果一个对象完全属于包含它的对象，那么它使用强引用。如果一个对象被两个以上的对象所拥有，并不完全属于一个对象，则使用弱引用，尽管该方法不是对于所有引用逗适用，但它确实是一个记住Objective-C内存管理约定的好技巧。</p>
 
 
 			
@@ -270,119 +359,6 @@ this is a test
 
 <p>内网的设备发送数据包的时候，首先要经过网关做NAT转换，即将内网ip替换成网关的ip。之后数据包在路由器之间交换的时候只需要替换目的mac即可，数据包回来的时候也可以看成是一次反向的发送，然后仍然是根据路由表替换目的mac即可。</p></li>
 </ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2013-05-31T21:37:30+08:00" itemprop="datePublished">2013/5/31</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15277738508394.html" itemprop="url">
-		Mimetic库分析3——Mime头Header</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Mimetic的header和body以一个空格来区分。如下</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-%E6%8D%95%E8%8E%B7.PNG" alt=""/></p>
-
-<p>红线以上部分就是Header了，红线以下部分就是body。<br/>
-Mimetic中Header的继承关系如下</p>
-
-<p><code>Header：public Rfc822Header：public std:deque&lt;Field&gt;</code></p>
-
-<p>可以看到Header中存放的值是一个deque队列，队列里面的每一项都是一个name-value的pari对，name就是header中每一行冒号左边的字符串，而value就是冒号右边的字符串。mimetic将这两部分组成一个pair存放在deque中。然后在Header类中提供相应的接口存取这些值。</p>
-
-<p>下图是Header的接口</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-1.png" alt=""/></p>
-
-<p>RfcHeader的接口</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-2.PNG" alt=""/></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2013-05-31T21:18:18+08:00" itemprop="datePublished">2013/5/31</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15277726988270.html" itemprop="url">
-		Mimetic库分析2-——入口类MimeEntity</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>整个Mimetic的入口类就是MimeEntity类，整个MIME格式文件或者字符串都是在MimeEntity内部完成解析的。<br/>
-MimeEntity类很简单，其成员如下：</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-1.PNG" alt=""/></p>
-
-<p>MimeEntity类提供了两种常用的初始化方式</p>
-
-<p>迭代器初始化：</p>
-
-<pre><code>ifstream file_in(&quot;test.eml&quot;);  //文件流
-ostrstream ostr&lt;&lt;ifstream;  //转换成strstream
-string str_eml=ostr.str();     //将ifstream转换成string字符串
-MimeEntity me(str_eml.begin(),str_eml.end());  
-</code></pre>
-
-<p>流初始化</p>
-
-<pre><code>ifstream file_in(&quot;test.eml&quot;);         
-MimeEntity me(file_in);
-</code></pre>
-
-<p>其中MimeEntity(Iterator beg,Iterator end,int mask = imNone)这个构造函数的第三个参数mask是解析参数，可以去下列值：</p>
-
-<pre><code>imNone   //完整解析整个MIME格式文件
-imHeader  //忽略MIME头
-imBody     //忽略MIME正文
-imChildParts  //忽略嵌套的MIME
-imPreamble   //忽略冗余头
-imEpilogue    //忽略结束符
-</code></pre>
-
-<p>MimeEntity将整个MIME格式分成两部分，以空格（\r\n\r\n）为分割符，空格以上的为MIME头，存放在m_header中，空格以下的为MIME正文，存放在m_body中，可以分别通过调用成员函数header()和body()得到相应的类型值。</p>
-
-<pre><code>#include&lt;iostream&gt;
-#include&lt;mimetic/mimetic.h&gt;
-    
-using namespace std;
-using namespace mimetic;
-    
-int main()
-{               
-    ifstream file_in(&quot;test.eml&quot;);         
-    if(!file_in)
-        return -1;
-    MimeEntity me(file_in);
-    cout&lt;&lt;me&lt;&lt;endl;   //可以直接打印出该邮件内容
-    return 0;
-}
-</code></pre>
 
 
 			

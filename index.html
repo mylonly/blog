@@ -126,6 +126,136 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-06-01T22:08:35+08:00" itemprop="datePublished">2018/6/1</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15278621156583.html" itemprop="url">
+		制作Kali Linux 加密U盘启动盘</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">前置条件</h2>
+
+<ol>
+<li>1个至少是32GB的U盘，最好是USB3.0接口的</li>
+<li>一台可以安装Virtual Box的电脑</li>
+</ol>
+
+<h2 id="toc_1">需要下载的文件</h2>
+
+<ol>
+<li>Kali Linux 64位 iso镜像文件: <a href="https://www.kali.org/downloads/">下载地址</a></li>
+<li>Virtual Box 安装包 <a href="https://www.virtualbox.org/wiki/Downloads">下载地址</a></li>
+<li>Kali Linux OVA镜像文件(OVA格式) <a href="https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-hyperv-image-download/">下载地址</a></li>
+<li>Virtual Box Extension Pack <a href="https://www.virtualbox.org/wiki/Downloads">下载地址</a></li>
+</ol>
+
+<h2 id="toc_2">安装Kali Linux 虚拟机</h2>
+
+<p>我们需要借助Kali里面的一些工具来帮助我们制作加密U盘，所以我们需要首先安装一个Kali Linux虚拟机，如果你已经有了类似的虚拟机，可以忽略这个步骤。</p>
+
+<p>利用安装包安装完VirtualBox之后：</p>
+
+<ol>
+<li>在菜单项<code>管理</code>当中选择<code>导入虚拟电脑</code>，然后选中之前下载好的Kali的OVA格式虚拟机镜像文件。</li>
+<li>安装Virtual Box Extension Pack，这步主要是让虚拟机能支持USB3.0的设备</li>
+<li>修改已经导入的Kali虚拟机的设置，在USB设备选项中选择<code>USB 3.0 控制器</code>
+<img src="https://pic.mylonly.com/2018-06-01-589FAFA6C598ACDFD296B6D320D525C7.jpg" alt=""/></li>
+<li>启动Kali虚拟机，进入Kali之后，点击VirtualBox的<code>设备</code>菜单项，选择<code>安装增强功能</code>,如果提示安装失败，可以直接将桌面上出现的光盘中的VBoxLinuxAdditions.run 拷贝至其他目录，修改其权限为755，然后手动运行此脚本即可。
+<img src="https://pic.mylonly.com/2018-06-01-151200.png" alt=""/></li>
+<li>设置共享文件夹，在VirtualBox当中操作，这步主要是方便后面将下载在windows里的Kali的iso文件拷贝至Kali当中。
+<img src="https://pic.mylonly.com/2018-06-01-56483D9C90D387A88824988AFDE2DCF1.jpg" alt=""/></li>
+</ol>
+
+<h2 id="toc_3">U盘初始设置</h2>
+
+<ol>
+<li>选择VirtualBox的<code>设备</code>菜单，在<code>USB</code>子菜单选中已经插在主机上的U盘设备，将U盘映射到虚拟机当中
+<img src="https://pic.mylonly.com/2018-06-01-151239.png" alt=""/></li>
+<li><p>找到Kali当中的GParted工具打开，选择已经挂载的U盘(如果你的虚拟机之前没有挂载过其他U盘,默认的挂载分区应该是<code>/dev/sdb</code>,本文演示截图当中显示为/dev/sdc是因为之前已经挂载过一个U盘)<br/>
+<img src="media/15278621156583/15278659829428.jpg" alt=""/></p></li>
+<li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
+<img src="media/15278621156583/15278659963602.jpg" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_4">写入镜像、U盘分区</h2>
+
+<ol>
+<li>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</li>
+<li>利用如下命令将该iso文件拷贝至U盘当中</li>
+</ol>
+
+<pre><code>dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
+</code></pre>
+
+<ol>
+<li>利用parted工具对U盘当中未使用的其他部分进行分区，命令如下</li>
+</ol>
+
+<pre><code class="language-Bash">parted  #进入parted界面
+select /dev/sdc #选择U盘分区
+print #查看当前分区信息
+mkpart primary 2937 23417 #制作新的分区，起始位置从2937M开始，到23417位置结束
+print #查看新的分区信息
+</code></pre>
+
+<p><img src="https://pic.mylonly.com/2018-06-01-152223.jpg" alt=""/></p>
+
+<h2 id="toc_5">制作加密U盘</h2>
+
+<ol>
+<li><p>制作加密分区</p>
+
+<pre><code>cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
+</code></pre>
+
+<p>确认覆盖分区，输入大写的YES，然后输入两遍密码之后，加密分区制作完毕<br/>
+<strong>注意/dev/sdc3,在上面利用parted制作新分区时，其属于/dev/sdc下面的第三个分区</strong><br/>
+<img src="https://pic.mylonly.com/2018-06-01-15A3CBD2C0856CCC83089E164F496957.png" alt=""/></p></li>
+<li><p>对加密分区格式化分区,分配卷标</p>
+
+<pre><code class="language-Bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
+
+ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件
+
+mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式
+
+e2label /dev/mapper/usb persistence #将分区卷标指定为persistence,名字必须为persistence
+</code></pre></li>
+<li><p>挂载新的分区,写入验证文件</p>
+
+<pre><code class="language-Bash">mkdir -p /mnt/usb 
+mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下
+echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf
+#写入一个persistence.conf文件，此文件会在启动时用来确认此U盘是用来加密存储的分区
+</code></pre></li>
+<li><p>卸载分区，退出加密分区</p>
+
+<pre><code class="language-Bash">umount /dev/mapper/usb
+cryptsetup luksClose /dev/mapper/usb
+</code></pre>
+
+<p><img src="media/15278621156583/E0D62780718DE48D31F6CDB55916B0D3.png" alt="E0D62780718DE48D31F6CDB55916B0D3"/></p></li>
+</ol>
+
+<h2 id="toc_6">重启物理电脑，选择从U盘启动</h2>
+
+<p>进入Boot Menu之后，选择LIve USB Encrypted Persistence 进入系统，之后会让你输入之前创建加密分区时输入的密码，密码输入正确才能正确的进入系统，至此，整个制作加密Kali Linux U盘启动盘过程结束。</p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-05-31T22:25:43+08:00" itemprop="datePublished">2018/5/31</time>
 			</div>
 			<div class="tags">posted in 
@@ -271,37 +401,6 @@ data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: pop
 
 data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
 data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-28T14:29:43+08:00" itemprop="datePublished">2018/5/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15274889837567.html" itemprop="url">
-		Tensorflow错误集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
-加入以下代码</p>
-
-<pre><code>import os 
-os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
 </code></pre></li>
 </ol>
 
