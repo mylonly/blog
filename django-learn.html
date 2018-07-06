@@ -302,6 +302,31 @@ use mysql；
 ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
 FLUSH PRIVILEGES; 
 </code></pre></li>
+<li><p>Django-Filter自定义查询过滤字段</p>
+
+<pre><code class="language-Python">from django_filters import FilterSet
+from django_filters import CharFilter
+
+class TagFilter(FilterSet):
+    ##自定义search字段
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)
+
+    class Meta:
+        model = Tag
+        fields = {
+          &#39;id&#39;: [&#39;exact&#39;],
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],
+          &#39;search&#39;: [&#39;exact&#39;],
+        }
+</code></pre>
+
+<p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
+<li><p>DRF的OrderingFilter默认排序</p>
+
+<pre><code class="language-Python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)
+ordering = (&#39;-hot&#39;,)
+</code></pre></li>
 </ol>
 
 

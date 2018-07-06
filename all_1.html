@@ -126,6 +126,76 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-05-31T16:15:11+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277545119360.html" itemprop="url">
+		Pyplot相关</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>subplot</p>
+
+<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
+plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
+</code></pre>
+
+<p>subplot(numRows, numCols, plotNum)<br/>
+如果3个参数都小于10的话，可以统一成一个整数<br/>
+subplot(221) = subplot(2,2,1)</p></li>
+<li><p><img src="media/15277545119360/15277557443176.jpg" alt=""/></p></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-30T16:47:02+08:00" itemprop="datePublished">2018/5/30</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15276700222671.html" itemprop="url">
+		Pandas相关</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>Pandas 读取列数据</p>
+
+<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
+
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
+data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-05-28T14:29:43+08:00" itemprop="datePublished">2018/5/28</time>
 			</div>
 			<div class="tags">posted in 
@@ -237,172 +307,6 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
 
 <p>参考:<br/>
 <a href="https://blog.landscape.io/using-pylint-on-django-projects-with-pylint-django.html">blog.landscape.io</a></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-26T14:24:32+08:00" itemprop="datePublished">2018/4/26</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15247238721302.html" itemprop="url">
-		nginx 相关技巧</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
-
-<pre><code>  server {
-      listen 80 default;
-      server_name _;
-      rewrite ^(.*) http://www.mylonly.com permanent;
-    }
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-23T15:06:52+08:00" itemprop="datePublished">2018/4/23</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15244672126240.html" itemprop="url">
-		Django问题集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Csrf验证</p>
-
-<pre><code>需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
-</code></pre></li>
-<li><p>Django允许跨域</p>
-
-<p>安装<code>django-cors-headers</code></p>
-
-<pre><code>pip install django-cors-headers
-</code></pre>
-
-<p>在setting.py中增加如下代码</p>
-
-<pre><code>INSTALLED_APPS = [
-...
-&#39;corsheaders&#39;，
-...
- ] 
-
-MIDDLEWARE_CLASSES = (
-    ...
-    &#39;corsheaders.middleware.CorsMiddleware&#39;,
-    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序
-    ...
-)
-#跨域增加忽略
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    &#39;*&#39;
-)
-
-CORS_ALLOW_METHODS = (
-    &#39;DELETE&#39;,
-    &#39;GET&#39;,
-    &#39;OPTIONS&#39;,
-    &#39;PATCH&#39;,
-    &#39;POST&#39;,
-    &#39;PUT&#39;,
-    &#39;VIEW&#39;,
-)
-
-CORS_ALLOW_HEADERS = (
-    &#39;XMLHttpRequest&#39;,
-    &#39;X_FILENAME&#39;,
-    &#39;accept-encoding&#39;,
-    &#39;authorization&#39;,
-    &#39;content-type&#39;,
-    &#39;dnt&#39;,
-    &#39;origin&#39;,
-    &#39;user-agent&#39;,
-    &#39;x-csrftoken&#39;,
-    &#39;x-requested-with&#39;,
-    &#39;Pragma&#39;,
-)
-</code></pre></li>
-<li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
-
-<pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
-axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
-axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
-</code></pre>
-
-<blockquote>
-<p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
-</blockquote>
-
-<p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
-<li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
-
-<p>需要两步：</p>
-
-<ul>
-<li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
-<li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
-</ul>
-
-<pre><code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
-class login(views.APIView):
-authentication_classes = (BasicAuthentication,)
-def post(self, request, *args, **kwargs):
-
-username = request.data.get(&quot;username&quot;)
-password = request.data.get(&quot;password&quot;)
-
-user = auth.authenticate(request, username=username, password=password)
-if user is not None:
-  auth.login(request, user)
-  return ErosResponse()
-else:
-  return ErosResponse(status=ErosResponseStatus.INVALID_USER)
-</code></pre></li>
-<li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
-
-<p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
-
-<pre><code class="language-Python">from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import OrderingFilter
-</code></pre></li>
-<li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
-
-<p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
-
-<pre><code>mysql -u root -p
-use mysql；
-ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
-FLUSH PRIVILEGES; 
-</code></pre></li>
-</ol>
 
 
 			

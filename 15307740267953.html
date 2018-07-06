@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Python 错误集锦 - 独自一人
+  	MySql 相关问题 - 独自一人
   	
 	</title>
 
@@ -122,38 +122,64 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Python 错误集锦</h1>
+		<h1 class="title" itemprop="name">MySql 相关问题</h1>
 		<div class="entry-content" itemprop="articleBody">
 			<ol>
-<li><p>ValueError: unknown locale: UTF-8 <br/>
-<img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
+<li><p>查看数据库服务器字符集</p>
 
-<p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
-export LC_ALL=
+<pre><code>mysql&gt; show variables like &#39;%char%&#39;;
++--------------------------+-------------------------------------+------
+| Variable_name | Value |......
++--------------------------+-------------------------------------+------
+| character_set_client | utf8 |...... -- 客户端字符集
+| character_set_connection | utf8 |......
+| character_set_database | utf8 |...... -- 数据库字符集
+| character_set_filesystem | binary |......
+| character_set_results | utf8 |......
+| character_set_server | utf8 |...... -- 服务器字符集
+| character_set_system | utf8 |......
+| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......
++--------------------------+-------------------------------------+------
 </code></pre></li>
-<li><p>zip()函数在Python2和Python3中的区别</p>
+<li><p>查看数据表(table)字符集</p>
 
-<p>在Python2中，zip返回的是元祖的列表<br/>
-而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
-
-<pre><code>x = [1, 2, 3]
-y = [a, b, c]
-
-#python3
-n = list(zip(x,y))
-print(n)
-#python2
-n = zip(x,y)
-print n
+<pre><code>mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
++-----------+--------+---------+------------+------+-----------------+------
+| Name | Engine | Version | Row_format | Rows | Collation |......
++-----------+--------+---------+------------+------+-----------------+------
+| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......
++-----------+--------+---------+------------+------+-----------------+------
 </code></pre></li>
+<li><p>查看数据列(column)字符集</p>
+
+<pre><code>mysql&gt; show full columns from countries;
++----------------------+-------------+-----------------+--------
+| Field | Type | Collation | .......
++----------------------+-------------+-----------------+--------
+| countries_id | int(11) | NULL | .......
+| countries_name | varchar(64) | utf8_general_ci | .......
+| countries_iso_code_2 | char(2) | utf8_general_ci | .......
+| countries_iso_code_3 | char(3) | utf8_general_ci | .......
+| address_format_id | int(11) | NULL | .......
++----------------------+-------------+-----------------+--------
+</code></pre></li>
+<li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
+
+<pre><code>alter database name character set utf8;
+create database name character set utf8;
+alter table 表名 convert to character set gbk;
+alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
+</code></pre></li>
+<li><p>通过数据库my.cnf配置文件设置字符集</p>
+
+<pre><code>vi /etc/my.cnf
+#在[client]下添加
+default-character-set=utf8
+#在[mysqld]下添加
+default-character-set=utf8
+</code></pre>
+
+<p>重启mysql</p></li>
 </ol>
 
 		</div>

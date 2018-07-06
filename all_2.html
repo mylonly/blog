@@ -126,6 +126,197 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-04-26T14:24:32+08:00" itemprop="datePublished">2018/4/26</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15247238721302.html" itemprop="url">
+		nginx 相关技巧</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
+
+<pre><code>  server {
+      listen 80 default;
+      server_name _;
+      rewrite ^(.*) http://www.mylonly.com permanent;
+    }
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-04-23T15:06:52+08:00" itemprop="datePublished">2018/4/23</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15244672126240.html" itemprop="url">
+		Django问题集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>Csrf验证</p>
+
+<pre><code>需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
+</code></pre></li>
+<li><p>Django允许跨域</p>
+
+<p>安装<code>django-cors-headers</code></p>
+
+<pre><code>pip install django-cors-headers
+</code></pre>
+
+<p>在setting.py中增加如下代码</p>
+
+<pre><code>INSTALLED_APPS = [
+...
+&#39;corsheaders&#39;，
+...
+ ] 
+
+MIDDLEWARE_CLASSES = (
+    ...
+    &#39;corsheaders.middleware.CorsMiddleware&#39;,
+    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序
+    ...
+)
+#跨域增加忽略
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    &#39;*&#39;
+)
+
+CORS_ALLOW_METHODS = (
+    &#39;DELETE&#39;,
+    &#39;GET&#39;,
+    &#39;OPTIONS&#39;,
+    &#39;PATCH&#39;,
+    &#39;POST&#39;,
+    &#39;PUT&#39;,
+    &#39;VIEW&#39;,
+)
+
+CORS_ALLOW_HEADERS = (
+    &#39;XMLHttpRequest&#39;,
+    &#39;X_FILENAME&#39;,
+    &#39;accept-encoding&#39;,
+    &#39;authorization&#39;,
+    &#39;content-type&#39;,
+    &#39;dnt&#39;,
+    &#39;origin&#39;,
+    &#39;user-agent&#39;,
+    &#39;x-csrftoken&#39;,
+    &#39;x-requested-with&#39;,
+    &#39;Pragma&#39;,
+)
+</code></pre></li>
+<li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
+
+<pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
+axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
+axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
+</code></pre>
+
+<blockquote>
+<p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
+</blockquote>
+
+<p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
+<li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
+
+<p>需要两步：</p>
+
+<ul>
+<li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
+<li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
+</ul>
+
+<pre><code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
+class login(views.APIView):
+authentication_classes = (BasicAuthentication,)
+def post(self, request, *args, **kwargs):
+
+username = request.data.get(&quot;username&quot;)
+password = request.data.get(&quot;password&quot;)
+
+user = auth.authenticate(request, username=username, password=password)
+if user is not None:
+  auth.login(request, user)
+  return ErosResponse()
+else:
+  return ErosResponse(status=ErosResponseStatus.INVALID_USER)
+</code></pre></li>
+<li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
+
+<p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
+
+<pre><code class="language-Python">from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+</code></pre></li>
+<li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
+
+<p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
+
+<pre><code>mysql -u root -p
+use mysql；
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
+FLUSH PRIVILEGES; 
+</code></pre></li>
+<li><p>Django-Filter自定义查询过滤字段</p>
+
+<pre><code class="language-Python">from django_filters import FilterSet
+from django_filters import CharFilter
+
+class TagFilter(FilterSet):
+    ##自定义search字段
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)
+
+    class Meta:
+        model = Tag
+        fields = {
+          &#39;id&#39;: [&#39;exact&#39;],
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],
+          &#39;search&#39;: [&#39;exact&#39;],
+        }
+</code></pre>
+
+<p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
+<li><p>DRF的OrderingFilter默认排序</p>
+
+<pre><code class="language-Python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)
+ordering = (&#39;-hot&#39;,)
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-04-23T11:35:12+08:00" itemprop="datePublished">2018/4/23</time>
 			</div>
 			<div class="tags">posted in 
@@ -152,6 +343,21 @@ export LC_MONETARY=&quot;en_US.UTF-8&quot;
 export LC_NUMERIC=&quot;en_US.UTF-8&quot;
 export LC_TIME=&quot;en_US.UTF-8&quot;
 export LC_ALL=
+</code></pre></li>
+<li><p>zip()函数在Python2和Python3中的区别</p>
+
+<p>在Python2中，zip返回的是元祖的列表<br/>
+而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
+
+<pre><code>x = [1, 2, 3]
+y = [a, b, c]
+
+#python3
+n = list(zip(x,y))
+print(n)
+#python2
+n = zip(x,y)
+print n
 </code></pre></li>
 </ol>
 
@@ -661,129 +867,6 @@ export default emotionFunc;
 <p>至此，我的整个实现已经完全呈现出来了，如果你能看懂我上面所写，正好你也正好有和我类似的需求，相信你也能在我的思路下实现自己的业务代码。</p>
 
 <p>最后，愿世界和平！！！</p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-12-07T21:30:15+08:00" itemprop="datePublished">2017/12/7</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15126534156721.html" itemprop="url">
-		Ubuntu 安装uwsgi</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
-然后利用pip3 安装uwsgi</p>
-
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-tar -xvf Python-3.6.3.tar.xz
-cd Python-3.6.3/
-
-apt-get install zlib1g-dev
-apt-get install libssl-dev
-apt-get install sqlite3
-
-
-./configure --enable-loadable-sqlite-extensions
-
-make &amp;&amp; sudo make install
-
-
-pip3 install uwsgi
-
-uwsgi -i /data/web/xxxx.ini
-</code></pre>
-
-<p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
-
-<pre><code>py-autoreload = 1
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-11-29T22:42:48+08:00" itemprop="datePublished">2017/11/29</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15119665687635.html" itemprop="url">
-		Django 发送html格式的邮件</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
-
-<h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
-
-<pre><code class="language-Python">EMAIL_USE_SSL = True    
-EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
-EMAIL_PORT = 465
-EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
-EMAIL_HOST_PASSWORD = &#39;password&#39;  # 密码
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-</code></pre>
-
-<h5 id="toc_1">2. 引用mail库发送邮件</h5>
-
-<pre><code class="language-Python">from django.core.mail import EmailMessage
-from Across.settings import EMAIL_HOST_USER
-
-msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
-msg.send()
-</code></pre>
-
-<h5 id="toc_2">3.发送html模板邮件</h5>
-
-<p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
-
-<pre><code class="language-Python">TEMPLATES = [
-    {
-        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
-        &#39;DIRS&#39;: [
-            os.path.join(BASE_DIR,&#39;templates&#39;)  ##你的模板目录
-        ],
-        &#39;APP_DIRS&#39;: True,
-        &#39;OPTIONS&#39;: {
-            &#39;context_processors&#39;: [
-                &#39;django.template.context_processors.debug&#39;,
-                &#39;django.template.context_processors.request&#39;,
-                &#39;django.contrib.auth.context_processors.auth&#39;,
-                &#39;django.contrib.messages.context_processors.messages&#39;,
-            ],
-        },
-    },
-]
-</code></pre>
-
-<p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
-
-<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
-msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
-msg.content_subtype = &quot;html&quot; # Main content is now text/html
-msg.send()
-</code></pre>
 
 
 			
