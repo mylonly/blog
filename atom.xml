@@ -4,7 +4,7 @@
   <title><![CDATA[独自一人]]></title>
   <link href="https://blog.mylonly.com/atom.xml" rel="self"/>
   <link href="https://blog.mylonly.com/"/>
-  <updated>2018-07-06T21:19:40+08:00</updated>
+  <updated>2018-07-06T21:41:46+08:00</updated>
   <id>https://blog.mylonly.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -375,7 +375,7 @@ class MovieItem(scrapy.Item):
 </code></pre>
 
 <p>接下来，分析解析函数，DoubanItem的数据获取就不额外介绍了，利用之前分析时用到的xpath语句可以很容易的定义到具体内容。<br/>
-其中movieId是起始链接中通过Request中Meta属性传递过来的，当前你可以通过分析网页找到包含movieId的地方。</p>
+其中movieId是起始链接中通过Request中Meta属性传递过来的，当然你可以通过分析网页找到包含movieId的地方。</p>
 
 <pre><code>current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
 total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
@@ -397,12 +397,13 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 <pre><code>1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
 2. 情况2时，由于此时触发了反爬虫机制，返回的页面没有我们的数据，如果我们直接忽略掉的话，会损失大量的数据（这种情况很常见），所以我们就干脆再试一次，返回request，让Scrapy重新爬取这个页面，因为每次重新爬取都会换一个新的代理IP，所以我们有很大概率下次抓取就是正常的。此处有一点需要注意：因为Scrapy默认会过滤掉重复请求，所以我们需要在构造Request的时候讲dont_filter参数设置为True,让其不要过滤重复链接。
 3. 正常情况时，通过xpath语法获取的下一页评论的链接地址然后构造一个request交给Scrapy继续爬取
+</code></pre>
 
-####影评下载中间件
-上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置
+<h4 id="toc_13">影评下载中间件</h4>
 
-```Python
-class DoubanDownloaderMiddleware(object):
+<p>上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置</p>
+
+<pre><code class="language-Python">class DoubanDownloaderMiddleware(object):
 # Not all methods need to be defined. If a method is not defined,
 # scrapy acts as if the downloader middleware does not modify the
 # passed objects.
@@ -453,14 +454,13 @@ def process_response(self, request, response, spider):
         return request
 
     return response
-```    
 </code></pre>
 
 <p>其中主要就要实现两个函数，process_request和process_response，前者是每次爬取页面前Scrapy会调用这个函数，后者则是每次爬取完页面之后调用。<br/>
     在前者方法里，我们通过调用一个在线的代理ip获取接口，获取一个代理IP，然后设置request的proxy属性达到更换代理的功能，当然，你也可以通过文件读取代理IP。<br/>
     在后者的方法里，我们判断了状态码为403的状况，因为这个状态码标识当前的request被反爬虫禁止侦测并禁止了，而我们要做的就是把这个禁止的request地址重新包装下放到Scrapy的爬取队列当中。</p>
 
-<h4 id="toc_13">影评Item</h4>
+<h4 id="toc_14">影评Item</h4>
 
 <pre><code class="language-Python">class ReviewItem(scrapy.Item):
 id = scrapy.Field()
@@ -477,7 +477,7 @@ alt = scrapy.Field()
 
 <p>没啥好说的，想存啥就写啥</p>
 
-<h4 id="toc_14">影评Pipeline</h4>
+<h4 id="toc_15">影评Pipeline</h4>
 
 <pre><code class="language-Python">
 class ReviewPipeline(object):
@@ -515,7 +515,7 @@ class ReviewPipeline(object):
 <pre><code>和之前的电影的pipeline类似，就是基本的数据库写操作。
 </code></pre>
 
-<h4 id="toc_15">运行爬虫</h4>
+<h4 id="toc_16">运行爬虫</h4>
 
 <pre><code class="language-Shell">scrapy crawl review
 </code></pre>
