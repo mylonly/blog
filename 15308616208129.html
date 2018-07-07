@@ -134,7 +134,7 @@
 
 <p>首先还是要分析一下要抓取的网站<a href="https://movie.douban.com/">豆瓣电影</a>,主要是通过搜索引擎或者浏览器的调试工具看看有没有可以利用的API，在没有找到任何api的前提下才开始分析网站的页面结构，找到可以提取的信息。<br/>
 通过搜索引擎，我找到了<a href="https://developers.douban.com/wiki/?title=api_v2">豆瓣开发者平台</a>，在<a href="https://developers.douban.com/wiki/?title=movie_v2">豆瓣电影</a>的文档中有获取电影，获取影评等等的详细接口，正当我以为接下来的数据采集将会变得非常简单之时，下面这张图还是让我冷静了下来<br/>
-<img src="media/15308616208129/15308648552927.jpg" alt=""/></p>
+<img src="https://pic.mylonly.com/2018-07-07-122829.jpg" alt=""/></p>
 
 <blockquote>
 <p>如果你在2015年之前注册过豆瓣的开发者，那么恭喜你,你可以通过豆瓣提供的API或者SDK获取你想获得的任何数据</p>
@@ -148,14 +148,13 @@
 </code></pre>
 
 <p>接口返回的格式大概如下:<br/>
-<img src="media/15308616208129/15308650382688.jpg" alt=""/></p>
-
-<p>里面包含了电影一些详细信息，对于推荐系统来说，这些数据足够了。</p>
+<img src="https://pic.mylonly.com/2018-07-07-122848.jpg" alt=""/><br/>
+里面包含了电影一些详细信息，对于推荐系统来说，这些数据足够了。</p>
 
 <p>此外，通过利用Chrome的调试工具，在<a href="https://movie.douban.com/tag/#/">豆瓣电影-分类</a>这个页面我发现了他们使用的一个JQuery接口,也是一个GET请求，不需要AUTH。</p>
 
-<p><img src="media/15308616208129/15308662057789.jpg" alt=""/><br/>
-<img src="media/15308616208129/15308662242933.jpg" alt=""/></p>
+<p><img src="https://pic.mylonly.com/2018-07-07-122901.jpg" alt=""/><br/>
+<img src="https://pic.mylonly.com/2018-07-07-123038.jpg" alt=""/></p>
 
 <p>详细接口如下,可以通过更改start来迭代获取所有电影条目</p>
 
@@ -178,7 +177,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 <p>照例先用调试工具看看有没有可以用的api接口后，发现这次并没有那么好运了，这个影评页面是由服务器渲染完成的。</p>
 
 <p>没有了接口，我们来分析页面，依然通过调试工具:<br/>
-<img src="media/15308616208129/15308675859423.jpg" alt=""/><br/>
+<img src="https://pic.mylonly.com/2018-07-07-122913.jpg" alt=""/><br/>
 每条评论都是在一个review-item的div块里面，而所有评论都是在一个review-list的div块里吗，我们通过xpath语法可以很容易的定位到每条评论的详细信息,下面是所有信息的xpath语句，在我们写爬虫时候就靠他提取内容了</p>
 
 <pre><code>评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
@@ -216,9 +215,8 @@ scrapy startproject Douban
 </code></pre>
 
 <p>创建好的工程目录大致如下:<br/>
-<img src="media/15308616208129/15308694758600.jpg" alt=""/></p>
-
-<p>其中：</p>
+<img src="https://pic.mylonly.com/2018-07-07-122926.jpg" alt=""/><br/>
+其中：</p>
 
 <pre><code>    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
     items.py: 模型类，所有需要结构化的数据都要预先在此文件中定义
@@ -491,7 +489,7 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>上面基础代码的作用主要是为了获取影评页面的底部导航条</p>
 
-<p><img src="media/15308616208129/15308756078903.jpg" alt=""/></p>
+<p><img src="https://pic.mylonly.com/2018-07-07-122943.jpg" alt=""/></p>
 
 <p>但是这个导航条会有两种情况获取不到:</p>
 

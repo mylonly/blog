@@ -176,17 +176,14 @@
 <ol>
 <li>选择VirtualBox的<code>设备</code>菜单，在<code>USB</code>子菜单选中已经插在主机上的U盘设备，将U盘映射到虚拟机当中
 <img src="https://pic.mylonly.com/2018-06-01-151239.png" alt=""/></li>
-<li><p>找到Kali当中的GParted工具打开，选择已经挂载的U盘(如果你的虚拟机之前没有挂载过其他U盘,默认的挂载分区应该是<code>/dev/sdb</code>,本文演示截图当中显示为/dev/sdc是因为之前已经挂载过一个U盘)<br/>
-<img src="media/15278621156583/15278659829428.jpg" alt=""/></p></li>
+<li>找到Kali当中的GParted工具打开，选择已经挂载的U盘(如果你的虚拟机之前没有挂载过其他U盘,默认的挂载分区应该是<code>/dev/sdb</code>,本文演示截图当中显示为/dev/sdc是因为之前已经挂载过一个U盘)
+<img src="https://pic.mylonly.com/2018-07-07-123121.jpg" alt=""/></li>
 <li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
-<img src="media/15278621156583/15278659963602.jpg" alt=""/></p></li>
-</ol>
+<img src="https://pic.mylonly.com/2018-07-07-123132.jpg" alt=""/></p>
 
-<h2 id="toc_4">写入镜像、U盘分区</h2>
-
-<ol>
-<li>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</li>
-<li>利用如下命令将该iso文件拷贝至U盘当中</li>
+<h2 id="toc_4">写入镜像、U盘分区</h2></li>
+<li><p>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</p></li>
+<li><p>利用如下命令将该iso文件拷贝至U盘当中</p></li>
 </ol>
 
 <pre><code>dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
@@ -239,7 +236,7 @@ echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf
 cryptsetup luksClose /dev/mapper/usb
 </code></pre>
 
-<p><img src="media/15278621156583/E0D62780718DE48D31F6CDB55916B0D3.png" alt="E0D62780718DE48D31F6CDB55916B0D3"/></p></li>
+<p><img src="https://pic.mylonly.com/2018-07-07-123146.jpg" alt=""/></p></li>
 </ol>
 
 <h2 id="toc_6">重启物理电脑，选择从U盘启动</h2>
