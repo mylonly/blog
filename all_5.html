@@ -126,489 +126,6 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2017-05-19T14:28:46+08:00" itemprop="datePublished">2017/5/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14951753262754.html" itemprop="url">
-		基于BarrageRender自定义弹幕动画</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><a href="https://github.com/unash/BarrageRenderer">BarrageRender</a> 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，<code>BarrageFloatSprite</code>和<code>BarrageWalkSprite</code>。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程。</p>
-</blockquote>
-
-<p><mark><em>BarrageRender目前已更新到2.0.1,自定义弹幕的机制有改变，本篇文章的代码在2.0.1下不起作用，如果想按照本文中用的方法，请使用1.9.1版本的BarrageRender。后续会更新2.0.1版本下的自定义弹幕</em></mark></p>
-
-<h3 id="toc_0">先展示效果</h3>
-
-<p><img src="https://pic.mylonly.com/2017-05-19-1234.gif" alt="弹幕效果"/></p>
-
-<h3 id="toc_1">再介绍BarrageWalkSprite原理</h3>
-
-<blockquote>
-<p>BarrageWalkSprite和本文将要实现的自定义Sprite有一定的关联性，所以就通过分析BarrageWalkSprite的源码来展示BarrageRender渲染弹幕的原理，另外一个BarrageFloatSprite的渲染方式稍有不同，但是如果你能搞清楚BarrageWalkSprite的原理，理解FloatSprite的渲染方式也是很轻松的。</p>
-</blockquote>
-
-<h4 id="toc_2">弹幕的初始位置</h4>
-
-<p>BarrageRender在BarrageDispatcher的调度下触发activeWithContext方法，而在此方法中，BarrageRender调用了Sprite的originInBounds:withSprite方法来确定每个精灵的初始位置</p>
-
-<pre><code class="language-objectivec">   - (void)activeWithContext:(NSDictionary *)context
-    {
-        CGRect rect = [[context objectForKey:kBarrageRendererContextCanvasBounds]CGRectValue];
-        NSArray * sprites = [context objectForKey:kBarrageRendererContextRelatedSpirts];
-        NSTimeInterval timestamp = [[context objectForKey:kBarrageRendererContextTimestamp]doubleValue];
-        _timestamp = timestamp;
-        _view = [self bindingView];
-        [self configView];
-        [_view sizeToFit];
-        if (!CGSizeEqualToSize(_mandatorySize, CGSizeZero)) {
-            _view.frame = CGRectMake(0, 0, _mandatorySize.width, _mandatorySize.height);
-        }
-        _origin = [self originInBounds:rect withSprites:sprites];
-        _view.frame = CGRectMake(_origin.x, _origin.y, self.size.width, self.size.height);
-    }
-</code></pre>
-
-<p>BarrageWalkSpirte在originInBounds:withSprite方法中,根据当前屏幕上已经存在的Sprite来计算自己的初始位置。</p>
-
-<pre><code class="language-objectivec">    
-- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
-{
-   // 获取同方向精灵
-   NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
-   for (BarrageWalkSprite * sprite in sprites) {
-       if (sprite.direction == _direction &amp;&amp; sprite.side == self.side) { // 找寻同道中人
-           [synclasticSprites addObject:sprite];
-       }
-   }
-   
-   static BOOL const AVAERAGE_STRATEGY = YES; // YES:条纹平均精灵策略(体验会好一些); NO:最快时间策略
-   NSTimeInterval stripMaxActiveTimes[STRIP_NUM]={0}; // 每一条网格 已有精灵中最后退出屏幕的时间
-   NSUInteger stripSpriteNumbers[STRIP_NUM]={0}; // 每一条网格 包含精灵的数目
-   NSUInteger stripNum = MIN(STRIP_NUM, MAX(self.trackNumber, 1)); // between (1,STRIP_NUM)
-   CGFloat stripHeight = rect.size.height/stripNum; // 水平条高度
-   CGFloat stripWidth = rect.size.width/stripNum; // 竖直条宽度
-   BOOL oritation = _direction == BarrageWalkDirectionL2R || _direction == BarrageWalkDirectionR2L; // 方向, YES代表水平弹幕
-   BOOL rotation = self.side == [self defaultSideWithDirection:_direction];
-   /// 计算数据结构,便于应用算法
-   NSUInteger overlandStripNum = 1; // 横跨网格条数目
-   if (oritation) { // 水平
-       overlandStripNum = (NSUInteger)ceil((double)self.size.height/stripHeight);
-   }
-   else // 竖直
-   {
-       overlandStripNum = (NSUInteger)ceil((double)self.size.width/stripWidth);
-   }
-   /// 当前精灵需要的时间,左边碰到边界, 不是真实的活跃时间
-   NSTimeInterval maxActiveTime = oritation?rect.size.width/self.speed:rect.size.height/self.speed;
-   NSUInteger availableFrom = 0;
-   NSUInteger leastActiveTimeStrip = 0; // 最小时间的行
-   NSUInteger leastActiveSpriteStrip = 0; // 最小网格的行
-   
-   for (NSUInteger i = 0; i &lt; stripNum; i++) {
-       //寻找当前行里包含的sprites
-       CGFloat stripFrom = i * (oritation?stripHeight:stripWidth);
-       CGFloat stripTo = stripFrom + (oritation?stripHeight:stripWidth);
-       if (!rotation) {
-           CGFloat preStripFrom = stripFrom;
-           stripFrom = (oritation?rect.size.height:rect.size.width) - stripTo;
-           stripTo = (oritation?rect.size.height:rect.size.width) - preStripFrom;
-       }
-       CGFloat lastDistanceAllOut = YES;
-       for (BarrageWalkSprite * sprite in synclasticSprites) {
-           CGFloat spriteFrom = oritation?sprite.origin.y:sprite.origin.x;
-           CGFloat spriteTo = spriteFrom + (oritation?sprite.size.height:sprite.size.width);
-           if ((spriteTo-spriteFrom)+(stripTo-stripFrom)&gt;MAX(stripTo-spriteFrom, spriteTo-stripFrom)) { // 在条条里
-               stripSpriteNumbers[i]++;
-               NSTimeInterval activeTime = [sprite estimateActiveTime];
-               if (activeTime &gt; stripMaxActiveTimes[i]){ // 获取最慢的那个
-                   stripMaxActiveTimes[i] = activeTime;
-                   CGFloat distance = oritation?fabs(sprite.position.x-sprite.origin.x):fabs(sprite.position.y-sprite.origin.y);
-                   lastDistanceAllOut = distance &gt; (oritation?sprite.size.width:sprite.size.height);
-               }
-           }
-       }
-       if (stripMaxActiveTimes[i]&gt;maxActiveTime || !lastDistanceAllOut) {
-           availableFrom = i+1;
-       }
-       else if (i - availableFrom &gt;= overlandStripNum - 1){
-           break; // eureka!
-       }
-       if (i &lt;= stripNum - overlandStripNum) {
-           if (stripMaxActiveTimes[i] &lt; stripMaxActiveTimes[leastActiveTimeStrip]) {
-               leastActiveTimeStrip = i;
-           }
-           if (stripSpriteNumbers[i] &lt; stripSpriteNumbers[leastActiveSpriteStrip]) {
-               leastActiveSpriteStrip = i;
-           }
-       }
-   }
-   if (availableFrom &gt; stripNum - overlandStripNum) { // 那就是没有找到喽
-       availableFrom = AVAERAGE_STRATEGY?leastActiveSpriteStrip:leastActiveTimeStrip; // 使用最小个数 or 使用最短时间
-   }
-   
-   CGPoint origin = CGPointZero;
-   if (oritation) { // 水平
-       _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-       origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-       _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width:rect.origin.x - self.size.width;
-   }
-   else
-   {
-       _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-       origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-       _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height:rect.origin.y - self.size.height;
-   }
-   return origin;
-}
-</code></pre>
-
-<p>代码虽然很长，但是主要就是为了实现下面几个逻辑:</p>
-
-<pre><code class="language-text">1. BarrageWalkSprite先获取了同方向的所有精灵
-2. 根据屏幕轨道的frame范围找到每一个轨道内的所有精灵
-3. 在同一轨道内的所有精灵中找到存活时间最长的精灵(速度最慢)
-4. 判断速度最慢的那个精灵的尾部是否已经完全进入弹幕显示区域
-5. 如果速度最慢的精灵尾部已经进入弹幕显示区域，则可以确定自己的可以紧跟在后面出现，如果还没有完全进入弹幕显示区域，则继续在下一个轨道获取合适的位置
-6. 根据计算得到的自己可以出现的轨道，加上该轨道上最后一个精灵的位置，得到自己的起始位置
-</code></pre>
-
-<h4 id="toc_3">弹幕的运动轨迹</h4>
-
-<p>BarrageRender绘制每个精灵的运动轨迹的方式非常简单，在BarrageRender中，内置的时钟引擎<code>BarrageClock</code>负责在间隔时间内调用所有已经激活精灵基类<code>BarrageSprite</code>中的updateWithTime方法。</p>
-
-<pre><code class="language-objectivec">   - (void)initClock
-    {
-        __weak id weakSelf = self;
-        _clock = [BarrageClock clockWithHandler:^(NSTimeInterval time){
-            BarrageRenderer * strongSelf = weakSelf;
-            strongSelf-&gt;_time = time;
-            [strongSelf update];
-        }];
-    }
-    
-    /// 每个刷新周期执行一次
-    - (void)update
-    {
-        [_dispatcher dispatchSprites]; // 分发精灵
-        for (BarrageSprite * sprite in _dispatcher.activeSprites) {
-            [sprite updateWithTime:_time];
-        }
-    }
-
-</code></pre>
-
-<p>而在<code>BarrageSprite</code>的updateWithTime方法中, 每个精灵重新更改了自身的frame属性，以此来达到动画位移的效果。其中<code>_valid</code>属性是Sprite存活的唯一标志，标记为NO之后，Sprite就会从队列中彻底移除</p>
-
-<pre><code class="language-objectivec">     //BarrageSprite
-   - (void)updateWithTime:(NSTimeInterval)time
-    {
-        _valid = [self validWithTime:time];
-        _view.frame = [self rectWithTime:time];
-    }
-</code></pre>
-
-<p>BarrageWalkSprite通过属性speed来实时改变自己的frame位置,同时计算剩下的destination和speed来算出自己的存活时间以用来标记valid属性</p>
-
-<pre><code class="language-objectivec">  //BarrageWalkSprite
-  
-  - (BOOL)validWithTime:(NSTimeInterval)time
-    {
-        return [self estimateActiveTime] &gt; 0;
-    }
-    
-  - (NSTimeInterval)estimateActiveTime
-    {
-        CGFloat activeDistance = 0;
-        switch (_direction) {
-            case BarrageWalkDirectionR2L:
-                activeDistance = self.position.x - _destination.x;
-                break;
-            case BarrageWalkDirectionL2R:
-                activeDistance = _destination.x - self.position.x;
-                break;
-            case BarrageWalkDirectionT2B:
-                activeDistance = _destination.y - self.position.y;
-                break;
-            case BarrageWalkDirectionB2T:
-                activeDistance = self.position.y - _destination.y;
-            default:
-                break;
-        }
-        return activeDistance/self.speed;
-    }
-  
-  - (CGRect)rectWithTime:(NSTimeInterval)time
-    {
-        CGFloat X = self.destination.x - self.origin.x;
-        CGFloat Y = self.destination.y - self.origin.y;
-        CGFloat L = sqrt(X*X + Y*Y);
-        NSTimeInterval duration = time - self.timestamp;
-        CGPoint position = CGPointMake(self.origin.x + duration * self.speed * X/L, self.origin.y + duration * self.speed * Y/L);
-        return CGRectMake(position.x, position.y, self.size.width, self.size.height);
-    }
-    
-</code></pre>
-
-<h4 id="toc_4">弹幕终点</h4>
-
-<p>BarrageWalkSprite的终点计算很简单，弹幕的显示的距离加上Sprite自身的宽度就是整个精灵需要位移的距离，这个destination的计算已经体现在了起点位置的获取当中</p>
-
-<pre><code class="language-objectivec">CGPoint origin = CGPointZero;
-if (oritation) { // 水平
-   _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-   origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-   _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width:rect.origin.x - self.size.width;
-}
-else
-{
-   _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-   origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-   _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height:rect.origin.y - self.size.height;
-}
-return origin;
-</code></pre>
-
-<h3 id="toc_5">自定义Sprite</h3>
-
-<blockquote>
-<p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite有很多重合之处，所以自定义的BarrageBubblingSprite直接继承BarrageWalkSprite以获取其direction,side,speed,trackNumber等多个属性，当然还需要另外加上加速度speedUp和停留时间stay属性</p>
-</blockquote>
-
-<pre><code class="language-objectivec">@interface BarrrageBubblingSprite : BarrageWalkSprite
-
-@property (nonatomic,assign) CGFloat speedUp; //加速度
-
-@property (nonatomic,assign) CGFloat stay; //到达终点后的停留时间
-
-@end
-</code></pre>
-
-<h4 id="toc_6">起点位置</h4>
-
-<p>BubblingSprite的起点位置的获取逻辑和WalkSprite的起点逻辑类似，不同的地方在于:</p>
-
-<ol>
-<li><em>即使轨道内最慢的那个精灵已经完全进入弹幕显示区域，只要该精灵仍然存活，就不能紧跟其后,而是要另外找寻其他轨道</em></li>
-<li><em>当所有轨道都已经有精灵占据的时候，找到存活时间最短的那个精灵，通过将其的stay属性设置为0让其直接消失，然后让自己占据该精灵所在轨道</em></li>
-</ol>
-
-<pre><code class="language-objectivec">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
-{
-    // 获取同方向精灵
-    NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
-    for (BarrageWalkSprite * sprite in sprites) {
-        if (sprite.direction == self.direction &amp;&amp; sprite.side == self.side) { // 找寻同道中人
-            [synclasticSprites addObject:sprite];
-        }
-    }
-    
-    NSUInteger stripNum = MIN(STRIP_NUM, MAX(self.trackNumber, 1)); // between (1,STRIP_NUM)
-    CGFloat stripHeight = rect.size.height/stripNum; // 水平条高度
-    CGFloat stripWidth = rect.size.width/stripNum; // 竖直条宽度
-    BOOL oritation = self.direction == BarrageWalkDirectionL2R || self.direction == BarrageWalkDirectionR2L; // 方向, YES代表水平弹幕
-    BOOL rotation = self.side == [self defaultSideWithDirection:self.direction];
-    /// 计算数据结构,便于应用算法
-    NSUInteger overlandStripNum = 1; // 横跨网格条数目
-    if (oritation) { // 水平
-        overlandStripNum = (NSUInteger)ceil((double)self.size.height/stripHeight);
-    }
-    else // 竖直
-    {
-        overlandStripNum = (NSUInteger)ceil((double)self.size.width/stripWidth);
-    }
-
-    NSUInteger availableFrom = 0;
-    BarrrageBubblingSprite* lastTimeSprite = self;
-    NSInteger lastSpriteIndex = 0;
-    
-    
-    for (NSUInteger i = 0; i &lt; stripNum; i++) {
-        //寻找当前行里包含的sprites
-        CGFloat stripFrom = i * (oritation?stripHeight:stripWidth);
-        CGFloat stripTo = stripFrom + (oritation?stripHeight:stripWidth);
-        if (!rotation) {
-            CGFloat preStripFrom = stripFrom;
-            stripFrom = (oritation?rect.size.height:rect.size.width) - stripTo;
-            stripTo = (oritation?rect.size.height:rect.size.width) - preStripFrom;
-        }
-        CGFloat exsitSprite = NO;
-        for (BarrrageBubblingSprite * sprite in synclasticSprites) {
-            CGFloat spriteFrom = oritation?sprite.origin.y:sprite.origin.x;
-            CGFloat spriteTo = spriteFrom + (oritation?sprite.size.height:sprite.size.width);
-            if ((spriteTo-spriteFrom)+(stripTo-stripFrom)&gt;MAX(stripTo-spriteFrom, spriteTo-stripFrom)) { // 在条条里
-                exsitSprite = YES;
-              
-                if (sprite.timestamp &lt; lastTimeSprite.timestamp){
-                    lastTimeSprite = sprite;
-                    lastSpriteIndex = i;
-                }
-                break;
-            }
-        }
-        if (exsitSprite) {
-            availableFrom = i+1;
-        }else{ //第一行就是空的
-            break;
-        }
-        
-    }
-    if (availableFrom == stripNum) { // 超出最大的轨道数，挤掉最上层精灵
-        availableFrom = lastSpriteIndex;
-        lastTimeSprite.stay = 0;
-    }
-    
-    CGPoint origin = CGPointZero;
-    if (oritation) { // 水平
-        _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-        origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-        _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width - self.size.width :rect.origin.x + self.size.width;
-    }
-    else
-    {
-        _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-        origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-        _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height - self.size.height:rect.origin.y + self.size.height;
-    }
-    return origin;
-
-</code></pre>
-
-<h4 id="toc_7">运动轨迹</h4>
-
-<p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite的运动轨迹不同的地方在于，BarrageWalkSprite是匀速前进，二BarrageBubblingSprite是加速前进，这样，在计算某个时段Sprite的位置就需要考虑加速度的存在。</p>
-
-<pre><code class="language-objectivec">- (CGRect)rectWithTime:(NSTimeInterval)time{
-    CGFloat X = self.destination.x - self.origin.x;
-    CGFloat Y = self.destination.y - self.origin.y;
-        
-    CGFloat L = sqrt(X*X + Y*Y);
-    NSTimeInterval duration = time - self.timestamp;
-    CGPoint position = CGPointMake(self.origin.x + duration * self.speed * X/L, self.origin.y + duration * self.speed * Y/L);
-    if (position.x &gt;= self.destination.x) {
-        position.x = self.destination.x;
-    }else{
-        self.destinationStamp = time;
-        self.speed = duration*self.speedUp;
-    }
-    if(position.y &gt;= self.destination.y) {
-        position.y = self.destination.y;
-      
-    }else{
-        self.destinationStamp = time;
-        self.speed = duration*self.speedUp;
-    }
-    return CGRectMake(position.x, position.y, self.size.width, self.size.height);
-}
-</code></pre>
-
-<p>在存活时间上，与BarrageWalkSprite不同的地方在于，BarrageWalkSprite在位移到终点的时候消失，而BarrageBubblingSprite在到达终点之后仍然需要停留stay的时间。这里引入了currentStamp和destinationStamp时间戳用于来计算stay时间是否已经到达。</p>
-
-<pre><code class="language-objectivec">//计算精灵的剩余存活时间
-
-- (double)countTimeByDistance:(CGFloat)distance{
-    CGFloat a = 0.5*self.speedUp;
-    CGFloat b = self.speed;
-    CGFloat c = -distance;
-    CGFloat delt = sqrt(b*b - 4*a*c);
-    double t = (-b+delt)/(2*a);
-    return t;
-}
-
-- (NSTimeInterval)estimateActiveTime
-{
-    CGFloat activeDistance = 0;
-    switch (self.direction) {
-        case BarrageWalkDirectionR2L:
-            activeDistance = self.position.x - _destination.x;
-            break;
-        case BarrageWalkDirectionL2R:
-            activeDistance = _destination.x - self.position.x;
-            break;
-        case BarrageWalkDirectionT2B:
-            activeDistance = _destination.y - self.position.y;
-            break;
-        case BarrageWalkDirectionB2T:
-            activeDistance = self.position.y - _destination.y;
-        default:
-            break;
-    }
-    NSTimeInterval leftTime = 0.0;
-    CGFloat time = [self countTimeByDistance:activeDistance];
-    if (time &gt; 0){
-        leftTime = time + self.stay;
-    }else{
-        leftTime = self.stay - (self.currentStamp - self.destinationStamp);
-    }
-    return leftTime;
-}
-
-- (BOOL)validWithTime:(NSTimeInterval)time{
-    self.currentStamp = time;
-    return  [self estimateActiveTime] &gt; 0;
-}
-</code></pre>
-
-<h4 id="toc_8">自定义弹幕样式</h4>
-
-<p>类似BarrageWalkImageSprite，我们也通过继承BarrageSpirte的bindingView 来将自定义的弹幕view返回给BarrageRender</p>
-
-<h3 id="toc_9">完整代码</h3>
-
-<p><a href="https://github.com/mylonly/BarrageRender-BubblingSprite">BarrageRender-BubblingSprite</a></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-11T19:11:07+08:00" itemprop="datePublished">2017/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945010672564.html" itemprop="url">
-		树莓派3安装Node.js</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>(树莓派官方系统)<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<pre><code class="language-bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
-tar zxvf node-v5.2.0-linux-armv7l.tar.gz
-cd node-v5.2.0-linux-armv7l
-sudo cp bin/* /usr/bin/ -r
-sudo cp include/ /usr/include/ -r
-sudo cp lib/ /usr/lib/ -r
-sudo cp share/ /usr/share/ -r
-cd ..
-node --version
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
 				<time datetime="2017-05-11T19:10:58+08:00" itemprop="datePublished">2017/5/11</time>
 			</div>
 			<div class="tags">posted in 
@@ -936,6 +453,154 @@ if (condition){<br/>
 }
 </code></pre></li>
 </ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-09-11T19:10:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010480752.html" itemprop="url">
+		各种程序的源码安装</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">nginx</h2>
+
+<pre><code class="language-text">#安装编译nginx必须的依赖
+yum install gcc-c++
+yum install pcre pcre-devel  
+yum install zlib zlib-devel 
+yum install openssl openssl--devel
+
+#下载nginx源码
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+
+#解压
+tar -zvxf nginx-1.9.15.tar.gz -C ../document/
+
+#编译安装
+cd ../document/nginx-1.9.15
+./configure
+make
+make install
+</code></pre>
+
+<h2 id="toc_1">setuptools 安装</h2>
+
+<pre><code class="language-text">wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+
+</code></pre>
+
+<h2 id="toc_2">pip源码安装</h2>
+
+<pre><code class="language-text">[pip官网安装](https://pypi.python.org/pypi/pip)
+</code></pre>
+
+<h2 id="toc_3">源码安装Git</h2>
+
+<ol>
+<li><p>安装依赖</p>
+<pre><code class="language-text"> yum install curl
+ yum install curl-devel<br/>
+ yum install zlib-devel<br/>
+ yum install openssl-devel<br/>
+ yum install perl<br/>
+ yum install perl-devel<br/>
+ yum install cpio<br/>
+ yum install expat-devel<br/>
+ yum install gettext-devel
+</code></pre></li>
+<li><p>下载源码编译安装</p>
+<pre><code class="language-text">wget https://www.kernel.org/pub/software/scm/git/git-2.8.2.tar.gz
+tar xzvf git-2.8.2.tar.gz<br/>
+cd git-2.8.2<br/>
+autoconf<br/>
+./configure<br/>
+make | make install
+</code></pre></li>
+<li><p>配置环境变量</p>
+<p>修改用户目录下的.bashrc或者bash_profile,末尾增加</p>
+<pre><code class="language-text">export PATH=$PATH:/usr/local/bin
+</code></pre>
+<p>然后重新加载profile</p>
+<pre><code class="language-text">source ~/.bashrc
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-09-11T18:16:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944978089747.html" itemprop="url">
+		Linux常用命令</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>磁盘挂载</li>
+</ol>
+
+<pre><code class="language-text">fdisk -l #查看磁盘信息
+mount /dev/xvdb1 /mnt #挂载磁盘
+</code></pre>
+
+<ol>
+<li>设置开机自动加载磁盘</li>
+</ol>
+
+<pre><code class="language-text">vim /etc/fstab
+写入 /dev/xvdb1 /mnt ext4 default 1 1
+</code></pre>
+
+<ol>
+<li>修改主机名</li>
+</ol>
+
+<pre><code class="language-text">vim /etc/sysconfig/network #修改里面的HOSTNAME值
+</code></pre>
+
+<ol>
+<li>设置ssh自动认证</li>
+</ol>
+
+<pre><code class="language-text">ssh-keygen -t rsa #在客户机生成秘钥，
+scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
+#将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
+最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
+cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+
+<ol>
+<li>dd命令实现ISO文件块拷贝</li>
+</ol>
+
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdb bs=1M
+</code></pre>
 
 
 			

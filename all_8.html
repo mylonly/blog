@@ -126,226 +126,6 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2016-05-11T19:11:56+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011166438.html" itemprop="url">
-		Scrapy——crawlSpider爬虫</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
- <br/>
-要利用crawSpider和BaseSpider的区别在于crawSpider提供了一组Rule对象列表，这些Rule对象规定了爬虫抓取链接的行为，Rule规定的链接才会被抓取，交给相应的callback函数去处理。<br/>
-  <br/>
-在rules中通过SmglLinkExtractor提取希望获取的链接。<br/>
- <br/>
-我此次的demo中rule只有一个，如下：</p>
-
-<pre><code class="language-python">allowed_domains = [&#39;sj.zol.com.cn&#39;]
-start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
-number = 0
-rules = (
-            Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
-            )
-</code></pre>
-
-<p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
- <br/>
-SmglLinkExtractor主要参数：<br/>
- </p>
-
-<ul>
-<li>allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。</li>
-<li>deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。</li>
-<li>allow_domains：会被提取的链接的domains。</li>
-<li>deny_domains：一定不会被提取链接的domains。</li>
-<li>restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
- <br/>
-下面的内容就是利用Selector解析获得的response并赋值个item就行了：</li>
-</ul>
-
-<pre><code class="language-python">#coding: utf-8 #############################################################
-# File Name: spiders/wallpaper.py
-# Author: mylonly
-# mail: tianxianggen@gmail.com
-#Blog:www.mylonly.com
-# Created Time: 2014年09月01日 星期一 14时20分07秒
-#########################################################################
-#!/usr/bin/python
-import urllib2
-import os
-import re
- 
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from mylonly.items import wallpaperItem
-from scrapy.http import Request
- 
-class wallpaper(CrawlSpider):
-        name = &quot;wallpaperSpider&quot;
-        allowed_domains = [&#39;sj.zol.com.cn&#39;]
-        start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
-        number = 0
-        rules = (
-                        Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
-                        )
-        def parse_image(self,response):
-                self.log(&#39;hi,this is an item page! %s&#39; % response.url)
-                sel = Selector(response)
-                sites = sel.xpath(&quot;//div[@class=&#39;wrapper mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()       
-                for site in sites:
-                        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
-                        print &#39;one page:&#39;,url
-                        item = wallpaperItem()
-                        item[&#39;size&#39;] = re.search(&#39;\d*x\d*&#39;,site).group()
-                        item[&#39;altInfo&#39;] = sel.xpath(&quot;//h1//a/text()&quot;).extract()[0]
-                        return Request(url,meta = {&#39;item&#39;:item},callback = self.parse_href)
-        def parse_href(self,response):
-                print &#39;I am in:&#39;,response.url
-                item = response.meta[&#39;item&#39;]
-                items = []
-                sel = Selector(response)
-                src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
-                item[&#39;imgSrc&#39;] = src
-                items.append(item)
-                return items
-                #self.download(src)
-        def download(self,url):
-                self.number += 1
-                savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
-                print &#39;正在下载...&#39;,url
-                try:
-                        u = urllib2.urlopen(url)
-                        r = u.read()
-                        downloadFile = open(savePath,&#39;wb&#39;)
-                        downloadFile.write(r)
-                        u.close()
-                        downloadFile.close()
-                except:
-                        print savePath,&#39;can not download.&#39;
-</code></pre>
-
-<p> <br/>
- <br/>
- <br/>
-接下来看看我的Item.py的代码：</p>
-
-<pre><code class="language-python">class wallpaperItem(scrapy.Item):
-        size = scrapy.Field()
-        altInfo = scrapy.Field()
-        imgSrc = scrapy.Field()
-</code></pre>
-
-<p> <br/>
-还有pipilines.py:</p>
-
-<pre><code class="language-python"># -*- coding: utf-8 -*-
- 
-# Define your item pipelines here
-#
-# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-import MySQLdb
- 
- 
-class MylonlyPipeline(object):
-    def process_item(self, item, spider):
-        return item
- 
-class wallpaperPipeline(object):
-        def process_item(self,item,spider):
-                print &#39;imgSrc:&#39;,item[&#39;imgSrc&#39;]
-                db = MySQLdb.connect(&quot;rdsauvva2auvva2.mysql.rds.aliyuncs.com&quot;,&quot;mylonly&quot;,&quot;703003659txg&quot;,&quot;wallpaper&quot;)
-                cursor = db.cursor()
-                db.set_character_set(&#39;utf8&#39;)
-                cursor.execute(&#39;SET NAMES utf8;&#39;)
-                cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
-                cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
- 
-                sql =&quot;INSERT INTO mobile_download(wallpaper_size,wallpaper_info,wallpaper_src)\
-                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;size&#39;],item[&#39;altInfo&#39;],item[&#39;imgSrc&#39;])
-                try:
-                        print sql
-                        cursor.execute(sql)
-                        db.commit()
-                except MySQLdb.Error,e:
-                        print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
-                db.close()
-                return item
-</code></pre>
-
-<p> <br/>
- <br/>
- <br/>
-本例中我将传回的items数据存放到了数据库中，如果你不想这样，可以将我注释掉的self.download()取消注释，不反悔items，就可以将找到的所有图片链接全部下载下来，不过要找个大点的地方存储，因为总共有5W多条：<br/>
-<img src="https://pic.mylonly.com/2016-06-29_061712481319744.png" alt="2016-06-29_061712481319744.png"/></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T19:10:15+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945010159790.html" itemprop="url">
-		CentOS中添加Swap交换文件</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>1.先检查是否存在Swap文件</p>
-
-<pre><code class="language-bash">swapon -s #返回的信息为空，说明没有其他交换文件
-</code></pre>
-
-<p>2.创建一个Swap文件，使用dd命令</p>
-
-<pre><code class="language-bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
-dd if=/dev/zero of=/home/swap bs=1024 count=1024000
-</code></pre>
-
-<p>3.将swap文件转换成swap格式</p>
-
-<pre><code class="language-bash">mkswap /home/swap
-</code></pre>
-
-<p>4.将swap文件挂载成swap分区</p>
-
-<pre><code class="language-bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
-</code></pre>
-
-<p>5.让swap文件自动挂载</p>
-
-<pre><code class="language-bash">vim /etc/fstab 
-#在文件末尾加上下面的命令
-/home/swap swap swap default 0 0 
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
 				<time datetime="2016-05-11T18:12:56+08:00" itemprop="datePublished">2016/5/11</time>
 			</div>
 			<div class="tags">posted in 
@@ -492,6 +272,81 @@ apt-get install bash
 bash: error importing function definition for `x’ 
 this is a test
 </code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2013-05-31T21:50:40+08:00" itemprop="datePublished">2013/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277746404762.html" itemprop="url">
+		数据路由过程</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>如果一个mac上对应有多个ip地址，那么数据按照协议栈向下封装时，怎么确定封装ip头的时候使用哪个ip地址呢？<br/>
+这个是靠数据目的ip决定的，首先系统会根据设备的其他网段的ip和掩码确定目的ip是否是内网的，如果是则用相应的内网ip封装ip头，如果不是，就说明这个数据包时发送到外网的，这个时候就封装外网ip。并将该数据包发送给网关进行转发。<br/>
+如果把一个网段掩码改了，让这个内网变小，那么本来是用内网ip封的数据包，就会改用外网ip封装。</p></li>
+<li><p>路由器怎么区分外网传进来的数据是给内网哪台设备的？</p>
+<p>通信过程要考虑传输层，传输层有端口号。比如用的TCP协议。外网C获得主机AB的IP地址都是路由器的地址说明做了nat的。你a和b同时访问C的时候 经过你内网路由器的时候是做了nat的，a的数据包出去的时候目标是C的ip和C的端口，c收到的数据包源ip会是路由的 但是源端口是XXXX ，b同时出去访问c的时候目标是C的ip和C的同一个端口，c收到的数据包源ip也是路由的，但是源端口不会是XXXX而是另外一个YYYY， 路由器做nat的时候端口不会出现重复的，并且会做对照记录，然后c在回复时候会分别回复给相同ip,但是端口是路由器的两个不同端口，然后路由两个收到两个端口数据后会比照刚才那个对照表 然后分别转发给A和B。</p></li>
+<li><p>路由器怎么区分这个数据包是内网的还是外网的？</p>
+<p>这个是靠封装数据包中链路层的目的mac地址决定的，当封装的mac地址是内网mac时就说明这个数据包是发送给内网的某一台设备的，从而路由器或交换机会根据自己的mac端口映射表和背部总线，将数据包发送给对应端口。如果这个目的mac封装的是网关的mac就说明这个数据包是要发送到外网的，路由器将会根据自己的路由表将这个据包发送到下一跳。</p></li>
+<li><p>路由器在公网下的转发数据时怎么完成的？</p>
+<p>内网的设备发送数据包的时候，首先要经过网关做NAT转换，即将内网ip替换成网关的ip。之后数据包在路由器之间交换的时候只需要替换目的mac即可，数据包回来的时候也可以看成是一次反向的发送，然后仍然是根据路由表替换目的mac即可。</p></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2013-05-31T21:37:30+08:00" itemprop="datePublished">2013/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277738508394.html" itemprop="url">
+		Mimetic库分析3——Mime头Header</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Mimetic的header和body以一个空格来区分。如下</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-%E6%8D%95%E8%8E%B7.PNG" alt=""/></p>
+
+<p>红线以上部分就是Header了，红线以下部分就是body。<br/>
+Mimetic中Header的继承关系如下</p>
+
+<p><code>Header：public Rfc822Header：public std:deque&lt;Field&gt;</code></p>
+
+<p>可以看到Header中存放的值是一个deque队列，队列里面的每一项都是一个name-value的pari对，name就是header中每一行冒号左边的字符串，而value就是冒号右边的字符串。mimetic将这两部分组成一个pair存放在deque中。然后在Header类中提供相应的接口存取这些值。</p>
+
+<p>下图是Header的接口</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-1.png" alt=""/></p>
+
+<p>RfcHeader的接口</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-2.PNG" alt=""/></p>
 
 
 			

@@ -4,7 +4,7 @@
   <title><![CDATA[独自一人]]></title>
   <link href="https://blog.mylonly.com/atom.xml" rel="self"/>
   <link href="https://blog.mylonly.com/"/>
-  <updated>2018-11-20T09:16:11+08:00</updated>
+  <updated>2018-11-20T09:18:21+08:00</updated>
   <id>https://blog.mylonly.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -97,55 +97,6 @@ apt-get -f install -y
 
 <pre><code class="language-text">apt-get install python-getsourceview2
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[投票需求]]></title>
-    <link href="https://blog.mylonly.com/15403776340477.html"/>
-    <updated>2018-10-24T18:40:34+08:00</updated>
-    <id>https://blog.mylonly.com/15403776340477.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">权限管理</h2>
-
-<ol>
-<li>管理员<br/>
-所有权限(创建投票选项，创建普通用户，查看各种统计）</li>
-<li>普通用户<br/>
-查询，投票操作</li>
-</ol>
-
-<h2 id="toc_1">登录页面</h2>
-
-<p>普通用户进入是查询页面，查询业主,查找到业主，出现可供选择的投票选项，如果投票选项未投票，则可进入下一步进行投票操作</p>
-
-<h2 id="toc_2">投票选项录入界面</h2>
-
-<p>管理员可以进入，创建投票选项</p>
-
-<h2 id="toc_3">各种统计页面</h2>
-
-<p>查询界面<br/>
-投票、未投票占比<br/>
-具体投票选项人数对比</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[OC 回顾]]></title>
-    <link href="https://blog.mylonly.com/15362858141219.html"/>
-    <updated>2018-09-07T10:03:34+08:00</updated>
-    <id>https://blog.mylonly.com/15362858141219.html</id>
-    <content type="html"><![CDATA[
-<ol>
-<li><p><code>@synthesize</code>关键字</p>
-<p>如果需要同时重写属性的setter和getter方法，需要在@implementation中指定</p>
-<pre><code class="language-text">@synthesize apiToken = _apiToken;
-</code></pre>
-<p>只是重写setter或者getter方法中的其中一个，则不需要，编译器会自动帮你指定apiToken的实例变量为_apiToken</p></li>
-</ol>
 
 ]]></content>
   </entry>
@@ -1727,6 +1678,113 @@ uwsgi -i /data/web/xxxx.ini
 <p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
 
 <pre><code class="language-text">py-autoreload = 1
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django 发送html格式的邮件]]></title>
+    <link href="https://blog.mylonly.com/15119665687635.html"/>
+    <updated>2017-11-29T22:42:48+08:00</updated>
+    <id>https://blog.mylonly.com/15119665687635.html</id>
+    <content type="html"><![CDATA[
+<p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
+
+<h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
+
+<pre><code class="language-python">EMAIL_USE_SSL = True    
+EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
+EMAIL_PORT = 465
+EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
+EMAIL_HOST_PASSWORD = &#39;password&#39;  # 密码
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+</code></pre>
+
+<h5 id="toc_1">2. 引用mail库发送邮件</h5>
+
+<pre><code class="language-python">from django.core.mail import EmailMessage
+from Across.settings import EMAIL_HOST_USER
+
+msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
+msg.send()
+</code></pre>
+
+<h5 id="toc_2">3.发送html模板邮件</h5>
+
+<p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
+
+<pre><code class="language-python">TEMPLATES = [
+    {
+        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
+        &#39;DIRS&#39;: [
+            os.path.join(BASE_DIR,&#39;templates&#39;)  ##你的模板目录
+        ],
+        &#39;APP_DIRS&#39;: True,
+        &#39;OPTIONS&#39;: {
+            &#39;context_processors&#39;: [
+                &#39;django.template.context_processors.debug&#39;,
+                &#39;django.template.context_processors.request&#39;,
+                &#39;django.contrib.auth.context_processors.auth&#39;,
+                &#39;django.contrib.messages.context_processors.messages&#39;,
+            ],
+        },
+    },
+]
+</code></pre>
+
+<p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
+
+<pre><code class="language-python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
+msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
+msg.content_subtype = &quot;html&quot; # Main content is now text/html
+msg.send()
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django扩展默认的User Model]]></title>
+    <link href="https://blog.mylonly.com/15117871248079.html"/>
+    <updated>2017-11-27T20:52:04+08:00</updated>
+    <id>https://blog.mylonly.com/15117871248079.html</id>
+    <content type="html"><![CDATA[
+<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
+
+<blockquote>
+<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
+</blockquote>
+
+<p>在models.py中新建一个model继承自AbstractUser</p>
+
+<pre><code class="language-text">from django.db import models
+
+# Create your models here.
+from django.contrib.auth.models import AbstractUser
+from enum import Enum
+
+
+class UserProfile(AbstractUser):
+
+    GENDER = [
+        (0,&quot;未知&quot;),
+        (1,&quot;男性&quot;),
+        (2,&quot;女性&quot;)
+    ]
+
+    nickname = models.CharField(max_length=50)
+    intro = models.CharField(max_length=500)
+    mobile = models.CharField(max_length=13)
+    gender = models.IntegerField(choices=GENDER,default=0)
+
+    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
+
+</code></pre>
+
+<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
+
+<pre><code class="language-text">AUTH_USER_MODEL = &#39;User.UserProfile&#39;
 </code></pre>
 
 ]]></content>

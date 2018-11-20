@@ -126,81 +126,6 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2018-10-24T18:40:34+08:00" itemprop="datePublished">2018/10/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15403776340477.html" itemprop="url">
-		投票需求</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">权限管理</h2>
-
-<ol>
-<li>管理员<br/>
-所有权限(创建投票选项，创建普通用户，查看各种统计）</li>
-<li>普通用户<br/>
-查询，投票操作</li>
-</ol>
-
-<h2 id="toc_1">登录页面</h2>
-
-<p>普通用户进入是查询页面，查询业主,查找到业主，出现可供选择的投票选项，如果投票选项未投票，则可进入下一步进行投票操作</p>
-
-<h2 id="toc_2">投票选项录入界面</h2>
-
-<p>管理员可以进入，创建投票选项</p>
-
-<h2 id="toc_3">各种统计页面</h2>
-
-<p>查询界面<br/>
-投票、未投票占比<br/>
-具体投票选项人数对比</p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-09-07T10:03:34+08:00" itemprop="datePublished">2018/9/7</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15362858141219.html" itemprop="url">
-		OC 回顾</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p><code>@synthesize</code>关键字</p>
-<p>如果需要同时重写属性的setter和getter方法，需要在@implementation中指定</p>
-<pre><code class="language-text">@synthesize apiToken = _apiToken;
-</code></pre>
-<p>只是重写setter或者getter方法中的其中一个，则不需要，编译器会自动帮你指定apiToken的实例变量为_apiToken</p></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
 				<time datetime="2017-05-25T16:55:45+08:00" itemprop="datePublished">2017/5/25</time>
 			</div>
 			<div class="tags">posted in 
@@ -888,6 +813,135 @@ test.area()<br/>
 test.simpleDescription()
 </code></pre></li>
 </ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-10-11T18:15:10+08:00" itemprop="datePublished">2016/10/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944977101213.html" itemprop="url">
+		Swift学习要点-基础部分</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
+
+<blockquote>
+<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
+</blockquote>
+
+<ol>
+<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+<pre><code class="language-swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
+print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print<br/>
+print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
+</code></pre></li>
+<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+<pre><code class="language-swift">let paddedDouble = 000123.456
+let oneMillion = 1_000_000<br/>
+let justOverOneMillion = 1_000_000.000_000_1
+</code></pre></li>
+<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+<pre><code class="language-swift">typealias AudioSample = UInt16
+var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
+</code></pre></li>
+<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+<pre><code class="language-swift">var maxValue = UInt8.max
+var max64Value = Int64.max<br/>
+max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;<br/>
+max64Value = Int64(maxValue) //Ok<br/>
+let number = 3<br/>
+var str1 = String(number) //str1 = &quot;3&quot;<br/>
+var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
+</code></pre></li>
+<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
+<pre><code class="language-swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
+let (justTheStatusCode, _) = http404Error<br/>
+print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
+</code></pre></li>
+<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
+<pre><code class="language-swift">var serverResponseCode: Int? = 404
+// serverResponseCode 包含一个可选的 Int 值 404<br/>
+serverResponseCode = nil<br/>
+// serverResponseCode 现在不包含值
+</code></pre></li>
+<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
+<pre><code class="language-swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
+var str = &quot;\(option)&quot; //输出:&quot;nil&quot;<br/>
+str = &quot;\(option!)&quot;    //Error
+</code></pre></li>
+<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
+<pre><code class="language-swift">let const_a:String
+if (condition){<br/>
+    const_a = &quot;a&quot;<br/>
+}else{<br/>
+    const_a = &quot;b&quot;<br/>
+}
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-05-11T18:12:56+08:00" itemprop="datePublished">2016/5/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ios.html'>iOS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944975766543.html" itemprop="url">
+		CocoaPods master仓库替换为国内源</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
+国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
+
+<ol>
+<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
+<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
+</ol>
+
+<p>执行如下命令替换Pods源</p>
+
+<pre><code class="language-bash">$ pod repo remove master
+$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
+</code></pre>
+
+<p> <br/>
+仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
+
+<pre><code class="language-bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
+Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
+</code></pre>
+
+<p> <br/>
+这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
+
+<pre><code class="language- bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
+platform :ios, &#39;6.0&#39;
+pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
+</code></pre>
 
 
 			

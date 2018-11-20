@@ -126,68 +126,6 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
-				<time datetime="2018-05-30T16:47:02+08:00" itemprop="datePublished">2018/5/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15276700222671.html" itemprop="url">
-		Pandas相关</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Pandas 读取列数据</p>
-<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])<br/>
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
-data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-28T14:29:43+08:00" itemprop="datePublished">2018/5/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15274889837567.html" itemprop="url">
-		Tensorflow错误集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
-加入以下代码</p>
-<pre><code class="language-text">import os 
-os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
 				<time datetime="2018-05-03T22:28:47+08:00" itemprop="datePublished">2018/5/3</time>
 			</div>
 			<div class="tags">posted in 
@@ -294,6 +232,188 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
       server_name _;<br/>
       rewrite ^(.*) http://www.mylonly.com permanent;<br/>
     }
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-04-23T15:06:52+08:00" itemprop="datePublished">2018/4/23</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15244672126240.html" itemprop="url">
+		Django问题集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>Csrf验证</p>
+<pre><code class="language-text">需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
+</code></pre></li>
+<li><p>Django允许跨域</p>
+<p>安装<code>django-cors-headers</code></p>
+<pre><code class="language-text">pip install django-cors-headers
+</code></pre>
+<p>在setting.py中增加如下代码</p>
+<pre><code class="language-text">INSTALLED_APPS = [
+...<br/>
+&#39;corsheaders&#39;，<br/>
+...<br/>
+ ] <br/>
+MIDDLEWARE_CLASSES = (<br/>
+    ...<br/>
+    &#39;corsheaders.middleware.CorsMiddleware&#39;,<br/>
+    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序<br/>
+    ...<br/>
+)<br/>
+#跨域增加忽略<br/>
+CORS_ALLOW_CREDENTIALS = True<br/>
+CORS_ORIGIN_ALLOW_ALL = True<br/>
+CORS_ORIGIN_WHITELIST = (<br/>
+    &#39;*&#39;<br/>
+)<br/>
+CORS_ALLOW_METHODS = (<br/>
+    &#39;DELETE&#39;,<br/>
+    &#39;GET&#39;,<br/>
+    &#39;OPTIONS&#39;,<br/>
+    &#39;PATCH&#39;,<br/>
+    &#39;POST&#39;,<br/>
+    &#39;PUT&#39;,<br/>
+    &#39;VIEW&#39;,<br/>
+)<br/>
+CORS_ALLOW_HEADERS = (<br/>
+    &#39;XMLHttpRequest&#39;,<br/>
+    &#39;X_FILENAME&#39;,<br/>
+    &#39;accept-encoding&#39;,<br/>
+    &#39;authorization&#39;,<br/>
+    &#39;content-type&#39;,<br/>
+    &#39;dnt&#39;,<br/>
+    &#39;origin&#39;,<br/>
+    &#39;user-agent&#39;,<br/>
+    &#39;x-csrftoken&#39;,<br/>
+    &#39;x-requested-with&#39;,<br/>
+    &#39;Pragma&#39;,<br/>
+)
+</code></pre></li>
+<li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
+<pre><code class="language-text">#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
+axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;<br/>
+axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
+</code></pre>
+<blockquote>
+<p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
+</blockquote>
+<p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
+<li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
+<p>需要两步：</p>
+<ul>
+<li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
+<li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
+</ul>
+<pre><code class="language-text">@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
+class login(views.APIView):<br/>
+authentication_classes = (BasicAuthentication,)<br/>
+def post(self, request, *args, **kwargs):<br/>
+username = request.data.get(&quot;username&quot;)<br/>
+password = request.data.get(&quot;password&quot;)<br/>
+user = auth.authenticate(request, username=username, password=password)<br/>
+if user is not None:<br/>
+  auth.login(request, user)<br/>
+  return ErosResponse()<br/>
+else:<br/>
+  return ErosResponse(status=ErosResponseStatus.INVALID_USER)
+</code></pre></li>
+<li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
+<p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
+<pre><code class="language-python">from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+</code></pre></li>
+<li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
+<p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
+<pre><code class="language-text">mysql -u root -p
+use mysql；<br/>
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  <br/>
+FLUSH PRIVILEGES; 
+</code></pre></li>
+<li><p>Django-Filter自定义查询过滤字段</p>
+<pre><code class="language-python">from django_filters import FilterSet
+from django_filters import CharFilter<br/>
+class TagFilter(FilterSet):<br/>
+    ##自定义search字段<br/>
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)<br/>
+    class Meta:<br/>
+        model = Tag<br/>
+        fields = {<br/>
+          &#39;id&#39;: [&#39;exact&#39;],<br/>
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],<br/>
+          &#39;search&#39;: [&#39;exact&#39;],<br/>
+        }
+</code></pre>
+<p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
+<li><p>DRF的OrderingFilter默认排序</p>
+<pre><code class="language-python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)<br/>
+ordering = (&#39;-hot&#39;,)
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-04-23T11:35:12+08:00" itemprop="datePublished">2018/4/23</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='python.html'>Python</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15244545128606.html" itemprop="url">
+		Python 错误集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>ValueError: unknown locale: UTF-8 <br/>
+<img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
+<p>添加下面代码至用户目录的.bash_profile文件   </p>
+<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
+export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
+export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
+export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
+export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
+export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
+export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
+export LC_ALL=
+</code></pre></li>
+<li><p>zip()函数在Python2和Python3中的区别</p>
+<p>在Python2中，zip返回的是元祖的列表<br/>
+而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
+<pre><code class="language-text">x = [1, 2, 3]
+y = [a, b, c]<br/>
+#python3<br/>
+n = list(zip(x,y))<br/>
+print(n)<br/>
+#python2<br/>
+n = zip(x,y)<br/>
+print n
 </code></pre></li>
 </ol>
 
