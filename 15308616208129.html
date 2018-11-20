@@ -144,7 +144,7 @@
 
 <p>虽然APIKey是不可能拿到了，但是通过文档我仍然发现了一些GET请求并不需要AUTH认证，也就是说有没有APIKey并不影响使用。其中，对我们有用的就是获取<code>TOP250电影列表</code>的接口:</p>
 
-<pre><code>http://api.douban.com/v2/movie/top250
+<pre><code class="language-text">http://api.douban.com/v2/movie/top250
 </code></pre>
 
 <p>接口返回的格式大概如下:<br/>
@@ -158,7 +158,7 @@
 
 <p>详细接口如下,可以通过更改start来迭代获取所有电影条目</p>
 
-<pre><code>https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
+<pre><code class="language-text">https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
 </code></pre>
 
 <p>这个接口可以获取所有豆瓣上收录的电影，经过我的测试，start改为10000时，返回的数据就已经是空的了</p>
@@ -168,7 +168,7 @@
 <p>获取电影信息的方法有了，接下来就是要分析如何获取影评信息了。<br/>
 在每部电影的详情页面里,如<a href="https://movie.douban.com/subject/1292064/">楚门的世界</a>，我们找到了如下这几个详情页面,分别显示了针对这部电影的影评和短评信息</p>
 
-<pre><code>https://movie.douban.com/subject/1292064/reviews ##影评页面
+<pre><code class="language-text">https://movie.douban.com/subject/1292064/reviews ##影评页面
 https://movie.douban.com/subject/1292064/comments ##短评页面
 </code></pre>
 
@@ -180,7 +180,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 <img src="https://pic.mylonly.com/2018-07-07-122913.jpg" alt=""/><br/>
 每条评论都是在一个review-item的div块里面，而所有评论都是在一个review-list的div块里吗，我们通过xpath语法可以很容易的定位到每条评论的详细信息,下面是所有信息的xpath语句，在我们写爬虫时候就靠他提取内容了</p>
 
-<pre><code>评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
+<pre><code class="language-text">评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
 
 评论ID: &quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;review-short&#39;]/@data-rid&quot;
 作者头像: &quot;./header[@class=&#39;main-hd&#39;]//a[@class=&#39;avator&#39;]//img/@src &quot;
@@ -195,7 +195,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <p>其中具体的评分我们不能直接拿到，而是只能拿到具体的文字描述,经过我的验证，具体如下对应关系如下:</p>
 
-<pre><code>&#39;力荐&#39;: 5,
+<pre><code class="language-text">&#39;力荐&#39;: 5,
 &#39;推荐&#39;: 4,
 &#39;还行&#39;: 3,
 &#39;较差&#39;: 2,
@@ -210,7 +210,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <h3 id="toc_5">创建项目工程</h3>
 
-<pre><code>##创建DoubanSpider工程
+<pre><code class="language-text">##创建DoubanSpider工程
 scrapy startproject Douban
 </code></pre>
 
@@ -218,7 +218,7 @@ scrapy startproject Douban
 <img src="https://pic.mylonly.com/2018-07-07-122926.jpg" alt=""/><br/>
 其中：</p>
 
-<pre><code>    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
+<pre><code class="language-text">    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
     items.py: 模型类，所有需要结构化的数据都要预先在此文件中定义
     middlewares.py: 中间件类，scrapy的核心之一，我们会用到其中的downloadMiddleware,
     pipelines.py: 管道类，数据的输出管理，是存数据库还是存文件在这里决定
@@ -237,7 +237,7 @@ scrapy startproject Douban
 
 <h4 id="toc_7">定义爬虫</h4>
 
-<pre><code>class MovieSpider(Spider):
+<pre><code class="language-text">class MovieSpider(Spider):
     name = &#39;movie&#39; #爬虫名称
     allow_dominas = [&quot;douban.com&quot;] #允许的域名
     
@@ -265,7 +265,7 @@ scrapy startproject Douban
 
 <p>接下来通过<code>start_request</code>告诉爬虫要爬取的链接：</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
     def start_requests(self):
         url = &#39;&#39;&#39;https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start={start}&#39;&#39;&#39;
         requests = []
@@ -279,7 +279,7 @@ scrapy startproject Douban
 
 <p>接下来解析每个接口返回的内容:</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 def parse_movie(self, response):
     jsonBody = json.loads(response.body)
     subjects = jsonBody[&#39;data&#39;]
@@ -299,7 +299,7 @@ def parse_movie(self, response):
 
 <h4 id="toc_8">定义Item</h4>
 
-<pre><code class="language-Python">#定义你需要获取的数据
+<pre><code class="language-python">#定义你需要获取的数据
 class MovieItem(scrapy.Item):
     id = scrapy.Field()
     title = scrapy.Field()
@@ -315,7 +315,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_9">定义Pipeline</h4>
 
-<pre><code class="language-Python">class MoviePipeline(object):
+<pre><code class="language-python">class MoviePipeline(object):
 
     movieInsert = &#39;&#39;&#39;insert into movies(id,title,rating,genres,original_title,alt,image,year) values (&#39;{id}&#39;,&#39;{title}&#39;,&#39;{rating}&#39;,&#39;{genres}&#39;,&#39;{original_title}&#39;,&#39;{alt}&#39;,&#39;{image}&#39;,&#39;{year}&#39;)&#39;&#39;&#39;
 
@@ -361,7 +361,7 @@ class MovieItem(scrapy.Item):
 
 <p>在命令行下输入:</p>
 
-<pre><code>scrapy crawl movie
+<pre><code class="language-text">scrapy crawl movie
 </code></pre>
 
 <p><img src="https://pic.mylonly.com/2018-07-06-101458.png" alt=""/><br/>
@@ -373,7 +373,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_12">爬虫逻辑</h4>
 
-<pre><code>class ReviewSpider(Spider):
+<pre><code class="language-text">class ReviewSpider(Spider):
     name = &quot;review&quot;
     allow_domain = [&#39;douban.com&#39;]
     custom_settings = {
@@ -402,7 +402,7 @@ class MovieItem(scrapy.Item):
 <code>DOWNLOAD_TIMEOUT</code>: 下载超时时间，默认是60秒，此处修改为10秒是想让整体的爬取速度加快，因为RETRY_TIMES的缘故，需要RETRY的判定时间为1分钟，如果有很多这种有问题的页面，那么整个爬取的过程会十分漫长。<br/>
 <code>DOWNLOAD_DELAY</code>: 下载延迟，如果你使用代理IP之后还是会出现访问返回403的情况，请设置此值，因为某IP太频繁的访问页面会触发豆瓣的防爬虫机制。</p>
 
-<pre><code class="language-Python">  def start_requests(self):
+<pre><code class="language-python">  def start_requests(self):
         #从数据库中找到所有的moviesId
         self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
         self.cursor = self.connect.cursor()
@@ -423,17 +423,17 @@ class MovieItem(scrapy.Item):
 
 <p>照例，我们在start_request中告诉Scrapy要爬取的起始网址链接，通过我们之前的分析，影评页面的地址格式为:</p>
 
-<pre><code class="language-Python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
+<pre><code class="language-python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
 </code></pre>
 
 <p>而movieId,我们之前的爬虫已经将所有电影的信息抓取了下来，所以我们在此先通过查询数据库将所有的已抓取的电影信息获取到，取到其中的movieId，然后构造一个页面链接。</p>
 
-<pre><code class="language-Python">url = url_format.format(movieId=movieId, offset=current_page*20)
+<pre><code class="language-python">url = url_format.format(movieId=movieId, offset=current_page*20)
 </code></pre>
 
 <p>因为抓取豆瓣影评的过程十分漫长，中间会出现各种各样的问题导致爬虫意外退出，因此我们需要一个机制让爬虫能从上次停止的地方继续爬取，current_page和total_page就是为此而服务的，在后面的数据解析过程中，每解析一个页面，就会将当期页面的页数存储下来，防止出现意外情况。</p>
 
-<pre><code class="language-Python">    def parse_review(self, response):
+<pre><code class="language-python">    def parse_review(self, response):
         movieId = response.request.meta[&#39;movieId&#39;]
         review_list = response.xpath(&quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;)
         for review in review_list:
@@ -482,7 +482,7 @@ class MovieItem(scrapy.Item):
 <p>接下来，分析解析函数，DoubanItem的数据获取就不额外介绍了，利用之前分析时用到的xpath语句可以很容易的定义到具体内容。<br/>
 其中movieId是起始链接中通过Request中Meta属性传递过来的，当然你可以通过分析网页找到包含movieId的地方。</p>
 
-<pre><code>current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
+<pre><code class="language-text">current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
 total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
 paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extract()
 </code></pre>
@@ -493,13 +493,13 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>但是这个导航条会有两种情况获取不到:</p>
 
-<pre><code>1. 当某个电影的评论不足20条时，也就是只有一页评论。
+<pre><code class="language-text">1. 当某个电影的评论不足20条时，也就是只有一页评论。
 2. 当触发了豆瓣的反爬虫的机制时，返回的页面并不是评论页面，而是一个验证页面，自然也找不到导航条
 </code></pre>
 
 <p>所以在下面的代码中，我通过这几个变量来判断了以上几种情况：</p>
 
-<pre><code>1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
+<pre><code class="language-text">1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
 2. 情况2时，由于此时触发了反爬虫机制，返回的页面没有我们的数据，如果我们直接忽略掉的话，会损失大量的数据（这种情况很常见），所以我们就干脆再试一次，返回request，让Scrapy重新爬取这个页面，因为每次重新爬取都会换一个新的代理IP，所以我们有很大概率下次抓取就是正常的。此处有一点需要注意：因为Scrapy默认会过滤掉重复请求，所以我们需要在构造Request的时候讲dont_filter参数设置为True,让其不要过滤重复链接。
 3. 正常情况时，通过xpath语法获取的下一页评论的链接地址然后构造一个request交给Scrapy继续爬取
 </code></pre>
@@ -508,7 +508,7 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置</p>
 
-<pre><code class="language-Python">class DoubanDownloaderMiddleware(object):
+<pre><code class="language-python">class DoubanDownloaderMiddleware(object):
 # Not all methods need to be defined. If a method is not defined,
 # scrapy acts as if the downloader middleware does not modify the
 # passed objects.
@@ -567,7 +567,7 @@ def process_response(self, request, response, spider):
 
 <h4 id="toc_14">影评Item</h4>
 
-<pre><code class="language-Python">class ReviewItem(scrapy.Item):
+<pre><code class="language-python">class ReviewItem(scrapy.Item):
 id = scrapy.Field()
 username = scrapy.Field()
 nickname = scrapy.Field()
@@ -584,7 +584,7 @@ alt = scrapy.Field()
 
 <h4 id="toc_15">影评Pipeline</h4>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 class ReviewPipeline(object):
 
     reviewInsert = &#39;&#39;&#39;insert into reviews(id,username,nickname,avatar,summary,title,movieId,rating,create_time,alt) values (&quot;{id}&quot;,&quot;{username}&quot;, &quot;{nickname}&quot;,&quot;{avatar}&quot;, &quot;{summary}&quot;,&quot;{title}&quot;,&quot;{movieId}&quot;,&quot;{rating}&quot;,&quot;{create_time}&quot;,&quot;{alt}&quot;)&#39;&#39;&#39;
@@ -617,12 +617,12 @@ class ReviewPipeline(object):
         self.connect.close()
 </code></pre>
 
-<pre><code>和之前的电影的pipeline类似，就是基本的数据库写操作。
+<pre><code class="language-text">和之前的电影的pipeline类似，就是基本的数据库写操作。
 </code></pre>
 
 <h4 id="toc_16">运行爬虫</h4>
 
-<pre><code class="language-Shell">scrapy crawl review
+<pre><code class="language-shell">scrapy crawl review
 </code></pre>
 
 <p>在我写完这篇文章时，影评的爬虫仍然还在爬取当中：<br/>

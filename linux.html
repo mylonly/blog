@@ -126,6 +126,37 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-07-19T00:21:35+08:00" itemprop="datePublished">2018/7/19</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15319308951102.html" itemprop="url">
+		PT924光猫 更改桥接模式/路由模式</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p><a href="http://192.168.1.1:8080/cgi-bin/index2.asp">http://192.168.1.1:8080/cgi-bin/index2.asp</a> 进入这个页面<br/>
+用useradmin账号密码登录</p></li>
+<li><p>将地址改为<a href="http://192.168.1.1:8080/cgi-bin/net-wanset.asp">http://192.168.1.1:8080/cgi-bin/net-wanset.asp</a> 进入internet设置页面(更改其他地址也会进入其他页面)</p>
+<p><img src="media/15319308951102/15319310908143.jpg" alt="" style="width:532px;"/></p></li>
+</ol>
+
+<p>其中<code>6_INTERNET_B_VID_229</code>是桥接模式，路由器需要拨号，而<code>5_INTERNET_R_VID_229</code>是路由模式，由猫拨号，路由器不需要拨号</p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-07-05T15:00:26+08:00" itemprop="datePublished">2018/7/5</time>
 			</div>
 			<div class="tags">posted in 
@@ -140,59 +171,53 @@
 			
 			<ol>
 <li><p>查看数据库服务器字符集</p>
-
-<pre><code>mysql&gt; show variables like &#39;%char%&#39;;
-+--------------------------+-------------------------------------+------
-| Variable_name | Value |......
-+--------------------------+-------------------------------------+------
-| character_set_client | utf8 |...... -- 客户端字符集
-| character_set_connection | utf8 |......
-| character_set_database | utf8 |...... -- 数据库字符集
-| character_set_filesystem | binary |......
-| character_set_results | utf8 |......
-| character_set_server | utf8 |...... -- 服务器字符集
-| character_set_system | utf8 |......
-| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......
+<pre><code class="language-text">mysql&gt; show variables like &#39;%char%&#39;;
++--------------------------+-------------------------------------+------<br/>
+| Variable_name | Value |......<br/>
++--------------------------+-------------------------------------+------<br/>
+| character_set_client | utf8 |...... -- 客户端字符集<br/>
+| character_set_connection | utf8 |......<br/>
+| character_set_database | utf8 |...... -- 数据库字符集<br/>
+| character_set_filesystem | binary |......<br/>
+| character_set_results | utf8 |......<br/>
+| character_set_server | utf8 |...... -- 服务器字符集<br/>
+| character_set_system | utf8 |......<br/>
+| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......<br/>
 +--------------------------+-------------------------------------+------
 </code></pre></li>
 <li><p>查看数据表(table)字符集</p>
-
-<pre><code>mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
-+-----------+--------+---------+------------+------+-----------------+------
-| Name | Engine | Version | Row_format | Rows | Collation |......
-+-----------+--------+---------+------------+------+-----------------+------
-| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......
+<pre><code class="language-text">mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| Name | Engine | Version | Row_format | Rows | Collation |......<br/>
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......<br/>
 +-----------+--------+---------+------------+------+-----------------+------
 </code></pre></li>
 <li><p>查看数据列(column)字符集</p>
-
-<pre><code>mysql&gt; show full columns from countries;
-+----------------------+-------------+-----------------+--------
-| Field | Type | Collation | .......
-+----------------------+-------------+-----------------+--------
-| countries_id | int(11) | NULL | .......
-| countries_name | varchar(64) | utf8_general_ci | .......
-| countries_iso_code_2 | char(2) | utf8_general_ci | .......
-| countries_iso_code_3 | char(3) | utf8_general_ci | .......
-| address_format_id | int(11) | NULL | .......
+<pre><code class="language-text">mysql&gt; show full columns from countries;
++----------------------+-------------+-----------------+--------<br/>
+| Field | Type | Collation | .......<br/>
++----------------------+-------------+-----------------+--------<br/>
+| countries_id | int(11) | NULL | .......<br/>
+| countries_name | varchar(64) | utf8_general_ci | .......<br/>
+| countries_iso_code_2 | char(2) | utf8_general_ci | .......<br/>
+| countries_iso_code_3 | char(3) | utf8_general_ci | .......<br/>
+| address_format_id | int(11) | NULL | .......<br/>
 +----------------------+-------------+-----------------+--------
 </code></pre></li>
 <li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
-
-<pre><code>alter database name character set utf8;
-create database name character set utf8;
-alter table 表名 convert to character set gbk;
+<pre><code class="language-text">alter database name character set utf8;
+create database name character set utf8;<br/>
+alter table 表名 convert to character set gbk;<br/>
 alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
 </code></pre></li>
 <li><p>通过数据库my.cnf配置文件设置字符集</p>
-
-<pre><code>vi /etc/my.cnf
-#在[client]下添加
-default-character-set=utf8
-#在[mysqld]下添加
+<pre><code class="language-text">vi /etc/my.cnf
+#在[client]下添加<br/>
+default-character-set=utf8<br/>
+#在[mysqld]下添加<br/>
 default-character-set=utf8
 </code></pre>
-
 <p>重启mysql</p></li>
 </ol>
 
@@ -218,7 +243,7 @@ default-character-set=utf8
 		uwsgi重启shell脚本</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<pre><code>#!/bin/bash
+			<pre><code class="language-text">#!/bin/bash
 if [ ! -n &quot;$1&quot; ]
 then
     echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
@@ -275,13 +300,41 @@ fi
 			
 			<ol>
 <li><p>CentOS python升级之后yum无法使用解决</p>
-
 <p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-
-<pre><code>vim /usr/bin/yum
+<pre><code class="language-text">vim /usr/bin/yum
 </code></pre>
-
 <p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
+<pre><code class="language-text">[program:ErosUpdate]
+command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
+;priority=999                ; the relative start priority (default 999)<br/>
+autostart=true              ; start at supervisord start (default: true)<br/>
+autorestart=true            ; retstart at unexpected quit (default: true)<br/>
+startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
+startretries=3              ; max # of serial start failures (default 3)<br/>
+nodaemon=true<br/>
+;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
+;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
+;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
+user=root                 ; setuid to this UNIX account to run the program<br/>
+log_stdout=true             ; if true, log program stdout (default true)<br/>
+log_stderr=true             ; if true, log program stderr (def false)<br/>
+logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
+logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
+logfile_backups=20          ; # of logfile backups (default 10)
+</code></pre></li>
+<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
+<pre><code class="language-text">[uwsgi]
+socket=127.0.0.1:3030<br/>
+chdir=/data/weex/projects/ErosUpdate<br/>
+wsgi-file = ErosUpdate/wsgi.py<br/>
+max-requests=5000<br/>
+processes = 4<br/>
+threads = 4<br/>
+logto=/data/logs/uwsgi/ErosUpdate.log<br/>
+#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
+pidfile=/tmp/ErosUpdate.pid
+</code></pre></li>
 </ol>
 
 
@@ -308,63 +361,13 @@ fi
 			
 			<ol>
 <li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
-
-<pre><code>  server {
-      listen 80 default;
-      server_name _;
-      rewrite ^(.*) http://www.mylonly.com permanent;
+<pre><code class="language-text">  server {
+      listen 80 default;<br/>
+      server_name _;<br/>
+      rewrite ^(.*) http://www.mylonly.com permanent;<br/>
     }
 </code></pre></li>
 </ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-12-07T21:30:15+08:00" itemprop="datePublished">2017/12/7</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='linux.html'>Linux</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15126534156721.html" itemprop="url">
-		Ubuntu 安装uwsgi</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
-然后利用pip3 安装uwsgi</p>
-
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-tar -xvf Python-3.6.3.tar.xz
-cd Python-3.6.3/
-
-apt-get install zlib1g-dev
-apt-get install libssl-dev
-apt-get install sqlite3
-
-
-./configure --enable-loadable-sqlite-extensions
-
-make &amp;&amp; sudo make install
-
-
-pip3 install uwsgi
-
-uwsgi -i /data/web/xxxx.ini
-</code></pre>
-
-<p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
-
-<pre><code>py-autoreload = 1
-</code></pre>
 
 
 			

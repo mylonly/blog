@@ -152,13 +152,13 @@
 
 <p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
 
-<pre><code class="language-Python">def start_requests(self):
+<pre><code class="language-python">def start_requests(self):
         return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
 </code></pre>
 
 <p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
 
-<pre><code class="language-Pythoh">headers = {
+<pre><code class="language-pythoh">headers = {
     &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
     &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
     &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
@@ -173,7 +173,7 @@
 
 <p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
 
-<pre><code class="language-Python">def post_login(self,response):
+<pre><code class="language-python">def post_login(self,response):
         self.log(&quot;preparing login...&quot;)
         xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
         self.log(xsrf)
@@ -193,27 +193,27 @@
 <li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
 </ol>
 
-<pre><code class="language-Python">def after_login(self,response):
+<pre><code class="language-python">def after_login(self,response):
         for url in self.start_urls:
             yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
 </code></pre>
 
 <p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
 
-<pre><code class="language-Pythoh">rules = (
+<pre><code class="language-pythoh">rules = (
         Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
     )
 </code></pre>
 
 <p>同时提供request_question函数</p>
 
-<pre><code class="language-Python">def request_question(self,request):
+<pre><code class="language-python">def request_question(self,request):
         return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
 </code></pre>
 
 <p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
 
-<pre><code class="language-Python">def parse_question(self,response):
+<pre><code class="language-python">def parse_question(self,response):
         sel = Selector(response)
         item = zhihuItem()
         item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
@@ -227,7 +227,7 @@
 
 <h3 id="toc_2">完整代码</h3>
 
-<pre><code class="language-Python">import urllib2
+<pre><code class="language-python">import urllib2
 import os
 import re
 import codecs

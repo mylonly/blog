@@ -130,7 +130,7 @@
 
 <h3 id="toc_0">WiFi连接</h3>
 
-<pre><code>pi@raspi3:~ $ iwlist scan
+<pre><code class="language-text">pi@raspi3:~ $ iwlist scan
 wlan0 Scan completed :
 Cell 01 - Address: 00:1E:20:50:AA:BB
 Channel:8
@@ -177,7 +177,7 @@ ifconfig wlan0
 
 <h3 id="toc_1">蓝牙连接</h3>
 
-<pre><code>pi@raspi3:~ $ sudo bluetoothctl
+<pre><code class="language-text">pi@raspi3:~ $ sudo bluetoothctl
 [NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
 [bluetooth]# list
 Controller BB:27:EB:0D:9D:DD raspi3 [default]
@@ -207,9 +207,12 @@ Changing E8:07:BF:3A:25:AA trust succeeded
 </code></pre>
 
 <p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
- <code><br/>
-sudo apt-get install pulseaudio pulseaudio-module-bluetooth<br/>
-</code></p>
+ ```<br/>
+sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
+
+<pre><code class="language-text">
+
+</code></pre>
 
 		</div>
 	</article>

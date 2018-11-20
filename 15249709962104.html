@@ -126,7 +126,7 @@
 		<div class="entry-content" itemprop="articleBody">
 			<p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
 
-<pre><code>App.objects.all()
+<pre><code class="language-text">App.objects.all()
 </code></pre>
 
 <p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
@@ -139,17 +139,17 @@
 
 <p>安装很简单,和pylint一样</p>
 
-<pre><code>pip3 install pylint-django
+<pre><code class="language-text">pip3 install pylint-django
 </code></pre>
 
 <p>然后通过pylint加载这个插件</p>
 
-<pre><code>pylint --load-plugins pylint_django 
+<pre><code class="language-text">pylint --load-plugins pylint_django 
 </code></pre>
 
 <p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
 
-<pre><code>&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
+<pre><code class="language-text">&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
 </code></pre>
 
 <p>然后重启VSCode就好了</p>

@@ -126,7 +126,7 @@
 		<div class="entry-content" itemprop="articleBody">
 			<p>在MVVM架构的项目中，我们一般会写一个viewModel的基类和一个controller的基类，在controller的对象中持有viewModel,如下代码</p>
 
-<pre><code class="language-Swift">class ViewModel{
+<pre><code class="language-swift">class ViewModel{
     
 }
 class Controller {
@@ -141,7 +141,7 @@ class Controller {
 
 <p>然后在每一个具体的页面上，都会写一个对应的viewModel和controller分别继承自上面两个基类</p>
 
-<pre><code class="language-Swift">class Sub1ViewModel:ViewModel{
+<pre><code class="language-swift">class Sub1ViewModel:ViewModel{
     
     let desc = &quot;Sub1&quot;
 
@@ -153,7 +153,7 @@ class Sub1Controller:Controller{
 
 <p>这时如果我想在Sub1Controller中访问Sub1ViewModel中的desc变量，只能在Sub1Controller中这样写</p>
 
-<pre><code class="language-Swift">class Sub1Controller:Controller{
+<pre><code class="language-swift">class Sub1Controller:Controller{
     var description{
         let viewModel = self.viewModel as! Sub1ViewModel
         return viewModel.desc
@@ -163,7 +163,7 @@ class Sub1Controller:Controller{
 
 <p>由于Swift是强类型语言，不能像OC那样通过类型的强制转换来使基类的属性变成子类的类型，所以你每次使用基类的属性的时候都必须要用as强制转换成子类的类型之后才能访问子类的属性或者方法，当然你可以将这个强制转换包装成一个函数，或者提供另一个变量返回强制转换过的类型。</p>
 
-<pre><code class="language-Swift">class Sub1Controller:Controller{
+<pre><code class="language-swift">class Sub1Controller:Controller{
     var sub1ViewModel:Sub1ViewModel{
         return self.viewModel as! Sub1ViewModel
     }
@@ -181,7 +181,7 @@ class Sub1Controller:Controller{
 
 <p>但是这两种方法仍然不够优雅，产生了很多冗余的代码，笔者在实践中尝试着使用泛型来是基类的属性类型动态化，是代码看起来更优雅</p>
 
-<pre><code class="language-Swift">
+<pre><code class="language-swift">
 class ViewModel{
 }
 

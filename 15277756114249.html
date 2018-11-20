@@ -133,12 +133,12 @@
 
 <p>命令行中输入：</p>
 
-<pre><code>env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test”  
+<pre><code class="language-text">env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test”  
 </code></pre>
 
 <p>如果显示了如下红色加粗内容，说明你的linux系统存在该漏洞，请立即修复。</p>
 
-<pre><code>vulnerable
+<pre><code class="language-text">vulnerable
 this is a test
 </code></pre>
 
@@ -146,12 +146,12 @@ this is a test
 
 <p>RedHat系操作系统(RedHat,CentOS),安装完成需要重启</p>
 
-<pre><code>yum update bash 
+<pre><code class="language-text">yum update bash 
 </code></pre>
 
 <p>Ubuntu系列(无需重启)：      </p>
 
-<pre><code>apt-get update   
+<pre><code class="language-text">apt-get update   
 apt-get install bash
 </code></pre>
 
@@ -159,12 +159,12 @@ apt-get install bash
 
 <p>命令行输入 ：</p>
 
-<pre><code>env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test” 
+<pre><code class="language-text">env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test” 
 </code></pre>
 
 <p>显示如下信息表示修复成功:</p>
 
-<pre><code>bash: warning: x: ignoring function definition attempt 
+<pre><code class="language-text">bash: warning: x: ignoring function definition attempt 
 bash: error importing function definition for `x’ 
 this is a test
 </code></pre>

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	各种程序的源码安装 - 独自一人
+  	Kali Linux 安装w3af - 独自一人
   	
 	</title>
 
@@ -122,70 +122,86 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">各种程序的源码安装</h1>
+		<h1 class="title" itemprop="name">Kali Linux 安装w3af</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<h2 id="toc_0">nginx</h2>
+			<h3 id="toc_0">更新软件源</h3>
 
-<pre><code class="language-text">#安装编译nginx必须的依赖
-yum install gcc-c++
-yum install pcre pcre-devel  
-yum install zlib zlib-devel 
-yum install openssl openssl--devel
-
-#下载nginx源码
-wget http://nginx.org/download/nginx-1.9.15.tar.gz
-
-#解压
-tar -zvxf nginx-1.9.15.tar.gz -C ../document/
-
-#编译安装
-cd ../document/nginx-1.9.15
-./configure
-make
-make install
+<pre><code class="language-text">apt-get update
 </code></pre>
 
-<h2 id="toc_1">setuptools 安装</h2>
+<h3 id="toc_1">下载源码</h3>
 
-<pre><code class="language-text">wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-
+<pre><code class="language-text">git clone --depth 1 https://github.com/andresriancho/w3af.git
 </code></pre>
 
-<h2 id="toc_2">pip源码安装</h2>
+<h3 id="toc_2">安装node(如果已安装请忽略)</h3>
 
-<pre><code class="language-text">[pip官网安装](https://pypi.python.org/pypi/pip)
+<pre><code class="language-text">wget https://nodejs.org/dist/v10.13.0/node-v10.13.0-linux-x64.tar.xz
+xz -d node-v10.13.0-linux-x64.tar.xz
+tar -vxf node-v10.13.0-linux-x64.tar
+mv node-v10.13.0-linux-x64.tar /usr/local/node
 </code></pre>
 
-<h2 id="toc_3">源码安装Git</h2>
+<p>node 加入到环境变量当中</p>
 
-<ol>
-<li><p>安装依赖</p>
-<pre><code class="language-text"> yum install curl
- yum install curl-devel<br/>
- yum install zlib-devel<br/>
- yum install openssl-devel<br/>
- yum install perl<br/>
- yum install perl-devel<br/>
- yum install cpio<br/>
- yum install expat-devel<br/>
- yum install gettext-devel
-</code></pre></li>
-<li><p>下载源码编译安装</p>
-<pre><code class="language-text">wget https://www.kernel.org/pub/software/scm/git/git-2.8.2.tar.gz
-tar xzvf git-2.8.2.tar.gz<br/>
-cd git-2.8.2<br/>
-autoconf<br/>
-./configure<br/>
-make | make install
-</code></pre></li>
-<li><p>配置环境变量</p>
-<p>修改用户目录下的.bashrc或者bash_profile,末尾增加</p>
-<pre><code class="language-text">export PATH=$PATH:/usr/local/bin
+<pre><code class="language-text">vim ~/.basrc
 </code></pre>
-<p>然后重新加载profile</p>
-<pre><code class="language-text">source ~/.bashrc
-</code></pre></li>
-</ol>
+
+<p>最后一行添加</p>
+
+<pre><code class="language-text">export PATH=$PATH:/usr/local/node/bin
+</code></pre>
+
+<h3 id="toc_3">获取w3af依赖安装脚本</h3>
+
+<pre><code class="language-text">./w3af_console
+./tmp/w3af_dependency_install.sh #安装依赖
+</code></pre>
+
+<h4 id="toc_4">提示: ld can not found -lcrypto</h4>
+
+<p>没有找到crypto库，crypto库是openssl中的，一般没有找到的话基本都是/usr/lib下没有改动态库的链接文件</p>
+
+<p>利用<code>find / -name *libcrypto.so*</code>指令找到libcrypto.so的位置，然后在/usr/lib下建立起软连接</p>
+
+<pre><code class="language-text">ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 /usr/lib/libcrypto.so
+</code></pre>
+
+<h4 id="toc_5">提示: Cannot uninstall &#39;scapy&#39;. It is a distutils installed project</h4>
+
+<p>系统以及安装了相应的版本的scapy，但是和w3af中要求的版本不符，w3af不能卸载它<br/>
+此时可以手动删除它</p>
+
+<pre><code class="language-text">apt-get remove python-scapy
+</code></pre>
+
+<p>或者在<code>w3af/core/controllers/dependency_check/requirements.py</code>中找到依赖包对应的版本，将其修改为系统自带的版本<br/>
+改完之后仍然需要在<code>w3af/core/controllers/dependency_check/platforms/mac.py</code>找到包对应的版本，修改为系统版本</p>
+
+<h4 id="toc_6">执行<code>./w3af_gui</code>提示: No module named webkit</h4>
+
+<p>由于新版本的Kali的软件源中已经没有了python-webkit和python-webkit-dev，所以我们需要手动下载并安装它们</p>
+
+<pre><code class="language-text">#下载缺省的deb二进制包
+wget http://ftp.br.debian.org/debian/pool/main/p/pywebkitgtk/python-webkit_1.1.8-3_amd64.deb
+wget http://ftp.br.debian.org/debian/pool/main/w/webkitgtk/libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb
+wget http://ftp.br.debian.org/debian/pool/main/p/python-support/python-support_1.0.15_all.deb
+wget http://ftp.br.debian.org/debian/pool/main/w/webkitgtk/libwebkitgtk-1.0-0_2.4.11-3_amd64.deb
+#依次安装deb二进制包
+dpkg -i libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb 
+dpkg -i python-support_1.0.15_all.deb 
+dpkg -i libwebkitgtk-1.0-0_2.4.11-3_amd64.deb
+dpkg -i python-webkit_1.1.8-3_amd64.deb
+#修复依赖
+apt-get -f install -y
+</code></pre>
+
+<h4 id="toc_7">执行<code>./w3af_gui</code>提示: ImportError: No module named gtksourceview2</h4>
+
+<p>缺少python-gtksourceview2</p>
+
+<pre><code class="language-text">apt-get install python-getsourceview2
+</code></pre>
 
 		</div>
 	</article>

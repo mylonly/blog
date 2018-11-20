@@ -140,7 +140,7 @@
 
 <p>这个样式中并没有指定flex-wrap属性，而在flex布局中，flex-wrap的默认属性就是<code>nowrap</code>不换行。</p>
 
-<pre><code>是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
+<pre><code class="language-text">是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
 如果真是这样，那么weex-ui的开发者为什么不把flex-wrap属性设置为wrap而提供一个支持多行的`wxc-rich-text`控件呢？
 </code></pre>
 
@@ -267,7 +267,7 @@
 
 <p>然后加上发送人的姓名，最后加上聊天的内容addMessage,在addMessage当中我实现了QQ表情的匹配已经文本内容的切割</p>
 
-<pre><code>addMessage(message){
+<pre><code class="language-text">addMessage(message){
       var char_list = []
       var chars = message.split(&#39;&#39;)
       var startIndex = -1

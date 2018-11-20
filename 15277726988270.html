@@ -133,7 +133,7 @@ MimeEntity类很简单，其成员如下：</p>
 
 <p>迭代器初始化：</p>
 
-<pre><code>ifstream file_in(&quot;test.eml&quot;);  //文件流
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);  //文件流
 ostrstream ostr&lt;&lt;ifstream;  //转换成strstream
 string str_eml=ostr.str();     //将ifstream转换成string字符串
 MimeEntity me(str_eml.begin(),str_eml.end());  
@@ -141,13 +141,13 @@ MimeEntity me(str_eml.begin(),str_eml.end());
 
 <p>流初始化</p>
 
-<pre><code>ifstream file_in(&quot;test.eml&quot;);         
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);         
 MimeEntity me(file_in);
 </code></pre>
 
 <p>其中MimeEntity(Iterator beg,Iterator end,int mask = imNone)这个构造函数的第三个参数mask是解析参数，可以去下列值：</p>
 
-<pre><code>imNone   //完整解析整个MIME格式文件
+<pre><code class="language-text">imNone   //完整解析整个MIME格式文件
 imHeader  //忽略MIME头
 imBody     //忽略MIME正文
 imChildParts  //忽略嵌套的MIME
@@ -157,7 +157,7 @@ imEpilogue    //忽略结束符
 
 <p>MimeEntity将整个MIME格式分成两部分，以空格（\r\n\r\n）为分割符，空格以上的为MIME头，存放在m_header中，空格以下的为MIME正文，存放在m_body中，可以分别通过调用成员函数header()和body()得到相应的类型值。</p>
 
-<pre><code>#include&lt;iostream&gt;
+<pre><code class="language-text">#include&lt;iostream&gt;
 #include&lt;mimetic/mimetic.h&gt;
     
 using namespace std;

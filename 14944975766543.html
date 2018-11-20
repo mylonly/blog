@@ -134,21 +134,21 @@
 
 <p>执行如下命令替换Pods源</p>
 
-<pre><code class="language-Bash">$ pod repo remove master
+<pre><code class="language-bash">$ pod repo remove master
 $ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
 </code></pre>
 
 <p> <br/>
 仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
 
-<pre><code class="language-Bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
+<pre><code class="language-bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
 Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
 </code></pre>
 
 <p> <br/>
 这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
 
-<pre><code class="language- Bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
+<pre><code class="language- bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
 platform :ios, &#39;6.0&#39;
 pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
 </code></pre>

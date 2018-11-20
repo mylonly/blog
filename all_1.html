@@ -126,6 +126,313 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2018-07-05T15:00:26+08:00" itemprop="datePublished">2018/7/5</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15307740267953.html" itemprop="url">
+		MySql 相关问题</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>查看数据库服务器字符集</p>
+<pre><code class="language-text">mysql&gt; show variables like &#39;%char%&#39;;
++--------------------------+-------------------------------------+------<br/>
+| Variable_name | Value |......<br/>
++--------------------------+-------------------------------------+------<br/>
+| character_set_client | utf8 |...... -- 客户端字符集<br/>
+| character_set_connection | utf8 |......<br/>
+| character_set_database | utf8 |...... -- 数据库字符集<br/>
+| character_set_filesystem | binary |......<br/>
+| character_set_results | utf8 |......<br/>
+| character_set_server | utf8 |...... -- 服务器字符集<br/>
+| character_set_system | utf8 |......<br/>
+| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......<br/>
++--------------------------+-------------------------------------+------
+</code></pre></li>
+<li><p>查看数据表(table)字符集</p>
+<pre><code class="language-text">mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| Name | Engine | Version | Row_format | Rows | Collation |......<br/>
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......<br/>
++-----------+--------+---------+------------+------+-----------------+------
+</code></pre></li>
+<li><p>查看数据列(column)字符集</p>
+<pre><code class="language-text">mysql&gt; show full columns from countries;
++----------------------+-------------+-----------------+--------<br/>
+| Field | Type | Collation | .......<br/>
++----------------------+-------------+-----------------+--------<br/>
+| countries_id | int(11) | NULL | .......<br/>
+| countries_name | varchar(64) | utf8_general_ci | .......<br/>
+| countries_iso_code_2 | char(2) | utf8_general_ci | .......<br/>
+| countries_iso_code_3 | char(3) | utf8_general_ci | .......<br/>
+| address_format_id | int(11) | NULL | .......<br/>
++----------------------+-------------+-----------------+--------
+</code></pre></li>
+<li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
+<pre><code class="language-text">alter database name character set utf8;
+create database name character set utf8;<br/>
+alter table 表名 convert to character set gbk;<br/>
+alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
+</code></pre></li>
+<li><p>通过数据库my.cnf配置文件设置字符集</p>
+<pre><code class="language-text">vi /etc/my.cnf
+#在[client]下添加<br/>
+default-character-set=utf8<br/>
+#在[mysqld]下添加<br/>
+default-character-set=utf8
+</code></pre>
+<p>重启mysql</p></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-06-01T22:08:35+08:00" itemprop="datePublished">2018/6/1</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15278621156583.html" itemprop="url">
+		制作Kali Linux 加密U盘启动盘</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">前置条件</h2>
+
+<ol>
+<li>1个至少是32GB的U盘，最好是USB3.0接口的</li>
+<li>一台可以安装Virtual Box的电脑</li>
+</ol>
+
+<h2 id="toc_1">需要下载的文件</h2>
+
+<ol>
+<li>Kali Linux 64位 iso镜像文件: <a href="https://www.kali.org/downloads/">下载地址</a></li>
+<li>Virtual Box 安装包 <a href="https://www.virtualbox.org/wiki/Downloads">下载地址</a></li>
+<li>Kali Linux OVA镜像文件(OVA格式) <a href="https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-hyperv-image-download/">下载地址</a></li>
+<li>Virtual Box Extension Pack <a href="https://www.virtualbox.org/wiki/Downloads">下载地址</a></li>
+</ol>
+
+<h2 id="toc_2">安装Kali Linux 虚拟机</h2>
+
+<p>我们需要借助Kali里面的一些工具来帮助我们制作加密U盘，所以我们需要首先安装一个Kali Linux虚拟机，如果你已经有了类似的虚拟机，可以忽略这个步骤。</p>
+
+<p>利用安装包安装完VirtualBox之后：</p>
+
+<ol>
+<li>在菜单项<code>管理</code>当中选择<code>导入虚拟电脑</code>，然后选中之前下载好的Kali的OVA格式虚拟机镜像文件。</li>
+<li>安装Virtual Box Extension Pack，这步主要是让虚拟机能支持USB3.0的设备</li>
+<li>修改已经导入的Kali虚拟机的设置，在USB设备选项中选择<code>USB 3.0 控制器</code>
+<img src="https://pic.mylonly.com/2018-06-01-589FAFA6C598ACDFD296B6D320D525C7.jpg" alt=""/></li>
+<li>启动Kali虚拟机，进入Kali之后，点击VirtualBox的<code>设备</code>菜单项，选择<code>安装增强功能</code>,如果提示安装失败，可以直接将桌面上出现的光盘中的VBoxLinuxAdditions.run 拷贝至其他目录，修改其权限为755，然后手动运行此脚本即可。
+<img src="https://pic.mylonly.com/2018-06-01-151200.png" alt=""/></li>
+<li>设置共享文件夹，在VirtualBox当中操作，这步主要是方便后面将下载在windows里的Kali的iso文件拷贝至Kali当中。
+<img src="https://pic.mylonly.com/2018-06-01-56483D9C90D387A88824988AFDE2DCF1.jpg" alt=""/></li>
+</ol>
+
+<h2 id="toc_3">U盘初始设置</h2>
+
+<ol>
+<li>选择VirtualBox的<code>设备</code>菜单，在<code>USB</code>子菜单选中已经插在主机上的U盘设备，将U盘映射到虚拟机当中
+<img src="https://pic.mylonly.com/2018-06-01-151239.png" alt=""/></li>
+<li>找到Kali当中的GParted工具打开，选择已经挂载的U盘(如果你的虚拟机之前没有挂载过其他U盘,默认的挂载分区应该是<code>/dev/sdb</code>,本文演示截图当中显示为/dev/sdc是因为之前已经挂载过一个U盘)
+<img src="https://pic.mylonly.com/2018-07-07-123121.jpg" alt=""/></li>
+<li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
+<img src="https://pic.mylonly.com/2018-07-07-123132.jpg" alt=""/></p>
+<h2 id="toc_4">写入镜像、U盘分区</h2></li>
+<li><p>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</p></li>
+<li><p>利用如下命令将该iso文件拷贝至U盘当中</p></li>
+</ol>
+
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
+</code></pre>
+
+<ol>
+<li>利用parted工具对U盘当中未使用的其他部分进行分区，命令如下</li>
+</ol>
+
+<pre><code class="language-bash">parted  #进入parted界面
+select /dev/sdc #选择U盘分区
+print #查看当前分区信息
+mkpart primary 2937 23417 #制作新的分区，起始位置从2937M开始，到23417位置结束
+print #查看新的分区信息
+</code></pre>
+
+<p><img src="https://pic.mylonly.com/2018-06-01-152223.jpg" alt=""/></p>
+
+<h2 id="toc_5">制作加密U盘</h2>
+
+<ol>
+<li><p>制作加密分区</p>
+<pre><code class="language-text">cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
+</code></pre>
+<p>确认覆盖分区，输入大写的YES，然后输入两遍密码之后，加密分区制作完毕<br/>
+<strong>注意/dev/sdc3,在上面利用parted制作新分区时，其属于/dev/sdc下面的第三个分区</strong><br/>
+<img src="https://pic.mylonly.com/2018-06-01-15A3CBD2C0856CCC83089E164F496957.png" alt=""/></p></li>
+<li><p>对加密分区格式化分区,分配卷标</p>
+<pre><code class="language-bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
+ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件<br/>
+mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式<br/>
+e2label /dev/mapper/usb persistence #将分区卷标指定为persistence,名字必须为persistence
+</code></pre></li>
+<li><p>挂载新的分区,写入验证文件</p>
+<pre><code class="language-bash">mkdir -p /mnt/usb 
+mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下<br/>
+echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf<br/>
+#写入一个persistence.conf文件，此文件会在启动时用来确认此U盘是用来加密存储的分区
+</code></pre></li>
+<li><p>卸载分区，退出加密分区</p>
+<pre><code class="language-bash">umount /dev/mapper/usb
+cryptsetup luksClose /dev/mapper/usb
+</code></pre>
+<p><img src="https://pic.mylonly.com/2018-07-07-123146.jpg" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_6">重启物理电脑，选择从U盘启动</h2>
+
+<p>进入Boot Menu之后，选择LIve USB Encrypted Persistence 进入系统，之后会让你输入之前创建加密分区时输入的密码，密码输入正确才能正确的进入系统，至此，整个制作加密Kali Linux U盘启动盘过程结束。</p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-31T22:25:43+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277767431151.html" itemprop="url">
+		uwsgi重启shell脚本</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<pre><code class="language-text">#!/bin/bash
+if [ ! -n &quot;$1&quot; ]
+then
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+    exit 0
+fi
+
+if [ $1 = start ]
+then
+    psid=`ps aux | grep &quot;uwsgi&quot; | grep -v &quot;grep&quot; | wc -l`
+    if [ $psid -gt 4 ]
+    then
+        echo &quot;uwsgi is running!&quot;
+        exit 0
+    else
+        uwsgi /etc/uwsgi.ini
+        echo &quot;Start uwsgi service [OK]&quot;
+    fi
+    
+
+elif [ $1 = stop ];then
+    killall -9 uwsgi
+    echo &quot;Stop uwsgi service [OK]&quot;
+elif [ $1 = restart ];then
+    killall -9 uwsgi
+    /usr/bin/uwsgi --ini /etc/uwsgi.ini #修改成自己业务的配置文件或命令
+    echo &quot;Restart uwsgi service [OK]&quot;
+
+else
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+fi
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2018-05-31T22:18:14+08:00" itemprop="datePublished">2018/5/31</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15277762940932.html" itemprop="url">
+		Linux问题集锦</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li><p>CentOS python升级之后yum无法使用解决</p>
+<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
+<pre><code class="language-text">vim /usr/bin/yum
+</code></pre>
+<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
+<pre><code class="language-text">[program:ErosUpdate]
+command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
+;priority=999                ; the relative start priority (default 999)<br/>
+autostart=true              ; start at supervisord start (default: true)<br/>
+autorestart=true            ; retstart at unexpected quit (default: true)<br/>
+startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
+startretries=3              ; max # of serial start failures (default 3)<br/>
+nodaemon=true<br/>
+;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
+;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
+;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
+user=root                 ; setuid to this UNIX account to run the program<br/>
+log_stdout=true             ; if true, log program stdout (default true)<br/>
+log_stderr=true             ; if true, log program stderr (def false)<br/>
+logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
+logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
+logfile_backups=20          ; # of logfile backups (default 10)
+</code></pre></li>
+<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
+<pre><code class="language-text">[uwsgi]
+socket=127.0.0.1:3030<br/>
+chdir=/data/weex/projects/ErosUpdate<br/>
+wsgi-file = ErosUpdate/wsgi.py<br/>
+max-requests=5000<br/>
+processes = 4<br/>
+threads = 4<br/>
+logto=/data/logs/uwsgi/ErosUpdate.log<br/>
+#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
+pidfile=/tmp/ErosUpdate.pid
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2018-05-31T16:15:11+08:00" itemprop="datePublished">2018/5/31</time>
 			</div>
 			<div class="tags">posted in 
@@ -140,173 +447,15 @@
 			
 			<ol>
 <li><p>subplot</p>
-
-<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
-plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
+<pre><code class="language-text">plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图<br/>
 plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
 </code></pre>
-
 <p>subplot(numRows, numCols, plotNum)<br/>
 如果3个参数都小于10的话，可以统一成一个整数<br/>
 subplot(221) = subplot(2,2,1)</p></li>
 <li><p><img src="media/15277545119360/15277557443176.jpg" alt=""/></p></li>
 </ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-30T16:47:02+08:00" itemprop="datePublished">2018/5/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15276700222671.html" itemprop="url">
-		Pandas相关</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Pandas 读取列数据</p>
-
-<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
-
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
-data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-28T14:29:43+08:00" itemprop="datePublished">2018/5/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Tensorflow.html'>Tensorflow</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15274889837567.html" itemprop="url">
-		Tensorflow错误集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
-加入以下代码</p>
-
-<pre><code>import os 
-os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-05-03T22:28:47+08:00" itemprop="datePublished">2018/5/3</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Weex.html'>Weex</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15253577270506.html" itemprop="url">
-		Weex 问题集锦</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li><p>weex中通过ref访问组件的两种情况:</p>
-
-<pre><code>&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
-</code></pre>
-
-<p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-
-<pre><code>&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
-</code></pre>
-
-<p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2018-04-29T11:03:16+08:00" itemprop="datePublished">2018/4/29</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='django-learn.html'>Django学习</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15249709962104.html" itemprop="url">
-		解决VSCode编写Django代码时经常提示objects属性等不存在的错误</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
-
-<pre><code>App.objects.all()
-</code></pre>
-
-<p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
-
-<blockquote>
-<p>Django使用了大量的元编程思想，其中会有大量的修改对象属性和行为的操作，pylint提示的不存在的属性和方法会在程序运行中被django动态的加入，所以并不会影响程序运行。</p>
-</blockquote>
-
-<p>所以在网上稍微找了下，发现这个叫做<code>pylint-django</code>的<code>pylint</code>的插件可以去掉这些恼人的提示。</p>
-
-<p>安装很简单,和pylint一样</p>
-
-<pre><code>pip3 install pylint-django
-</code></pre>
-
-<p>然后通过pylint加载这个插件</p>
-
-<pre><code>pylint --load-plugins pylint_django 
-</code></pre>
-
-<p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
-
-<pre><code>&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
-</code></pre>
-
-<p>然后重启VSCode就好了</p>
-
-<p>参考:<br/>
-<a href="https://blog.landscape.io/using-pylint-on-django-projects-with-pylint-django.html">blog.landscape.io</a></p>
 
 
 			

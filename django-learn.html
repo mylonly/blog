@@ -140,7 +140,7 @@
 			
 			<p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
 
-<pre><code>App.objects.all()
+<pre><code class="language-text">App.objects.all()
 </code></pre>
 
 <p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
@@ -153,17 +153,17 @@
 
 <p>安装很简单,和pylint一样</p>
 
-<pre><code>pip3 install pylint-django
+<pre><code class="language-text">pip3 install pylint-django
 </code></pre>
 
 <p>然后通过pylint加载这个插件</p>
 
-<pre><code>pylint --load-plugins pylint_django 
+<pre><code class="language-text">pylint --load-plugins pylint_django 
 </code></pre>
 
 <p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
 
-<pre><code>&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
+<pre><code class="language-text">&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
 </code></pre>
 
 <p>然后重启VSCode就好了</p>
@@ -195,136 +195,111 @@
 			
 			<ol>
 <li><p>Csrf验证</p>
-
-<pre><code>需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
+<pre><code class="language-text">需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
 </code></pre></li>
 <li><p>Django允许跨域</p>
-
 <p>安装<code>django-cors-headers</code></p>
-
-<pre><code>pip install django-cors-headers
+<pre><code class="language-text">pip install django-cors-headers
 </code></pre>
-
 <p>在setting.py中增加如下代码</p>
-
-<pre><code>INSTALLED_APPS = [
-...
-&#39;corsheaders&#39;，
-...
- ] 
-
-MIDDLEWARE_CLASSES = (
-    ...
-    &#39;corsheaders.middleware.CorsMiddleware&#39;,
-    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序
-    ...
-)
-#跨域增加忽略
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    &#39;*&#39;
-)
-
-CORS_ALLOW_METHODS = (
-    &#39;DELETE&#39;,
-    &#39;GET&#39;,
-    &#39;OPTIONS&#39;,
-    &#39;PATCH&#39;,
-    &#39;POST&#39;,
-    &#39;PUT&#39;,
-    &#39;VIEW&#39;,
-)
-
-CORS_ALLOW_HEADERS = (
-    &#39;XMLHttpRequest&#39;,
-    &#39;X_FILENAME&#39;,
-    &#39;accept-encoding&#39;,
-    &#39;authorization&#39;,
-    &#39;content-type&#39;,
-    &#39;dnt&#39;,
-    &#39;origin&#39;,
-    &#39;user-agent&#39;,
-    &#39;x-csrftoken&#39;,
-    &#39;x-requested-with&#39;,
-    &#39;Pragma&#39;,
+<pre><code class="language-text">INSTALLED_APPS = [
+...<br/>
+&#39;corsheaders&#39;，<br/>
+...<br/>
+ ] <br/>
+MIDDLEWARE_CLASSES = (<br/>
+    ...<br/>
+    &#39;corsheaders.middleware.CorsMiddleware&#39;,<br/>
+    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序<br/>
+    ...<br/>
+)<br/>
+#跨域增加忽略<br/>
+CORS_ALLOW_CREDENTIALS = True<br/>
+CORS_ORIGIN_ALLOW_ALL = True<br/>
+CORS_ORIGIN_WHITELIST = (<br/>
+    &#39;*&#39;<br/>
+)<br/>
+CORS_ALLOW_METHODS = (<br/>
+    &#39;DELETE&#39;,<br/>
+    &#39;GET&#39;,<br/>
+    &#39;OPTIONS&#39;,<br/>
+    &#39;PATCH&#39;,<br/>
+    &#39;POST&#39;,<br/>
+    &#39;PUT&#39;,<br/>
+    &#39;VIEW&#39;,<br/>
+)<br/>
+CORS_ALLOW_HEADERS = (<br/>
+    &#39;XMLHttpRequest&#39;,<br/>
+    &#39;X_FILENAME&#39;,<br/>
+    &#39;accept-encoding&#39;,<br/>
+    &#39;authorization&#39;,<br/>
+    &#39;content-type&#39;,<br/>
+    &#39;dnt&#39;,<br/>
+    &#39;origin&#39;,<br/>
+    &#39;user-agent&#39;,<br/>
+    &#39;x-csrftoken&#39;,<br/>
+    &#39;x-requested-with&#39;,<br/>
+    &#39;Pragma&#39;,<br/>
 )
 </code></pre></li>
 <li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
-
-<pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
-axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
+<pre><code class="language-text">#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
+axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;<br/>
 axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
 </code></pre>
-
 <blockquote>
 <p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
 </blockquote>
-
 <p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
 <li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
-
 <p>需要两步：</p>
-
 <ul>
 <li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
 <li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
 </ul>
-
-<pre><code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
-class login(views.APIView):
-authentication_classes = (BasicAuthentication,)
-def post(self, request, *args, **kwargs):
-
-username = request.data.get(&quot;username&quot;)
-password = request.data.get(&quot;password&quot;)
-
-user = auth.authenticate(request, username=username, password=password)
-if user is not None:
-  auth.login(request, user)
-  return ErosResponse()
-else:
+<pre><code class="language-text">@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
+class login(views.APIView):<br/>
+authentication_classes = (BasicAuthentication,)<br/>
+def post(self, request, *args, **kwargs):<br/>
+username = request.data.get(&quot;username&quot;)<br/>
+password = request.data.get(&quot;password&quot;)<br/>
+user = auth.authenticate(request, username=username, password=password)<br/>
+if user is not None:<br/>
+  auth.login(request, user)<br/>
+  return ErosResponse()<br/>
+else:<br/>
   return ErosResponse(status=ErosResponseStatus.INVALID_USER)
 </code></pre></li>
 <li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
-
 <p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
-
-<pre><code class="language-Python">from django_filters.rest_framework import DjangoFilterBackend
+<pre><code class="language-python">from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 </code></pre></li>
 <li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
-
 <p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
-
-<pre><code>mysql -u root -p
-use mysql；
-ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
+<pre><code class="language-text">mysql -u root -p
+use mysql；<br/>
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  <br/>
 FLUSH PRIVILEGES; 
 </code></pre></li>
 <li><p>Django-Filter自定义查询过滤字段</p>
-
-<pre><code class="language-Python">from django_filters import FilterSet
-from django_filters import CharFilter
-
-class TagFilter(FilterSet):
-    ##自定义search字段
-    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)
-
-    class Meta:
-        model = Tag
-        fields = {
-          &#39;id&#39;: [&#39;exact&#39;],
-          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],
-          &#39;search&#39;: [&#39;exact&#39;],
+<pre><code class="language-python">from django_filters import FilterSet
+from django_filters import CharFilter<br/>
+class TagFilter(FilterSet):<br/>
+    ##自定义search字段<br/>
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)<br/>
+    class Meta:<br/>
+        model = Tag<br/>
+        fields = {<br/>
+          &#39;id&#39;: [&#39;exact&#39;],<br/>
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],<br/>
+          &#39;search&#39;: [&#39;exact&#39;],<br/>
         }
 </code></pre>
-
 <p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
 <li><p>DRF的OrderingFilter默认排序</p>
-
-<pre><code class="language-Python">filter_backends = (DjangoFilterBackend, OrderingFilter)
-ordering_fields = (&#39;id&#39;, &#39;hot&#39;)
+<pre><code class="language-python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)<br/>
 ordering = (&#39;-hot&#39;,)
 </code></pre></li>
 </ol>
@@ -355,7 +330,7 @@ ordering = (&#39;-hot&#39;,)
 
 <h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
 
-<pre><code class="language-Python">EMAIL_USE_SSL = True    
+<pre><code class="language-python">EMAIL_USE_SSL = True    
 EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
 EMAIL_PORT = 465
 EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
@@ -365,7 +340,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 <h5 id="toc_1">2. 引用mail库发送邮件</h5>
 
-<pre><code class="language-Python">from django.core.mail import EmailMessage
+<pre><code class="language-python">from django.core.mail import EmailMessage
 from Across.settings import EMAIL_HOST_USER
 
 msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
@@ -376,7 +351,7 @@ msg.send()
 
 <p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
 
-<pre><code class="language-Python">TEMPLATES = [
+<pre><code class="language-python">TEMPLATES = [
     {
         &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
         &#39;DIRS&#39;: [
@@ -397,7 +372,7 @@ msg.send()
 
 <p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
 
-<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
+<pre><code class="language-python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
 msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
 msg.content_subtype = &quot;html&quot; # Main content is now text/html
 msg.send()
@@ -433,7 +408,7 @@ msg.send()
 
 <p>在models.py中新建一个model继承自AbstractUser</p>
 
-<pre><code>from django.db import models
+<pre><code class="language-text">from django.db import models
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
@@ -459,7 +434,7 @@ class UserProfile(AbstractUser):
 
 <p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
 
-<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
+<pre><code class="language-text">AUTH_USER_MODEL = &#39;User.UserProfile&#39;
 </code></pre>
 
 

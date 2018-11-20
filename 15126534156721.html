@@ -127,7 +127,7 @@
 			<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
 然后利用pip3 安装uwsgi</p>
 
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+<pre><code class="language-shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
 tar -xvf Python-3.6.3.tar.xz
 cd Python-3.6.3/
 
@@ -148,7 +148,7 @@ uwsgi -i /data/web/xxxx.ini
 
 <p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
 
-<pre><code>py-autoreload = 1
+<pre><code class="language-text">py-autoreload = 1
 </code></pre>
 
 		</div>

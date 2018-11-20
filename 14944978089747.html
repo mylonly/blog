@@ -128,7 +128,7 @@
 <li>磁盘挂载</li>
 </ol>
 
-<pre><code>fdisk -l #查看磁盘信息
+<pre><code class="language-text">fdisk -l #查看磁盘信息
 mount /dev/xvdb1 /mnt #挂载磁盘
 </code></pre>
 
@@ -136,7 +136,7 @@ mount /dev/xvdb1 /mnt #挂载磁盘
 <li>设置开机自动加载磁盘</li>
 </ol>
 
-<pre><code>vim /etc/fstab
+<pre><code class="language-text">vim /etc/fstab
 写入 /dev/xvdb1 /mnt ext4 default 1 1
 </code></pre>
 
@@ -144,14 +144,14 @@ mount /dev/xvdb1 /mnt #挂载磁盘
 <li>修改主机名</li>
 </ol>
 
-<pre><code>vim /etc/sysconfig/network #修改里面的HOSTNAME值
+<pre><code class="language-text">vim /etc/sysconfig/network #修改里面的HOSTNAME值
 </code></pre>
 
 <ol>
 <li>设置ssh自动认证</li>
 </ol>
 
-<pre><code>ssh-keygen -t rsa #在客户机生成秘钥，
+<pre><code class="language-text">ssh-keygen -t rsa #在客户机生成秘钥，
 scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
 #将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
 最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
@@ -162,7 +162,7 @@ cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
 <li>dd命令实现ISO文件块拷贝</li>
 </ol>
 
-<pre><code>dd if=kali-linux-2018.2-amd64.iso of=/dev/sdb bs=1M
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdb bs=1M
 </code></pre>
 
 		</div>

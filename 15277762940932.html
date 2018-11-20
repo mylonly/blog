@@ -126,13 +126,41 @@
 		<div class="entry-content" itemprop="articleBody">
 			<ol>
 <li><p>CentOS python升级之后yum无法使用解决</p>
-
 <p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-
-<pre><code>vim /usr/bin/yum
+<pre><code class="language-text">vim /usr/bin/yum
 </code></pre>
-
 <p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
+<pre><code class="language-text">[program:ErosUpdate]
+command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
+;priority=999                ; the relative start priority (default 999)<br/>
+autostart=true              ; start at supervisord start (default: true)<br/>
+autorestart=true            ; retstart at unexpected quit (default: true)<br/>
+startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
+startretries=3              ; max # of serial start failures (default 3)<br/>
+nodaemon=true<br/>
+;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
+;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
+;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
+user=root                 ; setuid to this UNIX account to run the program<br/>
+log_stdout=true             ; if true, log program stdout (default true)<br/>
+log_stderr=true             ; if true, log program stderr (def false)<br/>
+logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
+logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
+logfile_backups=20          ; # of logfile backups (default 10)
+</code></pre></li>
+<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
+<pre><code class="language-text">[uwsgi]
+socket=127.0.0.1:3030<br/>
+chdir=/data/weex/projects/ErosUpdate<br/>
+wsgi-file = ErosUpdate/wsgi.py<br/>
+max-requests=5000<br/>
+processes = 4<br/>
+threads = 4<br/>
+logto=/data/logs/uwsgi/ErosUpdate.log<br/>
+#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
+pidfile=/tmp/ErosUpdate.pid
+</code></pre></li>
 </ol>
 
 		</div>

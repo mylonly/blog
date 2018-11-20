@@ -132,7 +132,7 @@
 
 <p>在models.py中新建一个model继承自AbstractUser</p>
 
-<pre><code>from django.db import models
+<pre><code class="language-text">from django.db import models
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
@@ -158,7 +158,7 @@ class UserProfile(AbstractUser):
 
 <p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
 
-<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
+<pre><code class="language-text">AUTH_USER_MODEL = &#39;User.UserProfile&#39;
 </code></pre>
 
 		</div>

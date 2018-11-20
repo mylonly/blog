@@ -166,20 +166,19 @@
 <img src="https://pic.mylonly.com/2018-07-07-123121.jpg" alt=""/></li>
 <li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
 <img src="https://pic.mylonly.com/2018-07-07-123132.jpg" alt=""/></p>
-
 <h2 id="toc_4">写入镜像、U盘分区</h2></li>
 <li><p>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</p></li>
 <li><p>利用如下命令将该iso文件拷贝至U盘当中</p></li>
 </ol>
 
-<pre><code>dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
 </code></pre>
 
 <ol>
 <li>利用parted工具对U盘当中未使用的其他部分进行分区，命令如下</li>
 </ol>
 
-<pre><code class="language-Bash">parted  #进入parted界面
+<pre><code class="language-bash">parted  #进入parted界面
 select /dev/sdc #选择U盘分区
 print #查看当前分区信息
 mkpart primary 2937 23417 #制作新的分区，起始位置从2937M开始，到23417位置结束
@@ -192,36 +191,27 @@ print #查看新的分区信息
 
 <ol>
 <li><p>制作加密分区</p>
-
-<pre><code>cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
+<pre><code class="language-text">cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
 </code></pre>
-
 <p>确认覆盖分区，输入大写的YES，然后输入两遍密码之后，加密分区制作完毕<br/>
 <strong>注意/dev/sdc3,在上面利用parted制作新分区时，其属于/dev/sdc下面的第三个分区</strong><br/>
 <img src="https://pic.mylonly.com/2018-06-01-15A3CBD2C0856CCC83089E164F496957.png" alt=""/></p></li>
 <li><p>对加密分区格式化分区,分配卷标</p>
-
-<pre><code class="language-Bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
-
-ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件
-
-mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式
-
+<pre><code class="language-bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
+ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件<br/>
+mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式<br/>
 e2label /dev/mapper/usb persistence #将分区卷标指定为persistence,名字必须为persistence
 </code></pre></li>
 <li><p>挂载新的分区,写入验证文件</p>
-
-<pre><code class="language-Bash">mkdir -p /mnt/usb 
-mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下
-echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf
+<pre><code class="language-bash">mkdir -p /mnt/usb 
+mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下<br/>
+echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf<br/>
 #写入一个persistence.conf文件，此文件会在启动时用来确认此U盘是用来加密存储的分区
 </code></pre></li>
 <li><p>卸载分区，退出加密分区</p>
-
-<pre><code class="language-Bash">umount /dev/mapper/usb
+<pre><code class="language-bash">umount /dev/mapper/usb
 cryptsetup luksClose /dev/mapper/usb
 </code></pre>
-
 <p><img src="https://pic.mylonly.com/2018-07-07-123146.jpg" alt=""/></p></li>
 </ol>
 

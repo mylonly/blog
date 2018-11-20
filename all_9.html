@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	远古知识 - 独自一人
+  	独自一人
   	
 	</title>
 
@@ -123,73 +123,6 @@
 <div itemscope itemtype="http://schema.org/Blog">
 
 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2015-04-21T22:06:51+08:00" itemprop="datePublished">2015/4/21</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15277756114249.html" itemprop="url">
-		OpenSSL心血漏洞的检测和修复方法</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p>近日，Linux社区爆出了关于Linux上Bash的安全漏洞，该漏洞源于你调用的bash shell之前创建的特殊的环境变量，这些变量可以包含代码，同时会被bash执行。 不同于之前的SSL的HeartBlood漏洞，这个Bash漏洞能让黑客通过嵌入恶意命令完全控制目标机器，而不像HeartBlood只是可以嗅探敏感信息。<br/>
-对于所有安装GNU bash 版本小于或者等于4.3的Linux操作系统都应该检测并修复该漏洞，以免造成不必要的损失。</p>
-</blockquote>
-
-<h2 id="toc_0">检测方法</h2>
-
-<p>命令行中输入：</p>
-
-<pre><code class="language-text">env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test”  
-</code></pre>
-
-<p>如果显示了如下红色加粗内容，说明你的linux系统存在该漏洞，请立即修复。</p>
-
-<pre><code class="language-text">vulnerable
-this is a test
-</code></pre>
-
-<h2 id="toc_1">修复方法</h2>
-
-<p>RedHat系操作系统(RedHat,CentOS),安装完成需要重启</p>
-
-<pre><code class="language-text">yum update bash 
-</code></pre>
-
-<p>Ubuntu系列(无需重启)：      </p>
-
-<pre><code class="language-text">apt-get update   
-apt-get install bash
-</code></pre>
-
-<h2 id="toc_2">验证是否修复成功</h2>
-
-<p>命令行输入 ：</p>
-
-<pre><code class="language-text">env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test” 
-</code></pre>
-
-<p>显示如下信息表示修复成功:</p>
-
-<pre><code class="language-text">bash: warning: x: ignoring function definition attempt 
-bash: error importing function definition for `x’ 
-this is a test
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
- 
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
@@ -417,7 +350,7 @@ intmain()
 
 </div>
 <nav id="pagenavi">
-	 
+	 <a class="prev" href="all_8.html">Prev</a>  
 	
 	<div class="center"><a href="archives.html">Blog Archives</a></div>
 

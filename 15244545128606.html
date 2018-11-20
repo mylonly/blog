@@ -127,31 +127,26 @@
 			<ol>
 <li><p>ValueError: unknown locale: UTF-8 <br/>
 <img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
-
 <p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
+<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
+export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
+export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
+export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
+export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
+export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
+export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
 export LC_ALL=
 </code></pre></li>
 <li><p>zip()函数在Python2和Python3中的区别</p>
-
 <p>在Python2中，zip返回的是元祖的列表<br/>
 而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
-
-<pre><code>x = [1, 2, 3]
-y = [a, b, c]
-
-#python3
-n = list(zip(x,y))
-print(n)
-#python2
-n = zip(x,y)
+<pre><code class="language-text">x = [1, 2, 3]
+y = [a, b, c]<br/>
+#python3<br/>
+n = list(zip(x,y))<br/>
+print(n)<br/>
+#python2<br/>
+n = zip(x,y)<br/>
 print n
 </code></pre></li>
 </ol>

