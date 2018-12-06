@@ -137,15 +137,13 @@
 
 <ol>
 <li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
 <blockquote>
 <p>为什么要安装Docker?<br/>
 因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
 </blockquote></li>
 <li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
 <li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
+<pre><code class="language-text">docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
 docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
 </code></pre></li>
 </ol>
@@ -154,7 +152,7 @@ docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
 
 <p>在Scrapy项目的setting.py中加入如下内容：</p>
 
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
+<pre><code class="language-python">SPLASH_URL = &#39;http://localhost:8050&#39;  
 
 DOWNLOADER_MIDDLEWARES = {
 &#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
@@ -187,7 +185,7 @@ HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
 
 <p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
 
-<pre><code class="language-Python">import scrapy
+<pre><code class="language-python">import scrapy
 from FinancialInfoSpider.items import ArticleItem
 from scrapy_splash import SplashRequest
 from w3lib.html import remove_tags
@@ -244,7 +242,7 @@ class TencentStockSpider(scrapy.Spider):
 
 <p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
 
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
+<pre><code class="language-text">SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
 </code></pre>
 
 <p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>

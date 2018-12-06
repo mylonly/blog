@@ -126,6 +126,154 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2016-09-11T19:10:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14945010480752.html" itemprop="url">
+		各种程序的源码安装</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">nginx</h2>
+
+<pre><code class="language-text">#安装编译nginx必须的依赖
+yum install gcc-c++
+yum install pcre pcre-devel  
+yum install zlib zlib-devel 
+yum install openssl openssl--devel
+
+#下载nginx源码
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+
+#解压
+tar -zvxf nginx-1.9.15.tar.gz -C ../document/
+
+#编译安装
+cd ../document/nginx-1.9.15
+./configure
+make
+make install
+</code></pre>
+
+<h2 id="toc_1">setuptools 安装</h2>
+
+<pre><code class="language-text">wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+
+</code></pre>
+
+<h2 id="toc_2">pip源码安装</h2>
+
+<pre><code class="language-text">[pip官网安装](https://pypi.python.org/pypi/pip)
+</code></pre>
+
+<h2 id="toc_3">源码安装Git</h2>
+
+<ol>
+<li><p>安装依赖</p>
+<pre><code class="language-text"> yum install curl
+ yum install curl-devel<br/>
+ yum install zlib-devel<br/>
+ yum install openssl-devel<br/>
+ yum install perl<br/>
+ yum install perl-devel<br/>
+ yum install cpio<br/>
+ yum install expat-devel<br/>
+ yum install gettext-devel
+</code></pre></li>
+<li><p>下载源码编译安装</p>
+<pre><code class="language-text">wget https://www.kernel.org/pub/software/scm/git/git-2.8.2.tar.gz
+tar xzvf git-2.8.2.tar.gz<br/>
+cd git-2.8.2<br/>
+autoconf<br/>
+./configure<br/>
+make | make install
+</code></pre></li>
+<li><p>配置环境变量</p>
+<p>修改用户目录下的.bashrc或者bash_profile,末尾增加</p>
+<pre><code class="language-text">export PATH=$PATH:/usr/local/bin
+</code></pre>
+<p>然后重新加载profile</p>
+<pre><code class="language-text">source ~/.bashrc
+</code></pre></li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2016-09-11T18:16:48+08:00" itemprop="datePublished">2016/9/11</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='linux.html'>Linux</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="14944978089747.html" itemprop="url">
+		Linux常用命令</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>磁盘挂载</li>
+</ol>
+
+<pre><code class="language-text">fdisk -l #查看磁盘信息
+mount /dev/xvdb1 /mnt #挂载磁盘
+</code></pre>
+
+<ol>
+<li>设置开机自动加载磁盘</li>
+</ol>
+
+<pre><code class="language-text">vim /etc/fstab
+写入 /dev/xvdb1 /mnt ext4 default 1 1
+</code></pre>
+
+<ol>
+<li>修改主机名</li>
+</ol>
+
+<pre><code class="language-text">vim /etc/sysconfig/network #修改里面的HOSTNAME值
+</code></pre>
+
+<ol>
+<li>设置ssh自动认证</li>
+</ol>
+
+<pre><code class="language-text">ssh-keygen -t rsa #在客户机生成秘钥，
+scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
+#将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
+最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
+cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+
+<ol>
+<li>dd命令实现ISO文件块拷贝</li>
+</ol>
+
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdb bs=1M
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2016-07-13T15:39:33+08:00" itemprop="datePublished">2016/7/13</time>
 			</div>
 			<div class="tags">posted in 
@@ -147,99 +295,75 @@
 可以在迅雷论坛上下载到最新的固件:<a href="http://luyou.xunlei.com/">官网论坛</a>,记得要下arm版本的固件<code>armel_v5te_glibc</code><br/>
 或者下载我共享的这个<a href="http://pan.baidu.com/s/1nvvoX7b">Xware1.0.31_armel_v5te_glibc</a> 提取码:e223<br/>
 在树莓派上解压到某个目录，例如我的是<code>/root/xunlei</code>下面</p>
-
-<pre><code class="language-Shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
+<pre><code class="language-shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
 </code></pre>
-
 <p>进入<code>/root/xunlei</code>目录 执行:</p>
-
-<pre><code class="language-Shell">./portal
+<pre><code class="language-shell">./portal
 </code></pre>
-
 <p>稍等片刻，会在最后输出一个激活码，类似下图中涂红的部分</p>
-
 <p><img src="https://pic.mylonly.com/2016-07-13_15:19:59.jpg" alt="2016-07-13_15:19:59.jpg"/> </p></li>
 <li><p>在迅雷远程下载页面绑定树莓派<br/>
 登录<a href="http://yuancheng.xunlei.com/">迅雷远程下载主页</a>,登录之后，左侧会有一个添加按钮，点击添加按钮，弹出如下界面:<br/>
 <img src="https://pic.mylonly.com/2016-07-13_15:22:45.jpg" alt="2016-07-13_15:22:45.jpg"/></p>
-
 <p>将树莓派上获得的激活码填入框中，点击<code>绑定</code>后左侧就会出现树莓派对应的设备列表了，但是，如果我们此时就在右侧点击<code>新建</code>之后会发现,弹出的新建页面中会提示找不到挂载磁盘，如下图：</p>
-
 <p><img src="http://pic.mylonly.com/2016-07-13_15:25:18.jpg" alt="2016-07-13_15:25:18.jpg"/></p></li>
 <li><p>自定义迅雷的下载目录</p>
-
 <p>进入<code>/mnt</code>目录，创建目录TDDOWNLOAD(名字随意)<br/>
 执行命令:</p>
-
-<pre><code class="language-Shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
+<pre><code class="language-shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
 </code></pre>
-
 <p>其中/data/TDDOWNLOAD就是自定义的下载目录，你可以指定为其他任何目录。</p>
-
 <p>然后再刚刚迅雷固件的解压目录下创建目录<code>etc</code>,同时创建文件<code>thunder_mounts.cfg</code>,编辑此文件</p>
-
-<pre><code class="language-Shell">vim /root/xunlei/etc/thunder_mounts.cfg
+<pre><code class="language-shell">vim /root/xunlei/etc/thunder_mounts.cfg
 </code></pre>
-
 <p>内容为:</p>
-
-<pre><code class="language-Shell">avaliable_mount_path_pattern
-{
-    /mnt/TDDOWNLOAD
+<pre><code class="language-shell">avaliable_mount_path_pattern
+{<br/>
+    /mnt/TDDOWNLOAD<br/>
 }
 </code></pre>
-
 <p>保存后重启迅雷路由器固件:</p>
-
-<pre><code class="language-Shell">./root/xunlei/portal
+<pre><code class="language-shell">./root/xunlei/portal
 </code></pre>
-
 <p>再进入远程下载界面新建下载就没有了没挂载磁盘的提示了</p></li>
 <li><p>迅雷路由器固件开机启动</p>
-
 <p>在/etc/init.d/下新建xunlei脚本，写入:</p>
-
-<pre><code>```Shell
-#!/bin/sh
-#
-# Xunlei initscript
-#
-### BEGIN INIT INFO
-# Provides:          xunlei
-# Required-Start:    $network $local_fs $remote_fs
-# Required-Stop::    $network $local_fs $remote_fs
-# Should-Start:      $all
-# Should-Stop:       $all
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start xunlei at boot time
-# Description:       A downloader
-### END INIT INFO
-
-do_start()
-{
-        ./root/xunlei/portal
-}
-
-do_stop()
-{
-        ./root/xunlei/portal -s
-}
-
-case &quot;$1&quot; in
-  start)
-    do_start
-    ;;
-  stop)
-    do_stop
-    ;;
-esac
+<pre><code class="language-text">```Shell
+#!/bin/sh<br/>
+#<br/>
+# Xunlei initscript<br/>
+#<br/>
+### BEGIN INIT INFO<br/>
+# Provides:          xunlei<br/>
+# Required-Start:    $network $local_fs $remote_fs<br/>
+# Required-Stop::    $network $local_fs $remote_fs<br/>
+# Should-Start:      $all<br/>
+# Should-Stop:       $all<br/>
+# Default-Start:     2 3 4 5<br/>
+# Default-Stop:      0 1 6<br/>
+# Short-Description: Start xunlei at boot time<br/>
+# Description:       A downloader<br/>
+### END INIT INFO<br/>
+do_start()<br/>
+{<br/>
+        ./root/xunlei/portal<br/>
+}<br/>
+do_stop()<br/>
+{<br/>
+        ./root/xunlei/portal -s<br/>
+}<br/>
+case &quot;$1&quot; in<br/>
+  start)<br/>
+    do_start<br/>
+    ;;<br/>
+  stop)<br/>
+    do_stop<br/>
+    ;;<br/>
+esac<br/>
 ``` 
 </code></pre>
-
 <p>然后将该脚本加入默认自启动中</p>
-
-<pre><code class="language-Shell">update-rc.d xunlei defaults
+<pre><code class="language-shell">update-rc.d xunlei defaults
 </code></pre></li>
 </ol>
 
@@ -271,7 +395,7 @@ esac
 
 <h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
 
-<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
+<pre><code class="language-node.js">var http = require(&#39;http&#39;)
 var createHandler = require(&#39;github-webhook-handler&#39;)
 var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
 // 上面的 secret 保持和 GitHub 后台设置的一致
@@ -306,17 +430,18 @@ handler.on(&#39;push&#39;, function (event) {
 
 <p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
 
-<p>还有代码这行:<br/>
-<code><br/>
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
-</code><br/>
-其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
+<p>还有代码这行:</p>
+
+<pre><code class="language-text">var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) 
+</code></pre>
+
+<p>其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
 
 <h3 id="toc_1">完成deploy.sh脚本</h3>
 
 <p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
 
-<pre><code class="language-Bash"> #!/bin/bash
+<pre><code class="language-bash"> #!/bin/bash
 
 WEB_PATH=&#39;/root/tools/&#39;$1
 WEB_USER=&#39;root&#39;
@@ -345,7 +470,7 @@ echo &quot;Finished.&quot;
 
 <p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
 
-<pre><code>nohup node deploy.js &gt; deploy.log &amp;
+<pre><code class="language-text">nohup node deploy.js &gt; deploy.log &amp;
 </code></pre>
 
 <h3 id="toc_3">去Github后台添加webhook</h3>
@@ -377,28 +502,28 @@ echo &quot;Finished.&quot;
 			
 			<p>1.先检查是否存在Swap文件</p>
 
-<pre><code class="language-Bash">swapon -s #返回的信息为空，说明没有其他交换文件
+<pre><code class="language-bash">swapon -s #返回的信息为空，说明没有其他交换文件
 </code></pre>
 
 <p>2.创建一个Swap文件，使用dd命令</p>
 
-<pre><code class="language-Bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
+<pre><code class="language-bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
 dd if=/dev/zero of=/home/swap bs=1024 count=1024000
 </code></pre>
 
 <p>3.将swap文件转换成swap格式</p>
 
-<pre><code class="language-Bash">mkswap /home/swap
+<pre><code class="language-bash">mkswap /home/swap
 </code></pre>
 
 <p>4.将swap文件挂载成swap分区</p>
 
-<pre><code class="language-Bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
+<pre><code class="language-bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
 </code></pre>
 
 <p>5.让swap文件自动挂载</p>
 
-<pre><code class="language-Bash">vim /etc/fstab 
+<pre><code class="language-bash">vim /etc/fstab 
 #在文件末尾加上下面的命令
 /home/swap swap swap default 0 0 
 </code></pre>

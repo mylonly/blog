@@ -144,7 +144,7 @@
 
 <p>BarrageRender在BarrageDispatcher的调度下触发activeWithContext方法，而在此方法中，BarrageRender调用了Sprite的originInBounds:withSprite方法来确定每个精灵的初始位置</p>
 
-<pre><code class="language-Objc">   - (void)activeWithContext:(NSDictionary *)context
+<pre><code class="language-objectivec">   - (void)activeWithContext:(NSDictionary *)context
     {
         CGRect rect = [[context objectForKey:kBarrageRendererContextCanvasBounds]CGRectValue];
         NSArray * sprites = [context objectForKey:kBarrageRendererContextRelatedSpirts];
@@ -163,7 +163,7 @@
 
 <p>BarrageWalkSpirte在originInBounds:withSprite方法中,根据当前屏幕上已经存在的Sprite来计算自己的初始位置。</p>
 
-<pre><code class="language-Objc">    
+<pre><code class="language-objectivec">    
 - (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
 {
    // 获取同方向精灵
@@ -257,7 +257,7 @@
 
 <p>代码虽然很长，但是主要就是为了实现下面几个逻辑:</p>
 
-<pre><code>1. BarrageWalkSprite先获取了同方向的所有精灵
+<pre><code class="language-text">1. BarrageWalkSprite先获取了同方向的所有精灵
 2. 根据屏幕轨道的frame范围找到每一个轨道内的所有精灵
 3. 在同一轨道内的所有精灵中找到存活时间最长的精灵(速度最慢)
 4. 判断速度最慢的那个精灵的尾部是否已经完全进入弹幕显示区域
@@ -269,7 +269,7 @@
 
 <p>BarrageRender绘制每个精灵的运动轨迹的方式非常简单，在BarrageRender中，内置的时钟引擎<code>BarrageClock</code>负责在间隔时间内调用所有已经激活精灵基类<code>BarrageSprite</code>中的updateWithTime方法。</p>
 
-<pre><code class="language-Objc">   - (void)initClock
+<pre><code class="language-objectivec">   - (void)initClock
     {
         __weak id weakSelf = self;
         _clock = [BarrageClock clockWithHandler:^(NSTimeInterval time){
@@ -292,7 +292,7 @@
 
 <p>而在<code>BarrageSprite</code>的updateWithTime方法中, 每个精灵重新更改了自身的frame属性，以此来达到动画位移的效果。其中<code>_valid</code>属性是Sprite存活的唯一标志，标记为NO之后，Sprite就会从队列中彻底移除</p>
 
-<pre><code class="language-Objc">     //BarrageSprite
+<pre><code class="language-objectivec">     //BarrageSprite
    - (void)updateWithTime:(NSTimeInterval)time
     {
         _valid = [self validWithTime:time];
@@ -302,7 +302,7 @@
 
 <p>BarrageWalkSprite通过属性speed来实时改变自己的frame位置,同时计算剩下的destination和speed来算出自己的存活时间以用来标记valid属性</p>
 
-<pre><code class="language-Objc">  //BarrageWalkSprite
+<pre><code class="language-objectivec">  //BarrageWalkSprite
   
   - (BOOL)validWithTime:(NSTimeInterval)time
     {
@@ -346,7 +346,7 @@
 
 <p>BarrageWalkSprite的终点计算很简单，弹幕的显示的距离加上Sprite自身的宽度就是整个精灵需要位移的距离，这个destination的计算已经体现在了起点位置的获取当中</p>
 
-<pre><code class="language-Objc">CGPoint origin = CGPointZero;
+<pre><code class="language-objectivec">CGPoint origin = CGPointZero;
 if (oritation) { // 水平
    _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
    origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
@@ -367,7 +367,7 @@ return origin;
 <p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite有很多重合之处，所以自定义的BarrageBubblingSprite直接继承BarrageWalkSprite以获取其direction,side,speed,trackNumber等多个属性，当然还需要另外加上加速度speedUp和停留时间stay属性</p>
 </blockquote>
 
-<pre><code class="language-Objc">@interface BarrrageBubblingSprite : BarrageWalkSprite
+<pre><code class="language-objectivec">@interface BarrrageBubblingSprite : BarrageWalkSprite
 
 @property (nonatomic,assign) CGFloat speedUp; //加速度
 
@@ -385,7 +385,7 @@ return origin;
 <li><em>当所有轨道都已经有精灵占据的时候，找到存活时间最短的那个精灵，通过将其的stay属性设置为0让其直接消失，然后让自己占据该精灵所在轨道</em></li>
 </ol>
 
-<pre><code class="language-Objc">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
+<pre><code class="language-objectivec">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
 {
     // 获取同方向精灵
     NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
@@ -470,7 +470,7 @@ return origin;
 
 <p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite的运动轨迹不同的地方在于，BarrageWalkSprite是匀速前进，二BarrageBubblingSprite是加速前进，这样，在计算某个时段Sprite的位置就需要考虑加速度的存在。</p>
 
-<pre><code class="language-Objc">- (CGRect)rectWithTime:(NSTimeInterval)time{
+<pre><code class="language-objectivec">- (CGRect)rectWithTime:(NSTimeInterval)time{
     CGFloat X = self.destination.x - self.origin.x;
     CGFloat Y = self.destination.y - self.origin.y;
         
@@ -496,7 +496,7 @@ return origin;
 
 <p>在存活时间上，与BarrageWalkSprite不同的地方在于，BarrageWalkSprite在位移到终点的时候消失，而BarrageBubblingSprite在到达终点之后仍然需要停留stay的时间。这里引入了currentStamp和destinationStamp时间戳用于来计算stay时间是否已经到达。</p>
 
-<pre><code class="language-Objc">//计算精灵的剩余存活时间
+<pre><code class="language-objectivec">//计算精灵的剩余存活时间
 
 - (double)countTimeByDistance:(CGFloat)distance{
     CGFloat a = 0.5*self.speedUp;

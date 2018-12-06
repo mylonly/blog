@@ -128,75 +128,63 @@
 
 <ol>
 <li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
-
-<pre><code class="language-Swift">let apples = 3
-let oranges = 5
-let appleSummary = &quot;I have \(apples) apples.&quot;
+<pre><code class="language-swift">let apples = 3
+let oranges = 5<br/>
+let appleSummary = &quot;I have \(apples) apples.&quot;<br/>
 let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
 </code></pre>
-
 <p>输出:</p>
-
-<pre><code>&quot;I have 3 apples&quot;
+<pre><code class="language-text">&quot;I have 3 apples&quot;
 &quot;I have 8 pieces of fruit&quot;
 </code></pre></li>
 <li><p>Swift声明数组或者字典可以声明指定类型</p>
-
-<pre><code class="language-Swift">let emptyArray = [String]()
+<pre><code class="language-swift">let emptyArray = [String]()
 let emptyDictionary = [String: Float]()
 </code></pre></li>
 <li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
-
-<pre><code class="language-Swift"> if score &gt; 50 {
-    teamScore += 3
-} else {
-       teamScore += 1
+<pre><code class="language-swift"> if score &gt; 50 {
+    teamScore += 3<br/>
+} else {<br/>
+       teamScore += 1<br/>
 }
 </code></pre>
-
 <p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
 <li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
-
-<pre><code class="language-Swift">let vegetable = &quot;red pepper&quot;
-switch vegetable {
-case &quot;celery&quot;:
-    print(&quot;Add some raisins and make ants on a  log.&quot;)
-case &quot;cucumber&quot;, &quot;watercress&quot;:
-    print(&quot;That would make a good tea sandwich.&quot;)
-case let x where x.hasSuffix(&quot;pepper&quot;):
-    print(&quot;Is it a spicy \(x)?&quot;)
-default:
-    print(&quot;Everything tastes good in soup.&quot;)
+<pre><code class="language-swift">let vegetable = &quot;red pepper&quot;
+switch vegetable {<br/>
+case &quot;celery&quot;:<br/>
+    print(&quot;Add some raisins and make ants on a  log.&quot;)<br/>
+case &quot;cucumber&quot;, &quot;watercress&quot;:<br/>
+    print(&quot;That would make a good tea sandwich.&quot;)<br/>
+case let x where x.hasSuffix(&quot;pepper&quot;):<br/>
+    print(&quot;Is it a spicy \(x)?&quot;)<br/>
+default:<br/>
+    print(&quot;Everything tastes good in soup.&quot;)<br/>
 }
 </code></pre>
-
 <p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
 <em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
 <li><p>do{}while()被repeat{}while()取代</p>
-
-<pre><code class="language-Swift">var m = 2
-repeat {
-    m = m * 2
-} while m &lt; 100
+<pre><code class="language-swift">var m = 2
+repeat {<br/>
+    m = m * 2<br/>
+} while m &lt; 100<br/>
 print(m)
 </code></pre></li>
 <li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
-
-<pre><code class="language-Swift">var firstForLoop = 0
-for i in 0..&lt;4 {
-    firstForLoop += i
-}
-print(firstForLoop)
-
-var firstForLoop = 0
-for i in 0...4 {
-    firstForLoop += i
-}
+<pre><code class="language-swift">var firstForLoop = 0
+for i in 0..&lt;4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)<br/>
+var firstForLoop = 0<br/>
+for i in 0...4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
 print(firstForLoop)
 </code></pre></li>
-<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:<br/>
-<code>Swift<br/>
-func sumOf(numbers: Int...) -&gt; Int {<br/>
+<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:</p>
+<pre><code class="language-swift">func sumOf(numbers: Int...) -&gt; Int {
 var sum = 0<br/>
 for number in numbers {<br/>
     sum += number<br/>
@@ -204,70 +192,60 @@ for number in numbers {<br/>
 return sum<br/>
 }<br/>
 sumOf()<br/>
-sumOf(42, 597, 12)<br/>
-</code></p></li>
+sumOf(42, 597, 12)
+</code></pre></li>
 <li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
-
-<pre><code class="language-Swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
-func addOne(number: Int) -&gt; Int {
-    return 1 + number
-}
-return addOne
-}
-var increment = makeIncrementer()
+<pre><code class="language-swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
+func addOne(number: Int) -&gt; Int {<br/>
+    return 1 + number<br/>
+}<br/>
+return addOne<br/>
+}<br/>
+var increment = makeIncrementer()<br/>
 increment(7)
 </code></pre>
-
 <p>同理，函数也可以当做参数传入函数,</p>
-
-<pre><code class="language-Swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
-for item in list {
-    if condition(item) {
-        return true
-    }
-}
-return false
-}
-func lessThanTen(number: Int) -&gt; Bool {
-    return number &lt; 10
-}
-var numbers = [20, 19, 7, 12]
+<pre><code class="language-swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
+for item in list {<br/>
+    if condition(item) {<br/>
+        return true<br/>
+    }<br/>
+}<br/>
+return false<br/>
+}<br/>
+func lessThanTen(number: Int) -&gt; Bool {<br/>
+    return number &lt; 10<br/>
+}<br/>
+var numbers = [20, 19, 7, 12]<br/>
 hasAnyMatches(numbers, condition: lessThanTen)
 </code></pre></li>
 <li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
-
-<pre><code class="language-Swift">class NamedShape {
-var numberOfSides: Int = 0
-var name: String
-
-init(name: String) {
-    self.name = name
-}
-
-func simpleDescription() -&gt; String {
-        return &quot;A shape with \(numberOfSides) sides.&quot;
-  }
-}
-
-class Square: NamedShape {
-var sideLength: Double
-
-init(sideLength: Double, name: String) {
-    self.sideLength = sideLength
-    super.init(name: name)
-    numberOfSides = 4
-}
-
-func area() -&gt;  Double {
-    return sideLength * sideLength
-}
-
-override func simpleDescription() -&gt; String {
-        return &quot;A square with sides of length \(sideLength).&quot;
-    }
-}
-let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)
-test.area()
+<pre><code class="language-swift">class NamedShape {
+var numberOfSides: Int = 0<br/>
+var name: String<br/>
+init(name: String) {<br/>
+    self.name = name<br/>
+}<br/>
+func simpleDescription() -&gt; String {<br/>
+        return &quot;A shape with \(numberOfSides) sides.&quot;<br/>
+  }<br/>
+}<br/>
+class Square: NamedShape {<br/>
+var sideLength: Double<br/>
+init(sideLength: Double, name: String) {<br/>
+    self.sideLength = sideLength<br/>
+    super.init(name: name)<br/>
+    numberOfSides = 4<br/>
+}<br/>
+func area() -&gt;  Double {<br/>
+    return sideLength * sideLength<br/>
+}<br/>
+override func simpleDescription() -&gt; String {<br/>
+        return &quot;A square with sides of length \(sideLength).&quot;<br/>
+    }<br/>
+}<br/>
+let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)<br/>
+test.area()<br/>
 test.simpleDescription()
 </code></pre></li>
 </ol>

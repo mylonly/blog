@@ -140,15 +140,11 @@
 			
 			<ol>
 <li><p>weex中通过ref访问组件的两种情况:</p>
-
-<pre><code>&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
+<pre><code class="language-text">&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
 </code></pre>
-
 <p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-
-<pre><code>&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
+<pre><code class="language-text">&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
 </code></pre>
-
 <p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
 </ol>
 
@@ -190,7 +186,7 @@
 
 <p>这个样式中并没有指定flex-wrap属性，而在flex布局中，flex-wrap的默认属性就是<code>nowrap</code>不换行。</p>
 
-<pre><code>是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
+<pre><code class="language-text">是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
 如果真是这样，那么weex-ui的开发者为什么不把flex-wrap属性设置为wrap而提供一个支持多行的`wxc-rich-text`控件呢？
 </code></pre>
 
@@ -317,7 +313,7 @@
 
 <p>然后加上发送人的姓名，最后加上聊天的内容addMessage,在addMessage当中我实现了QQ表情的匹配已经文本内容的切割</p>
 
-<pre><code>addMessage(message){
+<pre><code class="language-text">addMessage(message){
       var char_list = []
       var chars = message.split(&#39;&#39;)
       var startIndex = -1

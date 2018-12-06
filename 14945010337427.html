@@ -133,99 +133,75 @@
 可以在迅雷论坛上下载到最新的固件:<a href="http://luyou.xunlei.com/">官网论坛</a>,记得要下arm版本的固件<code>armel_v5te_glibc</code><br/>
 或者下载我共享的这个<a href="http://pan.baidu.com/s/1nvvoX7b">Xware1.0.31_armel_v5te_glibc</a> 提取码:e223<br/>
 在树莓派上解压到某个目录，例如我的是<code>/root/xunlei</code>下面</p>
-
-<pre><code class="language-Shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
+<pre><code class="language-shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
 </code></pre>
-
 <p>进入<code>/root/xunlei</code>目录 执行:</p>
-
-<pre><code class="language-Shell">./portal
+<pre><code class="language-shell">./portal
 </code></pre>
-
 <p>稍等片刻，会在最后输出一个激活码，类似下图中涂红的部分</p>
-
 <p><img src="https://pic.mylonly.com/2016-07-13_15:19:59.jpg" alt="2016-07-13_15:19:59.jpg"/> </p></li>
 <li><p>在迅雷远程下载页面绑定树莓派<br/>
 登录<a href="http://yuancheng.xunlei.com/">迅雷远程下载主页</a>,登录之后，左侧会有一个添加按钮，点击添加按钮，弹出如下界面:<br/>
 <img src="https://pic.mylonly.com/2016-07-13_15:22:45.jpg" alt="2016-07-13_15:22:45.jpg"/></p>
-
 <p>将树莓派上获得的激活码填入框中，点击<code>绑定</code>后左侧就会出现树莓派对应的设备列表了，但是，如果我们此时就在右侧点击<code>新建</code>之后会发现,弹出的新建页面中会提示找不到挂载磁盘，如下图：</p>
-
 <p><img src="http://pic.mylonly.com/2016-07-13_15:25:18.jpg" alt="2016-07-13_15:25:18.jpg"/></p></li>
 <li><p>自定义迅雷的下载目录</p>
-
 <p>进入<code>/mnt</code>目录，创建目录TDDOWNLOAD(名字随意)<br/>
 执行命令:</p>
-
-<pre><code class="language-Shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
+<pre><code class="language-shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
 </code></pre>
-
 <p>其中/data/TDDOWNLOAD就是自定义的下载目录，你可以指定为其他任何目录。</p>
-
 <p>然后再刚刚迅雷固件的解压目录下创建目录<code>etc</code>,同时创建文件<code>thunder_mounts.cfg</code>,编辑此文件</p>
-
-<pre><code class="language-Shell">vim /root/xunlei/etc/thunder_mounts.cfg
+<pre><code class="language-shell">vim /root/xunlei/etc/thunder_mounts.cfg
 </code></pre>
-
 <p>内容为:</p>
-
-<pre><code class="language-Shell">avaliable_mount_path_pattern
-{
-    /mnt/TDDOWNLOAD
+<pre><code class="language-shell">avaliable_mount_path_pattern
+{<br/>
+    /mnt/TDDOWNLOAD<br/>
 }
 </code></pre>
-
 <p>保存后重启迅雷路由器固件:</p>
-
-<pre><code class="language-Shell">./root/xunlei/portal
+<pre><code class="language-shell">./root/xunlei/portal
 </code></pre>
-
 <p>再进入远程下载界面新建下载就没有了没挂载磁盘的提示了</p></li>
 <li><p>迅雷路由器固件开机启动</p>
-
 <p>在/etc/init.d/下新建xunlei脚本，写入:</p>
-
-<pre><code>```Shell
-#!/bin/sh
-#
-# Xunlei initscript
-#
-### BEGIN INIT INFO
-# Provides:          xunlei
-# Required-Start:    $network $local_fs $remote_fs
-# Required-Stop::    $network $local_fs $remote_fs
-# Should-Start:      $all
-# Should-Stop:       $all
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start xunlei at boot time
-# Description:       A downloader
-### END INIT INFO
-
-do_start()
-{
-        ./root/xunlei/portal
-}
-
-do_stop()
-{
-        ./root/xunlei/portal -s
-}
-
-case &quot;$1&quot; in
-  start)
-    do_start
-    ;;
-  stop)
-    do_stop
-    ;;
-esac
+<pre><code class="language-text">```Shell
+#!/bin/sh<br/>
+#<br/>
+# Xunlei initscript<br/>
+#<br/>
+### BEGIN INIT INFO<br/>
+# Provides:          xunlei<br/>
+# Required-Start:    $network $local_fs $remote_fs<br/>
+# Required-Stop::    $network $local_fs $remote_fs<br/>
+# Should-Start:      $all<br/>
+# Should-Stop:       $all<br/>
+# Default-Start:     2 3 4 5<br/>
+# Default-Stop:      0 1 6<br/>
+# Short-Description: Start xunlei at boot time<br/>
+# Description:       A downloader<br/>
+### END INIT INFO<br/>
+do_start()<br/>
+{<br/>
+        ./root/xunlei/portal<br/>
+}<br/>
+do_stop()<br/>
+{<br/>
+        ./root/xunlei/portal -s<br/>
+}<br/>
+case &quot;$1&quot; in<br/>
+  start)<br/>
+    do_start<br/>
+    ;;<br/>
+  stop)<br/>
+    do_stop<br/>
+    ;;<br/>
+esac<br/>
 ``` 
 </code></pre>
-
 <p>然后将该脚本加入默认自启动中</p>
-
-<pre><code class="language-Shell">update-rc.d xunlei defaults
+<pre><code class="language-shell">update-rc.d xunlei defaults
 </code></pre></li>
 </ol>
 

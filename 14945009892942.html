@@ -130,7 +130,7 @@
 
 <h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
 
-<pre><code class="language-Node.js">var http = require(&#39;http&#39;)
+<pre><code class="language-node.js">var http = require(&#39;http&#39;)
 var createHandler = require(&#39;github-webhook-handler&#39;)
 var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
 // 上面的 secret 保持和 GitHub 后台设置的一致
@@ -165,17 +165,18 @@ handler.on(&#39;push&#39;, function (event) {
 
 <p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
 
-<p>还有代码这行:<br/>
-<code><br/>
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) <br/>
-</code><br/>
-其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
+<p>还有代码这行:</p>
+
+<pre><code class="language-text">var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) 
+</code></pre>
+
+<p>其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
 
 <h3 id="toc_1">完成deploy.sh脚本</h3>
 
 <p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
 
-<pre><code class="language-Bash"> #!/bin/bash
+<pre><code class="language-bash"> #!/bin/bash
 
 WEB_PATH=&#39;/root/tools/&#39;$1
 WEB_USER=&#39;root&#39;
@@ -204,7 +205,7 @@ echo &quot;Finished.&quot;
 
 <p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
 
-<pre><code>nohup node deploy.js &gt; deploy.log &amp;
+<pre><code class="language-text">nohup node deploy.js &gt; deploy.log &amp;
 </code></pre>
 
 <h3 id="toc_3">去Github后台添加webhook</h3>

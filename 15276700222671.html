@@ -126,12 +126,10 @@
 		<div class="entry-content" itemprop="articleBody">
 			<ol>
 <li><p>Pandas 读取列数据</p>
-
-<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
-
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
+<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])<br/>
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
 data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
 </code></pre></li>
 </ol>

@@ -128,7 +128,7 @@
 
 <h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
 
-<pre><code class="language-Python">EMAIL_USE_SSL = True    
+<pre><code class="language-python">EMAIL_USE_SSL = True    
 EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
 EMAIL_PORT = 465
 EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
@@ -138,7 +138,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 <h5 id="toc_1">2. 引用mail库发送邮件</h5>
 
-<pre><code class="language-Python">from django.core.mail import EmailMessage
+<pre><code class="language-python">from django.core.mail import EmailMessage
 from Across.settings import EMAIL_HOST_USER
 
 msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
@@ -149,7 +149,7 @@ msg.send()
 
 <p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
 
-<pre><code class="language-Python">TEMPLATES = [
+<pre><code class="language-python">TEMPLATES = [
     {
         &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
         &#39;DIRS&#39;: [
@@ -170,7 +170,7 @@ msg.send()
 
 <p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
 
-<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
+<pre><code class="language-python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
 msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
 msg.content_subtype = &quot;html&quot; # Main content is now text/html
 msg.send()

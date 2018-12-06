@@ -140,12 +140,10 @@
 			
 			<ol>
 <li><p>subplot</p>
-
-<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
-plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
+<pre><code class="language-text">plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图<br/>
 plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
 </code></pre>
-
 <p>subplot(numRows, numCols, plotNum)<br/>
 如果3个参数都小于10的话，可以统一成一个整数<br/>
 subplot(221) = subplot(2,2,1)</p></li>
@@ -176,12 +174,10 @@ subplot(221) = subplot(2,2,1)</p></li>
 			
 			<ol>
 <li><p>Pandas 读取列数据</p>
-
-<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
-
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
+<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])<br/>
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
 data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
 </code></pre></li>
 </ol>
@@ -211,8 +207,7 @@ data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返�
 			<ol>
 <li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
 加入以下代码</p>
-
-<pre><code>import os 
+<pre><code class="language-text">import os 
 os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
 </code></pre></li>
 </ol>

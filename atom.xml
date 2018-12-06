@@ -4,7 +4,7 @@
   <title><![CDATA[独自一人]]></title>
   <link href="https://blog.mylonly.com/atom.xml" rel="self"/>
   <link href="https://blog.mylonly.com/"/>
-  <updated>2018-07-07T20:32:04+08:00</updated>
+  <updated>2018-12-06T18:40:19+08:00</updated>
   <id>https://blog.mylonly.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,288 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源]]></title>
+    <link href="https://blog.mylonly.com/15440788666202.html"/>
+    <updated>2018-12-06T14:47:46+08:00</updated>
+    <id>https://blog.mylonly.com/15440788666202.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">写在前面</h2>
+
+<p>我想很多公司由于安全考虑，一些内部系统(Git仓库、OA之类）的一定是放在公司内部的服务器上，只有在公司的网络下才能够访问，但是一些公司的随着业务的发展，肯定会出现一些外地的同事（外地的办事处、研发中心、销售团队等等）这种情况，这样一来，在内部服务不迁移到外网的前提下，如何让外地的同事能访问到内网这些资源就成了一个必须要解决的问题了。<br/>
+其实内网穿透有很很多种解决方案，本文只是利用SoftetherVPN以及Bind9这两个工具提供另一种解决思路。<br/>
+本文所提到的解决方案有如下优点:</p>
+
+<pre><code class="language-text">1. 原来的内部资源不需要额外的配置改动
+2. 需要身份认证，只有拥有权限的外部人员才能访问内部资源
+3. 只有加入了共享网络的内部资源才能被外部访问，没有开放共享的内部资源的无法访问
+4. 可以做到通过相同的域名访问同一个内部资源
+5. 通过LPTP,LPSec协议支持OS X以及iOS设备访问
+</code></pre>
+
+<p>当然也有如下不足:<br/>
+    1. 需要一台拥有公网IP的服务器作为中心服务器<br/>
+    2. 由于本文的解决方案是基于虚拟局域网来实现的，因此拥有局域网内一些无法回避的缺点。</p>
+
+<h2 id="toc_1">原理</h2>
+
+<p><img src="https://pic.mylonly.com/2018-12-06-%E7%BD%91%E7%BB%9C%E5%9B%BE%20-1-.png" alt=""/><br/>
+本解决方案利用了SoftetherVPN提供的Ad-Hoc VPN将内网服务器和外部用户通过VLAN连接在同一个局域网内，然后通过支持智能解析的DNS服务器，将域名解析到对应的虚拟局域网IP。<br/>
+如果是内网用户，则直接通过DNS服务器将域名解析到内部资源对应的内网IP。</p>
+
+<h2 id="toc_2">部署</h2>
+
+<p>本次部署大部分采用Docker方式部署，如果需要手动安装的，可以在<a href="https://www.softether-download.com/cn.aspx?product=softether">这个网站</a>下载对应的安装包</p>
+
+<h3 id="toc_3">Docker 环境</h3>
+
+<p>略，不再本文讨论范围之内</p>
+
+<h3 id="toc_4">安装Softether Server</h3>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">siomiz/softethervpn
+</code></pre></li>
+<li><p>启动vpnserver</p>
+<pre><code class="language-text">docker run -d --cap-add NET_ADMIN \
+ -p 500:500/udp \<br/>
+ -p 4500:4500/udp \<br/>
+ -p 1701:1701/tcp \<br/>
+ -p 1194:1194/udp \<br/>
+ -p 5555:5555/tcp \<br/>
+ -p 443:443/tcp \<br/>
+ -p 992:992 \<br/>
+ siomiz/softethervpn
+</code></pre>
+<p>记得要开放对应的端口</p></li>
+</ol>
+
+<h3 id="toc_5">安装Softether ServerManger</h3>
+
+<p>虽然Softether 提供了mac版的安装包，但本人装完之后发现其实是套了一个wine的环境，在mac上体验极差，所以此处推荐找一个windows电脑安装vpn server manager，<a href="https://www.softether-download.com/cn.aspx?product=softether">下载地址</a>在此<br/>
+由于是windows上的安装教程，大部分都是图片，为了不占文章篇幅，就不放在文章里介绍了，各位可以参考<a href="https://www.softether.org/4-docs/2-howto/1.VPN_for_On-premise/1.Ad-hoc_VPN">官网</a>或者这篇<a href="http://www.leqii.com/download/yulan/d77/d77.html">博客</a></p>
+
+<p>其中需要注意的是，在<code>虚拟HUB管理页面</code>中的<code>虚拟NAT和虚拟DHCP服务器</code>，点击<code>SecureNAT</code>,然后设置DHCP服务器的网段，以及DNS服务器为下面将要搭建的DNS服务器地址<br/>
+<img src="https://pic.mylonly.com/2018-12-06-101214.png" alt=""/></p>
+
+<h3 id="toc_6">部署DNS服务器</h3>
+
+<ol>
+<li><p>安装bind9</p>
+<pre><code class="language-text">sudo apt-get install bind9
+</code></pre></li>
+<li><p>增加两个视图文件,在/etc/bind/目录下<br/>
+name.2.conf</p>
+<pre><code class="language-text">acl &quot;2&quot; {
+    192.168.2.0/24;<br/>
+};   
+</code></pre>
+<p>name.111.conf </p>
+<pre><code class="language-text">acl &quot;111&quot; {
+    192.168.111.0/24;<br/>
+};
+</code></pre>
+<p>两个视图文件主要是为了区分来源IP所在的网段，然后根据不同的网段返回不同的解析结果，在本解决方案当中，192.168.2.0/24网段为内网网段，   192.168.111.0/24为VPN生成的虚拟局域网的网段</p></li>
+<li><p>新建不同网段对应的不同的解析记录文件，也在/etc/bind/目录下</p>
+<p>1234tv.lan-2.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA      xxxx.xx. root.xxxx.xx. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      xxxx.xx.<br/>
+@       IN      A      192.168.2.222<br/>
+gitlab  IN      A       192.168.2.84
+</code></pre>
+<p>1234tv.lan-111.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA     xxxx.xx. root.xxxx.xx. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      xxxx.xx.<br/>
+@       IN      A       192.168.111.222<br/>
+gitlab  IN      A       192.168.111.84
+</code></pre></li>
+<li><p>将视图文件和解析文件写入Bind9主配置文件</p>
+<pre><code class="language-text">sudo vim /etc/bind/name.conf
+</code></pre>
+<p>增加如下内容，声明两个视图，view_2,view_11,可以注释掉默认带的配置文件，如果你没有其他的用途的话,注意每一行后面的分号，不可缺少。</p>
+<pre><code class="language-text">#include &quot;/etc/bind/named.conf.options&quot;;
+#include &quot;/etc/bind/named.conf.local&quot;;<br/>
+#include &quot;/etc/bind/named.conf.default-zones&quot;;<br/>
+include &quot;/etc/bind/name.2.conf&quot;;<br/>
+view &quot;View_2&quot; {<br/>
+        match-clients {&quot;2&quot;;};<br/>
+        zone &quot;xxxx.xxx&quot; IN {<br/>
+                type master;<br/>
+                file &quot;xxxx.xxx-2.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};<br/>
+include &quot;/etc/bind/name.111.conf&quot;;<br/>
+view &quot;View_111&quot; {<br/>
+        match-clients {&quot;111&quot;;};<br/>
+        zone &quot;xxxx.xxx&quot; IN {<br/>
+                type master;<br/>
+                file &quot;xxxx.xxx-111.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};
+</code></pre></li>
+<li><p>然后启动Bind9 服务</p>
+<pre><code class="language-text">sudo /etc/init.d/bind9 start
+</code></pre></li>
+<li><p>验证解析</p>
+<pre><code class="language-text">dig gitlab.xxx.xx @192.168.2.222
+</code></pre>
+<p><img src="media/15440788666202/15440920519061.jpg" alt="" style="width:460px;"/></p></li>
+</ol>
+
+<h4 id="toc_7">安装Vpn Client</h4>
+
+<p>所有需要共享给外部访问的内部服务器都需要安装vpn client连接上vpn server，下面的方法为linux 下docker方式部署vpn_client方法，windows端请参考这篇<a href="http://www.leqii.com/download/yulan/d77/d77.html">文章</a></p>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
+</code></pre></li>
+<li><p>启动镜像连接之前创建的vpn server</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient \
+--net=host --privileged \<br/>
+-e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
+-e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
+-e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
+-e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
+-e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
+-e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
+mitsutaka/softether-vpnclient<br/>
+```<br/>
+服务器端，VIRTUAL_HUB端填入之前在manager上新建的虚拟HUB名称 ，TAP_IPADDR，最好采用指定IP的方式，尤其是DNS服务器，需要固定IP地址
+</code></pre></li>
+</ol>
+
+<h2 id="toc_8">结束语</h2>
+
+<p>至此，这个简单的内网穿透方案算是部署完成，内网用户可以直接通过设置内网DNS服务器来通过域名访问内部服务器，外网用户在使用vpn clinet连接上虚拟局域网之后也能通过相同的域名访问内部服务器资源。<br/>
+写这篇文章，一方面是觉得自己以后可能还会有此需求，怕自己遗忘，权且当做记录。另外也是想也可能有别的同学有这方面的需要，写出来共享一下。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Kali Linux 安装w3af]]></title>
+    <link href="https://blog.mylonly.com/15423821126836.html"/>
+    <updated>2018-11-16T23:28:32+08:00</updated>
+    <id>https://blog.mylonly.com/15423821126836.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">更新软件源</h3>
+
+<pre><code class="language-text">apt-get update
+</code></pre>
+
+<h3 id="toc_1">下载源码</h3>
+
+<pre><code class="language-text">git clone --depth 1 https://github.com/andresriancho/w3af.git
+</code></pre>
+
+<h3 id="toc_2">安装node(如果已安装请忽略)</h3>
+
+<pre><code class="language-text">wget https://nodejs.org/dist/v10.13.0/node-v10.13.0-linux-x64.tar.xz
+xz -d node-v10.13.0-linux-x64.tar.xz
+tar -vxf node-v10.13.0-linux-x64.tar
+mv node-v10.13.0-linux-x64.tar /usr/local/node
+</code></pre>
+
+<p>node 加入到环境变量当中</p>
+
+<pre><code class="language-text">vim ~/.basrc
+</code></pre>
+
+<p>最后一行添加</p>
+
+<pre><code class="language-text">export PATH=$PATH:/usr/local/node/bin
+</code></pre>
+
+<h3 id="toc_3">获取w3af依赖安装脚本</h3>
+
+<pre><code class="language-text">./w3af_console
+./tmp/w3af_dependency_install.sh #安装依赖
+</code></pre>
+
+<h4 id="toc_4">提示: ld can not found -lcrypto</h4>
+
+<p>没有找到crypto库，crypto库是openssl中的，一般没有找到的话基本都是/usr/lib下没有改动态库的链接文件</p>
+
+<p>利用<code>find / -name *libcrypto.so*</code>指令找到libcrypto.so的位置，然后在/usr/lib下建立起软连接</p>
+
+<pre><code class="language-text">ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 /usr/lib/libcrypto.so
+</code></pre>
+
+<h4 id="toc_5">提示: Cannot uninstall &#39;scapy&#39;. It is a distutils installed project</h4>
+
+<p>系统以及安装了相应的版本的scapy，但是和w3af中要求的版本不符，w3af不能卸载它<br/>
+此时可以手动删除它</p>
+
+<pre><code class="language-text">apt-get remove python-scapy
+</code></pre>
+
+<p>或者在<code>w3af/core/controllers/dependency_check/requirements.py</code>中找到依赖包对应的版本，将其修改为系统自带的版本<br/>
+改完之后仍然需要在<code>w3af/core/controllers/dependency_check/platforms/mac.py</code>找到包对应的版本，修改为系统版本</p>
+
+<h4 id="toc_6">执行<code>./w3af_gui</code>提示: No module named webkit</h4>
+
+<p>由于新版本的Kali的软件源中已经没有了python-webkit和python-webkit-dev，所以我们需要手动下载并安装它们</p>
+
+<pre><code class="language-text">#下载缺省的deb二进制包
+wget http://ftp.br.debian.org/debian/pool/main/p/pywebkitgtk/python-webkit_1.1.8-3_amd64.deb
+wget http://ftp.br.debian.org/debian/pool/main/w/webkitgtk/libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb
+wget http://ftp.br.debian.org/debian/pool/main/p/python-support/python-support_1.0.15_all.deb
+wget http://ftp.br.debian.org/debian/pool/main/w/webkitgtk/libwebkitgtk-1.0-0_2.4.11-3_amd64.deb
+#依次安装deb二进制包
+dpkg -i libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb 
+dpkg -i python-support_1.0.15_all.deb 
+dpkg -i libwebkitgtk-1.0-0_2.4.11-3_amd64.deb
+dpkg -i python-webkit_1.1.8-3_amd64.deb
+#修复依赖
+apt-get -f install -y
+</code></pre>
+
+<h4 id="toc_7">执行<code>./w3af_gui</code>提示: ImportError: No module named gtksourceview2</h4>
+
+<p>缺少python-gtksourceview2</p>
+
+<pre><code class="language-text">apt-get install python-getsourceview2
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PT924光猫 更改桥接模式/路由模式]]></title>
+    <link href="https://blog.mylonly.com/15319308951102.html"/>
+    <updated>2018-07-19T00:21:35+08:00</updated>
+    <id>https://blog.mylonly.com/15319308951102.html</id>
+    <content type="html"><![CDATA[
+<ol>
+<li><p><a href="http://192.168.1.1:8080/cgi-bin/index2.asp">http://192.168.1.1:8080/cgi-bin/index2.asp</a> 进入这个页面<br/>
+用useradmin账号密码登录</p></li>
+<li><p>将地址改为<a href="http://192.168.1.1:8080/cgi-bin/net-wanset.asp">http://192.168.1.1:8080/cgi-bin/net-wanset.asp</a> 进入internet设置页面(更改其他地址也会进入其他页面)</p>
+<p><img src="media/15319308951102/15319310908143.jpg" alt="" style="width:532px;"/></p></li>
+</ol>
+
+<p>其中<code>6_INTERNET_B_VID_229</code>是桥接模式，路由器需要拨号，而<code>5_INTERNET_R_VID_229</code>是路由模式，由猫拨号，路由器不需要拨号</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的豆瓣电影影评抓取之旅]]></title>
@@ -39,7 +321,7 @@
 
 <p>虽然APIKey是不可能拿到了，但是通过文档我仍然发现了一些GET请求并不需要AUTH认证，也就是说有没有APIKey并不影响使用。其中，对我们有用的就是获取<code>TOP250电影列表</code>的接口:</p>
 
-<pre><code>http://api.douban.com/v2/movie/top250
+<pre><code class="language-text">http://api.douban.com/v2/movie/top250
 </code></pre>
 
 <p>接口返回的格式大概如下:<br/>
@@ -53,7 +335,7 @@
 
 <p>详细接口如下,可以通过更改start来迭代获取所有电影条目</p>
 
-<pre><code>https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
+<pre><code class="language-text">https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
 </code></pre>
 
 <p>这个接口可以获取所有豆瓣上收录的电影，经过我的测试，start改为10000时，返回的数据就已经是空的了</p>
@@ -63,7 +345,7 @@
 <p>获取电影信息的方法有了，接下来就是要分析如何获取影评信息了。<br/>
 在每部电影的详情页面里,如<a href="https://movie.douban.com/subject/1292064/">楚门的世界</a>，我们找到了如下这几个详情页面,分别显示了针对这部电影的影评和短评信息</p>
 
-<pre><code>https://movie.douban.com/subject/1292064/reviews ##影评页面
+<pre><code class="language-text">https://movie.douban.com/subject/1292064/reviews ##影评页面
 https://movie.douban.com/subject/1292064/comments ##短评页面
 </code></pre>
 
@@ -75,7 +357,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 <img src="https://pic.mylonly.com/2018-07-07-122913.jpg" alt=""/><br/>
 每条评论都是在一个review-item的div块里面，而所有评论都是在一个review-list的div块里吗，我们通过xpath语法可以很容易的定位到每条评论的详细信息,下面是所有信息的xpath语句，在我们写爬虫时候就靠他提取内容了</p>
 
-<pre><code>评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
+<pre><code class="language-text">评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
 
 评论ID: &quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;review-short&#39;]/@data-rid&quot;
 作者头像: &quot;./header[@class=&#39;main-hd&#39;]//a[@class=&#39;avator&#39;]//img/@src &quot;
@@ -90,7 +372,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <p>其中具体的评分我们不能直接拿到，而是只能拿到具体的文字描述,经过我的验证，具体如下对应关系如下:</p>
 
-<pre><code>&#39;力荐&#39;: 5,
+<pre><code class="language-text">&#39;力荐&#39;: 5,
 &#39;推荐&#39;: 4,
 &#39;还行&#39;: 3,
 &#39;较差&#39;: 2,
@@ -105,7 +387,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <h3 id="toc_5">创建项目工程</h3>
 
-<pre><code>##创建DoubanSpider工程
+<pre><code class="language-text">##创建DoubanSpider工程
 scrapy startproject Douban
 </code></pre>
 
@@ -113,7 +395,7 @@ scrapy startproject Douban
 <img src="https://pic.mylonly.com/2018-07-07-122926.jpg" alt=""/><br/>
 其中：</p>
 
-<pre><code>    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
+<pre><code class="language-text">    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
     items.py: 模型类，所有需要结构化的数据都要预先在此文件中定义
     middlewares.py: 中间件类，scrapy的核心之一，我们会用到其中的downloadMiddleware,
     pipelines.py: 管道类，数据的输出管理，是存数据库还是存文件在这里决定
@@ -132,7 +414,7 @@ scrapy startproject Douban
 
 <h4 id="toc_7">定义爬虫</h4>
 
-<pre><code>class MovieSpider(Spider):
+<pre><code class="language-text">class MovieSpider(Spider):
     name = &#39;movie&#39; #爬虫名称
     allow_dominas = [&quot;douban.com&quot;] #允许的域名
     
@@ -160,7 +442,7 @@ scrapy startproject Douban
 
 <p>接下来通过<code>start_request</code>告诉爬虫要爬取的链接：</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
     def start_requests(self):
         url = &#39;&#39;&#39;https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start={start}&#39;&#39;&#39;
         requests = []
@@ -174,7 +456,7 @@ scrapy startproject Douban
 
 <p>接下来解析每个接口返回的内容:</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 def parse_movie(self, response):
     jsonBody = json.loads(response.body)
     subjects = jsonBody[&#39;data&#39;]
@@ -194,7 +476,7 @@ def parse_movie(self, response):
 
 <h4 id="toc_8">定义Item</h4>
 
-<pre><code class="language-Python">#定义你需要获取的数据
+<pre><code class="language-python">#定义你需要获取的数据
 class MovieItem(scrapy.Item):
     id = scrapy.Field()
     title = scrapy.Field()
@@ -210,7 +492,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_9">定义Pipeline</h4>
 
-<pre><code class="language-Python">class MoviePipeline(object):
+<pre><code class="language-python">class MoviePipeline(object):
 
     movieInsert = &#39;&#39;&#39;insert into movies(id,title,rating,genres,original_title,alt,image,year) values (&#39;{id}&#39;,&#39;{title}&#39;,&#39;{rating}&#39;,&#39;{genres}&#39;,&#39;{original_title}&#39;,&#39;{alt}&#39;,&#39;{image}&#39;,&#39;{year}&#39;)&#39;&#39;&#39;
 
@@ -256,7 +538,7 @@ class MovieItem(scrapy.Item):
 
 <p>在命令行下输入:</p>
 
-<pre><code>scrapy crawl movie
+<pre><code class="language-text">scrapy crawl movie
 </code></pre>
 
 <p><img src="https://pic.mylonly.com/2018-07-06-101458.png" alt=""/><br/>
@@ -268,7 +550,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_12">爬虫逻辑</h4>
 
-<pre><code>class ReviewSpider(Spider):
+<pre><code class="language-text">class ReviewSpider(Spider):
     name = &quot;review&quot;
     allow_domain = [&#39;douban.com&#39;]
     custom_settings = {
@@ -297,7 +579,7 @@ class MovieItem(scrapy.Item):
 <code>DOWNLOAD_TIMEOUT</code>: 下载超时时间，默认是60秒，此处修改为10秒是想让整体的爬取速度加快，因为RETRY_TIMES的缘故，需要RETRY的判定时间为1分钟，如果有很多这种有问题的页面，那么整个爬取的过程会十分漫长。<br/>
 <code>DOWNLOAD_DELAY</code>: 下载延迟，如果你使用代理IP之后还是会出现访问返回403的情况，请设置此值，因为某IP太频繁的访问页面会触发豆瓣的防爬虫机制。</p>
 
-<pre><code class="language-Python">  def start_requests(self):
+<pre><code class="language-python">  def start_requests(self):
         #从数据库中找到所有的moviesId
         self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
         self.cursor = self.connect.cursor()
@@ -318,17 +600,17 @@ class MovieItem(scrapy.Item):
 
 <p>照例，我们在start_request中告诉Scrapy要爬取的起始网址链接，通过我们之前的分析，影评页面的地址格式为:</p>
 
-<pre><code class="language-Python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
+<pre><code class="language-python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
 </code></pre>
 
 <p>而movieId,我们之前的爬虫已经将所有电影的信息抓取了下来，所以我们在此先通过查询数据库将所有的已抓取的电影信息获取到，取到其中的movieId，然后构造一个页面链接。</p>
 
-<pre><code class="language-Python">url = url_format.format(movieId=movieId, offset=current_page*20)
+<pre><code class="language-python">url = url_format.format(movieId=movieId, offset=current_page*20)
 </code></pre>
 
 <p>因为抓取豆瓣影评的过程十分漫长，中间会出现各种各样的问题导致爬虫意外退出，因此我们需要一个机制让爬虫能从上次停止的地方继续爬取，current_page和total_page就是为此而服务的，在后面的数据解析过程中，每解析一个页面，就会将当期页面的页数存储下来，防止出现意外情况。</p>
 
-<pre><code class="language-Python">    def parse_review(self, response):
+<pre><code class="language-python">    def parse_review(self, response):
         movieId = response.request.meta[&#39;movieId&#39;]
         review_list = response.xpath(&quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;)
         for review in review_list:
@@ -377,7 +659,7 @@ class MovieItem(scrapy.Item):
 <p>接下来，分析解析函数，DoubanItem的数据获取就不额外介绍了，利用之前分析时用到的xpath语句可以很容易的定义到具体内容。<br/>
 其中movieId是起始链接中通过Request中Meta属性传递过来的，当然你可以通过分析网页找到包含movieId的地方。</p>
 
-<pre><code>current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
+<pre><code class="language-text">current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
 total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
 paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extract()
 </code></pre>
@@ -388,13 +670,13 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>但是这个导航条会有两种情况获取不到:</p>
 
-<pre><code>1. 当某个电影的评论不足20条时，也就是只有一页评论。
+<pre><code class="language-text">1. 当某个电影的评论不足20条时，也就是只有一页评论。
 2. 当触发了豆瓣的反爬虫的机制时，返回的页面并不是评论页面，而是一个验证页面，自然也找不到导航条
 </code></pre>
 
 <p>所以在下面的代码中，我通过这几个变量来判断了以上几种情况：</p>
 
-<pre><code>1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
+<pre><code class="language-text">1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
 2. 情况2时，由于此时触发了反爬虫机制，返回的页面没有我们的数据，如果我们直接忽略掉的话，会损失大量的数据（这种情况很常见），所以我们就干脆再试一次，返回request，让Scrapy重新爬取这个页面，因为每次重新爬取都会换一个新的代理IP，所以我们有很大概率下次抓取就是正常的。此处有一点需要注意：因为Scrapy默认会过滤掉重复请求，所以我们需要在构造Request的时候讲dont_filter参数设置为True,让其不要过滤重复链接。
 3. 正常情况时，通过xpath语法获取的下一页评论的链接地址然后构造一个request交给Scrapy继续爬取
 </code></pre>
@@ -403,7 +685,7 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置</p>
 
-<pre><code class="language-Python">class DoubanDownloaderMiddleware(object):
+<pre><code class="language-python">class DoubanDownloaderMiddleware(object):
 # Not all methods need to be defined. If a method is not defined,
 # scrapy acts as if the downloader middleware does not modify the
 # passed objects.
@@ -462,7 +744,7 @@ def process_response(self, request, response, spider):
 
 <h4 id="toc_14">影评Item</h4>
 
-<pre><code class="language-Python">class ReviewItem(scrapy.Item):
+<pre><code class="language-python">class ReviewItem(scrapy.Item):
 id = scrapy.Field()
 username = scrapy.Field()
 nickname = scrapy.Field()
@@ -479,7 +761,7 @@ alt = scrapy.Field()
 
 <h4 id="toc_15">影评Pipeline</h4>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 class ReviewPipeline(object):
 
     reviewInsert = &#39;&#39;&#39;insert into reviews(id,username,nickname,avatar,summary,title,movieId,rating,create_time,alt) values (&quot;{id}&quot;,&quot;{username}&quot;, &quot;{nickname}&quot;,&quot;{avatar}&quot;, &quot;{summary}&quot;,&quot;{title}&quot;,&quot;{movieId}&quot;,&quot;{rating}&quot;,&quot;{create_time}&quot;,&quot;{alt}&quot;)&#39;&#39;&#39;
@@ -512,12 +794,12 @@ class ReviewPipeline(object):
         self.connect.close()
 </code></pre>
 
-<pre><code>和之前的电影的pipeline类似，就是基本的数据库写操作。
+<pre><code class="language-text">和之前的电影的pipeline类似，就是基本的数据库写操作。
 </code></pre>
 
 <h4 id="toc_16">运行爬虫</h4>
 
-<pre><code class="language-Shell">scrapy crawl review
+<pre><code class="language-shell">scrapy crawl review
 </code></pre>
 
 <p>在我写完这篇文章时，影评的爬虫仍然还在爬取当中：<br/>
@@ -542,59 +824,53 @@ class ReviewPipeline(object):
     <content type="html"><![CDATA[
 <ol>
 <li><p>查看数据库服务器字符集</p>
-
-<pre><code>mysql&gt; show variables like &#39;%char%&#39;;
-+--------------------------+-------------------------------------+------
-| Variable_name | Value |......
-+--------------------------+-------------------------------------+------
-| character_set_client | utf8 |...... -- 客户端字符集
-| character_set_connection | utf8 |......
-| character_set_database | utf8 |...... -- 数据库字符集
-| character_set_filesystem | binary |......
-| character_set_results | utf8 |......
-| character_set_server | utf8 |...... -- 服务器字符集
-| character_set_system | utf8 |......
-| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......
+<pre><code class="language-text">mysql&gt; show variables like &#39;%char%&#39;;
++--------------------------+-------------------------------------+------<br/>
+| Variable_name | Value |......<br/>
++--------------------------+-------------------------------------+------<br/>
+| character_set_client | utf8 |...... -- 客户端字符集<br/>
+| character_set_connection | utf8 |......<br/>
+| character_set_database | utf8 |...... -- 数据库字符集<br/>
+| character_set_filesystem | binary |......<br/>
+| character_set_results | utf8 |......<br/>
+| character_set_server | utf8 |...... -- 服务器字符集<br/>
+| character_set_system | utf8 |......<br/>
+| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......<br/>
 +--------------------------+-------------------------------------+------
 </code></pre></li>
 <li><p>查看数据表(table)字符集</p>
-
-<pre><code>mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
-+-----------+--------+---------+------------+------+-----------------+------
-| Name | Engine | Version | Row_format | Rows | Collation |......
-+-----------+--------+---------+------------+------+-----------------+------
-| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......
+<pre><code class="language-text">mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| Name | Engine | Version | Row_format | Rows | Collation |......<br/>
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......<br/>
 +-----------+--------+---------+------------+------+-----------------+------
 </code></pre></li>
 <li><p>查看数据列(column)字符集</p>
-
-<pre><code>mysql&gt; show full columns from countries;
-+----------------------+-------------+-----------------+--------
-| Field | Type | Collation | .......
-+----------------------+-------------+-----------------+--------
-| countries_id | int(11) | NULL | .......
-| countries_name | varchar(64) | utf8_general_ci | .......
-| countries_iso_code_2 | char(2) | utf8_general_ci | .......
-| countries_iso_code_3 | char(3) | utf8_general_ci | .......
-| address_format_id | int(11) | NULL | .......
+<pre><code class="language-text">mysql&gt; show full columns from countries;
++----------------------+-------------+-----------------+--------<br/>
+| Field | Type | Collation | .......<br/>
++----------------------+-------------+-----------------+--------<br/>
+| countries_id | int(11) | NULL | .......<br/>
+| countries_name | varchar(64) | utf8_general_ci | .......<br/>
+| countries_iso_code_2 | char(2) | utf8_general_ci | .......<br/>
+| countries_iso_code_3 | char(3) | utf8_general_ci | .......<br/>
+| address_format_id | int(11) | NULL | .......<br/>
 +----------------------+-------------+-----------------+--------
 </code></pre></li>
 <li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
-
-<pre><code>alter database name character set utf8;
-create database name character set utf8;
-alter table 表名 convert to character set gbk;
+<pre><code class="language-text">alter database name character set utf8;
+create database name character set utf8;<br/>
+alter table 表名 convert to character set gbk;<br/>
 alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
 </code></pre></li>
 <li><p>通过数据库my.cnf配置文件设置字符集</p>
-
-<pre><code>vi /etc/my.cnf
-#在[client]下添加
-default-character-set=utf8
-#在[mysqld]下添加
+<pre><code class="language-text">vi /etc/my.cnf
+#在[client]下添加<br/>
+default-character-set=utf8<br/>
+#在[mysqld]下添加<br/>
 default-character-set=utf8
 </code></pre>
-
 <p>重启mysql</p></li>
 </ol>
 
@@ -649,20 +925,19 @@ default-character-set=utf8
 <img src="https://pic.mylonly.com/2018-07-07-123121.jpg" alt=""/></li>
 <li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
 <img src="https://pic.mylonly.com/2018-07-07-123132.jpg" alt=""/></p>
-
 <h2 id="toc_4">写入镜像、U盘分区</h2></li>
 <li><p>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</p></li>
 <li><p>利用如下命令将该iso文件拷贝至U盘当中</p></li>
 </ol>
 
-<pre><code>dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
 </code></pre>
 
 <ol>
 <li>利用parted工具对U盘当中未使用的其他部分进行分区，命令如下</li>
 </ol>
 
-<pre><code class="language-Bash">parted  #进入parted界面
+<pre><code class="language-bash">parted  #进入parted界面
 select /dev/sdc #选择U盘分区
 print #查看当前分区信息
 mkpart primary 2937 23417 #制作新的分区，起始位置从2937M开始，到23417位置结束
@@ -675,36 +950,27 @@ print #查看新的分区信息
 
 <ol>
 <li><p>制作加密分区</p>
-
-<pre><code>cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
+<pre><code class="language-text">cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
 </code></pre>
-
 <p>确认覆盖分区，输入大写的YES，然后输入两遍密码之后，加密分区制作完毕<br/>
 <strong>注意/dev/sdc3,在上面利用parted制作新分区时，其属于/dev/sdc下面的第三个分区</strong><br/>
 <img src="https://pic.mylonly.com/2018-06-01-15A3CBD2C0856CCC83089E164F496957.png" alt=""/></p></li>
 <li><p>对加密分区格式化分区,分配卷标</p>
-
-<pre><code class="language-Bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
-
-ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件
-
-mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式
-
+<pre><code class="language-bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
+ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件<br/>
+mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式<br/>
 e2label /dev/mapper/usb persistence #将分区卷标指定为persistence,名字必须为persistence
 </code></pre></li>
 <li><p>挂载新的分区,写入验证文件</p>
-
-<pre><code class="language-Bash">mkdir -p /mnt/usb 
-mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下
-echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf
+<pre><code class="language-bash">mkdir -p /mnt/usb 
+mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下<br/>
+echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf<br/>
 #写入一个persistence.conf文件，此文件会在启动时用来确认此U盘是用来加密存储的分区
 </code></pre></li>
 <li><p>卸载分区，退出加密分区</p>
-
-<pre><code class="language-Bash">umount /dev/mapper/usb
+<pre><code class="language-bash">umount /dev/mapper/usb
 cryptsetup luksClose /dev/mapper/usb
 </code></pre>
-
 <p><img src="https://pic.mylonly.com/2018-07-07-123146.jpg" alt=""/></p></li>
 </ol>
 
@@ -721,7 +987,7 @@ cryptsetup luksClose /dev/mapper/usb
     <updated>2018-05-31T22:25:43+08:00</updated>
     <id>https://blog.mylonly.com/15277767431151.html</id>
     <content type="html"><![CDATA[
-<pre><code>#!/bin/bash
+<pre><code class="language-text">#!/bin/bash
 if [ ! -n &quot;$1&quot; ]
 then
     echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
@@ -765,13 +1031,41 @@ fi
     <content type="html"><![CDATA[
 <ol>
 <li><p>CentOS python升级之后yum无法使用解决</p>
-
 <p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-
-<pre><code>vim /usr/bin/yum
+<pre><code class="language-text">vim /usr/bin/yum
 </code></pre>
-
 <p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
+<pre><code class="language-text">[program:ErosUpdate]
+command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
+;priority=999                ; the relative start priority (default 999)<br/>
+autostart=true              ; start at supervisord start (default: true)<br/>
+autorestart=true            ; retstart at unexpected quit (default: true)<br/>
+startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
+startretries=3              ; max # of serial start failures (default 3)<br/>
+nodaemon=true<br/>
+;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
+;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
+;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
+user=root                 ; setuid to this UNIX account to run the program<br/>
+log_stdout=true             ; if true, log program stdout (default true)<br/>
+log_stderr=true             ; if true, log program stderr (def false)<br/>
+logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
+logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
+logfile_backups=20          ; # of logfile backups (default 10)
+</code></pre></li>
+<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
+<pre><code class="language-text">[uwsgi]
+socket=127.0.0.1:3030<br/>
+chdir=/data/weex/projects/ErosUpdate<br/>
+wsgi-file = ErosUpdate/wsgi.py<br/>
+max-requests=5000<br/>
+processes = 4<br/>
+threads = 4<br/>
+logto=/data/logs/uwsgi/ErosUpdate.log<br/>
+#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
+pidfile=/tmp/ErosUpdate.pid
+</code></pre></li>
 </ol>
 
 ]]></content>
@@ -785,12 +1079,10 @@ fi
     <content type="html"><![CDATA[
 <ol>
 <li><p>subplot</p>
-
-<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
-plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
+<pre><code class="language-text">plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图<br/>
 plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
 </code></pre>
-
 <p>subplot(numRows, numCols, plotNum)<br/>
 如果3个参数都小于10的话，可以统一成一个整数<br/>
 subplot(221) = subplot(2,2,1)</p></li>
@@ -808,12 +1100,10 @@ subplot(221) = subplot(2,2,1)</p></li>
     <content type="html"><![CDATA[
 <ol>
 <li><p>Pandas 读取列数据</p>
-
-<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
-
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
+<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])<br/>
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
 data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
 </code></pre></li>
 </ol>
@@ -830,8 +1120,7 @@ data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返�
 <ol>
 <li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
 加入以下代码</p>
-
-<pre><code>import os 
+<pre><code class="language-text">import os 
 os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
 </code></pre></li>
 </ol>
@@ -847,15 +1136,11 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
     <content type="html"><![CDATA[
 <ol>
 <li><p>weex中通过ref访问组件的两种情况:</p>
-
-<pre><code>&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
+<pre><code class="language-text">&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
 </code></pre>
-
 <p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-
-<pre><code>&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
+<pre><code class="language-text">&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
 </code></pre>
-
 <p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
 </ol>
 
@@ -870,7 +1155,7 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
     <content type="html"><![CDATA[
 <p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
 
-<pre><code>App.objects.all()
+<pre><code class="language-text">App.objects.all()
 </code></pre>
 
 <p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
@@ -883,17 +1168,17 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
 
 <p>安装很简单,和pylint一样</p>
 
-<pre><code>pip3 install pylint-django
+<pre><code class="language-text">pip3 install pylint-django
 </code></pre>
 
 <p>然后通过pylint加载这个插件</p>
 
-<pre><code>pylint --load-plugins pylint_django 
+<pre><code class="language-text">pylint --load-plugins pylint_django 
 </code></pre>
 
 <p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
 
-<pre><code>&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
+<pre><code class="language-text">&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
 </code></pre>
 
 <p>然后重启VSCode就好了</p>
@@ -912,11 +1197,10 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
     <content type="html"><![CDATA[
 <ol>
 <li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
-
-<pre><code>  server {
-      listen 80 default;
-      server_name _;
-      rewrite ^(.*) http://www.mylonly.com permanent;
+<pre><code class="language-text">  server {
+      listen 80 default;<br/>
+      server_name _;<br/>
+      rewrite ^(.*) http://www.mylonly.com permanent;<br/>
     }
 </code></pre></li>
 </ol>
@@ -932,136 +1216,111 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
     <content type="html"><![CDATA[
 <ol>
 <li><p>Csrf验证</p>
-
-<pre><code>需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
+<pre><code class="language-text">需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
 </code></pre></li>
 <li><p>Django允许跨域</p>
-
 <p>安装<code>django-cors-headers</code></p>
-
-<pre><code>pip install django-cors-headers
+<pre><code class="language-text">pip install django-cors-headers
 </code></pre>
-
 <p>在setting.py中增加如下代码</p>
-
-<pre><code>INSTALLED_APPS = [
-...
-&#39;corsheaders&#39;，
-...
- ] 
-
-MIDDLEWARE_CLASSES = (
-    ...
-    &#39;corsheaders.middleware.CorsMiddleware&#39;,
-    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序
-    ...
-)
-#跨域增加忽略
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    &#39;*&#39;
-)
-
-CORS_ALLOW_METHODS = (
-    &#39;DELETE&#39;,
-    &#39;GET&#39;,
-    &#39;OPTIONS&#39;,
-    &#39;PATCH&#39;,
-    &#39;POST&#39;,
-    &#39;PUT&#39;,
-    &#39;VIEW&#39;,
-)
-
-CORS_ALLOW_HEADERS = (
-    &#39;XMLHttpRequest&#39;,
-    &#39;X_FILENAME&#39;,
-    &#39;accept-encoding&#39;,
-    &#39;authorization&#39;,
-    &#39;content-type&#39;,
-    &#39;dnt&#39;,
-    &#39;origin&#39;,
-    &#39;user-agent&#39;,
-    &#39;x-csrftoken&#39;,
-    &#39;x-requested-with&#39;,
-    &#39;Pragma&#39;,
+<pre><code class="language-text">INSTALLED_APPS = [
+...<br/>
+&#39;corsheaders&#39;，<br/>
+...<br/>
+ ] <br/>
+MIDDLEWARE_CLASSES = (<br/>
+    ...<br/>
+    &#39;corsheaders.middleware.CorsMiddleware&#39;,<br/>
+    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序<br/>
+    ...<br/>
+)<br/>
+#跨域增加忽略<br/>
+CORS_ALLOW_CREDENTIALS = True<br/>
+CORS_ORIGIN_ALLOW_ALL = True<br/>
+CORS_ORIGIN_WHITELIST = (<br/>
+    &#39;*&#39;<br/>
+)<br/>
+CORS_ALLOW_METHODS = (<br/>
+    &#39;DELETE&#39;,<br/>
+    &#39;GET&#39;,<br/>
+    &#39;OPTIONS&#39;,<br/>
+    &#39;PATCH&#39;,<br/>
+    &#39;POST&#39;,<br/>
+    &#39;PUT&#39;,<br/>
+    &#39;VIEW&#39;,<br/>
+)<br/>
+CORS_ALLOW_HEADERS = (<br/>
+    &#39;XMLHttpRequest&#39;,<br/>
+    &#39;X_FILENAME&#39;,<br/>
+    &#39;accept-encoding&#39;,<br/>
+    &#39;authorization&#39;,<br/>
+    &#39;content-type&#39;,<br/>
+    &#39;dnt&#39;,<br/>
+    &#39;origin&#39;,<br/>
+    &#39;user-agent&#39;,<br/>
+    &#39;x-csrftoken&#39;,<br/>
+    &#39;x-requested-with&#39;,<br/>
+    &#39;Pragma&#39;,<br/>
 )
 </code></pre></li>
 <li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
-
-<pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
-axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
+<pre><code class="language-text">#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
+axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;<br/>
 axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
 </code></pre>
-
 <blockquote>
 <p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
 </blockquote>
-
 <p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
 <li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
-
 <p>需要两步：</p>
-
 <ul>
 <li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
 <li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
 </ul>
-
-<pre><code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
-class login(views.APIView):
-authentication_classes = (BasicAuthentication,)
-def post(self, request, *args, **kwargs):
-
-username = request.data.get(&quot;username&quot;)
-password = request.data.get(&quot;password&quot;)
-
-user = auth.authenticate(request, username=username, password=password)
-if user is not None:
-  auth.login(request, user)
-  return ErosResponse()
-else:
+<pre><code class="language-text">@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
+class login(views.APIView):<br/>
+authentication_classes = (BasicAuthentication,)<br/>
+def post(self, request, *args, **kwargs):<br/>
+username = request.data.get(&quot;username&quot;)<br/>
+password = request.data.get(&quot;password&quot;)<br/>
+user = auth.authenticate(request, username=username, password=password)<br/>
+if user is not None:<br/>
+  auth.login(request, user)<br/>
+  return ErosResponse()<br/>
+else:<br/>
   return ErosResponse(status=ErosResponseStatus.INVALID_USER)
 </code></pre></li>
 <li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
-
 <p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
-
-<pre><code class="language-Python">from django_filters.rest_framework import DjangoFilterBackend
+<pre><code class="language-python">from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 </code></pre></li>
 <li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
-
 <p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
-
-<pre><code>mysql -u root -p
-use mysql；
-ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
+<pre><code class="language-text">mysql -u root -p
+use mysql；<br/>
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  <br/>
 FLUSH PRIVILEGES; 
 </code></pre></li>
 <li><p>Django-Filter自定义查询过滤字段</p>
-
-<pre><code class="language-Python">from django_filters import FilterSet
-from django_filters import CharFilter
-
-class TagFilter(FilterSet):
-    ##自定义search字段
-    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)
-
-    class Meta:
-        model = Tag
-        fields = {
-          &#39;id&#39;: [&#39;exact&#39;],
-          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],
-          &#39;search&#39;: [&#39;exact&#39;],
+<pre><code class="language-python">from django_filters import FilterSet
+from django_filters import CharFilter<br/>
+class TagFilter(FilterSet):<br/>
+    ##自定义search字段<br/>
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)<br/>
+    class Meta:<br/>
+        model = Tag<br/>
+        fields = {<br/>
+          &#39;id&#39;: [&#39;exact&#39;],<br/>
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],<br/>
+          &#39;search&#39;: [&#39;exact&#39;],<br/>
         }
 </code></pre>
-
 <p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
 <li><p>DRF的OrderingFilter默认排序</p>
-
-<pre><code class="language-Python">filter_backends = (DjangoFilterBackend, OrderingFilter)
-ordering_fields = (&#39;id&#39;, &#39;hot&#39;)
+<pre><code class="language-python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)<br/>
 ordering = (&#39;-hot&#39;,)
 </code></pre></li>
 </ol>
@@ -1078,31 +1337,26 @@ ordering = (&#39;-hot&#39;,)
 <ol>
 <li><p>ValueError: unknown locale: UTF-8 <br/>
 <img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
-
 <p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
+<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
+export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
+export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
+export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
+export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
+export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
+export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
 export LC_ALL=
 </code></pre></li>
 <li><p>zip()函数在Python2和Python3中的区别</p>
-
 <p>在Python2中，zip返回的是元祖的列表<br/>
 而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
-
-<pre><code>x = [1, 2, 3]
-y = [a, b, c]
-
-#python3
-n = list(zip(x,y))
-print(n)
-#python2
-n = zip(x,y)
+<pre><code class="language-text">x = [1, 2, 3]
+y = [a, b, c]<br/>
+#python3<br/>
+n = list(zip(x,y))<br/>
+print(n)<br/>
+#python2<br/>
+n = zip(x,y)<br/>
 print n
 </code></pre></li>
 </ol>
@@ -1120,22 +1374,18 @@ print n
 
 <ol>
 <li><p>GitLab</p>
-
 <blockquote>
 <p>是一套基于Ruby开发的开源Git项目管理应用，其提供的功能和Github类似，不同的是GitLab提供一个GitLab CE社区版本，用户可以将其部署在自己的服务器上，这样就可以用于团队内部的项目代码托管仓库。</p>
 </blockquote></li>
 <li><p>GitLab CI</p>
-
 <blockquote>
 <p>是GitLab 提供的持续集成服务(从8.0版本之后，GitLab CI已经集成在GitLab中了)，只要在你的仓库根目录下创建一个.gitlab-ci.yml 文件， 并为该项目指派一个Runner，当有合并请求或者Push操作时，你写在.gitlab-ci.yml中的构建脚本就会开始执行。</p>
 </blockquote></li>
 <li><p>GitLab Runner</p>
-
 <blockquote>
 <p>是配合GitLab CI进行构建任务的应用程序，GitLab CI负责yml文件中各种阶段流程的执行，而GitLab Runner就是具体的负责执行每个阶段的脚本执行，一般来说GitLab Runner需要安装在单独的机器上通过其提供的注册操作跟GitLab CI进行绑定，当然，你也可以让其和GitLab安装在一起，只是有的情况下，你代码的构建过程对资源消耗十分严重的时候，会拖累GitLab给其他用户提供政策的Git服务。</p>
 </blockquote></li>
 <li><p>持续集成/部署环境</p>
-
 <blockquote>
 <p>持续集成是程序开发人员在频繁的提交代码之后，能有相应的环境能对其提交的代码自动执行构建(Build)、测试(Test),然后根据测试结果判断新提交的代码能否合并加入主分支当中,而持续部署也就是在持续集成之后自动将代码部署(Deploy)到生成环境上</p>
 </blockquote></li>
@@ -1154,7 +1404,7 @@ print n
 
 <p><code>.gitlab-ci.yml</code>文件是用来配置GitLab CI进行构建流程的配置文件，其采用YAML语法,所以你需要额外注意要用空格来代替缩进，而不是Tabs。下面通过我自己项目中的<code>.gitlab-ci.yml</code>文件来具体介绍其规则</p>
 
-<pre><code class="language-YAML">stages:
+<pre><code class="language-yaml">stages:
   - init
   - check
   - build
@@ -1217,7 +1467,7 @@ dev_deploy:
 <p>关于GitLab CI中的stages,有如下几个特点:</p>
 </blockquote>
 
-<pre><code>1. 所有 Stages 会按照顺序运行，即当一个 Stage 完成后，下一个 Stage 才会开始
+<pre><code class="language-text">1. 所有 Stages 会按照顺序运行，即当一个 Stage 完成后，下一个 Stage 才会开始
 2. 只有当所有 Stages 完成后，该构建任务 (Pipeline) 才会成功
 3. 如果任何一个 Stage 失败，那么后面的 Stages 不会执行，该构建任务 (Pipeline) 失败
 </code></pre>
@@ -1236,7 +1486,7 @@ dev_deploy:
 <p>关于GitLab CI中的Jobs,也有如下几个特点:</p>
 </blockquote>
 
-<pre><code>1. 相同 Stage 中的 Jobs 会并行执行
+<pre><code class="language-text">1. 相同 Stage 中的 Jobs 会并行执行
 2. 相同 Stage 中的 Jobs 都执行成功时，该 Stage 才会成功
 3. 如果任何一个 Job 失败，那么该 Stage 失败，即该构建任务 (Pipeline) 失败
 </code></pre>
@@ -1257,48 +1507,35 @@ dev_deploy:
 
 <ol>
 <li><p>下载对应GitLab 版本的GitLab Runner</p>
-
 <ul>
 <li>如果你的GitLab是10.0之后的版本，GitLab Runner可执行文件改名为<code>gitlab-runner</code></li>
 </ul>
-
-<pre><code>sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+<pre><code class="language-text">sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
 sudo chmod +x /usr/local/bin/gitlab-runner
 </code></pre>
-
 <ul>
 <li>9.0~10.0之间的版本</li>
 </ul>
-
-<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
+<pre><code class="language-text">sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
 sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
 </code></pre>
-
 <ul>
 <li>9.0 之前,由于9.0之后启用全新的API4接口，所以如果你的GitLab是9.0以前的版本,需要下载下面的版本,否则会导致你的GitLab Runner注册不上</li>
 </ul>
-
-<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runnerhttps://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/v1.11.1/binaries/gitlab-ci-multi-runner-darwin-amd64
+<pre><code class="language-text">sudo curl --output /usr/local/bin/gitlab-ci-multi-runnerhttps://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/v1.11.1/binaries/gitlab-ci-multi-runner-darwin-amd64
 sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
 </code></pre>
-
 <blockquote>
 <p>不知道各位有没有注意到上面下载地址链接当中的v1.11.1,这个就是对应的Gitlab Runner,如果你的GitLab是9.0之前的版本，使用GitLab Runner v1.11.1这个版本仍然注册不上，可以尝试使用降几个版本的GitLab Runner,所有GitLab Runner发行的版本可以在<a href="https://gitlab.com/gitlab-org/gitlab-runner/tags">GitLab Runner Tags</a>找到</p>
 </blockquote>
-
 <p>假如你遇到不能通过登录服务器来确定GitLab版本号时，可以通过直接访问gitlab的首页，后面加上help，如下图：<br/>
 <img src="https://pic.mylonly.com/2018-04-19-083100.png" alt=""/></p></li>
 <li><p>注册GitLab Runner</p>
-
 <p>执行下面命令，</p>
-
-<pre><code>sudo gitlab-ci-multi-runner register
+<pre><code class="language-text">sudo gitlab-ci-multi-runner register
 </code></pre>
-
 <p>如果你的终端提示找不到命令，请通过<code>export PATH=/usr/local/bin:$PATH</code>将/usr/local/bin目录加入环境变量,或者你遗漏了上面的chmod命令导致文件不可执行。</p>
-
 <p>执行完上面的命令之后，会让你输入下面的信息:</p>
-
 <ul>
 <li>Please enter the gitlab-ci coordinator URL:</li>
 <li>Please enter the gitlab-ci token for this runner:</li>
@@ -1307,18 +1544,13 @@ sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
 <li>Whether to run untagged builds [true/false]:</li>
 <li>Please enter the executor:</li>
 </ul>
-
 <p>其中coordinator URL和token可以在你需要进行持续集成的项目的Runner标签页中找到<br/>
 <img src="https://pic.mylonly.com/2018-04-19-084819.jpg" alt=""/><br/>
 description和tags可以自己定义，是否build没有tag的提交这个也是根据你自己的需求来选择，默认是false，executer选择shell</p>
-
 <p>填写完成之后如果提示<code>Registering runner... succeeded</code>表明这个Runner已经被注册成功了，之后你在返回进入项目的Runners页面，会发现下面多了一个处于Active状态的Runner</p>
-
 <p>紧接着最后一步，启动我们刚注册的Runner</p>
-
-<pre><code>sudo  gitlab-ci-multi-runner start
+<pre><code class="language-text">sudo  gitlab-ci-multi-runner start
 </code></pre>
-
 <p>现在，我们切回项目的Pipelines当中，肯定会发现之前处于peding状态的任务已经开始running了，我们可以通过点击这个状态按钮来实时查看每个阶段的输出日志<br/>
 <img src="https://pic.mylonly.com/2018-04-19-085612.jpg" alt=""/></p></li>
 </ol>
@@ -1362,7 +1594,7 @@ description和tags可以自己定义，是否build没有tag的提交这个也是
 
 <p>这个样式中并没有指定flex-wrap属性，而在flex布局中，flex-wrap的默认属性就是<code>nowrap</code>不换行。</p>
 
-<pre><code>是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
+<pre><code class="language-text">是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
 如果真是这样，那么weex-ui的开发者为什么不把flex-wrap属性设置为wrap而提供一个支持多行的`wxc-rich-text`控件呢？
 </code></pre>
 
@@ -1489,7 +1721,7 @@ description和tags可以自己定义，是否build没有tag的提交这个也是
 
 <p>然后加上发送人的姓名，最后加上聊天的内容addMessage,在addMessage当中我实现了QQ表情的匹配已经文本内容的切割</p>
 
-<pre><code>addMessage(message){
+<pre><code class="language-text">addMessage(message){
       var char_list = []
       var chars = message.split(&#39;&#39;)
       var startIndex = -1
@@ -1600,7 +1832,7 @@ export default emotionFunc;
 <p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
 然后利用pip3 安装uwsgi</p>
 
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+<pre><code class="language-shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
 tar -xvf Python-3.6.3.tar.xz
 cd Python-3.6.3/
 
@@ -1621,7 +1853,7 @@ uwsgi -i /data/web/xxxx.ini
 
 <p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
 
-<pre><code>py-autoreload = 1
+<pre><code class="language-text">py-autoreload = 1
 </code></pre>
 
 ]]></content>
@@ -1637,7 +1869,7 @@ uwsgi -i /data/web/xxxx.ini
 
 <h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
 
-<pre><code class="language-Python">EMAIL_USE_SSL = True    
+<pre><code class="language-python">EMAIL_USE_SSL = True    
 EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
 EMAIL_PORT = 465
 EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
@@ -1647,7 +1879,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 <h5 id="toc_1">2. 引用mail库发送邮件</h5>
 
-<pre><code class="language-Python">from django.core.mail import EmailMessage
+<pre><code class="language-python">from django.core.mail import EmailMessage
 from Across.settings import EMAIL_HOST_USER
 
 msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
@@ -1658,7 +1890,7 @@ msg.send()
 
 <p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
 
-<pre><code class="language-Python">TEMPLATES = [
+<pre><code class="language-python">TEMPLATES = [
     {
         &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
         &#39;DIRS&#39;: [
@@ -1679,342 +1911,11 @@ msg.send()
 
 <p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
 
-<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
+<pre><code class="language-python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
 msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
 msg.content_subtype = &quot;html&quot; # Main content is now text/html
 msg.send()
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django扩展默认的User Model]]></title>
-    <link href="https://blog.mylonly.com/15117871248079.html"/>
-    <updated>2017-11-27T20:52:04+08:00</updated>
-    <id>https://blog.mylonly.com/15117871248079.html</id>
-    <content type="html"><![CDATA[
-<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
-
-<blockquote>
-<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
-</blockquote>
-
-<p>在models.py中新建一个model继承自AbstractUser</p>
-
-<pre><code>from django.db import models
-
-# Create your models here.
-from django.contrib.auth.models import AbstractUser
-from enum import Enum
-
-
-class UserProfile(AbstractUser):
-
-    GENDER = [
-        (0,&quot;未知&quot;),
-        (1,&quot;男性&quot;),
-        (2,&quot;女性&quot;)
-    ]
-
-    nickname = models.CharField(max_length=50)
-    intro = models.CharField(max_length=500)
-    mobile = models.CharField(max_length=13)
-    gender = models.IntegerField(choices=GENDER,default=0)
-
-    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
-
-</code></pre>
-
-<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
-
-<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[利用Scrapy-Splash抓取JS动态渲染的网页数据]]></title>
-    <link href="https://blog.mylonly.com/15052000291680.html"/>
-    <updated>2017-09-12T15:07:09+08:00</updated>
-    <id>https://blog.mylonly.com/15052000291680.html</id>
-    <content type="html"><![CDATA[
-<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
-
-<ol>
-<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
-<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
-</ol>
-
-<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
-
-<h3 id="toc_0">准备工作</h3>
-
-<ol>
-<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
-<blockquote>
-<p>为什么要安装Docker?<br/>
-因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
-</blockquote></li>
-<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
-<li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
-docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
-</code></pre></li>
-</ol>
-
-<h3 id="toc_1">Scrapy配置</h3>
-
-<p>在Scrapy项目的setting.py中加入如下内容：</p>
-
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
-
-DOWNLOADER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
-&#39;scrapy_splash.SplashMiddleware&#39;: 725,
-&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
-}
-
-SPIDER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
-}
-
-DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
-
-HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
-
-</code></pre>
-
-<h3 id="toc_2">实际代码解析</h3>
-
-<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
-
-<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
-<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
-
-<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
-<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
-
-<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
-<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
-
-<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
-
-<pre><code class="language-Python">import scrapy
-from FinancialInfoSpider.items import ArticleItem
-from scrapy_splash import SplashRequest
-from w3lib.html import remove_tags
-import re
-from bs4 import BeautifulSoup
-
-class TencentStockSpider(scrapy.Spider):
-    name = &quot;TencentStock&quot;
-    def start_requests(self):
-        urls = [
-           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
-        ]
-
-        for url in urls:
-            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-
-    def parse(self,response):
-
-        sel = scrapy.Selector(response)
-        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
-        requests = []
-        
-        for link in links:
-            request = scrapy.Request(link, callback =self.parse_article)
-            requests.append(request)
-        return requests
-
-    def parse_article(self,response):
-
-        sel = scrapy.Selector(response)
-
-        article = ArticleItem()
-        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
-        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
-        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
-        
-        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
-        article[&#39;content&#39;] = self.remove_html_tags(html_content)
-        return article
-
-
-    def remove_html_tags(self,html):
-        
-        soup = BeautifulSoup(html)
-        [s.extract() for s in soup(&#39;script&#39;)]
-        [s.extract() for s in soup(&#39;style&#39;)] 
-         
-        content = &#39;&#39;
-        for substring in soup.stripped_strings:
-            content = content + substring
-
-        return content       
-</code></pre>
-
-<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
-
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-</code></pre>
-
-<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
-
-<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
-<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
-
-<p>输出结果:</p>
-
-<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CentOS6 安装部署Zabbix]]></title>
-    <link href="https://blog.mylonly.com/14972546183511.html"/>
-    <updated>2017-06-12T16:03:38+08:00</updated>
-    <id>https://blog.mylonly.com/14972546183511.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>Zabbix是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题。</p>
-</blockquote>
-
-<h2 id="toc_0">部署LAMP|LNMP环境</h2>
-
-<p>由于Zabbix的Web管理页面是由php写的，所以需要服务器PHP环境的支持，Linux部署LAMP或者LNMP的教程很多，在此就不在赘述。<br/>
-需要注意的是:Zabbix支持的PHP最低版本是PHP5.4,而目前CentOS6中通过yum安装的php版本为5.3，所以最好采用源码编译安装。<br/>
-当然，如果你觉得自己搞不定源码安装的各种编译参数，本文也给出一种yum安装php5.5版本的方法</p>
-
-<h3 id="toc_1">Yum 安装PHP5.5</h3>
-
-<ol>
-<li>CentOS6安装PHP5.5源
-<code>rpm -ivh http://mirror.webtatic.com/yum/el6/latest.rpm</code></li>
-<li>安装php5.5
-<code>yum install php55w php55w-gd php55w-mbstring php55w-mysql php55w-fpm php55w-bcmath php55w-xmlreader php55w-xmlwriter</code></li>
-</ol>
-
-<p>修改PHP配置，编辑/etc/php.ini,修改下列参数</p>
-
-<pre><code>max_execution_time = 300
-max_input_time = 300
-memory_limit = 128M
-post_max_size = 32M
-date.timezone = Asia/Shanghai
-</code></pre>
-
-<h2 id="toc_2">zabbix数据库</h2>
-
-<ol>
-<li>从<a href="http://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/3.2.6/zabbix-3.2.6.tar.gz/download%5D">zabbix-3.2.6</a>下载最新版本的zabbix源码并解压至当前目录</li>
-<li>进入mysql数据库  <code>mysql -u root -p</code></li>
-<li>创建zabbix数据库 <code>create database zabbix character set utf8;</code></li>
-<li>创建zabbix用户并给与进入zabbix数据库的权限（用户名:zabbix,密码:123456） `grant all privileges on zabbix.* to zabbix@&#39;%&#39; identified by &#39;123456&#39;;</li>
-<li>刷新系统权限表 <code>flush privileges;</code></li>
-<li><p>进入之前下载的zabbix源码目录，找到database文件夹，里面有<code>schema.sql</code>、<code>images.sql</code>、<code>data.sql</code>，将这三个sql文件依次导入之前创建好的zabbix数据库中（PS,请按照schema-&gt;images-&gt;data的顺序依次导入，否则会出错）</p>
-
-<pre><code>mysql&gt; use zabbix;
-mysql&gt; source /root/zabbix-3.2.6/database/schema.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/images.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/data.sql;
-</code></pre></li>
-</ol>
-
-<h2 id="toc_3">添加zabbix用户和组</h2>
-
-<pre><code>groupadd zabbix
-useradd -g zabbix -m zabbix
-</code></pre>
-
-<h2 id="toc_4">安装zabbix其他依赖包</h2>
-
-<pre><code>yum install net-snmp-devel curl curl-devel mysql-devel
-</code></pre>
-
-<h2 id="toc_5">编译安装zabbix</h2>
-
-<ol>
-<li><p>进入zabbix源码根目录，生成makefile</p>
-
-<pre><code>./configure --prefix=/usr/local/zabbix --with-mysql --with-net-snmp --with-libcurl --enable-server --enable-agent --enable-proxy
-</code></pre></li>
-<li><p>安装</p>
-
-<pre><code>make
-make install
-</code></pre></li>
-</ol>
-
-<h2 id="toc_6">添加zabbix服务对应的端口</h2>
-
-<pre><code>vim /etc/services ##在文件中加入以下端口
-zabbix-agent 10050/tcp # Zabbix Agent
-zabbix-agent 10050/udp # Zabbix Agent
-zabbix-trapper 10051/tcp # Zabbix Trapper
-zabbix-trapper 10051/udp # Zabbix Trapper
-</code></pre>
-
-<h2 id="toc_7">修改zabbix配置</h2>
-
-<ol>
-<li><p>修改 /usr/local/zabbix/etc/zabbix_server.conf</p>
-
-<pre><code>DBName=zabbix #数据库名称
-
-DBUser=zabbix #数据库用户名
-
-DBPassword=123456 #数据库密码
-
-ListenIP=127.0.0.1 #数据库ip地址
-
-AlertScriptsPath=/usr/local/zabbix/share/zabbix/alertscripts #zabbix运行脚本存放目录
-</code></pre></li>
-<li><p>修改 /usr/local/zabbix/etc/zabbix_agentd.conf</p>
-
-<pre><code>Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/
-</code></pre></li>
-</ol>
-
-<h2 id="toc_8">让zabbix开机启动</h2>
-
-<ol>
-<li><p>拷贝可执行文件至init.d目录</p>
-
-<pre><code>cp /usr/local/zabbix/sbin/zabbix_server /etc/rc.d/init.d/zabbix_server  #服务端
-cp /usr/local/zabbix/sbin/zabbix_agentd /etc/rc.d/init.d/zabbix_agentd  #客户端
-</code></pre></li>
-<li><p>添加脚本执行权限</p>
-
-<pre><code>chmod +x /etc/rc.d/init.d/zabbix_server
-chmod +x /etc/rc.d/init.d/zabbix_agentd 
-</code></pre></li>
-<li><p>加入开机启动</p>
-
-<pre><code>chkconfig zabbix_server on
-chkconfig zabbix_agentd on
-</code></pre></li>
-<li><p>修改开启启动脚本中zabbix的安装路径,分别用vim打开/etc/rc.d/init.d/zabbix_server和/etc/rc.d/init.d/zabbix_agentd,修改BASEDIR参数为/usr/local/zabbix</p>
-
-<pre><code>BASEDIR=/usr/local/zabbix/ #zabbix安装目录
-</code></pre></li>
-</ol>
-
-<h2 id="toc_9">安装zabbix web管理页面</h2>
-
-<ol>
-<li><p>拷贝zabbix源码当中的frontends/php下面的所有文件至web服务器的根目录，重启web服务器，如果你的LNMP环境或者LAMP环境没有问题的话，浏览器中输入服务器地址应该会出现zabbix的setup页面</p></li>
-<li><p>点击next按钮，之后会检测zabbix所需要的条件是否完全支持(PS:缺少什么就安装什么，一定要全部OK才可继续下去)</p></li>
-<li><p>之后会出现连接数据库的页面,填入之前创建zabbix数据库时的信息</p></li>
-<li><p>第4步出现当前zabbix服务器的一些基本信息，name填一下</p></li>
-<li><p>安装向导会自动在服务器根目录下的conf下创建一个zabbix.conf.php文件,如果你的根目录权限设置不正确导致向导无法写入文件，这时就需要你手动将这个文件上传到服务器的正确目录</p></li>
-<li><p>一切OK之后就会出现登录页面，初始用户名admin,初始密码zabbix</p></li>
-</ol>
 
 ]]></content>
   </entry>

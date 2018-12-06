@@ -145,7 +145,7 @@
 
 <p>修改PHP配置，编辑/etc/php.ini,修改下列参数</p>
 
-<pre><code>max_execution_time = 300
+<pre><code class="language-text">max_execution_time = 300
 max_input_time = 300
 memory_limit = 128M
 post_max_size = 32M
@@ -161,42 +161,39 @@ date.timezone = Asia/Shanghai
 <li>创建zabbix用户并给与进入zabbix数据库的权限（用户名:zabbix,密码:123456） `grant all privileges on zabbix.* to zabbix@&#39;%&#39; identified by &#39;123456&#39;;</li>
 <li>刷新系统权限表 <code>flush privileges;</code></li>
 <li><p>进入之前下载的zabbix源码目录，找到database文件夹，里面有<code>schema.sql</code>、<code>images.sql</code>、<code>data.sql</code>，将这三个sql文件依次导入之前创建好的zabbix数据库中（PS,请按照schema-&gt;images-&gt;data的顺序依次导入，否则会出错）</p>
-
-<pre><code>mysql&gt; use zabbix;
-mysql&gt; source /root/zabbix-3.2.6/database/schema.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/images.sql;
+<pre><code class="language-text">mysql&gt; use zabbix;
+mysql&gt; source /root/zabbix-3.2.6/database/schema.sql;<br/>
+mysql&gt; source /root/zabbix-3.2.6/database/images.sql;<br/>
 mysql&gt; source /root/zabbix-3.2.6/database/data.sql;
 </code></pre></li>
 </ol>
 
 <h2 id="toc_3">添加zabbix用户和组</h2>
 
-<pre><code>groupadd zabbix
+<pre><code class="language-text">groupadd zabbix
 useradd -g zabbix -m zabbix
 </code></pre>
 
 <h2 id="toc_4">安装zabbix其他依赖包</h2>
 
-<pre><code>yum install net-snmp-devel curl curl-devel mysql-devel
+<pre><code class="language-text">yum install net-snmp-devel curl curl-devel mysql-devel
 </code></pre>
 
 <h2 id="toc_5">编译安装zabbix</h2>
 
 <ol>
 <li><p>进入zabbix源码根目录，生成makefile</p>
-
-<pre><code>./configure --prefix=/usr/local/zabbix --with-mysql --with-net-snmp --with-libcurl --enable-server --enable-agent --enable-proxy
+<pre><code class="language-text">./configure --prefix=/usr/local/zabbix --with-mysql --with-net-snmp --with-libcurl --enable-server --enable-agent --enable-proxy
 </code></pre></li>
 <li><p>安装</p>
-
-<pre><code>make
+<pre><code class="language-text">make
 make install
 </code></pre></li>
 </ol>
 
 <h2 id="toc_6">添加zabbix服务对应的端口</h2>
 
-<pre><code>vim /etc/services ##在文件中加入以下端口
+<pre><code class="language-text">vim /etc/services ##在文件中加入以下端口
 zabbix-agent 10050/tcp # Zabbix Agent
 zabbix-agent 10050/udp # Zabbix Agent
 zabbix-trapper 10051/tcp # Zabbix Trapper
@@ -207,20 +204,14 @@ zabbix-trapper 10051/udp # Zabbix Trapper
 
 <ol>
 <li><p>修改 /usr/local/zabbix/etc/zabbix_server.conf</p>
-
-<pre><code>DBName=zabbix #数据库名称
-
-DBUser=zabbix #数据库用户名
-
-DBPassword=123456 #数据库密码
-
-ListenIP=127.0.0.1 #数据库ip地址
-
+<pre><code class="language-text">DBName=zabbix #数据库名称
+DBUser=zabbix #数据库用户名<br/>
+DBPassword=123456 #数据库密码<br/>
+ListenIP=127.0.0.1 #数据库ip地址<br/>
 AlertScriptsPath=/usr/local/zabbix/share/zabbix/alertscripts #zabbix运行脚本存放目录
 </code></pre></li>
 <li><p>修改 /usr/local/zabbix/etc/zabbix_agentd.conf</p>
-
-<pre><code>Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/
+<pre><code class="language-text">Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/
 </code></pre></li>
 </ol>
 
@@ -228,23 +219,19 @@ AlertScriptsPath=/usr/local/zabbix/share/zabbix/alertscripts #zabbix运行脚本
 
 <ol>
 <li><p>拷贝可执行文件至init.d目录</p>
-
-<pre><code>cp /usr/local/zabbix/sbin/zabbix_server /etc/rc.d/init.d/zabbix_server  #服务端
+<pre><code class="language-text">cp /usr/local/zabbix/sbin/zabbix_server /etc/rc.d/init.d/zabbix_server  #服务端
 cp /usr/local/zabbix/sbin/zabbix_agentd /etc/rc.d/init.d/zabbix_agentd  #客户端
 </code></pre></li>
 <li><p>添加脚本执行权限</p>
-
-<pre><code>chmod +x /etc/rc.d/init.d/zabbix_server
+<pre><code class="language-text">chmod +x /etc/rc.d/init.d/zabbix_server
 chmod +x /etc/rc.d/init.d/zabbix_agentd 
 </code></pre></li>
 <li><p>加入开机启动</p>
-
-<pre><code>chkconfig zabbix_server on
+<pre><code class="language-text">chkconfig zabbix_server on
 chkconfig zabbix_agentd on
 </code></pre></li>
 <li><p>修改开启启动脚本中zabbix的安装路径,分别用vim打开/etc/rc.d/init.d/zabbix_server和/etc/rc.d/init.d/zabbix_agentd,修改BASEDIR参数为/usr/local/zabbix</p>
-
-<pre><code>BASEDIR=/usr/local/zabbix/ #zabbix安装目录
+<pre><code class="language-text">BASEDIR=/usr/local/zabbix/ #zabbix安装目录
 </code></pre></li>
 </ol>
 

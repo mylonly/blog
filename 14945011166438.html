@@ -143,14 +143,17 @@ rules = (
 <p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
  <br/>
 SmglLinkExtractor主要参数：<br/>
+ </p>
+
+<ul>
+<li>allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。</li>
+<li>deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。</li>
+<li>allow_domains：会被提取的链接的domains。</li>
+<li>deny_domains：一定不会被提取链接的domains。</li>
+<li>restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
  <br/>
-- allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。<br/>
-- deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。<br/>
-- allow_domains：会被提取的链接的domains。<br/>
-- deny_domains：一定不会被提取链接的domains。<br/>
-- restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
- <br/>
-下面的内容就是利用Selector解析获得的response并赋值个item就行了：</p>
+下面的内容就是利用Selector解析获得的response并赋值个item就行了：</li>
+</ul>
 
 <pre><code class="language-python">#coding: utf-8 #############################################################
 # File Name: spiders/wallpaper.py
