@@ -1,0 +1,480 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  独自一人
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="15277726988270.html">
+                
+                  <h1>Mimetic库分析2-——入口类MimeEntity</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>整个Mimetic的入口类就是MimeEntity类，整个MIME格式文件或者字符串都是在MimeEntity内部完成解析的。<br/>
+MimeEntity类很简单，其成员如下：</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-1.PNG" alt=""/></p>
+
+<p>MimeEntity类提供了两种常用的初始化方式</p>
+
+<p>迭代器初始化：</p>
+
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);  //文件流
+ostrstream ostr&lt;&lt;ifstream;  //转换成strstream
+string str_eml=ostr.str();     //将ifstream转换成string字符串
+MimeEntity me(str_eml.begin(),str_eml.end());  
+</code></pre>
+
+<p>流初始化</p>
+
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);         
+MimeEntity me(file_in);
+</code></pre>
+
+<p>其中MimeEntity(Iterator beg,Iterator end,int mask = imNone)这个构造函数的第三个参数mask是解析参数，可以去下列值：</p>
+
+<pre><code class="language-text">imNone   //完整解析整个MIME格式文件
+imHeader  //忽略MIME头
+imBody     //忽略MIME正文
+imChildParts  //忽略嵌套的MIME
+imPreamble   //忽略冗余头
+imEpilogue    //忽略结束符
+</code></pre>
+
+<p>MimeEntity将整个MIME格式分成两部分，以空格（\r\n\r\n）为分割符，空格以上的为MIME头，存放在m_header中，空格以下的为MIME正文，存放在m_body中，可以分别通过调用成员函数header()和body()得到相应的类型值。</p>
+
+<pre><code class="language-text">#include&lt;iostream&gt;
+#include&lt;mimetic/mimetic.h&gt;
+    
+using namespace std;
+using namespace mimetic;
+    
+int main()
+{               
+    ifstream file_in(&quot;test.eml&quot;);         
+    if(!file_in)
+        return -1;
+    MimeEntity me(file_in);
+    cout&lt;&lt;me&lt;&lt;endl;   //可以直接打印出该邮件内容
+    return 0;
+}
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2013/05/31</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15277718994557.html">
+                
+                  <h1>Mimetic库分析1——安装和使用mimetic</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<blockquote>
+<p>Mimetic库是开源的MIME格式解析库，利用mimetic不仅可以解析标准的邮件文件(message/rfc822)，也可以用来解析某些协议中用到的MIME编码。例如webmail，其http报文中就有大量用MIME格式编码的信息。<br/>
+       mimetic库的项目主页是<a href="http://www.codesink.org/mimetic_mime_library.html%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%9C%A8%E4%B8%8A%E9%9D%A2%E4%B8%8B%E8%BD%BD%E5%88%B0%E6%9C%80%E6%96%B0%E7%9A%84mimetic%E5%BA%93%E3%80%82">http://www.codesink.org/mimetic_mime_library.html，可以在上面下载到最新的mimetic库。</a><br/>
+       目前最新的mimetic-0.9.7的下载地址如下:<a href="http://www.codesink.org/download/mimetic-0.9.7.tar.gz">http://www.codesink.org/download/mimetic-0.9.7.tar.gz</a></p>
+</blockquote>
+
+<h2 id="toc_0">安装</h2>
+
+<p>将下载好的mimetic-0.9.7.tar.gz包放到指定目录,解压：</p>
+
+<pre><code class="language-text"> tar -zvxf mimetic-0.9.7.tar.gz
+ cd mimetic
+ ./configure
+ make
+ make install
+</code></pre>
+
+<h2 id="toc_1">初步使用</h2>
+
+<p>安装好mimetic后就可以在程序中使用mimetic提供的库函数了,可以用官方提供的小例子测试下是否能正常使用</p>
+
+<pre><code class="language-text">#include&lt;iostream&gt;
+#include&lt;mimetic/mimetic.h&gt;
+
+using namespace mimetic;
+using namespace std;
+intmain()
+{
+    MimeEntity me;
+    me.header().from(&quot;me &lt;me@domain.com&gt;&quot;);
+    me.header().to(&quot;you &lt;you@domain.com&gt;&quot;);
+    me.header().subject(&quot;my first mimetic msg&quot;);
+    me.body().assign(&quot;hello there!&quot;);
+    cout &lt;&lt; me &lt;&lt; endl;
+    return0;
+}
+</code></pre>
+
+<p>编译好后运行，如果可以正常输出，说明可以正确使用mimetic库了。</p>
+
+<blockquote>
+<p>如果运行提示找不到libmimetic.so.o，将/usr/local/lib下的libmimetic.so.o拷贝到/usr/lib下就可以正常运行)。</p>
+</blockquote>
+
+<h2 id="toc_2">mimetic帮助</h2>
+
+<p>mimetic的在线帮助地址如下:<a href="http://www.codesink.org/data/mimetic/docs/html/index.html">http://www.codesink.org/data/mimetic/docs/html/index.html</a><br/>
+  如果你想生成本地的mimetic文档，可以执行如下操作</p>
+
+<pre><code class="language-text">  cd mimetic-0.9.7/doc #进入mimetic帮助目录
+  make docs #生成doc文档
+</code></pre>
+
+<p>会生成一份html文档的本地帮助</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2013/05/31</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="all_9.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
+
+
+
+  </body>
+</html>

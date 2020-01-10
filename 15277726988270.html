@@ -1,130 +1,147 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	Mimetic库分析2-——入口类MimeEntity - 独自一人
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  Mimetic库分析2-——入口类MimeEntity - 独自一人
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-				 	<div class="profilepic">
-						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
-					</div>
-            	
-					
-					<h1><a href="index.html">独自一人</a></h1>
-					<p class="subtitle">独自一人,独自Coding...</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="self" href="index.html">Home</a></li>
-						
-						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Mimetic库分析2-——入口类MimeEntity</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2013/05/31</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+           
+         
+          <span class="comments">
+            
 
-<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+            
+          </span>
 
-								
+        </div>
+      </div><!-- article -->
 
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Mimetic库分析2-——入口类MimeEntity</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<p>整个Mimetic的入口类就是MimeEntity类，整个MIME格式文件或者字符串都是在MimeEntity内部完成解析的。<br/>
+      <div class="article-content">
+      <p>整个Mimetic的入口类就是MimeEntity类，整个MIME格式文件或者字符串都是在MimeEntity内部完成解析的。<br/>
 MimeEntity类很简单，其成员如下：</p>
 
 <p><img src="https://pic.mylonly.com/2018-05-31-1.PNG" alt=""/></p>
@@ -133,7 +150,7 @@ MimeEntity类很简单，其成员如下：</p>
 
 <p>迭代器初始化：</p>
 
-<pre><code>ifstream file_in(&quot;test.eml&quot;);  //文件流
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);  //文件流
 ostrstream ostr&lt;&lt;ifstream;  //转换成strstream
 string str_eml=ostr.str();     //将ifstream转换成string字符串
 MimeEntity me(str_eml.begin(),str_eml.end());  
@@ -141,13 +158,13 @@ MimeEntity me(str_eml.begin(),str_eml.end());
 
 <p>流初始化</p>
 
-<pre><code>ifstream file_in(&quot;test.eml&quot;);         
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);         
 MimeEntity me(file_in);
 </code></pre>
 
 <p>其中MimeEntity(Iterator beg,Iterator end,int mask = imNone)这个构造函数的第三个参数mask是解析参数，可以去下列值：</p>
 
-<pre><code>imNone   //完整解析整个MIME格式文件
+<pre><code class="language-text">imNone   //完整解析整个MIME格式文件
 imHeader  //忽略MIME头
 imBody     //忽略MIME正文
 imChildParts  //忽略嵌套的MIME
@@ -157,7 +174,7 @@ imEpilogue    //忽略结束符
 
 <p>MimeEntity将整个MIME格式分成两部分，以空格（\r\n\r\n）为分割符，空格以上的为MIME头，存放在m_header中，空格以下的为MIME正文，存放在m_body中，可以分别通过调用成员函数header()和body()得到相应的类型值。</p>
 
-<pre><code>#include&lt;iostream&gt;
+<pre><code class="language-text">#include&lt;iostream&gt;
 #include&lt;mimetic/mimetic.h&gt;
     
 using namespace std;
@@ -174,28 +191,230 @@ int main()
 }
 </code></pre>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="15277738508394.html" 
+          title="Previous Post: Mimetic库分析3——Mime头Header">&laquo; Mimetic库分析3——Mime头Header</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="15277718994557.html" 
+          title="Next Post: Mimetic库分析1——安装和使用mimetic">Mimetic库分析1——安装和使用mimetic &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+      <div id="gitalk-container"></div>
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: 'd91ffa1480549c466d2f',
+        clientSecret: '92600b8db63745566efb39c0ad9a15c2462b0008',
+        repo: 'blog.mylonly.com',
+        owner: 'mylonly',
+        admin: ['mylonly'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+      gitalk.render('gitalk-container')
+      </script>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
 
 
-</body>
+
+  </body>
 </html>

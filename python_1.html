@@ -1,342 +1,163 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	Python - 独自一人
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-	</style>
-  
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-				 	<div class="profilepic">
-						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
-					</div>
-            	
-					
-					<h1><a href="index.html">独自一人</a></h1>
-					<p class="subtitle">独自一人,独自Coding...</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="self" href="index.html">Home</a></li>
-						
-						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
-
-
-
-
-
-
-
-
-
-
-<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
-
-								
-
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
-
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-06-24T19:11:42+08:00" itemprop="datePublished">2016/6/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011027951.html" itemprop="url">
-		Python利用Pexpect模拟ssh交互</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><mark>关于Pexpect</mark><br/>
-Pexpect 是 Don Libes 的 Expect 语言的一个 Python 实现，是一个用来启动子程序，并使用正则表达式对程序输出做出特定响应，以此实现与其自动交互的 Python 模块。 Pexpect 的使用范围很广，可以用来实现与 ssh、ftp 、telnet 等程序的自动交互；可以用来自动复制软件安装包并在不同机器自动安装；还可以用来实现软件测试中与命令行交互的自动化。</p>
-</blockquote>
-
-<h5 id="toc_0">本文利用到的Pexpect的类和方法</h5>
-
-<ol>
-<li><p><code>spawn()</code>类:</p>
-
-<pre><code class="language-Python">class spawn:
-    def __init__(self,command,args=[],timeout=30,maxread=2000,\
-    searchwindowsize=None, logfile=None, cwd=None, env=None)
-</code></pre>
-
-<p>spawn是Pexpect模块主要的类，用以实现启动子程序，它有丰富的方法与子程序交互从而实现用户对子程序的控制。它主要使用 pty.fork() 生成子进程，并调用 exec() 系列函数执行 command 参数的内容。</p></li>
-<li><p><code>spawn()</code>类中的<code>expect()</code>函数:</p>
-
-<pre><code class="language-Python">expect(self, pattern, timeout=-1, searchwindowsize=None)
-</code></pre>
-
-<p>在参数中： pattern 可以是正则表达式， pexpect.EOF ， pexpect.TIMEOUT ，或者由这些元素组成的列表。需要注意的是，当 pattern 的类型是一个列表时，且子程序输出结果中不止一个被匹配成功，则匹配返回的结果是缓冲区中最先出现的那个元素，或者是列表中最左边的元素。使用 timeout 可以指定等待结果的超时时间 ，该时间以秒为单位。当超过预订时间时， expect 匹配到pexpect.TIMEOUT。</p></li>
-<li><p><code>spawn()</code>类中的<code>before</code>和<code>after</code>属性:</p>
-
-<p>expect 不断从读入缓冲区中匹配目标正则表达式，当匹配结束时 pexpect 的 before 成员中保存了缓冲区中匹配成功处之前的内容， pexpect 的 after 成员保存的是缓冲区中与目标正则表达式相匹配的内容。</p>
-
-<pre><code class="language-Python">child = pexpect.spawn(&#39;/bin/ls /&#39;) 
-child.expect (pexpect.EOF) 
-print child.before
-</code></pre>
-
-<p>以上代码就是打印在根目录下面执行ls命令后的输出内容</p></li>
-<li><p><code>spawn()</code>类中的send系列函数:</p>
-
-<pre><code class="language-Python">send(self, s) 
-sendline(self, s=&#39;&#39;) 
-sendcontrol(self, char)
-</code></pre>
-
-<p>这些方法用来向子程序发送命令，模拟输入命令的行为。 与 send() 不同的是 sendline() 会额外输入一个回车符 ，更加适合用来模拟对子程序进行输入命令的操作。 当需要模拟发送 “Ctrl+c” 的行为时，还可以使用 sendcontrol() 发送控制字符。</p>
-
-<pre><code class="language-Python">child.sendcontrol(&#39;c&#39;)
-
-</code></pre></li>
-</ol>
-
-<h5 id="toc_1">功能模块分解</h5>
-
-<ol>
-<li><p>首先我们需要一个可以单独的session会话，可以由connect函数创建指定host,username和password的会话子进程</p>
-
-<pre><code>```Python
-PROMPT = [&#39;#&#39;,&#39;$&#39;,&#39;&gt;&#39;,&#39;\$&#39;,&#39;&gt;&gt;&gt;&#39;]
-def createChildSession(host,username,password):
-    command = &#39;ssh &#39;+username+&#39;@&#39;+host
-    child = pexpect.spawn(command)
-    ret = child.expect([pexpect.TIMEOUT,&#39;Are you sure you want to continue connecting&#39;,&#39;[P|p]assword&#39;]+PROMPT)
-    if ret == 0:
-        print(&#39;[-] Error Connecting&#39;)
-        return
-    if ret == 1:
-        child.sendline(&#39;yes&#39;)
-        ret = child.expect([pexpect.TIMEOUT,&#39;[p|P]assword&#39;])
-        if ret == 0:
-            print(&#39;[-] Error Connecting&#39;)
-            return
-        if ret == 1:
-            send_command(password)
-            return
-    if ret == 2:
-        send_command(password)
-        return
-    return child
-```
-利用spawn创建会话之后,利用expect匹配可能存在的返回结果,如果匹配&#39;Are you sure you want to continue connecting&#39; 说明需要确认认证信息，如果直接返回password或者Password`这里利用[p|P]assword正则来匹配`,说明需要输入密码,如果直接是PROMPT中存在的字符，说明直接登录上去了。
-</code></pre></li>
-<li><p>一个单独的执行命令的函数:</p>
-
-<pre><code class="language-Python">def send_command(child,cmd):
-    child.sendline(cmd)
-    child.expect(PROMPT)
-    print(child.before)
-</code></pre>
-
-<p>一旦通过验证,我们就可以用上面的command函数在ssh会话中发送命令，然后等待命令提示符的出现，最后将命令的执行结果通过child.before打印出来。</p></li>
-<li><p>一个包含参数解析的main函数:</p>
-
-<pre><code class="language-Python">def main():
-    parse = optparse.OptionParser(&#39;Usage %prog -H &lt;host&gt; -u &lt;username&gt; -p &lt;password&gt; -c &lt;command&gt;&#39;)
-    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify the host&#39;)
-    parse.add_option(&#39;-u&#39;,dest=&#39;username&#39;,type=&#39;string&#39;,help=&#39;specify the username&#39;)
-    parse.add_option(&#39;-p&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify the password&#39;)    
-    parse.add_option(&#39;-c&#39;,dest=&#39;command&#39;,type=&#39;string&#39;,help=&#39;specify the command&#39;)
-
-    (options,args)=parse.parse_args()
-    host = options.host
-    username = options.username
-    password = options.password
-    command = options.command
-
-    session = createChildSession(host,username,password)
-    send_command(session,command)
-</code></pre>
-
-<p>optparse是一个用来给你的代码添加各种命令参数的库，用其解析出输入的host,username,password已经command,然后调用创建session会话，最后利用send_command向此session发送命令</p></li>
-</ol>
-
-<pre><code class="language-Bash">tianxianggendeiMac:Python-Study Apple$ python ssh.py -H pi.****.com -u root -p ***** -c pwd
-</code></pre>
-
-<p>输出:</p>
-
-<pre><code class="language-Bash"> pwd
-/root
-root@raspberrypi:~
-</code></pre>
-
-<h5 id="toc_2">完整代码</h5>
-
-<pre><code class="language-Python">#!/usr/bin/python
-#-*-coding:utf-8-*-
-# date:2016-6-21
-# author:root
-# 利用pexpect模拟ssh登陆
-
-import pexpect
-import optparse
-
-PROMPT = [&#39;#&#39;,&#39;$&#39;,&#39;&gt;&#39;,&#39;\$&#39;,&#39;&gt;&gt;&gt;&#39;]
-
-def send_command(child,cmd):
-    child.sendline(cmd)
-    child.expect(PROMPT)
-    print(child.before)
-
-def createChildSession(host,username,password):
-    command = &#39;ssh &#39;+username+&#39;@&#39;+host
-    child = pexpect.spawn(command)
-    ret = child.expect([pexpect.TIMEOUT,&#39;Are you sure you want to continue connecting&#39;,&#39;[P|p]assword&#39;]+PROMPT)
-    if ret == 0:
-        print(&#39;[-] Error Connecting&#39;)
-        return
-    if ret == 1:
-        child.sendline(&#39;yes&#39;)
-        ret = child.expect([pexpect.TIMEOUT,&#39;[p|P]assword&#39;])
-        if ret == 0:
-            print(&#39;[-] Error Connecting&#39;)
-            return
-        if ret == 1:
-            send_command(password)
-            return
-    if ret == 2:
-        send_command(password)
-        return
-    return child
-
-def main():
-    parse = optparse.OptionParser(&#39;Usage %prog -H &lt;host&gt; -u &lt;username&gt; -p &lt;password&gt; -c &lt;command&gt;&#39;)
-    parse.add_option(&#39;-H&#39;,dest=&#39;host&#39;,type=&#39;string&#39;,help=&#39;specify the host&#39;)
-    parse.add_option(&#39;-u&#39;,dest=&#39;username&#39;,type=&#39;string&#39;,help=&#39;specify the username&#39;)
-    parse.add_option(&#39;-p&#39;,dest=&#39;password&#39;,type=&#39;string&#39;,help=&#39;specify the password&#39;)    
-    parse.add_option(&#39;-c&#39;,dest=&#39;command&#39;,type=&#39;string&#39;,help=&#39;specify the command&#39;)
-
-    (options,args)=parse.parse_args()
-    host = options.host
-    username = options.username
-    password = options.password
-    command = options.command
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
     
-    session = createChildSession(host,username,password)
-    send_command(session,command)
+  Python - 独自一人
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
-if __name__ == &#39;__main__&#39;:
-    main()
-</code></pre>
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
-			
-			
-		</div>
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
 
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-30T19:12:12+08:00" itemprop="datePublished">2016/5/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011328774.html" itemprop="url">
-		Scrapy模拟登陆知乎</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="14945011027951.html">
+                
+                  <h1>Python利用Pexpect模拟ssh交互</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	Pexpect 是 Don Libes 的 Expect 语言的一个 Python 实现，是一个用来启动子程序，并使用正则表达式对程序输出做出特定响应，以此实现与其自动交互的 Python 模块。 Pexpect 的使用范围很广，可以用来实现与 ssh、ftp 、telnet 等程序的自动交互；可以用来自动复制软件安装包并在不同机器自动安装；还可以用来实现软件测试中与命令行交互的自动化。
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/06/24</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011328774.html">
+                
+                  <h1>Scrapy模拟登陆知乎</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
 感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
 </a></p>
 
@@ -364,13 +185,13 @@ if __name__ == &#39;__main__&#39;:
 
 <p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
 
-<pre><code class="language-Python">def start_requests(self):
+<pre><code class="language-python">def start_requests(self):
         return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
 </code></pre>
 
 <p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
 
-<pre><code class="language-Pythoh">headers = {
+<pre><code class="language-pythoh">headers = {
     &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
     &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
     &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
@@ -385,7 +206,7 @@ if __name__ == &#39;__main__&#39;:
 
 <p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
 
-<pre><code class="language-Python">def post_login(self,response):
+<pre><code class="language-python">def post_login(self,response):
         self.log(&quot;preparing login...&quot;)
         xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
         self.log(xsrf)
@@ -405,27 +226,27 @@ if __name__ == &#39;__main__&#39;:
 <li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
 </ol>
 
-<pre><code class="language-Python">def after_login(self,response):
+<pre><code class="language-python">def after_login(self,response):
         for url in self.start_urls:
             yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
 </code></pre>
 
 <p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
 
-<pre><code class="language-Pythoh">rules = (
+<pre><code class="language-pythoh">rules = (
         Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
     )
 </code></pre>
 
 <p>同时提供request_question函数</p>
 
-<pre><code class="language-Python">def request_question(self,request):
+<pre><code class="language-python">def request_question(self,request):
         return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
 </code></pre>
 
 <p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
 
-<pre><code class="language-Python">def parse_question(self,response):
+<pre><code class="language-python">def parse_question(self,response):
         sel = Selector(response)
         item = zhihuItem()
         item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
@@ -439,7 +260,7 @@ if __name__ == &#39;__main__&#39;:
 
 <h3 id="toc_2">完整代码</h3>
 
-<pre><code class="language-Python">import urllib2
+<pre><code class="language-python">import urllib2
 import os
 import re
 import codecs
@@ -505,31 +326,40 @@ class zhihuSpider(CrawlSpider):
         return item
 </code></pre>
 
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/30</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-			
-			
-		</div>
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011548149.html">
+                
+                  <h1>简单Scrapy爬虫</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>只是个小小的demo，自己测试了下，总共down了20几张图片</p>
 
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T19:12:34+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011548149.html" itemprop="url">
-		简单Scrapy爬虫</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>只是个小小的demo，自己测试了下，总共down了20几张图片</p>
-
-<pre><code class="language-Python">#coding: utf-8 #############################################################
+<pre><code class="language-python">#coding: utf-8 #############################################################
 # File Name: spiders/wallpaper.py
 # Author: mylonly
 # mail: tianxianggen@gmail.com
@@ -583,29 +413,38 @@ class wallpaper(CrawlSpider):
  
 </code></pre>
 
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T19:11:56+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='python.html'>Python</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14945011166438.html" itemprop="url">
-		Scrapy——crawlSpider爬虫</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011166438.html">
+                
+                  <h1>Scrapy——crawlSpider爬虫</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
  <br/>
 要利用crawSpider和BaseSpider的区别在于crawSpider提供了一组Rule对象列表，这些Rule对象规定了爬虫抓取链接的行为，Rule规定的链接才会被抓取，交给相应的callback函数去处理。<br/>
   <br/>
@@ -624,14 +463,17 @@ rules = (
 <p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
  <br/>
 SmglLinkExtractor主要参数：<br/>
+ </p>
+
+<ul>
+<li>allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。</li>
+<li>deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。</li>
+<li>allow_domains：会被提取的链接的domains。</li>
+<li>deny_domains：一定不会被提取链接的domains。</li>
+<li>restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
  <br/>
-- allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。<br/>
-- deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。<br/>
-- allow_domains：会被提取的链接的domains。<br/>
-- deny_domains：一定不会被提取链接的domains。<br/>
-- restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
- <br/>
-下面的内容就是利用Selector解析获得的response并赋值个item就行了：</p>
+下面的内容就是利用Selector解析获得的response并赋值个item就行了：</li>
+</ul>
 
 <pre><code class="language-python">#coding: utf-8 #############################################################
 # File Name: spiders/wallpaper.py
@@ -750,38 +592,220 @@ class wallpaperPipeline(object):
 本例中我将传回的items数据存放到了数据库中，如果你不想这样，可以将我注释掉的self.download()取消注释，不反悔items，就可以将找到的所有图片链接全部下载下来，不过要找个大点的地方存储，因为总共有5W多条：<br/>
 <img src="https://pic.mylonly.com/2016-06-29_061712481319744.png" alt="2016-06-29_061712481319744.png"/></p>
 
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="python.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
 			
-			
+			</p>
+			  </div>
+			</div>
 		</div>
+	</div><!-- large 8 -->
 
-	</article>
-  
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
 
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
 </div>
-<nav id="pagenavi">
-	 <a class="prev" href="python.html">Prev</a>  
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
-
-</div>
-
-
-
-        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+        </section>
+      </div>
+    </div>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
 
 
-</body>
+
+  </body>
 </html>

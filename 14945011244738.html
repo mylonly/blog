@@ -1,130 +1,147 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	Scrapy抓取Ajax动态页面 - 独自一人
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  Scrapy抓取Ajax动态页面 - 独自一人
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-				 	<div class="profilepic">
-						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
-					</div>
-            	
-					
-					<h1><a href="index.html">独自一人</a></h1>
-					<p class="subtitle">独自一人,独自Coding...</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="self" href="index.html">Home</a></li>
-						
-						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  <meta name="keywords" content="Scrapy,爬虫,Python-Webkit" />
+  <meta name="description" content="Scrapy抓取Ajax动态页面" />
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Scrapy抓取Ajax动态页面</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2016/07/04</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='python.html'>Python</a></span>
+           
+         
+          <span class="comments">
+            
 
-<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+            
+          </span>
 
-								
+        </div>
+      </div><!-- article -->
 
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Scrapy抓取Ajax动态页面</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
+      <div class="article-content">
+      <blockquote>
 <p>一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦。</p>
 </blockquote>
 
@@ -160,102 +177,92 @@
 
 <ol>
 <li><p>定义Item</p>
-
-<pre><code class="language-Python">class tbModelItem(scrapy.Item):
-    avatarUrl = scrapy.Field()
-    cardUrl = scrapy.Field()
-    city = scrapy.Field()
-    height = scrapy.Field()
-    identityUrl = scrapy.Field()
-    modelUrl = scrapy.Field()
-    realName = scrapy.Field()
-    totalFanNum = scrapy.Field()
-    totalFavorNum = scrapy.Field()
-    userId = scrapy.Field()
-    viewFlag = scrapy.Field()
+<pre><code class="language-python">class tbModelItem(scrapy.Item):
+    avatarUrl = scrapy.Field()<br/>
+    cardUrl = scrapy.Field()<br/>
+    city = scrapy.Field()<br/>
+    height = scrapy.Field()<br/>
+    identityUrl = scrapy.Field()<br/>
+    modelUrl = scrapy.Field()<br/>
+    realName = scrapy.Field()<br/>
+    totalFanNum = scrapy.Field()<br/>
+    totalFavorNum = scrapy.Field()<br/>
+    userId = scrapy.Field()<br/>
+    viewFlag = scrapy.Field()<br/>
     weight = scrapy.Field()
 </code></pre>
-
 <p>根据上面的分析得到的json格式，我们可以很轻松的定义出item</p></li>
 <li><p>Spider编写</p>
-
-<pre><code class="language-Python">import urllib2
-import os
-import re
-import codecs
-import json
-import sys
-from scrapy import Spider
-from scrapy.selector import Selector
-from MySpider.items import tbModelItem,tbThumbItem
-from scrapy.http import Request
-from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
-
-reload(sys)
-sys.setdefaultencoding(&#39;utf8&#39;)
-
-class tbmmSpider(Spider):
-    name = &quot;tbmm&quot;
-    allow_domians = [&quot;mm.taobao.com&quot;]
-
-    custom_settings = {
-        &quot;DEFAULT_REQUEST_HEADERS&quot;:{
-            &#39;authority&#39;:&#39;mm.taobao.com&#39;,
-            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,
-            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,
-            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,
-            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,
-            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,
-            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,
-            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,
-            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;
-        },
-        &quot;ITEM_PIPELINES&quot;:{
-            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300
-        }
-    } 
-
-    def start_requests(self):
-        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;
-        requests = []
-        for i in range(1,60):
-            formdata = {&quot;q&quot;:&quot;&quot;,
-                        &quot;viewFlag&quot;:&quot;A&quot;,
-                        &quot;sortType&quot;:&quot;default&quot;,
-                        &quot;searchStyle&quot;:&quot;&quot;,
-                        &quot;searchRegion&quot;:&quot;city:&quot;,
-                        &quot;searchFansNum&quot;:&quot;&quot;,
-                        &quot;currentPage&quot;:str(i),
-                        &quot;pageSize&quot;:&quot;100&quot;}
-            request = FormRequest(url,callback=self.parse_model,formdata=formdata)
-            requests.append(request)
-        return requests
-
-    def parse_model(self,response):
-        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))
-        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]
-        modelItems = []
-        for dict in models:
-            modelItem = tbModelItem()
-            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]
-            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]
-            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]
-            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]
-            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]
-            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]
-            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]
-            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]
-            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]
-            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]
-            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]
-            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]
-            modelItems.append(modelItem)
+<pre><code class="language-python">import urllib2
+import os<br/>
+import re<br/>
+import codecs<br/>
+import json<br/>
+import sys<br/>
+from scrapy import Spider<br/>
+from scrapy.selector import Selector<br/>
+from MySpider.items import tbModelItem,tbThumbItem<br/>
+from scrapy.http import Request<br/>
+from scrapy.http import FormRequest<br/>
+from scrapy.utils.response import open_in_browser<br/>
+reload(sys)<br/>
+sys.setdefaultencoding(&#39;utf8&#39;)<br/>
+class tbmmSpider(Spider):<br/>
+    name = &quot;tbmm&quot;<br/>
+    allow_domians = [&quot;mm.taobao.com&quot;]<br/>
+    custom_settings = {<br/>
+        &quot;DEFAULT_REQUEST_HEADERS&quot;:{<br/>
+            &#39;authority&#39;:&#39;mm.taobao.com&#39;,<br/>
+            &#39;accept&#39;:&#39;application/json, text/javascript, */*; q=0.01&#39;,<br/>
+            &#39;accept-encoding&#39;:&#39;gzip, deflate&#39;,<br/>
+            &#39;accept-language&#39;:&#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,<br/>
+            &#39;origin&#39;:&#39;https://mm.taobao.com&#39;,<br/>
+            &#39;referer&#39;:&#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,<br/>
+            &#39;user-agent&#39;:&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,<br/>
+            &#39;x-requested-with&#39;:&#39;XMLHttpRequest&#39;,<br/>
+            &#39;cookie&#39;:&#39;cna=/oN/DGwUYmYCATFN+mKOnP/h; tracknick=adimtxg; _cc_=Vq8l%2BKCLiw%3D%3D; tg=0; thw=cn; v=0; cookie2=1b2b42f305311a91800c25231d60f65b; t=1d8c593caba8306c5833e5c8c2815f29; _tb_token_=7e6377338dee7; CNZZDATA30064598=cnzz_eid%3D1220334357-1464871305-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464871305; CNZZDATA30063600=cnzz_eid%3D1139262023-1464874171-https%253A%252F%252Fmm.taobao.com%252F%26ntime%3D1464874171; JSESSIONID=8D5A3266F7A73C643C652F9F2DE1CED8; uc1=cookie14=UoWxNejwFlzlcw%3D%3D; l=Ahoatr-5ycJM6M9x2/4hzZdp6so-pZzm; mt=ci%3D-1_0&#39;<br/>
+        },<br/>
+        &quot;ITEM_PIPELINES&quot;:{<br/>
+            &#39;MySpider.pipelines.tbModelPipeline&#39;: 300<br/>
+        }<br/>
+    } <br/>
+    def start_requests(self):<br/>
+        url = &quot;https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8&quot;<br/>
+        requests = []<br/>
+        for i in range(1,60):<br/>
+            formdata = {&quot;q&quot;:&quot;&quot;,<br/>
+                        &quot;viewFlag&quot;:&quot;A&quot;,<br/>
+                        &quot;sortType&quot;:&quot;default&quot;,<br/>
+                        &quot;searchStyle&quot;:&quot;&quot;,<br/>
+                        &quot;searchRegion&quot;:&quot;city:&quot;,<br/>
+                        &quot;searchFansNum&quot;:&quot;&quot;,<br/>
+                        &quot;currentPage&quot;:str(i),<br/>
+                        &quot;pageSize&quot;:&quot;100&quot;}<br/>
+            request = FormRequest(url,callback=self.parse_model,formdata=formdata)<br/>
+            requests.append(request)<br/>
+        return requests<br/>
+    def parse_model(self,response):<br/>
+        jsonBody = json.loads(response.body.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;))<br/>
+        models = jsonBody[&#39;data&#39;][&#39;searchDOList&#39;]<br/>
+        modelItems = []<br/>
+        for dict in models:<br/>
+            modelItem = tbModelItem()<br/>
+            modelItem[&#39;avatarUrl&#39;] = dict[&#39;avatarUrl&#39;]<br/>
+            modelItem[&#39;cardUrl&#39;] = dict[&#39;cardUrl&#39;]<br/>
+            modelItem[&#39;city&#39;] = dict[&#39;city&#39;]<br/>
+            modelItem[&#39;height&#39;] = dict[&#39;height&#39;]<br/>
+            modelItem[&#39;identityUrl&#39;] = dict[&#39;identityUrl&#39;]<br/>
+            modelItem[&#39;modelUrl&#39;] = dict[&#39;modelUrl&#39;]<br/>
+            modelItem[&#39;realName&#39;] = dict[&#39;realName&#39;]<br/>
+            modelItem[&#39;totalFanNum&#39;] = dict[&#39;totalFanNum&#39;]<br/>
+            modelItem[&#39;totalFavorNum&#39;] = dict[&#39;totalFavorNum&#39;]<br/>
+            modelItem[&#39;userId&#39;] = dict[&#39;userId&#39;]<br/>
+            modelItem[&#39;viewFlag&#39;] = dict[&#39;viewFlag&#39;]<br/>
+            modelItem[&#39;weight&#39;] = dict[&#39;weight&#39;]<br/>
+            modelItems.append(modelItem)<br/>
         return modelItems  
 </code></pre>
-
 <p>代码不长，一点一点来分析:</p>
-
 <ol>
 <li>由于分析这个页面并不需要递归遍历网页，所以就不要crawlSpider了，只继承最简单的spider</li>
 <li>custome_setting可用于自定义每个spider的设置，而setting.py中的都是全局属性的，当你的scrapy工程里有多个spider的时候这个custom_setting就显得很有用了</li>
@@ -264,30 +271,26 @@ class tbmmSpider(Spider):
 <li>parse函数里利用json库解析了返回来得数据，赋值给item的相应字段</li>
 </ol></li>
 <li><p>数据后续处理</p>
-
 <p>数据处理也就是我上面配置ITEM_PIPELINES的目的，这里，我将获取到的item数据存储到了本地的mysql数据中，各位也可以通过FEED_URL参数直接输出json格式文本文件</p>
-
-<pre><code class="language-Python">import MySQLdb
-
-class tbModelPipeline(object):
-    def process_item(self,item,spider):
-        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)
-        cursor = db.cursor()
-        db.set_character_set(&#39;utf8&#39;)
-        cursor.execute(&#39;SET NAMES utf8;&#39;)
-        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
-        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
-
-        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\
-                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\
-                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])
-        try:
-                print sql
-                cursor.execute(sql)
-                db.commit()
-        except MySQLdb.Error,e:
-                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
-        db.close()
+<pre><code class="language-python">import MySQLdb
+class tbModelPipeline(object):<br/>
+    def process_item(self,item,spider):<br/>
+        db = MySQLdb.connect(&quot;localhost&quot;,&quot;用户名&quot;,&quot;密码&quot;,&quot;spider&quot;)<br/>
+        cursor = db.cursor()<br/>
+        db.set_character_set(&#39;utf8&#39;)<br/>
+        cursor.execute(&#39;SET NAMES utf8;&#39;)<br/>
+        cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)<br/>
+        cursor.execute(&#39;SET character_set_connection=utf8;&#39;)<br/>
+        sql =&quot;INSERT INTO tb_model(user_id,avatar_url,card_url,city,height,identity_url,model_url,real_name,total_fan_num,total_favor_num,view_flag,weight)\<br/>
+                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;userId&#39;],item[&#39;avatarUrl&#39;],item[&#39;cardUrl&#39;],item[&#39;city&#39;],item[&#39;height&#39;],item[&#39;identityUrl&#39;],\<br/>
+                      item[&#39;modelUrl&#39;],item[&#39;realName&#39;],item[&#39;totalFanNum&#39;],item[&#39;totalFavorNum&#39;],item[&#39;viewFlag&#39;],item[&#39;weight&#39;])<br/>
+        try:<br/>
+                print sql<br/>
+                cursor.execute(sql)<br/>
+                db.commit()<br/>
+        except MySQLdb.Error,e:<br/>
+                print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])<br/>
+        db.close()<br/>
         return item
 </code></pre></li>
 </ol>
@@ -310,27 +313,24 @@ class tbModelPipeline(object):
 
 <ol>
 <li><p>获取相册列表的接口是一个GET请求，其中只有一个很重要的user_id，而这个user_id在上面拿去模特的基本信息已经拿到了，还有个page参数用于标识获取的是第几页数据(由于这个是第一页，并没有在url中显现出来，可以通过返回的html中包含的totalPage元素获得)不过这个接口的返回就不是标准的json格式了，而是一段html，这时候又到了利用scrapy中提供的强大的xpath功能了</p>
-
-<pre><code class="language-Python">def parse_album(self,response):
-   sel = Selector(response)
-   tbThumbItems = []
-   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       
-   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()
-   user_id = response.meta[&#39;user_id&#39;]
-   for i in range(0,len(thumb_url_list)-1):
-       thumbItem = tbThumbItem()
-       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)
-       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]
-       thumbItem[&#39;thumb_userId&#39;] = str(user_id)
-       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])
-       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]
-       tbThumbItems.append(thumbItem)
+<pre><code class="language-python">def parse_album(self,response):
+   sel = Selector(response)<br/>
+   tbThumbItems = []<br/>
+   thumb_url_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/@href&quot;).extract()       <br/>
+   thumb_name_list = sel.xpath(&quot;//div[@class=&#39;mm-photo-cell-middle&#39;]//h4//a/text()&quot;).extract()<br/>
+   user_id = response.meta[&#39;user_id&#39;]<br/>
+   for i in range(0,len(thumb_url_list)-1):<br/>
+       thumbItem = tbThumbItem()<br/>
+       thumbItem[&#39;thumb_name&#39;] = thumb_name_list[i].replace(&#39;\r\n&#39;,&#39;&#39;).replace(&#39; &#39;,&#39;&#39;)<br/>
+       thumbItem[&#39;thumb_url&#39;] = thumb_url_list[i]<br/>
+       thumbItem[&#39;thumb_userId&#39;] = str(user_id)<br/>
+       temp = self.urldecode(thumbItem[&#39;thumb_url&#39;])<br/>
+       thumbItem[&#39;thumb_id&#39;] = temp[&#39;album_id&#39;][0]<br/>
+       tbThumbItems.append(thumbItem)<br/>
    return tbThumbItems
 </code></pre></li>
 <li><p>获取相册里照片的接口就是一个完全的json格式的接口了,其中参数包括我们已经拿到的user_id以及album_id，page的最大范围totalPage依然可以通过第一次返回的response中的totalPage字段获得</p>
-
 <p><img src="https://pic.mylonly.com/2016-07-04_17:25:23.jpg" alt="2016-07-04_17:25:23.jpg"/></p>
-
 <p><img src="https://pic.mylonly.com/2016-07-04_17:25:46.jpg" alt="2016-07-04_17:25:46.jpg"/></p></li>
 </ol>
 
@@ -341,28 +341,230 @@ class tbModelPipeline(object):
 <li>获取相册和相册里的照片列表写的比较简略，基本没展示什么代码，这样写是有原因的:一个是因为我已经挂了代码的链接,而且后面这两部分的原理和我主要讲的第一部分获取模特信息的原理基本类似，不想花太多的篇幅花在这种重复的内容上，另外一个我希望想掌握Scrapy的同学能在明白我第一部分的讲解下自己能顺利完成后面的工作，遇到不明白的时候可以看看我Github上的源码，看看有什么不对的地方，只有自己写一遍才能掌握，这是编程界的硬道理。</li>
 </ol>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14945010337427.html" 
+          title="Previous Post: 利用树莓派搭建迅雷远程下载服务器">&laquo; 利用树莓派搭建迅雷远程下载服务器</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14945009892942.html" 
+          title="Next Post: 利用Github的Webhook功能和Node.js完成项目的自动部署">利用Github的Webhook功能和Node.js完成项目的自动部署 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+      <div id="gitalk-container"></div>
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: 'd91ffa1480549c466d2f',
+        clientSecret: '92600b8db63745566efb39c0ad9a15c2462b0008',
+        repo: 'blog.mylonly.com',
+        owner: 'mylonly',
+        admin: ['mylonly'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+      gitalk.render('gitalk-container')
+      </script>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
 
 
-</body>
+
+  </body>
 </html>

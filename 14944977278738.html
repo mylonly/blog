@@ -1,102 +1,333 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	Swift要点 - 独自一人
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  Swift要点 - 独自一人
   
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
-</head>
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-				 	<div class="profilepic">
-						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
-					</div>
-            	
-					
-					<h1><a href="index.html">独自一人</a></h1>
-					<p class="subtitle">独自一人,独自Coding...</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="self" href="index.html">Home</a></li>
-						
-						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
-						
-						</ul>
-					</nav>
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
 
-					<nav id="sub-nav">
-						<div class="social">
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
 
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Swift要点</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2016/10/11</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='ios.html'>iOS</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
+
+<ol>
+<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
+<pre><code class="language-swift">let apples = 3
+let oranges = 5<br/>
+let appleSummary = &quot;I have \(apples) apples.&quot;<br/>
+let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-text">&quot;I have 3 apples&quot;
+&quot;I have 8 pieces of fruit&quot;
+</code></pre></li>
+<li><p>Swift声明数组或者字典可以声明指定类型</p>
+<pre><code class="language-swift">let emptyArray = [String]()
+let emptyDictionary = [String: Float]()
+</code></pre></li>
+<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
+<pre><code class="language-swift"> if score &gt; 50 {
+    teamScore += 3<br/>
+} else {<br/>
+       teamScore += 1<br/>
+}
+</code></pre>
+<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
+<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
+<pre><code class="language-swift">let vegetable = &quot;red pepper&quot;
+switch vegetable {<br/>
+case &quot;celery&quot;:<br/>
+    print(&quot;Add some raisins and make ants on a  log.&quot;)<br/>
+case &quot;cucumber&quot;, &quot;watercress&quot;:<br/>
+    print(&quot;That would make a good tea sandwich.&quot;)<br/>
+case let x where x.hasSuffix(&quot;pepper&quot;):<br/>
+    print(&quot;Is it a spicy \(x)?&quot;)<br/>
+default:<br/>
+    print(&quot;Everything tastes good in soup.&quot;)<br/>
+}
+</code></pre>
+<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
+<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
+<li><p>do{}while()被repeat{}while()取代</p>
+<pre><code class="language-swift">var m = 2
+repeat {<br/>
+    m = m * 2<br/>
+} while m &lt; 100<br/>
+print(m)
+</code></pre></li>
+<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
+<pre><code class="language-swift">var firstForLoop = 0
+for i in 0..&lt;4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)<br/>
+var firstForLoop = 0<br/>
+for i in 0...4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)
+</code></pre></li>
+<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:</p>
+<pre><code class="language-swift">func sumOf(numbers: Int...) -&gt; Int {
+var sum = 0<br/>
+for number in numbers {<br/>
+    sum += number<br/>
+}<br/>
+return sum<br/>
+}<br/>
+sumOf()<br/>
+sumOf(42, 597, 12)
+</code></pre></li>
+<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
+<pre><code class="language-swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
+func addOne(number: Int) -&gt; Int {<br/>
+    return 1 + number<br/>
+}<br/>
+return addOne<br/>
+}<br/>
+var increment = makeIncrementer()<br/>
+increment(7)
+</code></pre>
+<p>同理，函数也可以当做参数传入函数,</p>
+<pre><code class="language-swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
+for item in list {<br/>
+    if condition(item) {<br/>
+        return true<br/>
+    }<br/>
+}<br/>
+return false<br/>
+}<br/>
+func lessThanTen(number: Int) -&gt; Bool {<br/>
+    return number &lt; 10<br/>
+}<br/>
+var numbers = [20, 19, 7, 12]<br/>
+hasAnyMatches(numbers, condition: lessThanTen)
+</code></pre></li>
+<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
+<pre><code class="language-swift">class NamedShape {
+var numberOfSides: Int = 0<br/>
+var name: String<br/>
+init(name: String) {<br/>
+    self.name = name<br/>
+}<br/>
+func simpleDescription() -&gt; String {<br/>
+        return &quot;A shape with \(numberOfSides) sides.&quot;<br/>
+  }<br/>
+}<br/>
+class Square: NamedShape {<br/>
+var sideLength: Double<br/>
+init(sideLength: Double, name: String) {<br/>
+    self.sideLength = sideLength<br/>
+    super.init(name: name)<br/>
+    numberOfSides = 4<br/>
+}<br/>
+func area() -&gt;  Double {<br/>
+    return sideLength * sideLength<br/>
+}<br/>
+override func simpleDescription() -&gt; String {<br/>
+        return &quot;A square with sides of length \(sideLength).&quot;<br/>
+    }<br/>
+}<br/>
+let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)<br/>
+test.area()<br/>
+test.simpleDescription()
+</code></pre></li>
+</ol>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14945010588526.html" 
+          title="Previous Post: 树莓派3命令行连接WiFi和蓝牙设备">&laquo; 树莓派3命令行连接WiFi和蓝牙设备</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14944977101213.html" 
+          title="Next Post: Swift学习要点-基础部分">Swift学习要点-基础部分 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+      <div id="gitalk-container"></div>
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: 'd91ffa1480549c466d2f',
+        clientSecret: '92600b8db63745566efb39c0ad9a15c2462b0008',
+        repo: 'blog.mylonly.com',
+        owner: 'mylonly',
+        admin: ['mylonly'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+      gitalk.render('gitalk-container')
+      </script>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
 
 
 
@@ -108,192 +339,158 @@
 
 <a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
 <a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
 
-								
+             
 
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
 
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Swift要点</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
 
-<ol>
-<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
 
-<pre><code class="language-Swift">let apples = 3
-let oranges = 5
-let appleSummary = &quot;I have \(apples) apples.&quot;
-let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
-</code></pre>
+                </div>
+              </div>
 
-<p>输出:</p>
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
 
-<pre><code>&quot;I have 3 apples&quot;
-&quot;I have 8 pieces of fruit&quot;
-</code></pre></li>
-<li><p>Swift声明数组或者字典可以声明指定类型</p>
+</div><!-- row -->
 
-<pre><code class="language-Swift">let emptyArray = [String]()
-let emptyDictionary = [String: Float]()
-</code></pre></li>
-<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
 
-<pre><code class="language-Swift"> if score &gt; 50 {
-    teamScore += 3
-} else {
-       teamScore += 1
-}
-</code></pre>
-
-<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
-<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
-
-<pre><code class="language-Swift">let vegetable = &quot;red pepper&quot;
-switch vegetable {
-case &quot;celery&quot;:
-    print(&quot;Add some raisins and make ants on a  log.&quot;)
-case &quot;cucumber&quot;, &quot;watercress&quot;:
-    print(&quot;That would make a good tea sandwich.&quot;)
-case let x where x.hasSuffix(&quot;pepper&quot;):
-    print(&quot;Is it a spicy \(x)?&quot;)
-default:
-    print(&quot;Everything tastes good in soup.&quot;)
-}
-</code></pre>
-
-<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
-<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
-<li><p>do{}while()被repeat{}while()取代</p>
-
-<pre><code class="language-Swift">var m = 2
-repeat {
-    m = m * 2
-} while m &lt; 100
-print(m)
-</code></pre></li>
-<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
-
-<pre><code class="language-Swift">var firstForLoop = 0
-for i in 0..&lt;4 {
-    firstForLoop += i
-}
-print(firstForLoop)
-
-var firstForLoop = 0
-for i in 0...4 {
-    firstForLoop += i
-}
-print(firstForLoop)
-</code></pre></li>
-<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:<br/>
-<code>Swift<br/>
-func sumOf(numbers: Int...) -&gt; Int {<br/>
-var sum = 0<br/>
-for number in numbers {<br/>
-    sum += number<br/>
-}<br/>
-return sum<br/>
-}<br/>
-sumOf()<br/>
-sumOf(42, 597, 12)<br/>
-</code></p></li>
-<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
-
-<pre><code class="language-Swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
-func addOne(number: Int) -&gt; Int {
-    return 1 + number
-}
-return addOne
-}
-var increment = makeIncrementer()
-increment(7)
-</code></pre>
-
-<p>同理，函数也可以当做参数传入函数,</p>
-
-<pre><code class="language-Swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
-for item in list {
-    if condition(item) {
-        return true
-    }
-}
-return false
-}
-func lessThanTen(number: Int) -&gt; Bool {
-    return number &lt; 10
-}
-var numbers = [20, 19, 7, 12]
-hasAnyMatches(numbers, condition: lessThanTen)
-</code></pre></li>
-<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
-
-<pre><code class="language-Swift">class NamedShape {
-var numberOfSides: Int = 0
-var name: String
-
-init(name: String) {
-    self.name = name
-}
-
-func simpleDescription() -&gt; String {
-        return &quot;A shape with \(numberOfSides) sides.&quot;
-  }
-}
-
-class Square: NamedShape {
-var sideLength: Double
-
-init(sideLength: Double, name: String) {
-    self.sideLength = sideLength
-    super.init(name: name)
-    numberOfSides = 4
-}
-
-func area() -&gt;  Double {
-    return sideLength * sideLength
-}
-
-override func simpleDescription() -&gt; String {
-        return &quot;A square with sides of length \(sideLength).&quot;
-    }
-}
-let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)
-test.area()
-test.simpleDescription()
-</code></pre></li>
-</ol>
-
-		</div>
-	</article>
-	<div class="share-comment">
-	 
-
-	  
-
-	  
-
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+        </section>
+      </div>
+    </div>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
 
 
-</body>
+
+  </body>
 </html>

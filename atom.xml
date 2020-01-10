@@ -2,22 +2,981 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[独自一人]]></title>
-  <link href="https://blog.mylonly.com/atom.xml" rel="self"/>
-  <link href="https://blog.mylonly.com/"/>
-  <updated>2018-07-07T20:32:04+08:00</updated>
-  <id>https://blog.mylonly.com/</id>
+  <link href="https://blog.xgtian.com/atom.xml" rel="self"/>
+  <link href="https://blog.xgtian.com/"/>
+  <updated>2020-01-10T14:13:59+08:00</updated>
+  <id>https://blog.xgtian.com/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
-  <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+  <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 测试磁盘性能]]></title>
+    <link href="https://blog.xgtian.com/15595559159421.html"/>
+    <updated>2019-06-03T17:58:35+08:00</updated>
+    <id>https://blog.xgtian.com/15595559159421.html</id>
+    <content type="html"><![CDATA[
+<p>测试场景：</p>
 
+<p>100%随机，100%读， 4K</p>
+
+<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=randread -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=rand_100read_4k
+</code></pre>
+
+<p>100%随机，100%写， 4K</p>
+
+<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=randwrite -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=rand_100write_4k
+</code></pre>
+
+<p>100%顺序，100%读 ，4K</p>
+
+<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=read -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=sqe_100read_4k
+</code></pre>
+
+<p>100%顺序，100%写 ，4K</p>
+
+<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=write -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=sqe_100write_4k
+</code></pre>
+
+<p>100%随机，70%读，30%写 4K</p>
+
+<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=randrw -rwmixread=70 -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=randrw_70read_4k
+</code></pre>
+
+<p>io=执行了多少M的IO</p>
+
+<p>bw=平均IO带宽<br/>
+iops=IOPS<br/>
+runt=线程运行时间<br/>
+slat=提交延迟<br/>
+clat=完成延迟<br/>
+lat=响应时间<br/>
+bw=带宽<br/>
+cpu=利用率<br/>
+IO depths=io队列<br/>
+IO submit=单个IO提交要提交的IO数<br/>
+IO complete=Like the above submit number, but for completions instead.<br/>
+IO issued=The number of read/write requests issued, and how many of them were short.<br/>
+IO latencies=IO完延迟的分布</p>
+
+<p>io=总共执行了多少size的IO<br/>
+aggrb=group总带宽<br/>
+minb=最小.平均带宽.<br/>
+maxb=最大平均带宽.<br/>
+mint=group中线程的最短运行时间.<br/>
+maxt=group中线程的最长运行时间.</p>
+
+<p>ios=所有group总共执行的IO数.<br/>
+merge=总共发生的IO合并数.<br/>
+ticks=Number of ticks we kept the disk busy.<br/>
+io_queue=花费在队列上的总共时间.<br/>
+util=磁盘利用率</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Docker]]></title>
+    <link href="https://blog.xgtian.com/15516896130866.html"/>
+    <updated>2019-03-04T16:53:33+08:00</updated>
+    <id>https://blog.xgtian.com/15516896130866.html</id>
+    <content type="html"><![CDATA[
+<ol>
+<li>默认网桥上的容器只能通过 IP 地址互相访问，除非你使用 --link 选项，这被认为是遗留的。在用户自定义网桥中，容器之间可以通过名字会别名互相访问</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu安装开发者工具包(make,g++,cc之类工具)]]></title>
+    <link href="https://blog.xgtian.com/15480624203516.html"/>
+    <updated>2019-01-21T17:20:20+08:00</updated>
+    <id>https://blog.xgtian.com/15480624203516.html</id>
+    <content type="html"><![CDATA[
+<pre><code class="language-text">sudo apt-get install build-essential
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[别人的vim配置文件]]></title>
+    <link href="https://blog.xgtian.com/15477022109795.html"/>
+    <updated>2019-01-17T13:16:50+08:00</updated>
+    <id>https://blog.xgtian.com/15477022109795.html</id>
+    <content type="html"><![CDATA[
+<ol>
+<li><p>下载vundle插件</p>
+<pre><code class="language-text">git clonehttps://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+</code></pre></li>
+<li><p>拷贝至~/.vimrc</p>
+<pre><code class="language-text">
+&quot;========================================  <br/>
+&quot; File Name: .vimrc  <br/>
+&quot; Author: Ricky.K <br/>
+&quot; Description: Vim配置文档  <br/>
+&quot; Date: 2014.7.12  <br/>
+&quot;========================================  <br/>
+let mapleader = &#39;,&#39;  <br/>
+let g:mapleader = &#39;,&#39;  <br/>
+&quot;==========================================<br/>
+&quot; General Settings<br/>
+&quot;==========================================<br/>
+&quot; 开启语法高亮  <br/>
+syntax enable  <br/>
+&quot; 开启语法高亮<br/>
+syntax on  <br/>
+&quot; 设置字体  <br/>
+set guifont=Monaco\ 12<br/>
+&quot; 设置历史记录条数  <br/>
+set history=2000  <br/>
+&quot; 检测文件类型  <br/>
+filetype on  <br/>
+&quot; 针对不同的文件，采用不同的缩进方式  <br/>
+filetype indent on  <br/>
+&quot; 允许插件  <br/>
+filetype plugin on  <br/>
+&quot; 启动自动补全<br/>
+filetype plugin indent on<br/>
+&quot; 文件修改之后自动读入<br/>
+set autoread<br/>
+&quot; 启动后不显示提示<br/>
+&quot;set shortmess=atI<br/>
+&quot; 备份,到另一个位置. 防止误删, 目前是取消备份<br/>
+&quot;set backup<br/>
+&quot;set backupext=.bak<br/>
+&quot;set backupdir=/tmp/vimbk/<br/>
+&quot; 设置取消备份，禁止临时文件生成  <br/>
+set nobackup  <br/>
+set noswapfile  <br/>
+&quot; create undo file<br/>
+set undolevels=1000 &quot; how many undos<br/>
+set undoreload=10000 &quot; number of lines to save for undo<br/>
+if v:version &gt;= 730<br/>
+    set undofile     &quot; keep a persistent backup file<br/>
+    set undodir=/tmp/vimundo/<br/>
+endif<br/>
+&quot;set wildignore=*.swp,*.bak,*.pyc,*.class,.svn<br/>
+&quot; 显示当前横竖线  <br/>
+&quot;set cursorline  <br/>
+&quot;set cursorcolumn  <br/>
+&quot; 设置退出Vim之后内容显示在终端屏幕，可以用于查看和复制<br/>
+&quot; 好处:误删什么，如果以前屏幕打开可以用来找回<br/>
+&quot; set t_ti= t_te=<br/>
+&quot; 设置在Vim中可以使用鼠标，防止终端无法拷贝  <br/>
+set mouse=a  <br/>
+&quot; 修复ctrl+m多光标操作选择的bug,但是改变了ctrl+v进行字符选中将包含光标下的字符<br/>
+&quot; set selection=inclusive<br/>
+&quot; set selectmode=mouse,key<br/>
+&quot; no errors sound<br/>
+set title &quot; change ther terminal&#39;s title<br/>
+set novisualbell &quot; don&#39;t beep<br/>
+set noerrorbells &quot; don&#39;t beep<br/>
+set t_vb=<br/>
+set tm=500<br/>
+&quot; remember info about open buffers on close<br/>
+set viminfo^=%<br/>
+&quot; for regular expression turn magic on<br/>
+set magic<br/>
+&quot; configure backspace so it acts as it should act<br/>
+set backspace=eol,start,indent<br/>
+set whichwrap+=&lt;,&gt;,h,l<br/>
+&quot; FuzzyFinder and ctrlp couldn&#39;t auto change dir you must manual add cd in<br/>
+&quot; command mode, so add this command to auto change current dir for these<br/>
+&quot; plugins<br/>
+&quot; set autochdir<br/>
+&quot;==========================================<br/>
+&quot; Display Settings<br/>
+&quot;==========================================<br/>
+&quot;<br/>
+&quot; 显示当前行号和列号<br/>
+set ruler<br/>
+&quot; 在状态栏显示正在输入的命令<br/>
+set showcmd<br/>
+&quot; 左下角显示当前Vim模式<br/>
+set showmode<br/>
+&quot; 光标移动至少保留的行数<br/>
+&quot;set scrolloff=7<br/>
+&quot; 命令行（在状态行下）的高度，默认为1，这里是2<br/>
+set statusline=%&lt;%f\ %h%m%r%=%k[%{(&amp;fenc==\&quot;\&quot;)?&amp;enc:&amp;fenc}%{(&amp;bomb?\&quot;,BOM\&quot;:\&quot;\&quot;)}]\ %-14.(%l,%c%V%)\ %P<br/>
+&quot; 总是显示状态栏(Powerline需要2行)  <br/>
+set laststatus=2  <br/>
+&quot; 显示行号  <br/>
+set number  <br/>
+&quot; 指定不折行<br/>
+set nowrap  <br/>
+&quot; 设置代码匹配,包括括号匹配情况  <br/>
+set showmatch  <br/>
+&quot; how many tenths of a second to blink when matching brackets<br/>
+&quot; setmatchtime=2<br/>
+&quot; 开启及时搜索(is)  <br/>
+set incsearch  <br/>
+&quot; 设置搜索高亮(hlsearch)  <br/>
+set hls  <br/>
+&quot; 设置搜索时忽略大小写  <br/>
+set ignorecase  <br/>
+&quot; 当搜索的时候尝试smart  <br/>
+set smartcase  <br/>
+&quot; 设置代码折叠<br/>
+&quot;set foldenable<br/>
+&quot; 折叠方法<br/>
+&quot; manual 手工折叠<br/>
+&quot; indent 缩进折叠<br/>
+&quot; expr 表达式折叠<br/>
+&quot; syntax 语法折叠<br/>
+&quot; diff 对没有更改的文件折叠<br/>
+&quot; marker 标记折叠<br/>
+&quot;set foldmethod=indent<br/>
+&quot;set foldlevel=99<br/>
+&quot; 设置C/C++方式自动对齐  <br/>
+set autoindent  <br/>
+set cindent  <br/>
+set smartindent  <br/>
+&quot; 设置tab宽度  <br/>
+set tabstop=4  <br/>
+&quot; 设置自动对齐空格数  <br/>
+set shiftwidth=4  <br/>
+&quot; 按退格键时可以一次删除4个空格<br/>
+&quot;set softtabstop=4<br/>
+ &quot; 编辑的时候将所有的tab设置为空格(expandtab)  <br/>
+ set et  <br/>
+ &quot; 使用Backspace直接删除tab  <br/>
+ set smarttab  <br/>
+&quot; 不在单词中间折行  <br/>
+set lbr  <br/>
+ &quot; 缩进时取整use multiple of shiftwidth when indenting with &#39;&lt;&#39; and &#39;&gt;&#39;<br/>
+ &quot; set shiftround<br/>
+ &quot; a buffer becomes hidden when it is abandoned<br/>
+ &quot; set hidden<br/>
+ &quot; set wildmode=list:longest<br/>
+ &quot; set ttyfast<br/>
+ &quot; 00x增减数字时使用十进制<br/>
+ &quot;set nrformats=<br/>
+ &quot;<br/>
+ &quot;==========================================<br/>
+ &quot; FileEncode Settings<br/>
+ &quot;==========================================<br/>
+ &quot; 设置编码方式  <br/>
+ set encoding=utf-8  <br/>
+ &quot; 设置打开文件的编码格式  <br/>
+ set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1  <br/>
+ set helplang=cn <br/>
+ &quot; 只对终端影响(默认)<br/>
+ set termencoding=utf-8<br/>
+ &quot; use UNIX as the standard file type<br/>
+ set ffs=unix,dos,mac<br/>
+&quot; 如遇Unicode值大于255的文本，不必等到空格再折行。<br/>
+set formatoptions+=m<br/>
+&quot; 合并两行中文时，不在中间加空格：<br/>
+set formatoptions+=B<br/>
+&quot;==========================================<br/>
+&quot; Other Settings<br/>
+&quot;==========================================<br/>
+ &quot;autocmd! bufwritepost _vimrc source %    &quot; .vimrc修改之后自动加载(Windows)<br/>
+ &quot;autocmd! bufwritepost .vimrc source %    &quot; .vimrc修改之后自动加载(Linux)<br/>
+ &quot; 自动补全配置让Vim补全菜单行为跟IDE一致<br/>
+ set completeopt=longest,menu<br/>
+ &quot; 增强模式中的命令行自动完成操作<br/>
+ set wildmenu<br/>
+ &quot; ignore compiled files<br/>
+ &quot; set wildignore=*.o,*~,*.pyc,*.class<br/>
+&quot;离开插入模式后自动关闭预览窗口<br/>
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif<br/>
+&quot;回车即选中当前项<br/>
+inoremap &lt;expr&gt; &lt;CR&gt;       pumvisible() ? &quot;\&lt;C-y&gt;&quot; : &quot;\&lt;CR&gt;&quot;<br/>
+&quot;上下左右键的行为 会显示其他信息<br/>
+inoremap &lt;expr&gt; &lt;Down&gt;     pumvisible() ? &quot;\&lt;C-n&gt;&quot; : &quot;\&lt;Down&gt;&quot;<br/>
+inoremap &lt;expr&gt; &lt;Up&gt;       pumvisible() ? &quot;\&lt;C-p&gt;&quot; : &quot;\&lt;Up&gt;&quot;<br/>
+inoremap &lt;expr&gt; &lt;PageDown&gt; pumvisible() ? &quot;\&lt;PageDown&gt;\&lt;C-p&gt;\&lt;C-n&gt;&quot; : &quot;\&lt;PageDown&gt;&quot;<br/>
+inoremap &lt;expr&gt; &lt;PageUp&gt;   pumvisible() ? &quot;\&lt;PageUp&gt;\&lt;C-p&gt;\&lt;C-n&gt;&quot; : &quot;\&lt;PageUp&gt;&quot;<br/>
+&quot; if this not work ,make sure .viminfo is writable for you<br/>
+if has(&quot;autocmd&quot;)<br/>
+  au BufReadPost * if line(&quot;&#39;\&quot;&quot;) &gt; 1 &amp;&amp; line(&quot;&#39;\&quot;&quot;) &lt;= line(&quot;$&quot;) | exe &quot;normal! g&#39;\&quot;&quot; | endif<br/>
+endif<br/>
+&quot;==========================================<br/>
+&quot; HotKey Settings<br/>
+&quot;==========================================<br/>
+&quot;<br/>
+&quot; 去掉搜索高亮<br/>
+&quot;noremap &lt;silent&gt;&lt;leader&gt;/ :nohls&lt;CR&gt;<br/>
+map &lt;leader&gt;/ :nohls&lt;CR&gt;<br/>
+map &lt;leader&gt;tn :tabnew&lt;cr&gt;<br/>
+map &lt;leader&gt;to :tabonly&lt;cr&gt;<br/>
+map &lt;leader&gt;tc :tabclose&lt;cr&gt;<br/>
+map &lt;leader&gt;tm :tabmove<br/>
+&quot; Opens a new tab with the current buffer&#39;s path<br/>
+&quot; Super useful when editing files in the same directory<br/>
+map &lt;leader&gt;te :tabedit &lt;c-r&gt;=expand(&quot;%:p:h&quot;)&lt;cr&gt;/<br/>
+&quot; Quickly edit/reload the vimrc file<br/>
+nmap &lt;silent&gt; &lt;leader&gt;ev :e $MYVIMRC&lt;CR&gt;<br/>
+nmap &lt;silent&gt; &lt;leader&gt;sv :so $MYVIMRC&lt;CR&gt;<br/>
+&quot; 手动刷新tags(含cscope)<br/>
+nmap tg :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q *&lt;CR&gt;:set tags+=./tags&lt;CR&gt;:!cscope -Rbq&lt;CR&gt;:cs add ./cscope.out .&lt;CR&gt;<br/>
+&quot; 切换buffer<br/>
+nnoremap [b :bp&lt;CR&gt;<br/>
+nnoremap ]b :bn&lt;CR&gt;<br/>
+&quot; cscope设置<br/>
+if has(&quot;cscope&quot;)<br/>
+    set csprg=/usr/bin/cscope   &quot; 制定cscope命令<br/>
+    set csto=0                  &quot; ctags查找顺序，0表示先cscope数据库再标签文件，1表示先标签文件爱<br/>
+    set cst                     &quot; 同时搜索tag文件和cscope数据库<br/>
+    set cscopequickfix=s-,c-,d-,i-,t-,e-  &quot;使用QucikFix窗口来显示cscope查找结果<br/>
+    set nocsverb<br/>
+    if filereadable(&quot;cscope.out&quot;)  &quot;如果当前目录下有cscope.out则加载进Vim<br/>
+        cs add cscope.out<br/>
+    elseif $CSCOPE_DB != &quot;&quot;       &quot;否则只要环境变量不为空就添加制定的数据库到Vim<br/>
+        cs add $CSCOPE_DB<br/>
+    endif<br/>
+    set csverb<br/>
+endif<br/>
+&quot;map &lt;F4&gt;:!cscope -Rbq&lt;CR&gt;:cs add ./cscope.out .&lt;CR&gt;&lt;CR&gt;&lt;CR&gt; :cs reset&lt;CR&gt;<br/>
+&quot; 查找符号<br/>
+nmap &lt;leader&gt;css :cs find s &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt; :copen&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找定义<br/>
+nmap &lt;leader&gt;csg :cs find g &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找被这个函数调用的函数<br/>
+nmap &lt;leader&gt;csd :cs find d &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt; :copen&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找调用这个函数的函数<br/>
+nmap &lt;leader&gt;csc :cs find c &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;:copen&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找这个字符串<br/>
+nmap &lt;leader&gt;cst :cs find t &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;:copen&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找这个egrep匹配模式<br/>
+nmap &lt;leader&gt;cse :cs find e &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;:copen&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找这个文件<br/>
+nmap &lt;leader&gt;csf :cs find f &lt;C-R&gt;=expand(&quot;&lt;cfile&gt;&quot;)&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 查找include这个文件的文件<br/>
+nmap &lt;leader&gt;csi :cs find i &lt;C-R&gt;=expand(&quot;&lt;cfile&gt;&quot;)&lt;CR&gt;&lt;CR&gt; :copen&lt;CR&gt;&lt;CR&gt;<br/>
+&quot; 设定是否使用QuickFix来显示结果<br/>
+set cscopequickfix=s-,c-,d-,i-,t-,e-<br/>
+&quot; QuickFix open and close<br/>
+nnoremap &lt;F11&gt; :copen&lt;CR&gt;<br/>
+nnoremap &lt;F12&gt; :cclose&lt;CR&gt;<br/>
+&quot; QucikFix next and prev<br/>
+nnoremap &lt;F9&gt; :cn&lt;CR&gt;<br/>
+nnoremap &lt;F10&gt; :cp&lt;CR&gt;<br/>
+&quot;==========================================<br/>
+&quot; Theme Settings<br/>
+&quot;==========================================<br/>
+&quot; Set extra options when running in GUI mode<br/>
+&quot;if has(&quot;gui_running&quot;)<br/>
+&quot;    set guifont=Monaco\ 12<br/>
+&quot;    set guioptions-=T<br/>
+&quot;    set guioptions+=e<br/>
+&quot;    set guioptions-=r<br/>
+&quot;    set guioptions-=L<br/>
+&quot;    set guitablabel=%M\ %t<br/>
+&quot;    set showtabline=1 <br/>
+&quot;    set linespace=2 <br/>
+&quot;    set noimd   <br/>
+&quot;    set t_Co=256<br/>
+&quot;endif<br/>
+&quot; 设置主题  <br/>
+set background=dark<br/>
+colorscheme molokai  <br/>
+&quot;colorscheme solarized<br/>
+set t_Co=256<br/>
+&quot; 添加水平滚动条  <br/>
+&quot;set guioptions+=b  <br/>
+&quot; 取消菜单栏和导航栏  <br/>
+set guioptions-=m  <br/>
+set guioptions-=T  <br/>
+&quot; 去除左右两边滚动条<br/>
+set go-=r<br/>
+set go-=L<br/>
+&quot; 设置水平行数和竖直列数  <br/>
+set lines=35  <br/>
+set columns=99  <br/>
+&quot; 使pathogen生效(插件管理器,只需将插件放入bundle，将pathogen.vim放入autoload即可)  <br/>
+&quot;execute pathogen#infect()  <br/>
+&quot;<br/>
+&quot;==========================================<br/>
+&quot; Vundle Settings<br/>
+&quot;==========================================<br/>
+ &quot; 关闭vi的一致性模式，避免以前版本的一些Bug和局限  <br/>
+set nocompatible  <br/>
+filetype off &quot; Vundle必须要求使用filetype off，如果不设置该选项，UltiSnips无法使用  <br/>
+if has(&#39;win32&#39;) || has(&#39;win64&#39;)<br/>
+    set rtp+=$HOME/vimfiles/vundle<br/>
+    call vundle#rc(&#39;$HOME/vimfiles/bundle/&#39;)<br/>
+else<br/>
+   set rtp+=~/.vim/bundle/vundle  <br/>
+   call vundle#rc()  <br/>
+endi<br/>
+&quot; let Vundle manage Vundle   <br/>
+&quot; required  <br/>
+Bundle &#39;gmarik/vundle&#39;  <br/>
+&quot; My bundles here:  <br/>
+&quot; original repos on GitHub  <br/>
+Bundle &#39;tpope/vim-fugitive&#39;  <br/>
+Bundle &#39;Lokaltog/vim-easymotion&#39;  <br/>
+&quot; 自动补全单引号，双引号等<br/>
+Bundle &#39;Raimondi/delimitMate&#39;<br/>
+&quot; 快速加入修改环绕字符<br/>
+Bundle &#39;tpope/vim-surround&#39;<br/>
+&quot; for repeat -&gt; enhance surround.vim, . to repeat command<br/>
+Bundle &#39;tpope/vim-repeat&#39;<br/>
+&quot; 多光标编辑 (该插件的ctrl-p可以正常使用，当到达最后一个的时候ctrlp才会起作用)<br/>
+Bundle &#39;terryma/vim-multiple-cursors&#39;<br/>
+&quot; 对括号等进行光标的控制辅助  <br/>
+&quot;Bundle &#39;rstacruz/sparkup&#39;, {&#39;rtp&#39;: &#39;vim/&#39;}  <br/>
+&quot;Bundle &#39;tpope/vim-rails.git&#39;  <br/>
+Bundle &#39;Valloric/ListToggle&#39;  <br/>
+Bundle &#39;L9&#39;  <br/>
+&quot; vim-scripts repos  <br/>
+Bundle &#39;a.vim&#39;  <br/>
+Bundle &#39;grep.vim&#39;<br/>
+&quot;Bundle &#39;easytags.vim&#39;  <br/>
+&quot;Bundle &#39;c.vim&#39;  <br/>
+&quot; non-GitHub repos  <br/>
+&quot;Bundle &#39;git://git.wincent.com/command-t.git&#39;  <br/>
+&quot; Git repos on your local machine (i.e. when working on your own plugin)  <br/>
+&quot;Bundle &#39;file:///Users/gmarik/path/to/plugin&#39;  <br/>
+&quot;==========================================<br/>
+&quot; ctrlp settings  <br/>
+&quot;==========================================<br/>
+Bundle &#39;kien/ctrlp.vim&#39;  <br/>
+&quot;let g:ctrlp_map = &#39;&lt;leader&gt;p&#39;<br/>
+&quot;let g:ctrlp_cmd = &#39;CtrlP&#39;<br/>
+&quot;map &lt;leader&gt;f :CtrlPMRU&lt;CR&gt;<br/>
+&quot;set wildignore+=*/tmp/*,*.so,*.swp,*.zip     &quot; MacOSX/Linux<br/>
+&quot;let g:ctrlp_custom_ignore = {<br/>
+&quot;    \ &#39;dir&#39;:  &#39;\v[\/]\.(git|hg|svn|rvm)$&#39;,<br/>
+&quot;    \ &#39;file&#39;: &#39;\v\.(exe|so|dll|zip|tar|tar.gz)$&#39;,<br/>
+&quot;    \ &#39;link&#39;: &#39;SOME_BAD_SYMBOLIC_LINKS&#39;,<br/>
+&quot;    \ }<br/>
+let g:ctrlp_custom_ignore = {<br/>
+   \ &#39;file&#39;: &#39;\v\.(exe|so|dll|zip|tar|tar.gz|lib|out|png|img|bak|db|o)&#39;<br/>
+    \ }<br/>
+&quot; 在每次进行切换分支或者重新设定custome_ignore选项的时候,必须手动清除CtrlP的缓存,<br/>
+&quot; 也可以使用下句不让它进行缓存处理，但扫描时间会比较耗时<br/>
+&quot;let g:ctrlp_use_caching = 0<br/>
+let g:ctrlp_working_path_mode=0<br/>
+let g:ctrlp_match_window_bottom=1<br/>
+let g:ctrlp_max_height=15<br/>
+let g:ctrlp_match_window_reversed=0<br/>
+let g:ctrlp_mruf_max=500<br/>
+let g:ctrlp_follow_symlinks=1<br/>
+nnoremap &lt;leader&gt;b :CtrlPBuffer&lt;CR&gt;<br/>
+nnoremap &lt;leader&gt;d :CtrlPDir&lt;CR&gt;<br/>
+&quot;==============================================================<br/>
+&quot; ctrlp-funky settings  ctrlp插件 - 不用ctag进行函数快速跳转<br/>
+&quot;==============================================================<br/>
+Bundle &#39;tacahiroy/ctrlp-funky&#39;<br/>
+&quot;nnoremap &lt;Leader&gt;fu :CtrlPFunky&lt;Cr&gt;<br/>
+nnoremap &lt;Leader&gt;f :CtrlPFunky&lt;Cr&gt;<br/>
+&quot; narrow the list down with a word under cursor<br/>
+&quot;nnoremap &lt;Leader&gt;fU :execute &#39;CtrlPFunky &#39; . expand(&#39;&lt;cword&gt;&#39;)&lt;Cr&gt;<br/>
+let g:ctrlp_funky_syntax_highlight = 1<br/>
+let g:ctrlp_extensions = [&#39;funky&#39;]<br/>
+&quot;==========================================<br/>
+&quot; nerdcommenter settings  快速注释<br/>
+&quot;==========================================<br/>
+Bundle &#39;scrooloose/nerdcommenter&#39;<br/>
+&quot; 注释与代码之间留存的空格数<br/>
+let g:NERDSpaceDelims = 1<br/>
+&quot;==========================================<br/>
+&quot; Airline settings<br/>
+&quot;==========================================<br/>
+&quot;Bundle &#39;bling/vim-airline&#39;<br/>
+&quot;Bundle &#39;bling/vim-bufferline&#39;<br/>
+&quot;if !exists(&#39;g:airline_symbols&#39;)<br/>
+&quot;let g:airline_symbols = {}<br/>
+&quot;endif<br/>
+&quot;let g:airline_left_sep = &#39;▶&#39;<br/>
+&quot;let g:airline_left_alt_sep = &#39;❯&#39;<br/>
+&quot;let g:airline_right_sep = &#39;◀&#39;<br/>
+&quot;let g:airline_right_alt_sep = &#39;❮&#39;<br/>
+&quot;let g:airline_symbols.linenr = &#39;¶&#39;<br/>
+&quot;let g:airline_symbols.branch = &#39;⎇&#39;<br/>
+&quot;&quot; 开启tabline<br/>
+&quot;let g:airline#extensions#tabline#enabled = 1<br/>
+&quot;&quot; tabline中当前buffer两端的分隔符<br/>
+&quot;let g:airline#extensions#tabline#left_sep = &#39; &#39;<br/>
+&quot;&quot; tabline为激活的buffer的两端字符<br/>
+&quot;let g:airline#extensions#tabline#left_alt_sep = &#39;|&#39;<br/>
+&quot;&quot; tabline中buffer显示编号<br/>
+&quot;let g:airline#extensions#tabline#buffer_nr_show = 1<br/>
+&quot;let g:airline#extensions#buffline#enabled = 1<br/>
+&quot;let g:airline#extensions#bufferline#overwrite_variables = 1<br/>
+&quot;&quot; airline主题<br/>
+&quot;let g:airline_theme = &#39;powerlineish&#39; <br/>
+&quot;括号显示增强<br/>
+&quot;Bundle &#39;kien/rainbow_parentheses.vim&#39;<br/>
+&quot;let g:rbpt_colorpairs = [<br/>
+&quot;    \ [&#39;brown&#39;,       &#39;RoyalBlue3&#39;],<br/>
+&quot;    \ [&#39;Darkblue&#39;,    &#39;SeaGreen3&#39;],<br/>
+&quot;    \ [&#39;darkgray&#39;,    &#39;DarkOrchid3&#39;],<br/>
+&quot;    \ [&#39;darkgreen&#39;,   &#39;firebrick3&#39;],<br/>
+&quot;    \ [&#39;darkcyan&#39;,    &#39;RoyalBlue3&#39;],<br/>
+&quot;    \ [&#39;darkred&#39;,     &#39;SeaGreen3&#39;],<br/>
+&quot;    \ [&#39;darkmagenta&#39;, &#39;DarkOrchid3&#39;],<br/>
+&quot;    \ [&#39;brown&#39;,       &#39;firebrick3&#39;],<br/>
+&quot;    \ [&#39;gray&#39;,        &#39;RoyalBlue3&#39;],<br/>
+&quot;    \ [&#39;black&#39;,       &#39;SeaGreen3&#39;],<br/>
+&quot;    \ [&#39;darkmagenta&#39;, &#39;DarkOrchid3&#39;],<br/>
+&quot;    \ [&#39;Darkblue&#39;,    &#39;firebrick3&#39;],<br/>
+&quot;    \ [&#39;darkgreen&#39;,   &#39;RoyalBlue3&#39;],<br/>
+&quot;    \ [&#39;darkcyan&#39;,    &#39;SeaGreen3&#39;],<br/>
+&quot;    \ [&#39;darkred&#39;,     &#39;DarkOrchid3&#39;],<br/>
+&quot;    \ [&#39;red&#39;,         &#39;firebrick3&#39;],<br/>
+&quot;    \ ]<br/>
+&quot;let g:rbpt_max = 40<br/>
+&quot;let g:rbpt_loadcmd_toggle = 0<br/>
+&quot;au VimEnter * RainbowParenthesesToggle<br/>
+&quot;au Syntax * RainbowParenthesesLoadRound<br/>
+&quot;au Syntax * RainbowParenthesesLoadSquare<br/>
+&quot;au Syntax * RainbowParenthesesLoadBraces<br/>
+&quot; 主题 solarized <br/>
+Bundle &#39;altercation/vim-colors-solarized&#39;<br/>
+&quot;let g:solarized_termcolors=256<br/>
+let g:solarized_termtrans=1<br/>
+let g:solarized_contrast=&quot;normal&quot;<br/>
+let g:solarized_visibility=&quot;normal&quot;<br/>
+&quot; 主题 molokai <br/>
+Bundle &#39;tomasr/molokai&#39;<br/>
+&quot;==========================================<br/>
+&quot; TagList settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;taglist.vim&#39;  <br/>
+&quot; increase the width of the taglist window  <br/>
+&quot;let Tlist_WinWidth=20  <br/>
+&quot; 自动打开TagList的window  <br/>
+let Tlist_Auto_Open=0  <br/>
+&quot; 当只剩下Tlist的时候自动关闭  <br/>
+let Tlist_Exit_OnlyWindow=1  <br/>
+&quot; 打开tags用单击  <br/>
+let Tlist_Use_SingleClick=1  <br/>
+&quot; close tag folders for inactive buffers  <br/>
+let Tlist_File_Fold_Auto_Close=1  <br/>
+&quot; show the fold indiactor column in the taglist window  <br/>
+let Tlist_Enable_Fold_Column=1  <br/>
+&quot; 自动更新TagList包含最新编辑的文件  <br/>
+let Tlist_Auto_Update=1  <br/>
+&quot; 显示一个文件的tag  <br/>
+let Tlist_Show_One_File=1  <br/>
+&quot; 在右侧显示窗口  <br/>
+let Tlist_Use_Right_Window=1  <br/>
+&quot; 按照名称排序  <br/>
+let Tlist_Sort_Type=&quot;name&quot;  <br/>
+&quot; 让TagList始终解释文件中的tag,不管TagList窗口有没有打开  <br/>
+let Tlist_Process_File_Always=1  <br/>
+&quot; 设置leader键  <br/>
+nnoremap &lt;leader&gt;tl :TlistToggle&lt;CR&gt;  <br/>
+&quot;==========================================<br/>
+&quot; YouCompleteMe settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;Valloric/YouCompleteMe&#39;  <br/>
+&quot;let g:ycm_key_list_select_completion=[&#39;&lt;c-n&gt;&#39;]<br/>
+&quot;let g:ycm_key_list_previous_completion=[&#39;&lt;c-p&gt;&#39;]<br/>
+let g:ycm_global_ycm_extra_conf=&#39;~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py&#39;  <br/>
+let g:ycm_collect_indentifiers_from_tags_files=1  <br/>
+let g:ycm_seed_identifiers_with_syntax=1  <br/>
+&quot; 避免YCM每次加载都对用户提示是否加载  <br/>
+let g:ycm_confirm_extra_conf=0  <br/>
+let g:ycm_autoclose_preview_window_after_completion=1  <br/>
+let g:ycm_complete_in_comments = 1  &quot;在注释输入中也能补全<br/>
+let g:ycm_complete_in_strings = 1   &quot;在字符串输入中也能补全<br/>
+let g:ycm_collect_identifiers_from_comments_and_strings = 1   &quot;注释和字符串中的文字也会被收入补全<br/>
+&quot; 跳到定义或声明  <br/>
+nnoremap &lt;F2&gt; :YcmCompleter GoToDefinitionElseDeclaration&lt;CR&gt;  <br/>
+&quot; 强制进行编译  <br/>
+nnoremap &lt;F5&gt; :YcmForceCompileAndDiagnostics&lt;CR&gt;  <br/>
+&quot;==========================================<br/>
+&quot; Syntastic settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;scrooloose/syntastic&#39;  <br/>
+&quot; 在打开文件的时候检查  <br/>
+let g:syntastic_check_on_open = 1  <br/>
+let g:syntastic_cpp_include_dirs = [&#39;/usr/include/&#39;]  <br/>
+let g:syntastic_cpp_remove_include_errors = 1  <br/>
+let g:syntastic_cpp_check_header = 1  <br/>
+let g:syntastic_cpp_compiler = &#39;clang++&#39;  <br/>
+let g:syntastic_cpp_compiler_options = &#39;-std=c++11 -stdlib=libstdc++&#39;  <br/>
+&quot;set error or warning signs  <br/>
+let g:syntastic_error_symbol = &#39;✗&#39;  <br/>
+let g:syntastic_warning_symbol = &#39;⚠&#39;  <br/>
+&quot;whether to show balloons  <br/>
+let g:syntastic_enable_balloons = 1  <br/>
+let g:syntastic_always_populate_loc_list = 1  <br/>
+&quot;==========================================<br/>
+&quot; ListToggle settings<br/>
+&quot;==========================================<br/>
+let g:lt_location_list_toggle_map = &#39;&lt;leader&gt;l&#39;  <br/>
+let g:lt_quickfix_list_toggle_map = &#39;&lt;leader&gt;q&#39;  <br/>
+&quot;==========================================<br/>
+&quot; NERDtree settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;scrooloose/nerdtree&#39;  <br/>
+let NERDTreeWinPos=&#39;left&#39;  <br/>
+let NERDTreeHighlightCursorline=1<br/>
+nnoremap &lt;leader&gt;n :NERDTreeToggle&lt;CR&gt;  <br/>
+autocmd bufenter * if (winnr(&quot;$&quot;) == 1 &amp;&amp; exists(&quot;b:NERDTreeType&quot;) &amp;&amp;b:NERDTreeType == &quot;primary&quot;) | q | endif  <br/>
+&quot;==========================================<br/>
+&quot; miniBufExpl settings<br/>
+&quot;==========================================<br/>
+&quot;Bundle &#39;fholgado/minibufexpl.vim&#39;<br/>
+&quot;let g:miniBufExplMapWindowNavVim = 1<br/>
+&quot;let g:miniBufExplMapWindowNavArrows = 1<br/>
+&quot;let g:miniBufExplMapCTabSwitchBufs = 1<br/>
+&quot;let g:miniBufExplModSelTarget = 1<br/>
+&quot;&quot;解决FileExplorer窗口变小问题<br/>
+&quot;let g:miniBufExplForceSyntaxEnable = 1<br/>
+&quot;let g:miniBufExplorerMoreThanOne=2<br/>
+&quot;let g:miniBufExplCycleArround=1<br/>
+&quot;&quot; 默认方向键左右可以切换buffer<br/>
+&quot;nnoremap &lt;TAB&gt; :MBEbn&lt;CR&gt;<br/>
+&quot;nnoremap &lt;s-TAB&gt; :MBEbp&lt;CR&gt;<br/>
+&quot;noremap &lt;leader&gt;bn :MBEbn&lt;CR&gt;<br/>
+&quot;noremap &lt;leader&gt;bp :MBEbp&lt;CR&gt;<br/>
+&quot;noremap &lt;leader&gt;bd :MBEbd&lt;CR&gt;<br/>
+&quot;==========================================<br/>
+&quot; FuzzyFinder settings<br/>
+&quot;==========================================<br/>
+&quot;Bundle &#39;FuzzyFinder&#39;  <br/>
+&quot;nnoremap &lt;leader&gt;f :FufFile&lt;CR&gt;  <br/>
+&quot;nnoremap &lt;leader&gt;b :FufBuffer&lt;CR&gt;  <br/>
+&quot;nnoremap &lt;leader&gt;d :FufDir&lt;CR&gt;  <br/>
+&quot;==========================================<br/>
+&quot; UltiSnips settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;SirVer/ultisnips&#39;  <br/>
+Bundle &#39;honza/vim-snippets&#39;<br/>
+let g:UltiSnipsExpandTrigger = &quot;&lt;c-j&gt;&quot;<br/>
+let g:UltiSnipsJumpForwardTrigger = &quot;&lt;c-j&gt;&quot;<br/>
+let g:UltiSnipsJumpBackwardTrigger = &quot;&lt;c-k&gt;&quot;<br/>
+&quot; 定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示<br/>
+let g:UltiSnipsSnippetDirectories=[&quot;additional_snippets&quot;, &#39;UltiSnips&#39;]<br/>
+&quot;==========================================<br/>
+&quot; closetag settings 自动补全html/xml标签<br/>
+&quot;==========================================<br/>
+&quot;Bundle &#39;docunext/closetag.vim&#39;<br/>
+&quot;let g:closetag_html_style=1<br/>
+&quot;==========================================<br/>
+&quot; Markdown settings<br/>
+&quot;==========================================<br/>
+&quot;Bundle &#39;plasticboy/vim-markdown&#39;<br/>
+&quot;let g:vim_markdown_folding_disabled=1<br/>
+&quot;==========================================<br/>
+&quot; Tagbar settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;majutsushi/tagbar&#39;  <br/>
+nnoremap &lt;leader&gt;tb :Tagbar&lt;CR&gt;  <br/>
+let g:tagbar_autofocus = 1<br/>
+&quot;==========================================<br/>
+&quot; A settings<br/>
+&quot;==========================================<br/>
+nnoremap &lt;F4&gt; :A&lt;CR&gt;  <br/>
+&quot;==========================================<br/>
+&quot; Powerline settings<br/>
+&quot;==========================================<br/>
+Bundle &#39;Lokaltog/vim-powerline&#39;  <br/>
+let g:Powerline_symbolsa = &#39;fancy&#39;  <br/>
+let g:Powerline_cache_enabled = 1  <br/>
+&quot;&quot;let g:session_autoload=&#39;yes&#39;  <br/>
+&quot;&quot;let g:session_autosave=&#39;yes&#39;  <br/>
+&quot; 因为Vundle需要关闭filetype,而之后的插件如果想要正常使用，必须要打开filetype<br/>
+&quot; 所以必须确保所有插件的加载过程在之前已经全部添加完毕<br/>
+filetype on             <br/>
+&quot; 参考链接:  <br/>
+&quot; amix vimrc模板地址参考:amix.dk/vim/vimrc.html  <br/>
+&quot; k-vim https://github.com/wklken/k-vim
+</code></pre></li>
+<li><p>打开vim,执行<code>:BundleInstall</code></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源]]></title>
+    <link href="https://blog.xgtian.com/15440788666202.html"/>
+    <updated>2018-12-06T14:47:46+08:00</updated>
+    <id>https://blog.xgtian.com/15440788666202.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">写在前面</h2>
+
+<p>我想很多公司由于安全考虑，一些内部系统(Git仓库、OA之类）的一定是放在公司内部的服务器上，只有在公司的网络下才能够访问，但是一些公司的随着业务的发展，肯定会出现一些外地的同事（外地的办事处、研发中心、销售团队等等）这种情况，这样一来，在内部服务不迁移到外网的前提下，如何让外地的同事能访问到内网这些资源就成了一个必须要解决的问题了。<br/>
+其实内网穿透有很很多种解决方案，本文只是利用SoftetherVPN以及Bind9这两个工具提供另一种解决思路。<br/>
+本文所提到的解决方案有如下优点:</p>
+
+<pre><code class="language-text">1. 原来的内部资源不需要额外的配置改动
+2. 需要身份认证，只有拥有权限的外部人员才能访问内部资源
+3. 只有加入了共享网络的内部资源才能被外部访问，没有开放共享的内部资源的无法访问
+4. 可以做到通过相同的域名访问同一个内部资源
+5. 通过LPTP,LPSec协议支持OS X以及iOS设备访问
+</code></pre>
+
+<p>当然也有如下不足:<br/>
+    1. 需要一台拥有公网IP的服务器作为中心服务器<br/>
+    2. 由于本文的解决方案是基于虚拟局域网来实现的，因此拥有局域网内一些无法回避的缺点。</p>
+
+<h2 id="toc_1">原理</h2>
+
+<p><img src="https://pic.mylonly.com/2018-12-06-%E7%BD%91%E7%BB%9C%E5%9B%BE%20-1-.png" alt=""/><br/>
+本解决方案利用了SoftetherVPN提供的Ad-Hoc VPN将内网服务器和外部用户通过VLAN连接在同一个局域网内，然后通过支持智能解析的DNS服务器，将域名解析到对应的虚拟局域网IP。<br/>
+如果是内网用户，则直接通过DNS服务器将域名解析到内部资源对应的内网IP。</p>
+
+<h2 id="toc_2">部署</h2>
+
+<p>本次部署大部分采用Docker方式部署，如果需要手动安装的，可以在<a href="https://www.softether-download.com/cn.aspx?product=softether">这个网站</a>下载对应的安装包</p>
+
+<h3 id="toc_3">Docker 环境</h3>
+
+<p>略，不再本文讨论范围之内</p>
+
+<h3 id="toc_4">安装Softether Server</h3>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">siomiz/softethervpn
+</code></pre></li>
+<li><p>启动vpnserver</p>
+<pre><code class="language-text">docker run -d --cap-add NET_ADMIN \
+ -p 500:500/udp \<br/>
+ -p 4500:4500/udp \<br/>
+ -p 1701:1701/tcp \<br/>
+ -p 1194:1194/udp \<br/>
+ -p 5555:5555/tcp \<br/>
+ -p 443:443/tcp \<br/>
+ -p 992:992 \<br/>
+ siomiz/softethervpn
+</code></pre>
+<p>记得要开放对应的端口</p></li>
+</ol>
+
+<h3 id="toc_5">安装Softether ServerManger</h3>
+
+<p>虽然Softether 提供了mac版的安装包，但本人装完之后发现其实是套了一个wine的环境，在mac上体验极差，所以此处推荐找一个windows电脑安装vpn server manager，<a href="https://www.softether-download.com/cn.aspx?product=softether">下载地址</a>在此<br/>
+由于是windows上的安装教程，大部分都是图片，为了不占文章篇幅，就不放在文章里介绍了，各位可以参考<a href="https://www.softether.org/4-docs/2-howto/1.VPN_for_On-premise/1.Ad-hoc_VPN">官网</a>或者这篇<a href="http://www.leqii.com/download/yulan/d77/d77.html">博客</a></p>
+
+<p>其中需要注意的是，在<code>虚拟HUB管理页面</code>中的<code>虚拟NAT和虚拟DHCP服务器</code>，点击<code>SecureNAT</code>,然后设置DHCP服务器的网段，以及DNS服务器为下面将要搭建的DNS服务器地址<br/>
+<img src="https://pic.mylonly.com/2018-12-06-101214.png" alt=""/></p>
+
+<h3 id="toc_6">部署DNS服务器</h3>
+
+<ol>
+<li><p>安装bind9</p>
+<pre><code class="language-text">sudo apt-get install bind9
+</code></pre></li>
+<li><p>增加两个视图文件,在/etc/bind/目录下<br/>
+name.2.conf</p>
+<pre><code class="language-text">acl &quot;2&quot; {
+    192.168.2.0/24;<br/>
+};   
+</code></pre>
+<p>name.111.conf </p>
+<pre><code class="language-text">acl &quot;111&quot; {
+    192.168.111.0/24;<br/>
+};
+</code></pre>
+<p>两个视图文件主要是为了区分来源IP所在的网段，然后根据不同的网段返回不同的解析结果，在本解决方案当中，192.168.2.0/24网段为内网网段，   192.168.111.0/24为VPN生成的虚拟局域网的网段</p></li>
+<li><p>新建不同网段对应的不同的解析记录文件，也在/etc/bind/目录下</p>
+<p>1234tv.lan-2.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA      xxxx.xx. root.xxxx.xx. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      xxxx.xx.<br/>
+@       IN      A      192.168.2.222<br/>
+gitlab  IN      A       192.168.2.84
+</code></pre>
+<p>1234tv.lan-111.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA     xxxx.xx. root.xxxx.xx. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      xxxx.xx.<br/>
+@       IN      A       192.168.111.222<br/>
+gitlab  IN      A       192.168.111.84
+</code></pre></li>
+<li><p>将视图文件和解析文件写入Bind9主配置文件</p>
+<pre><code class="language-text">sudo vim /etc/bind/name.conf
+</code></pre>
+<p>增加如下内容，声明两个视图，view_2,view_11,可以注释掉默认带的配置文件，如果你没有其他的用途的话,注意每一行后面的分号，不可缺少。</p>
+<pre><code class="language-text">#include &quot;/etc/bind/named.conf.options&quot;;
+#include &quot;/etc/bind/named.conf.local&quot;;<br/>
+#include &quot;/etc/bind/named.conf.default-zones&quot;;<br/>
+include &quot;/etc/bind/name.2.conf&quot;;<br/>
+view &quot;View_2&quot; {<br/>
+        match-clients {&quot;2&quot;;};<br/>
+        zone &quot;xxxx.xxx&quot; IN {<br/>
+                type master;<br/>
+                file &quot;xxxx.xxx-2.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};<br/>
+include &quot;/etc/bind/name.111.conf&quot;;<br/>
+view &quot;View_111&quot; {<br/>
+        match-clients {&quot;111&quot;;};<br/>
+        zone &quot;xxxx.xxx&quot; IN {<br/>
+                type master;<br/>
+                file &quot;xxxx.xxx-111.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};
+</code></pre></li>
+<li><p>然后启动Bind9 服务</p>
+<pre><code class="language-text">sudo /etc/init.d/bind9 start
+</code></pre></li>
+<li><p>验证解析</p>
+<pre><code class="language-text">dig gitlab.xxx.xx @192.168.2.222
+</code></pre>
+<p><img src="media/15440788666202/15440920519061.jpg" alt="" style="width:460px;"/></p></li>
+</ol>
+
+<h4 id="toc_7">安装Vpn Client</h4>
+
+<p>所有需要共享给外部访问的内部服务器都需要安装vpn client连接上vpn server，下面的方法为linux 下docker方式部署vpn_client方法，windows端请参考这篇<a href="http://www.leqii.com/download/yulan/d77/d77.html">文章</a></p>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
+</code></pre></li>
+<li><p>启动镜像连接之前创建的vpn server</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient \
+--net=host --privileged \<br/>
+-e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
+-e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
+-e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
+-e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
+-e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
+-e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
+mitsutaka/softether-vpnclient<br/>
+```<br/>
+服务器端，VIRTUAL_HUB端填入之前在manager上新建的虚拟HUB名称 ，TAP_IPADDR，最好采用指定IP的方式，尤其是DNS服务器，需要固定IP地址
+</code></pre></li>
+</ol>
+
+<h2 id="toc_8">结束语</h2>
+
+<p>至此，这个简单的内网穿透方案算是部署完成，内网用户可以直接通过设置内网DNS服务器来通过域名访问内部服务器，外网用户在使用vpn clinet连接上虚拟局域网之后也能通过相同的域名访问内部服务器资源。<br/>
+写这篇文章，一方面是觉得自己以后可能还会有此需求，怕自己遗忘，权且当做记录。另外也是想也可能有别的同学有这方面的需要，写出来共享一下。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Kali Linux 安装w3af]]></title>
+    <link href="https://blog.xgtian.com/15423821126836.html"/>
+    <updated>2018-11-16T23:28:32+08:00</updated>
+    <id>https://blog.xgtian.com/15423821126836.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">更新软件源</h3>
+
+<pre><code class="language-text">apt-get update
+</code></pre>
+
+<h3 id="toc_1">下载源码</h3>
+
+<pre><code class="language-text">git clone --depth 1 https://github.com/andresriancho/w3af.git
+</code></pre>
+
+<h3 id="toc_2">安装node(如果已安装请忽略)</h3>
+
+<pre><code class="language-text">wget https://nodejs.org/dist/v10.13.0/node-v10.13.0-linux-x64.tar.xz
+xz -d node-v10.13.0-linux-x64.tar.xz
+tar -vxf node-v10.13.0-linux-x64.tar
+mv node-v10.13.0-linux-x64.tar /usr/local/node
+</code></pre>
+
+<p>node 加入到环境变量当中</p>
+
+<pre><code class="language-text">vim ~/.basrc
+</code></pre>
+
+<p>最后一行添加</p>
+
+<pre><code class="language-text">export PATH=$PATH:/usr/local/node/bin
+</code></pre>
+
+<h3 id="toc_3">获取w3af依赖安装脚本</h3>
+
+<pre><code class="language-text">./w3af_console
+./tmp/w3af_dependency_install.sh #安装依赖
+</code></pre>
+
+<h4 id="toc_4">提示: ld can not found -lcrypto</h4>
+
+<p>没有找到crypto库，crypto库是openssl中的，一般没有找到的话基本都是/usr/lib下没有改动态库的链接文件</p>
+
+<p>利用<code>find / -name *libcrypto.so*</code>指令找到libcrypto.so的位置，然后在/usr/lib下建立起软连接</p>
+
+<pre><code class="language-text">ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 /usr/lib/libcrypto.so
+</code></pre>
+
+<h4 id="toc_5">提示: Cannot uninstall &#39;scapy&#39;. It is a distutils installed project</h4>
+
+<p>系统以及安装了相应的版本的scapy，但是和w3af中要求的版本不符，w3af不能卸载它<br/>
+此时可以手动删除它</p>
+
+<pre><code class="language-text">apt-get remove python-scapy
+</code></pre>
+
+<p>或者在<code>w3af/core/controllers/dependency_check/requirements.py</code>中找到依赖包对应的版本，将其修改为系统自带的版本<br/>
+改完之后仍然需要在<code>w3af/core/controllers/dependency_check/platforms/mac.py</code>找到包对应的版本，修改为系统版本</p>
+
+<h4 id="toc_6">执行<code>./w3af_gui</code>提示: No module named webkit</h4>
+
+<p>由于新版本的Kali的软件源中已经没有了python-webkit和python-webkit-dev，所以我们需要手动下载并安装它们</p>
+
+<pre><code class="language-text">#下载缺省的deb二进制包
+wget http://ftp.br.debian.org/debian/pool/main/p/pywebkitgtk/python-webkit_1.1.8-3_amd64.deb
+wget http://ftp.br.debian.org/debian/pool/main/w/webkitgtk/libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb
+wget http://ftp.br.debian.org/debian/pool/main/p/python-support/python-support_1.0.15_all.deb
+wget http://ftp.br.debian.org/debian/pool/main/w/webkitgtk/libwebkitgtk-1.0-0_2.4.11-3_amd64.deb
+#依次安装deb二进制包
+dpkg -i libjavascriptcoregtk-1.0-0_2.4.11-3_amd64.deb 
+dpkg -i python-support_1.0.15_all.deb 
+dpkg -i libwebkitgtk-1.0-0_2.4.11-3_amd64.deb
+dpkg -i python-webkit_1.1.8-3_amd64.deb
+#修复依赖
+apt-get -f install -y
+</code></pre>
+
+<h4 id="toc_7">执行<code>./w3af_gui</code>提示: ImportError: No module named gtksourceview2</h4>
+
+<p>缺少python-gtksourceview2</p>
+
+<pre><code class="language-text">apt-get install python-getsourceview2
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PT924光猫 更改桥接模式/路由模式]]></title>
+    <link href="https://blog.xgtian.com/15319308951102.html"/>
+    <updated>2018-07-19T00:21:35+08:00</updated>
+    <id>https://blog.xgtian.com/15319308951102.html</id>
+    <content type="html"><![CDATA[
+<ol>
+<li><p><a href="http://192.168.1.1:8080/cgi-bin/index2.asp">http://192.168.1.1:8080/cgi-bin/index2.asp</a> 进入这个页面<br/>
+用useradmin账号密码登录</p></li>
+<li><p>将地址改为<a href="http://192.168.1.1:8080/cgi-bin/net-wanset.asp">http://192.168.1.1:8080/cgi-bin/net-wanset.asp</a> 进入internet设置页面(更改其他地址也会进入其他页面)</p>
+<p><img src="media/15319308951102/15319310908143.jpg" alt="" style="width:532px;"/></p></li>
+</ol>
+
+<p>其中<code>6_INTERNET_B_VID_229</code>是桥接模式，路由器需要拨号，而<code>5_INTERNET_R_VID_229</code>是路由模式，由猫拨号，路由器不需要拨号</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的豆瓣电影影评抓取之旅]]></title>
-    <link href="https://blog.mylonly.com/15308616208129.html"/>
+    <link href="https://blog.xgtian.com/15308616208129.html"/>
     <updated>2018-07-06T15:20:20+08:00</updated>
-    <id>https://blog.mylonly.com/15308616208129.html</id>
+    <id>https://blog.xgtian.com/15308616208129.html</id>
     <content type="html"><![CDATA[
 <p><a href="https://juejin.im/entry/5b42b4125188251b3950c25c/detail"><img src="https://badge.juejin.im/entry/5b42b4125188251b3950c25c/likes.svg?style=flat-square" alt=""/></a></p>
 
@@ -39,7 +998,7 @@
 
 <p>虽然APIKey是不可能拿到了，但是通过文档我仍然发现了一些GET请求并不需要AUTH认证，也就是说有没有APIKey并不影响使用。其中，对我们有用的就是获取<code>TOP250电影列表</code>的接口:</p>
 
-<pre><code>http://api.douban.com/v2/movie/top250
+<pre><code class="language-text">http://api.douban.com/v2/movie/top250
 </code></pre>
 
 <p>接口返回的格式大概如下:<br/>
@@ -53,7 +1012,7 @@
 
 <p>详细接口如下,可以通过更改start来迭代获取所有电影条目</p>
 
-<pre><code>https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
+<pre><code class="language-text">https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
 </code></pre>
 
 <p>这个接口可以获取所有豆瓣上收录的电影，经过我的测试，start改为10000时，返回的数据就已经是空的了</p>
@@ -63,7 +1022,7 @@
 <p>获取电影信息的方法有了，接下来就是要分析如何获取影评信息了。<br/>
 在每部电影的详情页面里,如<a href="https://movie.douban.com/subject/1292064/">楚门的世界</a>，我们找到了如下这几个详情页面,分别显示了针对这部电影的影评和短评信息</p>
 
-<pre><code>https://movie.douban.com/subject/1292064/reviews ##影评页面
+<pre><code class="language-text">https://movie.douban.com/subject/1292064/reviews ##影评页面
 https://movie.douban.com/subject/1292064/comments ##短评页面
 </code></pre>
 
@@ -75,7 +1034,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 <img src="https://pic.mylonly.com/2018-07-07-122913.jpg" alt=""/><br/>
 每条评论都是在一个review-item的div块里面，而所有评论都是在一个review-list的div块里吗，我们通过xpath语法可以很容易的定位到每条评论的详细信息,下面是所有信息的xpath语句，在我们写爬虫时候就靠他提取内容了</p>
 
-<pre><code>评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
+<pre><code class="language-text">评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
 
 评论ID: &quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;review-short&#39;]/@data-rid&quot;
 作者头像: &quot;./header[@class=&#39;main-hd&#39;]//a[@class=&#39;avator&#39;]//img/@src &quot;
@@ -90,7 +1049,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <p>其中具体的评分我们不能直接拿到，而是只能拿到具体的文字描述,经过我的验证，具体如下对应关系如下:</p>
 
-<pre><code>&#39;力荐&#39;: 5,
+<pre><code class="language-text">&#39;力荐&#39;: 5,
 &#39;推荐&#39;: 4,
 &#39;还行&#39;: 3,
 &#39;较差&#39;: 2,
@@ -105,7 +1064,7 @@ https://movie.douban.com/subject/1292064/comments ##短评页面
 
 <h3 id="toc_5">创建项目工程</h3>
 
-<pre><code>##创建DoubanSpider工程
+<pre><code class="language-text">##创建DoubanSpider工程
 scrapy startproject Douban
 </code></pre>
 
@@ -113,7 +1072,7 @@ scrapy startproject Douban
 <img src="https://pic.mylonly.com/2018-07-07-122926.jpg" alt=""/><br/>
 其中：</p>
 
-<pre><code>    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
+<pre><code class="language-text">    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
     items.py: 模型类，所有需要结构化的数据都要预先在此文件中定义
     middlewares.py: 中间件类，scrapy的核心之一，我们会用到其中的downloadMiddleware,
     pipelines.py: 管道类，数据的输出管理，是存数据库还是存文件在这里决定
@@ -132,7 +1091,7 @@ scrapy startproject Douban
 
 <h4 id="toc_7">定义爬虫</h4>
 
-<pre><code>class MovieSpider(Spider):
+<pre><code class="language-text">class MovieSpider(Spider):
     name = &#39;movie&#39; #爬虫名称
     allow_dominas = [&quot;douban.com&quot;] #允许的域名
     
@@ -160,7 +1119,7 @@ scrapy startproject Douban
 
 <p>接下来通过<code>start_request</code>告诉爬虫要爬取的链接：</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
     def start_requests(self):
         url = &#39;&#39;&#39;https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start={start}&#39;&#39;&#39;
         requests = []
@@ -174,7 +1133,7 @@ scrapy startproject Douban
 
 <p>接下来解析每个接口返回的内容:</p>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 def parse_movie(self, response):
     jsonBody = json.loads(response.body)
     subjects = jsonBody[&#39;data&#39;]
@@ -194,7 +1153,7 @@ def parse_movie(self, response):
 
 <h4 id="toc_8">定义Item</h4>
 
-<pre><code class="language-Python">#定义你需要获取的数据
+<pre><code class="language-python">#定义你需要获取的数据
 class MovieItem(scrapy.Item):
     id = scrapy.Field()
     title = scrapy.Field()
@@ -210,7 +1169,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_9">定义Pipeline</h4>
 
-<pre><code class="language-Python">class MoviePipeline(object):
+<pre><code class="language-python">class MoviePipeline(object):
 
     movieInsert = &#39;&#39;&#39;insert into movies(id,title,rating,genres,original_title,alt,image,year) values (&#39;{id}&#39;,&#39;{title}&#39;,&#39;{rating}&#39;,&#39;{genres}&#39;,&#39;{original_title}&#39;,&#39;{alt}&#39;,&#39;{image}&#39;,&#39;{year}&#39;)&#39;&#39;&#39;
 
@@ -256,7 +1215,7 @@ class MovieItem(scrapy.Item):
 
 <p>在命令行下输入:</p>
 
-<pre><code>scrapy crawl movie
+<pre><code class="language-text">scrapy crawl movie
 </code></pre>
 
 <p><img src="https://pic.mylonly.com/2018-07-06-101458.png" alt=""/><br/>
@@ -268,7 +1227,7 @@ class MovieItem(scrapy.Item):
 
 <h4 id="toc_12">爬虫逻辑</h4>
 
-<pre><code>class ReviewSpider(Spider):
+<pre><code class="language-text">class ReviewSpider(Spider):
     name = &quot;review&quot;
     allow_domain = [&#39;douban.com&#39;]
     custom_settings = {
@@ -297,7 +1256,7 @@ class MovieItem(scrapy.Item):
 <code>DOWNLOAD_TIMEOUT</code>: 下载超时时间，默认是60秒，此处修改为10秒是想让整体的爬取速度加快，因为RETRY_TIMES的缘故，需要RETRY的判定时间为1分钟，如果有很多这种有问题的页面，那么整个爬取的过程会十分漫长。<br/>
 <code>DOWNLOAD_DELAY</code>: 下载延迟，如果你使用代理IP之后还是会出现访问返回403的情况，请设置此值，因为某IP太频繁的访问页面会触发豆瓣的防爬虫机制。</p>
 
-<pre><code class="language-Python">  def start_requests(self):
+<pre><code class="language-python">  def start_requests(self):
         #从数据库中找到所有的moviesId
         self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
         self.cursor = self.connect.cursor()
@@ -318,17 +1277,17 @@ class MovieItem(scrapy.Item):
 
 <p>照例，我们在start_request中告诉Scrapy要爬取的起始网址链接，通过我们之前的分析，影评页面的地址格式为:</p>
 
-<pre><code class="language-Python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
+<pre><code class="language-python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
 </code></pre>
 
 <p>而movieId,我们之前的爬虫已经将所有电影的信息抓取了下来，所以我们在此先通过查询数据库将所有的已抓取的电影信息获取到，取到其中的movieId，然后构造一个页面链接。</p>
 
-<pre><code class="language-Python">url = url_format.format(movieId=movieId, offset=current_page*20)
+<pre><code class="language-python">url = url_format.format(movieId=movieId, offset=current_page*20)
 </code></pre>
 
 <p>因为抓取豆瓣影评的过程十分漫长，中间会出现各种各样的问题导致爬虫意外退出，因此我们需要一个机制让爬虫能从上次停止的地方继续爬取，current_page和total_page就是为此而服务的，在后面的数据解析过程中，每解析一个页面，就会将当期页面的页数存储下来，防止出现意外情况。</p>
 
-<pre><code class="language-Python">    def parse_review(self, response):
+<pre><code class="language-python">    def parse_review(self, response):
         movieId = response.request.meta[&#39;movieId&#39;]
         review_list = response.xpath(&quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;)
         for review in review_list:
@@ -377,7 +1336,7 @@ class MovieItem(scrapy.Item):
 <p>接下来，分析解析函数，DoubanItem的数据获取就不额外介绍了，利用之前分析时用到的xpath语句可以很容易的定义到具体内容。<br/>
 其中movieId是起始链接中通过Request中Meta属性传递过来的，当然你可以通过分析网页找到包含movieId的地方。</p>
 
-<pre><code>current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
+<pre><code class="language-text">current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
 total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
 paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extract()
 </code></pre>
@@ -388,13 +1347,13 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>但是这个导航条会有两种情况获取不到:</p>
 
-<pre><code>1. 当某个电影的评论不足20条时，也就是只有一页评论。
+<pre><code class="language-text">1. 当某个电影的评论不足20条时，也就是只有一页评论。
 2. 当触发了豆瓣的反爬虫的机制时，返回的页面并不是评论页面，而是一个验证页面，自然也找不到导航条
 </code></pre>
 
 <p>所以在下面的代码中，我通过这几个变量来判断了以上几种情况：</p>
 
-<pre><code>1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
+<pre><code class="language-text">1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
 2. 情况2时，由于此时触发了反爬虫机制，返回的页面没有我们的数据，如果我们直接忽略掉的话，会损失大量的数据（这种情况很常见），所以我们就干脆再试一次，返回request，让Scrapy重新爬取这个页面，因为每次重新爬取都会换一个新的代理IP，所以我们有很大概率下次抓取就是正常的。此处有一点需要注意：因为Scrapy默认会过滤掉重复请求，所以我们需要在构造Request的时候讲dont_filter参数设置为True,让其不要过滤重复链接。
 3. 正常情况时，通过xpath语法获取的下一页评论的链接地址然后构造一个request交给Scrapy继续爬取
 </code></pre>
@@ -403,7 +1362,7 @@ paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extrac
 
 <p>上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置</p>
 
-<pre><code class="language-Python">class DoubanDownloaderMiddleware(object):
+<pre><code class="language-python">class DoubanDownloaderMiddleware(object):
 # Not all methods need to be defined. If a method is not defined,
 # scrapy acts as if the downloader middleware does not modify the
 # passed objects.
@@ -462,7 +1421,7 @@ def process_response(self, request, response, spider):
 
 <h4 id="toc_14">影评Item</h4>
 
-<pre><code class="language-Python">class ReviewItem(scrapy.Item):
+<pre><code class="language-python">class ReviewItem(scrapy.Item):
 id = scrapy.Field()
 username = scrapy.Field()
 nickname = scrapy.Field()
@@ -479,7 +1438,7 @@ alt = scrapy.Field()
 
 <h4 id="toc_15">影评Pipeline</h4>
 
-<pre><code class="language-Python">
+<pre><code class="language-python">
 class ReviewPipeline(object):
 
     reviewInsert = &#39;&#39;&#39;insert into reviews(id,username,nickname,avatar,summary,title,movieId,rating,create_time,alt) values (&quot;{id}&quot;,&quot;{username}&quot;, &quot;{nickname}&quot;,&quot;{avatar}&quot;, &quot;{summary}&quot;,&quot;{title}&quot;,&quot;{movieId}&quot;,&quot;{rating}&quot;,&quot;{create_time}&quot;,&quot;{alt}&quot;)&#39;&#39;&#39;
@@ -512,12 +1471,12 @@ class ReviewPipeline(object):
         self.connect.close()
 </code></pre>
 
-<pre><code>和之前的电影的pipeline类似，就是基本的数据库写操作。
+<pre><code class="language-text">和之前的电影的pipeline类似，就是基本的数据库写操作。
 </code></pre>
 
 <h4 id="toc_16">运行爬虫</h4>
 
-<pre><code class="language-Shell">scrapy crawl review
+<pre><code class="language-shell">scrapy crawl review
 </code></pre>
 
 <p>在我写完这篇文章时，影评的爬虫仍然还在爬取当中：<br/>
@@ -536,65 +1495,59 @@ class ReviewPipeline(object):
   
   <entry>
     <title type="html"><![CDATA[MySql 相关问题]]></title>
-    <link href="https://blog.mylonly.com/15307740267953.html"/>
+    <link href="https://blog.xgtian.com/15307740267953.html"/>
     <updated>2018-07-05T15:00:26+08:00</updated>
-    <id>https://blog.mylonly.com/15307740267953.html</id>
+    <id>https://blog.xgtian.com/15307740267953.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>查看数据库服务器字符集</p>
-
-<pre><code>mysql&gt; show variables like &#39;%char%&#39;;
-+--------------------------+-------------------------------------+------
-| Variable_name | Value |......
-+--------------------------+-------------------------------------+------
-| character_set_client | utf8 |...... -- 客户端字符集
-| character_set_connection | utf8 |......
-| character_set_database | utf8 |...... -- 数据库字符集
-| character_set_filesystem | binary |......
-| character_set_results | utf8 |......
-| character_set_server | utf8 |...... -- 服务器字符集
-| character_set_system | utf8 |......
-| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......
+<pre><code class="language-text">mysql&gt; show variables like &#39;%char%&#39;;
++--------------------------+-------------------------------------+------<br/>
+| Variable_name | Value |......<br/>
++--------------------------+-------------------------------------+------<br/>
+| character_set_client | utf8 |...... -- 客户端字符集<br/>
+| character_set_connection | utf8 |......<br/>
+| character_set_database | utf8 |...... -- 数据库字符集<br/>
+| character_set_filesystem | binary |......<br/>
+| character_set_results | utf8 |......<br/>
+| character_set_server | utf8 |...... -- 服务器字符集<br/>
+| character_set_system | utf8 |......<br/>
+| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......<br/>
 +--------------------------+-------------------------------------+------
 </code></pre></li>
 <li><p>查看数据表(table)字符集</p>
-
-<pre><code>mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
-+-----------+--------+---------+------------+------+-----------------+------
-| Name | Engine | Version | Row_format | Rows | Collation |......
-+-----------+--------+---------+------------+------+-----------------+------
-| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......
+<pre><code class="language-text">mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| Name | Engine | Version | Row_format | Rows | Collation |......<br/>
++-----------+--------+---------+------------+------+-----------------+------<br/>
+| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......<br/>
 +-----------+--------+---------+------------+------+-----------------+------
 </code></pre></li>
 <li><p>查看数据列(column)字符集</p>
-
-<pre><code>mysql&gt; show full columns from countries;
-+----------------------+-------------+-----------------+--------
-| Field | Type | Collation | .......
-+----------------------+-------------+-----------------+--------
-| countries_id | int(11) | NULL | .......
-| countries_name | varchar(64) | utf8_general_ci | .......
-| countries_iso_code_2 | char(2) | utf8_general_ci | .......
-| countries_iso_code_3 | char(3) | utf8_general_ci | .......
-| address_format_id | int(11) | NULL | .......
+<pre><code class="language-text">mysql&gt; show full columns from countries;
++----------------------+-------------+-----------------+--------<br/>
+| Field | Type | Collation | .......<br/>
++----------------------+-------------+-----------------+--------<br/>
+| countries_id | int(11) | NULL | .......<br/>
+| countries_name | varchar(64) | utf8_general_ci | .......<br/>
+| countries_iso_code_2 | char(2) | utf8_general_ci | .......<br/>
+| countries_iso_code_3 | char(3) | utf8_general_ci | .......<br/>
+| address_format_id | int(11) | NULL | .......<br/>
 +----------------------+-------------+-----------------+--------
 </code></pre></li>
 <li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
-
-<pre><code>alter database name character set utf8;
-create database name character set utf8;
-alter table 表名 convert to character set gbk;
+<pre><code class="language-text">alter database name character set utf8;
+create database name character set utf8;<br/>
+alter table 表名 convert to character set gbk;<br/>
 alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
 </code></pre></li>
 <li><p>通过数据库my.cnf配置文件设置字符集</p>
-
-<pre><code>vi /etc/my.cnf
-#在[client]下添加
-default-character-set=utf8
-#在[mysqld]下添加
+<pre><code class="language-text">vi /etc/my.cnf
+#在[client]下添加<br/>
+default-character-set=utf8<br/>
+#在[mysqld]下添加<br/>
 default-character-set=utf8
 </code></pre>
-
 <p>重启mysql</p></li>
 </ol>
 
@@ -603,9 +1556,9 @@ default-character-set=utf8
   
   <entry>
     <title type="html"><![CDATA[制作Kali Linux 加密U盘启动盘]]></title>
-    <link href="https://blog.mylonly.com/15278621156583.html"/>
+    <link href="https://blog.xgtian.com/15278621156583.html"/>
     <updated>2018-06-01T22:08:35+08:00</updated>
-    <id>https://blog.mylonly.com/15278621156583.html</id>
+    <id>https://blog.xgtian.com/15278621156583.html</id>
     <content type="html"><![CDATA[
 <h2 id="toc_0">前置条件</h2>
 
@@ -649,20 +1602,19 @@ default-character-set=utf8
 <img src="https://pic.mylonly.com/2018-07-07-123121.jpg" alt=""/></li>
 <li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
 <img src="https://pic.mylonly.com/2018-07-07-123132.jpg" alt=""/></p>
-
 <h2 id="toc_4">写入镜像、U盘分区</h2></li>
 <li><p>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</p></li>
 <li><p>利用如下命令将该iso文件拷贝至U盘当中</p></li>
 </ol>
 
-<pre><code>dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
 </code></pre>
 
 <ol>
 <li>利用parted工具对U盘当中未使用的其他部分进行分区，命令如下</li>
 </ol>
 
-<pre><code class="language-Bash">parted  #进入parted界面
+<pre><code class="language-bash">parted  #进入parted界面
 select /dev/sdc #选择U盘分区
 print #查看当前分区信息
 mkpart primary 2937 23417 #制作新的分区，起始位置从2937M开始，到23417位置结束
@@ -675,36 +1627,27 @@ print #查看新的分区信息
 
 <ol>
 <li><p>制作加密分区</p>
-
-<pre><code>cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
+<pre><code class="language-text">cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
 </code></pre>
-
 <p>确认覆盖分区，输入大写的YES，然后输入两遍密码之后，加密分区制作完毕<br/>
 <strong>注意/dev/sdc3,在上面利用parted制作新分区时，其属于/dev/sdc下面的第三个分区</strong><br/>
 <img src="https://pic.mylonly.com/2018-06-01-15A3CBD2C0856CCC83089E164F496957.png" alt=""/></p></li>
 <li><p>对加密分区格式化分区,分配卷标</p>
-
-<pre><code class="language-Bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
-
-ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件
-
-mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式
-
+<pre><code class="language-bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
+ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件<br/>
+mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式<br/>
 e2label /dev/mapper/usb persistence #将分区卷标指定为persistence,名字必须为persistence
 </code></pre></li>
 <li><p>挂载新的分区,写入验证文件</p>
-
-<pre><code class="language-Bash">mkdir -p /mnt/usb 
-mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下
-echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf
+<pre><code class="language-bash">mkdir -p /mnt/usb 
+mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下<br/>
+echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf<br/>
 #写入一个persistence.conf文件，此文件会在启动时用来确认此U盘是用来加密存储的分区
 </code></pre></li>
 <li><p>卸载分区，退出加密分区</p>
-
-<pre><code class="language-Bash">umount /dev/mapper/usb
+<pre><code class="language-bash">umount /dev/mapper/usb
 cryptsetup luksClose /dev/mapper/usb
 </code></pre>
-
 <p><img src="https://pic.mylonly.com/2018-07-07-123146.jpg" alt=""/></p></li>
 </ol>
 
@@ -717,11 +1660,11 @@ cryptsetup luksClose /dev/mapper/usb
   
   <entry>
     <title type="html"><![CDATA[uwsgi重启shell脚本]]></title>
-    <link href="https://blog.mylonly.com/15277767431151.html"/>
+    <link href="https://blog.xgtian.com/15277767431151.html"/>
     <updated>2018-05-31T22:25:43+08:00</updated>
-    <id>https://blog.mylonly.com/15277767431151.html</id>
+    <id>https://blog.xgtian.com/15277767431151.html</id>
     <content type="html"><![CDATA[
-<pre><code>#!/bin/bash
+<pre><code class="language-text">#!/bin/bash
 if [ ! -n &quot;$1&quot; ]
 then
     echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
@@ -759,19 +1702,47 @@ fi
   
   <entry>
     <title type="html"><![CDATA[Linux问题集锦]]></title>
-    <link href="https://blog.mylonly.com/15277762940932.html"/>
+    <link href="https://blog.xgtian.com/15277762940932.html"/>
     <updated>2018-05-31T22:18:14+08:00</updated>
-    <id>https://blog.mylonly.com/15277762940932.html</id>
+    <id>https://blog.xgtian.com/15277762940932.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>CentOS python升级之后yum无法使用解决</p>
-
 <p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-
-<pre><code>vim /usr/bin/yum
+<pre><code class="language-text">vim /usr/bin/yum
 </code></pre>
-
 <p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
+<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
+<pre><code class="language-text">[program:ErosUpdate]
+command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
+;priority=999                ; the relative start priority (default 999)<br/>
+autostart=true              ; start at supervisord start (default: true)<br/>
+autorestart=true            ; retstart at unexpected quit (default: true)<br/>
+startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
+startretries=3              ; max # of serial start failures (default 3)<br/>
+nodaemon=true<br/>
+;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
+;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
+;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
+user=root                 ; setuid to this UNIX account to run the program<br/>
+log_stdout=true             ; if true, log program stdout (default true)<br/>
+log_stderr=true             ; if true, log program stderr (def false)<br/>
+logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
+logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
+logfile_backups=20          ; # of logfile backups (default 10)
+</code></pre></li>
+<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
+<pre><code class="language-text">[uwsgi]
+socket=127.0.0.1:3030<br/>
+chdir=/data/weex/projects/ErosUpdate<br/>
+wsgi-file = ErosUpdate/wsgi.py<br/>
+max-requests=5000<br/>
+processes = 4<br/>
+threads = 4<br/>
+logto=/data/logs/uwsgi/ErosUpdate.log<br/>
+#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
+pidfile=/tmp/ErosUpdate.pid
+</code></pre></li>
 </ol>
 
 ]]></content>
@@ -779,18 +1750,16 @@ fi
   
   <entry>
     <title type="html"><![CDATA[Pyplot相关]]></title>
-    <link href="https://blog.mylonly.com/15277545119360.html"/>
+    <link href="https://blog.xgtian.com/15277545119360.html"/>
     <updated>2018-05-31T16:15:11+08:00</updated>
-    <id>https://blog.mylonly.com/15277545119360.html</id>
+    <id>https://blog.xgtian.com/15277545119360.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>subplot</p>
-
-<pre><code>plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
-plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图
+<pre><code class="language-text">plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图<br/>
 plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
 </code></pre>
-
 <p>subplot(numRows, numCols, plotNum)<br/>
 如果3个参数都小于10的话，可以统一成一个整数<br/>
 subplot(221) = subplot(2,2,1)</p></li>
@@ -802,18 +1771,16 @@ subplot(221) = subplot(2,2,1)</p></li>
   
   <entry>
     <title type="html"><![CDATA[Pandas相关]]></title>
-    <link href="https://blog.mylonly.com/15276700222671.html"/>
+    <link href="https://blog.xgtian.com/15276700222671.html"/>
     <updated>2018-05-30T16:47:02+08:00</updated>
-    <id>https://blog.mylonly.com/15276700222671.html</id>
+    <id>https://blog.xgtian.com/15276700222671.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>Pandas 读取列数据</p>
-
-<pre><code class="language-Python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })
-
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series
+<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])<br/>
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
 data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
 </code></pre></li>
 </ol>
@@ -823,15 +1790,14 @@ data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返�
   
   <entry>
     <title type="html"><![CDATA[Tensorflow错误集锦]]></title>
-    <link href="https://blog.mylonly.com/15274889837567.html"/>
+    <link href="https://blog.xgtian.com/15274889837567.html"/>
     <updated>2018-05-28T14:29:43+08:00</updated>
-    <id>https://blog.mylonly.com/15274889837567.html</id>
+    <id>https://blog.xgtian.com/15274889837567.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
 加入以下代码</p>
-
-<pre><code>import os 
+<pre><code class="language-text">import os 
 os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
 </code></pre></li>
 </ol>
@@ -841,21 +1807,17 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
   
   <entry>
     <title type="html"><![CDATA[Weex 问题集锦]]></title>
-    <link href="https://blog.mylonly.com/15253577270506.html"/>
+    <link href="https://blog.xgtian.com/15253577270506.html"/>
     <updated>2018-05-03T22:28:47+08:00</updated>
-    <id>https://blog.mylonly.com/15253577270506.html</id>
+    <id>https://blog.xgtian.com/15253577270506.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>weex中通过ref访问组件的两种情况:</p>
-
-<pre><code>&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
+<pre><code class="language-text">&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
 </code></pre>
-
 <p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-
-<pre><code>&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
+<pre><code class="language-text">&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
 </code></pre>
-
 <p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
 </ol>
 
@@ -864,13 +1826,13 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
   
   <entry>
     <title type="html"><![CDATA[解决VSCode编写Django代码时经常提示objects属性等不存在的错误]]></title>
-    <link href="https://blog.mylonly.com/15249709962104.html"/>
+    <link href="https://blog.xgtian.com/15249709962104.html"/>
     <updated>2018-04-29T11:03:16+08:00</updated>
-    <id>https://blog.mylonly.com/15249709962104.html</id>
+    <id>https://blog.xgtian.com/15249709962104.html</id>
     <content type="html"><![CDATA[
 <p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
 
-<pre><code>App.objects.all()
+<pre><code class="language-text">App.objects.all()
 </code></pre>
 
 <p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
@@ -883,17 +1845,17 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
 
 <p>安装很简单,和pylint一样</p>
 
-<pre><code>pip3 install pylint-django
+<pre><code class="language-text">pip3 install pylint-django
 </code></pre>
 
 <p>然后通过pylint加载这个插件</p>
 
-<pre><code>pylint --load-plugins pylint_django 
+<pre><code class="language-text">pylint --load-plugins pylint_django 
 </code></pre>
 
 <p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
 
-<pre><code>&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
+<pre><code class="language-text">&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
 </code></pre>
 
 <p>然后重启VSCode就好了</p>
@@ -906,18 +1868,20 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
   
   <entry>
     <title type="html"><![CDATA[nginx 相关技巧]]></title>
-    <link href="https://blog.mylonly.com/15247238721302.html"/>
+    <link href="https://blog.xgtian.com/15247238721302.html"/>
     <updated>2018-04-26T14:24:32+08:00</updated>
-    <id>https://blog.mylonly.com/15247238721302.html</id>
+    <id>https://blog.xgtian.com/15247238721302.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
-
-<pre><code>  server {
-      listen 80 default;
-      server_name _;
-      rewrite ^(.*) http://www.mylonly.com permanent;
+<pre><code class="language-text">  server {
+      listen 80 default;<br/>
+      server_name _;<br/>
+      rewrite ^(.*) http://www.mylonly.com permanent;<br/>
     }
+</code></pre></li>
+<li><p>Ubuntu developer tool</p>
+<pre><code class="language-text">sudo apt-get install build-essential
 </code></pre></li>
 </ol>
 
@@ -926,143 +1890,121 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
   
   <entry>
     <title type="html"><![CDATA[Django问题集锦]]></title>
-    <link href="https://blog.mylonly.com/15244672126240.html"/>
+    <link href="https://blog.xgtian.com/15244672126240.html"/>
     <updated>2018-04-23T15:06:52+08:00</updated>
-    <id>https://blog.mylonly.com/15244672126240.html</id>
+    <id>https://blog.xgtian.com/15244672126240.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>Csrf验证</p>
-
-<pre><code>需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
+<pre><code class="language-text">需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
 </code></pre></li>
 <li><p>Django允许跨域</p>
-
 <p>安装<code>django-cors-headers</code></p>
-
-<pre><code>pip install django-cors-headers
+<pre><code class="language-text">pip install django-cors-headers
 </code></pre>
-
 <p>在setting.py中增加如下代码</p>
-
-<pre><code>INSTALLED_APPS = [
-...
-&#39;corsheaders&#39;，
-...
- ] 
-
-MIDDLEWARE_CLASSES = (
-    ...
-    &#39;corsheaders.middleware.CorsMiddleware&#39;,
-    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序
-    ...
-)
-#跨域增加忽略
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    &#39;*&#39;
-)
-
-CORS_ALLOW_METHODS = (
-    &#39;DELETE&#39;,
-    &#39;GET&#39;,
-    &#39;OPTIONS&#39;,
-    &#39;PATCH&#39;,
-    &#39;POST&#39;,
-    &#39;PUT&#39;,
-    &#39;VIEW&#39;,
-)
-
-CORS_ALLOW_HEADERS = (
-    &#39;XMLHttpRequest&#39;,
-    &#39;X_FILENAME&#39;,
-    &#39;accept-encoding&#39;,
-    &#39;authorization&#39;,
-    &#39;content-type&#39;,
-    &#39;dnt&#39;,
-    &#39;origin&#39;,
-    &#39;user-agent&#39;,
-    &#39;x-csrftoken&#39;,
-    &#39;x-requested-with&#39;,
-    &#39;Pragma&#39;,
+<pre><code class="language-text">INSTALLED_APPS = [
+...<br/>
+&#39;corsheaders&#39;，<br/>
+...<br/>
+ ] <br/>
+MIDDLEWARE_CLASSES = (<br/>
+    ...<br/>
+    &#39;corsheaders.middleware.CorsMiddleware&#39;,<br/>
+    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序<br/>
+    ...<br/>
+)<br/>
+#跨域增加忽略<br/>
+CORS_ALLOW_CREDENTIALS = True<br/>
+CORS_ORIGIN_ALLOW_ALL = True<br/>
+CORS_ORIGIN_WHITELIST = (<br/>
+    &#39;*&#39;<br/>
+)<br/>
+CORS_ALLOW_METHODS = (<br/>
+    &#39;DELETE&#39;,<br/>
+    &#39;GET&#39;,<br/>
+    &#39;OPTIONS&#39;,<br/>
+    &#39;PATCH&#39;,<br/>
+    &#39;POST&#39;,<br/>
+    &#39;PUT&#39;,<br/>
+    &#39;VIEW&#39;,<br/>
+)<br/>
+CORS_ALLOW_HEADERS = (<br/>
+    &#39;XMLHttpRequest&#39;,<br/>
+    &#39;X_FILENAME&#39;,<br/>
+    &#39;accept-encoding&#39;,<br/>
+    &#39;authorization&#39;,<br/>
+    &#39;content-type&#39;,<br/>
+    &#39;dnt&#39;,<br/>
+    &#39;origin&#39;,<br/>
+    &#39;user-agent&#39;,<br/>
+    &#39;x-csrftoken&#39;,<br/>
+    &#39;x-requested-with&#39;,<br/>
+    &#39;Pragma&#39;,<br/>
 )
 </code></pre></li>
 <li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
-
-<pre><code>#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
-axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;
+<pre><code class="language-text">#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
+axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;<br/>
 axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
 </code></pre>
-
 <blockquote>
 <p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
 </blockquote>
-
 <p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
 <li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
-
 <p>需要两步：</p>
-
 <ul>
 <li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
 <li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
 </ul>
-
-<pre><code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
-class login(views.APIView):
-authentication_classes = (BasicAuthentication,)
-def post(self, request, *args, **kwargs):
-
-username = request.data.get(&quot;username&quot;)
-password = request.data.get(&quot;password&quot;)
-
-user = auth.authenticate(request, username=username, password=password)
-if user is not None:
-  auth.login(request, user)
-  return ErosResponse()
-else:
+<pre><code class="language-text">@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
+class login(views.APIView):<br/>
+authentication_classes = (BasicAuthentication,)<br/>
+def post(self, request, *args, **kwargs):<br/>
+username = request.data.get(&quot;username&quot;)<br/>
+password = request.data.get(&quot;password&quot;)<br/>
+user = auth.authenticate(request, username=username, password=password)<br/>
+if user is not None:<br/>
+  auth.login(request, user)<br/>
+  return ErosResponse()<br/>
+else:<br/>
   return ErosResponse(status=ErosResponseStatus.INVALID_USER)
 </code></pre></li>
 <li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
-
 <p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
-
-<pre><code class="language-Python">from django_filters.rest_framework import DjangoFilterBackend
+<pre><code class="language-python">from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 </code></pre></li>
 <li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
-
 <p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
-
-<pre><code>mysql -u root -p
-use mysql；
-ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  
+<pre><code class="language-text">mysql -u root -p
+use mysql；<br/>
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  <br/>
 FLUSH PRIVILEGES; 
 </code></pre></li>
 <li><p>Django-Filter自定义查询过滤字段</p>
-
-<pre><code class="language-Python">from django_filters import FilterSet
-from django_filters import CharFilter
-
-class TagFilter(FilterSet):
-    ##自定义search字段
-    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)
-
-    class Meta:
-        model = Tag
-        fields = {
-          &#39;id&#39;: [&#39;exact&#39;],
-          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],
-          &#39;search&#39;: [&#39;exact&#39;],
+<pre><code class="language-python">from django_filters import FilterSet
+from django_filters import CharFilter<br/>
+class TagFilter(FilterSet):<br/>
+    ##自定义search字段<br/>
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)<br/>
+    class Meta:<br/>
+        model = Tag<br/>
+        fields = {<br/>
+          &#39;id&#39;: [&#39;exact&#39;],<br/>
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],<br/>
+          &#39;search&#39;: [&#39;exact&#39;],<br/>
         }
 </code></pre>
-
 <p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
 <li><p>DRF的OrderingFilter默认排序</p>
-
-<pre><code class="language-Python">filter_backends = (DjangoFilterBackend, OrderingFilter)
-ordering_fields = (&#39;id&#39;, &#39;hot&#39;)
+<pre><code class="language-python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)<br/>
 ordering = (&#39;-hot&#39;,)
+</code></pre></li>
+<li><p>Django runserver指定setting配置</p>
+<pre><code class="language-text">python3 manage.py runserver 0.0.0.0:8000 --settings=OrionGraphQL.settings.dev
 </code></pre></li>
 </ol>
 
@@ -1071,949 +2013,35 @@ ordering = (&#39;-hot&#39;,)
   
   <entry>
     <title type="html"><![CDATA[Python 错误集锦]]></title>
-    <link href="https://blog.mylonly.com/15244545128606.html"/>
+    <link href="https://blog.xgtian.com/15244545128606.html"/>
     <updated>2018-04-23T11:35:12+08:00</updated>
-    <id>https://blog.mylonly.com/15244545128606.html</id>
+    <id>https://blog.xgtian.com/15244545128606.html</id>
     <content type="html"><![CDATA[
 <ol>
 <li><p>ValueError: unknown locale: UTF-8 <br/>
 <img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
-
 <p>添加下面代码至用户目录的.bash_profile文件   </p>
-
-<pre><code class="language-Bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;
-export LC_CTYPE=&quot;en_US.UTF-8&quot;
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;
-export LC_MONETARY=&quot;en_US.UTF-8&quot;
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;
-export LC_TIME=&quot;en_US.UTF-8&quot;
+<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
+export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
+export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
+export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
+export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
+export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
+export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
 export LC_ALL=
 </code></pre></li>
 <li><p>zip()函数在Python2和Python3中的区别</p>
-
 <p>在Python2中，zip返回的是元祖的列表<br/>
 而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
-
-<pre><code>x = [1, 2, 3]
-y = [a, b, c]
-
-#python3
-n = list(zip(x,y))
-print(n)
-#python2
-n = zip(x,y)
+<pre><code class="language-text">x = [1, 2, 3]
+y = [a, b, c]<br/>
+#python3<br/>
+n = list(zip(x,y))<br/>
+print(n)<br/>
+#python2<br/>
+n = zip(x,y)<br/>
 print n
 </code></pre></li>
-</ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[利用GitLab提供的GitLab-CI以及GitLab-Runner搭建持续集成/部署环境]]></title>
-    <link href="https://blog.mylonly.com/15241105353902.html"/>
-    <updated>2018-04-19T12:02:15+08:00</updated>
-    <id>https://blog.mylonly.com/15241105353902.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">简介</h2>
-
-<ol>
-<li><p>GitLab</p>
-
-<blockquote>
-<p>是一套基于Ruby开发的开源Git项目管理应用，其提供的功能和Github类似，不同的是GitLab提供一个GitLab CE社区版本，用户可以将其部署在自己的服务器上，这样就可以用于团队内部的项目代码托管仓库。</p>
-</blockquote></li>
-<li><p>GitLab CI</p>
-
-<blockquote>
-<p>是GitLab 提供的持续集成服务(从8.0版本之后，GitLab CI已经集成在GitLab中了)，只要在你的仓库根目录下创建一个.gitlab-ci.yml 文件， 并为该项目指派一个Runner，当有合并请求或者Push操作时，你写在.gitlab-ci.yml中的构建脚本就会开始执行。</p>
-</blockquote></li>
-<li><p>GitLab Runner</p>
-
-<blockquote>
-<p>是配合GitLab CI进行构建任务的应用程序，GitLab CI负责yml文件中各种阶段流程的执行，而GitLab Runner就是具体的负责执行每个阶段的脚本执行，一般来说GitLab Runner需要安装在单独的机器上通过其提供的注册操作跟GitLab CI进行绑定，当然，你也可以让其和GitLab安装在一起，只是有的情况下，你代码的构建过程对资源消耗十分严重的时候，会拖累GitLab给其他用户提供政策的Git服务。</p>
-</blockquote></li>
-<li><p>持续集成/部署环境</p>
-
-<blockquote>
-<p>持续集成是程序开发人员在频繁的提交代码之后，能有相应的环境能对其提交的代码自动执行构建(Build)、测试(Test),然后根据测试结果判断新提交的代码能否合并加入主分支当中,而持续部署也就是在持续集成之后自动将代码部署(Deploy)到生成环境上</p>
-</blockquote></li>
-</ol>
-
-<h2 id="toc_1">开启GitLab CI功能</h2>
-
-<p>在GitLab 8.0版本之后,你可以通过如下两部启用GitLab CI功能</p>
-
-<ol>
-<li> 新建一个<code>.gitlab-ci.yml</code>文件在你项目的根目录</li>
-<li> 为你的项目配置一个GitLab Runner</li>
-</ol>
-
-<h4 id="toc_2">配置一个<code>.gitlab-ci.yml</code>文件</h4>
-
-<p><code>.gitlab-ci.yml</code>文件是用来配置GitLab CI进行构建流程的配置文件，其采用YAML语法,所以你需要额外注意要用空格来代替缩进，而不是Tabs。下面通过我自己项目中的<code>.gitlab-ci.yml</code>文件来具体介绍其规则</p>
-
-<pre><code class="language-YAML">stages:
-  - init
-  - check
-  - build
-  - deploy
-
-cache:
-  key: ${CI_BUILD_REF_NAME}
-  paths:
-  - node_modules/
-  - dist/
-
-#定义一个叫init的Job任务
-init:
-  stage: init
-  script:
-  -  cnpm install
-
-#master_check Job:检查master分支上关键内容
-master_check:
-  stage: check
-  script:
-  - echo &quot;Start Check Eros Config ...&quot;
-  - bash check.sh release 
-  only:
-  - master
-  
-#dev_check Job: 检查dev分支上关键内容
-dev_check:
-  stage: check
-  script:
-  - echo &quot;Start Check Eros Config ...&quot;
-  - bash check.sh debug
-  only:
-  - dev
-
-js_build:
-  stage: build
-  script:
-  - eros build
-
-master_deploy:
-  stage: deploy
-  script:
-  - bash deploy.sh release
-  only:
-  - master
-
-dev_deploy:
-  stage: deploy
-  script:
-  - bash deploy.sh debug
-  only:
-  - dev
-
-</code></pre>
-
-<p>在上面的例子中，我们利用<code>stages</code>关键字来定义持续构建过程中的四个阶段init、chec、build、deploy</p>
-
-<blockquote>
-<p>关于GitLab CI中的stages,有如下几个特点:</p>
-</blockquote>
-
-<pre><code>1. 所有 Stages 会按照顺序运行，即当一个 Stage 完成后，下一个 Stage 才会开始
-2. 只有当所有 Stages 完成后，该构建任务 (Pipeline) 才会成功
-3. 如果任何一个 Stage 失败，那么后面的 Stages 不会执行，该构建任务 (Pipeline) 失败
-</code></pre>
-
-<p>然后我们利用<code>caches</code>字段来指定下面将要进行的job任务中需要共享的文件目录,如果没有，每个Job开始的时候，GitLab Runner都会删掉<code>.gitignore</code>里面的文件</p>
-
-<p>紧接着，我们定义了一个叫做<code>init</code>的job，其通过stage字段声明属于<code>init</code>阶段，因此，这个job会第一个执行，我们在这个job当中，执行一些环境的初始化工作。</p>
-
-<p>接下来是<code>check</code>阶段,用来检查代码的一些基础错误(代码规范之类不会被编译器发现的问题)，以及一些配置文件的检查，我将其命名为<code>master_check</code>和<code>dev_check</code>,通过only字段来告诉GitLab CI 只有当对应的分支有push操作的时候才会触发这个job。</p>
-
-<p>然后就是代码的<code>build</code>阶段，由于此阶段不像上个极端，没有需要区分不同分支的命令，所以就只需要定义一个job就够了</p>
-
-<p>最后的<code>deploy</code>，因为不同的分支需要发布到不同的环境，所以依然通过only来区分两个job。</p>
-
-<blockquote>
-<p>关于GitLab CI中的Jobs,也有如下几个特点:</p>
-</blockquote>
-
-<pre><code>1. 相同 Stage 中的 Jobs 会并行执行
-2. 相同 Stage 中的 Jobs 都执行成功时，该 Stage 才会成功
-3. 如果任何一个 Job 失败，那么该 Stage 失败，即该构建任务 (Pipeline) 失败
-</code></pre>
-
-<p>在我的这个构建任务当中，根据我的业务情况只用到了少许关键字,还有更多的类似于<code>before_script</code>、<code>after_script</code>等关键字，具体的可以参阅<a href="https://docs.gitlab.com/ce/ci/yaml/README.html">GitLab的官方文档</a></p>
-
-<p>在我们完成<code>.gitlab-ci.yml</code>的流程编写之后，就可以将其放在项目的根目录下，然后push到我们的GitLab上，这时，如果你打开项目首页的Piplines标签页，会发现一个状态标识为<code>pending</code>的构建任务，如下图所示：<br/>
-<img src="https://pic.mylonly.com/2018-04-19-075009.jpg" alt=""/><br/>
-这时由于这个构建任务还有找到可用的GitLab Runner来执行其构建脚本，等我们接下来为我们的项目接入GitLab Runner之后，这些任务的状态就会由<code>pendding</code>变成<code>running</code>了</p>
-
-<h4 id="toc_3">安装GitLab Runner</h4>
-
-<p>找一台适合安装GitLab Runner的机器，无论是Windows或者Mac还是Linux都行，最好是那种比较空闲的能24小时开启的机器，我们在<a href="https://docs.gitlab.com/runner/install/">GitLab Runner的官网</a>找到我们平台的安装文件，以及对应的安装流程。由于笔者我准备安装GitLab Runner是一台闲置的iMac电脑，因此我就在演示MacOS下GitLab Runner的安装：</p>
-
-<blockquote>
-<p>GitLab Runner 在macOS和Linux/UNIX下安装流程是一样的，都是直接下载已编译好的二进制包</p>
-</blockquote>
-
-<ol>
-<li><p>下载对应GitLab 版本的GitLab Runner</p>
-
-<ul>
-<li>如果你的GitLab是10.0之后的版本，GitLab Runner可执行文件改名为<code>gitlab-runner</code></li>
-</ul>
-
-<pre><code>sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
-sudo chmod +x /usr/local/bin/gitlab-runner
-</code></pre>
-
-<ul>
-<li>9.0~10.0之间的版本</li>
-</ul>
-
-<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
-sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
-</code></pre>
-
-<ul>
-<li>9.0 之前,由于9.0之后启用全新的API4接口，所以如果你的GitLab是9.0以前的版本,需要下载下面的版本,否则会导致你的GitLab Runner注册不上</li>
-</ul>
-
-<pre><code>sudo curl --output /usr/local/bin/gitlab-ci-multi-runnerhttps://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/v1.11.1/binaries/gitlab-ci-multi-runner-darwin-amd64
-sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
-</code></pre>
-
-<blockquote>
-<p>不知道各位有没有注意到上面下载地址链接当中的v1.11.1,这个就是对应的Gitlab Runner,如果你的GitLab是9.0之前的版本，使用GitLab Runner v1.11.1这个版本仍然注册不上，可以尝试使用降几个版本的GitLab Runner,所有GitLab Runner发行的版本可以在<a href="https://gitlab.com/gitlab-org/gitlab-runner/tags">GitLab Runner Tags</a>找到</p>
-</blockquote>
-
-<p>假如你遇到不能通过登录服务器来确定GitLab版本号时，可以通过直接访问gitlab的首页，后面加上help，如下图：<br/>
-<img src="https://pic.mylonly.com/2018-04-19-083100.png" alt=""/></p></li>
-<li><p>注册GitLab Runner</p>
-
-<p>执行下面命令，</p>
-
-<pre><code>sudo gitlab-ci-multi-runner register
-</code></pre>
-
-<p>如果你的终端提示找不到命令，请通过<code>export PATH=/usr/local/bin:$PATH</code>将/usr/local/bin目录加入环境变量,或者你遗漏了上面的chmod命令导致文件不可执行。</p>
-
-<p>执行完上面的命令之后，会让你输入下面的信息:</p>
-
-<ul>
-<li>Please enter the gitlab-ci coordinator URL:</li>
-<li>Please enter the gitlab-ci token for this runner:</li>
-<li>Please enter the gitlab-ci description for this runner</li>
-<li>Please enter the gitlab-ci tags for this runner (comma separated):</li>
-<li>Whether to run untagged builds [true/false]:</li>
-<li>Please enter the executor:</li>
-</ul>
-
-<p>其中coordinator URL和token可以在你需要进行持续集成的项目的Runner标签页中找到<br/>
-<img src="https://pic.mylonly.com/2018-04-19-084819.jpg" alt=""/><br/>
-description和tags可以自己定义，是否build没有tag的提交这个也是根据你自己的需求来选择，默认是false，executer选择shell</p>
-
-<p>填写完成之后如果提示<code>Registering runner... succeeded</code>表明这个Runner已经被注册成功了，之后你在返回进入项目的Runners页面，会发现下面多了一个处于Active状态的Runner</p>
-
-<p>紧接着最后一步，启动我们刚注册的Runner</p>
-
-<pre><code>sudo  gitlab-ci-multi-runner start
-</code></pre>
-
-<p>现在，我们切回项目的Pipelines当中，肯定会发现之前处于peding状态的任务已经开始running了，我们可以通过点击这个状态按钮来实时查看每个阶段的输出日志<br/>
-<img src="https://pic.mylonly.com/2018-04-19-085612.jpg" alt=""/></p></li>
-</ol>
-
-<h2 id="toc_4">开启构建状态的邮件提醒</h2>
-
-<p>如果你想收到关于每个构建任务的实时状态的邮件，你可以在在项目中的service标签野种启用Build Emails这个服务。</p>
-
-<p><img src="https://pic.mylonly.com/2018-04-19-085906.png" alt=""/></p>
-
-<h2 id="toc_5">结语</h2>
-
-<p>搭建一个快速方便的持续集成、持续部署环境对于项目的开发来说是一个很重要的举措，无论你是采用大名鼎鼎的jenkins还是本文介绍的GitLab CI,它不仅仅可以帮助我们节省大量的时间在调试发布部署当中，也减少了我们因为人为因素导致的发布过程中出现的意外，有效的较低了项目开发当中的风险。</p>
-
-<h4 id="toc_6">如果你想和我交流，可以关注我的订阅号:</h4>
-
-<p><img src="https://pic.mylonly.com/2018-04-19-wechat-mylonly.jpg" alt=""/></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在wxc-rich-text以及wxc-special-rich-text的思路上实现类似QQ表情的富文本多行排版]]></title>
-    <link href="https://blog.mylonly.com/15241067803366.html"/>
-    <updated>2018-04-19T10:59:40+08:00</updated>
-    <id>https://blog.mylonly.com/15241067803366.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">先上效果图:</h2>
-
-<p><img src="https://pic.mylonly.com/2018-03-30-093130.jpg" alt=""/></p>
-
-<h2 id="toc_1">wxc-rich-text和wxc-special-rich-text的实现思路</h2>
-
-<p>weex-ui中为我们提供了<code>wxc-rich-text</code>和<code>wxc-special-rich-text</code>两种富文本控件，其中，<code>wxc-rich-text</code> 只支持单行富文本显示,而<code>wxc-special-rich-text</code>只能支持最多两行特定种类的图文混排(<code>标签+文本</code>以及<code>图标+文本</code>) </p>
-
-<p>首先我们来分析<code>wxc-rich-text</code>的源码来看看为什么这个控件不支持多行的样式</p>
-
-<p>在<code>wxc-rich-text.vue</code>的代码中，我们找到这样一段css的样式,下图红色箭头所指处</p>
-
-<p><img src="https://pic.mylonly.com/2018-03-30-093159.jpg" alt=""/></p>
-
-<p>这个样式中并没有指定flex-wrap属性，而在flex布局中，flex-wrap的默认属性就是<code>nowrap</code>不换行。</p>
-
-<pre><code>是不是就是这个原因导致`wxc-rich-text`不支持换行呢？
-如果真是这样，那么weex-ui的开发者为什么不把flex-wrap属性设置为wrap而提供一个支持多行的`wxc-rich-text`控件呢？
-</code></pre>
-
-<p>带着这个疑问，我们手动在<code>wxc-rich-text.vue</code>中将flex-wrap属性加上，这段css样式改为:</p>
-
-<pre><code class="language-css">.wxc-rich-text {
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-} 
-</code></pre>
-
-<p>好了，我们尝试输入一个多行的文本来看看效果:<br/>
-<img src="https://pic.mylonly.com/2018-03-30-093213.jpg" alt=""/></p>
-
-<p>在上图中我们发现，虽然整个控件的内容虽然确实有两行了，但是并不是我们想要的效果，文字部分并没有紧接着前面一个文字或者图片的后面，我想这也是为什么weex-ui的开发者在<code>wxc-rich-text</code>控件中不将flex-wrap属性设置为wrap的原因了。</p>
-
-<p>好了，分析完<code>wxc-rich-text</code>不支持多行的原因，我们再来看看为什么<code>wxc-special-rich-text</code>可以支持两行的富文本呢？</p>
-
-<p>当然还是先看源码,在<code>wxc-special-rich-text.vue</code>中，有下面一段代码:<br/>
-<img src="https://pic.mylonly.com/2018-03-30-093224.jpg" alt=""/></p>
-
-<p>代码当中有两个text控件，且两个text控件分别读取了newList[0]和newList[1]中的数据,为什么要如此呢，我们来看下面的js代码，在vue的computed当中，我们找到了名为<code>newList</code>的计算属性，代码有点长，我分别截了两张图<br/>
-<img src="https://pic.mylonly.com/2018-03-30-093720.png" alt=""/><img src="https://pic.mylonly.com/2018-03-30-093640.png" alt=""/></p>
-
-<p>如果你不想看上面的代码，可以直接看下面的结论：</p>
-
-<p><code>这个newList中，就是将configLis中有的text文本内容切割成了两段文本分别放进两个text控件当中（依据前面已有的icon或者tag控件来计算第一行可以塞下的字符长度，其余字符就是第二行的文本内容）</code></p>
-
-<p>好了，这下知道为什么<code>wxc-special-rich-text.vue</code>只能显示不超过两行的的富文本了吧，而且该富文本还必须要是<code>icon+text</code>或者<code>tag+text</code>的格式。</p>
-
-<h2 id="toc_2">我的多行富文本实现思路</h2>
-
-<p>既然<code>wxc-special-rich-text</code>通过将文本内容切割成两段文本来实现两行富文本的功能，那我能否通过将文本切割成粒度更小的的内容来解决多行富文本呢，这个粒度又是多少才最合适呢，我想，作为程序员，粒度为1应该是很容易想出来的一个数字，我也是如此。在粒度为1的情况下是不会存在<code>wxc-rich-text</code>中出现的因为第一行排列不下而将自己移至第二行从而导致第一行末端出现大量空白的情况。</p>
-
-<p>那我们就在这个思路下实现我们自己的多行富文本</p>
-
-<p>首先第一步，在<code>wxc-rich-text.vue</code>当中设置flex-wrap为wrap值，如上面文章所示。</p>
-
-<p>如果你是用npm包的方式引入的weex-ui，那你可能就需要将wxc-rich-text.vue的代码拷贝一份，重新起个别的名字的控件了，然后再将flex-wrap属性设置成wrap。</p>
-
-<p>第二步，将你的富文本内容切割成最小粒度的config，塞入<code>wxc-rich-text</code>的configList当中，我的实现如下:</p>
-
-<pre><code class="language-javascript"> addNormalMessage:function(msg_id,sender,sender_level,title,message){
-        console.log(&quot;normal message:&quot;,msg_id,sender,sender_level,title,message)
-        var configList = []
-        var config = this.addGrade(sender_level,title)
-        if (config != {}){
-          configList.push(config)
-        }
-        configList.push( {
-          type: &#39;text&#39;,
-          value: sender+&quot;:&quot;,
-          theme: &#39;blue&#39;
-        })
-
-        var message_list = this.addMessage(message)
-
-        message_list.forEach(config =&gt; {
-          configList.push(config)
-        })     
-        this.messages.push(configList)
-        this.messagesDict[msg_id] = this.messages.length - 1
-        this.scroolToEnd()
-    },
-</code></pre>
-
-<p>代码当中有三个部分的内容，addGrade是增加徽标的config，此处代码有点啰嗦，因为当时应该是直接复制拷贝的，可以通过设置value，color等等一些变量让代码精简很多。</p>
-
-<pre><code class="language-javascript">addGrade(sender_level,title){
-          console.log(&quot;grade:&quot;,sender_level,title)
-          var config = {}
-            if (sender_level == 500){
-              config = {
-                  type: &#39;tag&#39;,
-                  value: &#39;讲师&#39;,
-                  style: {
-                    fontSize: 30,
-                    color: &#39;#ffffff&#39;,
-                    borderColor: &#39;#2d9b3a&#39;,
-                    backgroundColor: &#39;#2d9b3a&#39;,
-                    height: 40
-                  }
-              }
-            }else if(sender_level == 900){
-              config = {
-                type:&#39;tag&#39;,
-                value:&#39;管理&#39;,
-                style: {
-                  fontSize: 30,
-                  color: &#39;#ffffff&#39;,
-                  borderColor: &#39;#ec24dd&#39;,
-                  backgroundColor: &#39;#ec24dd&#39;,
-                  height: 40
-                }
-              }
-            }else if(sender_level == 2000){
-              config = {
-                type:&#39;tag&#39;,
-                value:&#39;室主&#39;,
-                style:{
-                  fontSize:30,
-                  color: &#39;#ffffff&#39;,
-                  borderColor: &#39;#e80c19&#39;,
-                  backgroundColor: &#39;#e80c19&#39;,
-                  height: 40
-                }
-              }
-            }else{
-              if(title &gt;= 0){
-                config = {
-                  type:&#39;icon&#39;,
-                  src:&quot;bmlocal://assets/grade/Grade_&quot;+title+&quot;.png&quot;,
-                  style: {
-                    width: 90,
-                    height: 40
-                  }
-                }
-              }
-            }
-            return config
-        },
-</code></pre>
-
-<p>然后加上发送人的姓名，最后加上聊天的内容addMessage,在addMessage当中我实现了QQ表情的匹配已经文本内容的切割</p>
-
-<pre><code>addMessage(message){
-      var char_list = []
-      var chars = message.split(&#39;&#39;)
-      var startIndex = -1
-      chars.forEach((char,index,array) =&gt; {
-        if(char == &#39;[&#39;){
-          startIndex = index
-        }else if(char == &#39;]&#39;){
-          if(startIndex != -1){
-            var emotionStr = array.slice(startIndex,index+1).join(&quot;&quot;)
-    
-            if (emotionStr.indexOf(&quot;http&quot;) &gt; -1){  //图文消息
-              var imageUrl = emotionStr.slice(1,index)
-              char_list.push(this.oneImageConfig(imageUrl))
-            }else{//表情文字
-              char_list.push(this.oneEmojConfig(emotionStr))
-            }
-    
-            startIndex = -1
-        
-          }else{
-            char_list.push(this.oneCharConfig(char))
-          }
-        }else{
-          if (startIndex == -1){
-            char_list.push(this.oneCharConfig(char))
-          }
-        }
-      });
-      return char_list
-    },
-</code></pre>
-
-<p>我们的业务当中，和大部分公司类似，我们的QQ表情是类似于[微笑][害羞]这种格式的。其中在查找表情的代码中，也许你们会疑问，为什么我不使用正则去匹配QQ表情，其实在我之前未重构之前的项目中（使用swift的作为开发语言），此处业务逻辑就是通过正则将QQ表情替换出来，但是在此处，由于要切割字符串为每个字符串返回一个配置，字符串的逐个遍历已经不可避免，如果在加上正则匹配，时间负责度反而会增加一倍，所以我直接在遍历循环中加入了查找QQ表情的代码，希望能减轻少许我这种投机取巧的方法实现多行富文本样式带来的性能损耗。</p>
-
-<pre><code class="language-javascript">oneEmojConfig(emojName){
-  var localPath = emotion.emojLocalPath(emojName)
-  console.log(&quot;localpath:&quot;,localPath)
-  if( localPath != null){
-    return {
-      type:&#39;icon&#39;,
-      src:localPath,
-      style:{
-        width:40,
-        height:40
-      }
-    }
-  }else{
-    return {
-      type:&#39;text&#39;,
-      value:emojName,
-      theme:&quot;yellow&quot;
-    }
-  }
-},
-</code></pre>
-
-<p>在设置QQ表情的config当中，我写了一个emotion.js的工具函数，用来返回QQ表情名字所对应的本地图片的路径</p>
-
-<p><code>emotion.js</code></p>
-
-<pre><code class="language-javascript">/**
- * 表情转换工具类
- * @authors Root (root@mylonly.com)
- * @date    2018-03-30 08:48:19
- * @version 1.0.0
- */
-
-
-
-let emotionFunc = {
-    emotionArray : [&quot;[微笑]&quot;,&quot;[撇嘴]&quot;,&quot;[色]&quot;,&quot;[发呆]&quot;,&quot;[得意]&quot;,&quot;[流泪]&quot;,&quot;[害羞]&quot;,&quot;[闭嘴]&quot;,&quot;[睡]&quot;,&quot;[大哭]&quot;,&quot;[尴尬]&quot;,&quot;[发怒]&quot;,&quot;[调皮]&quot;,&quot;[呲牙]&quot;,&quot;[惊讶]&quot;,&quot;[难过]&quot;,&quot;[酷]&quot;,&quot;[冷汗]&quot;,&quot;[抓狂]&quot;,&quot;[吐]&quot;,&quot;[偷笑]&quot;,&quot;[可爱]&quot;,
-&quot;[白眼]&quot;,&quot;[傲慢]&quot;,&quot;[饥饿]&quot;,&quot;[困]&quot;,&quot;[惊恐]&quot;,&quot;[流汗]&quot;,&quot;[憨笑]&quot;,&quot;[大兵]&quot;,&quot;[奋斗]&quot;,&quot;[咒骂]&quot;,&quot;[疑问]&quot;,&quot;[嘘]&quot;,&quot;[晕]&quot;,&quot;[折磨]&quot;,&quot;[衰]&quot;,&quot;[骷髅]&quot;,&quot;[敲打]&quot;,&quot;[再见]&quot;,&quot;[擦汗]&quot;,&quot;[抠鼻]&quot;,&quot;[鼓掌]&quot;,&quot;[糗大了]&quot;,&quot;[坏笑]&quot;,&quot;[左哼哼]&quot;,&quot;[右哼哼]&quot;,&quot;[哈欠]&quot;,
-&quot;[鄙视]&quot;,&quot;[委屈]&quot;,&quot;[快哭了]&quot;,&quot;[阴险]&quot;,&quot;[亲亲]&quot;,&quot;[吓]&quot;,&quot;[可怜]&quot;,&quot;[菜刀]&quot;,&quot;[西瓜]&quot;,&quot;[啤酒]&quot;,&quot;[篮球]&quot;,&quot;[乒乓]&quot;,&quot;[咖啡]&quot;,&quot;[饭]&quot;,&quot;[猪头]&quot;,&quot;[玫瑰]&quot;,&quot;[凋谢]&quot;,&quot;[示爱]&quot;,&quot;[爱心]&quot;,&quot;[心碎]&quot;,&quot;[蛋糕]&quot;,&quot;[闪电]&quot;,&quot;[炸弹]&quot;,&quot;[刀]&quot;,&quot;[握手]&quot;,&quot;[胜利]&quot;,
-&quot;[便便]&quot;,&quot;[NO]&quot;,&quot;[OK]&quot;,&quot;[抱拳]&quot;,&quot;[弱]&quot;,&quot;[强]&quot;],
-
-    emojLocalPath:function(emoj_name){
-      var index = this.emotionArray.indexOf(emoj_name)
-      if (index &gt; -1){
-          return &quot;bmlocal://assets/emotions/&quot;+index+&quot;@2x.png&quot;
-      }
-      return null
-    },
-    emojName:function(index){
-        if (index &lt; this.emotionArray.length){
-            return this.emotionArray[index]
-        }
-        return null
-    }
-}
-
-export default emotionFunc;
-
-</code></pre>
-
-<p>至此，我的整个实现已经完全呈现出来了，如果你能看懂我上面所写，正好你也正好有和我类似的需求，相信你也能在我的思路下实现自己的业务代码。</p>
-
-<p>最后，愿世界和平！！！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ubuntu 安装uwsgi]]></title>
-    <link href="https://blog.mylonly.com/15126534156721.html"/>
-    <updated>2017-12-07T21:30:15+08:00</updated>
-    <id>https://blog.mylonly.com/15126534156721.html</id>
-    <content type="html"><![CDATA[
-<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
-然后利用pip3 安装uwsgi</p>
-
-<pre><code class="language-Shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-tar -xvf Python-3.6.3.tar.xz
-cd Python-3.6.3/
-
-apt-get install zlib1g-dev
-apt-get install libssl-dev
-apt-get install sqlite3
-
-
-./configure --enable-loadable-sqlite-extensions
-
-make &amp;&amp; sudo make install
-
-
-pip3 install uwsgi
-
-uwsgi -i /data/web/xxxx.ini
-</code></pre>
-
-<p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
-
-<pre><code>py-autoreload = 1
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django 发送html格式的邮件]]></title>
-    <link href="https://blog.mylonly.com/15119665687635.html"/>
-    <updated>2017-11-29T22:42:48+08:00</updated>
-    <id>https://blog.mylonly.com/15119665687635.html</id>
-    <content type="html"><![CDATA[
-<p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
-
-<h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
-
-<pre><code class="language-Python">EMAIL_USE_SSL = True    
-EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
-EMAIL_PORT = 465
-EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
-EMAIL_HOST_PASSWORD = &#39;password&#39;  # 密码
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-</code></pre>
-
-<h5 id="toc_1">2. 引用mail库发送邮件</h5>
-
-<pre><code class="language-Python">from django.core.mail import EmailMessage
-from Across.settings import EMAIL_HOST_USER
-
-msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
-msg.send()
-</code></pre>
-
-<h5 id="toc_2">3.发送html模板邮件</h5>
-
-<p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
-
-<pre><code class="language-Python">TEMPLATES = [
-    {
-        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
-        &#39;DIRS&#39;: [
-            os.path.join(BASE_DIR,&#39;templates&#39;)  ##你的模板目录
-        ],
-        &#39;APP_DIRS&#39;: True,
-        &#39;OPTIONS&#39;: {
-            &#39;context_processors&#39;: [
-                &#39;django.template.context_processors.debug&#39;,
-                &#39;django.template.context_processors.request&#39;,
-                &#39;django.contrib.auth.context_processors.auth&#39;,
-                &#39;django.contrib.messages.context_processors.messages&#39;,
-            ],
-        },
-    },
-]
-</code></pre>
-
-<p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
-
-<pre><code class="language-Python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
-msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
-msg.content_subtype = &quot;html&quot; # Main content is now text/html
-msg.send()
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django扩展默认的User Model]]></title>
-    <link href="https://blog.mylonly.com/15117871248079.html"/>
-    <updated>2017-11-27T20:52:04+08:00</updated>
-    <id>https://blog.mylonly.com/15117871248079.html</id>
-    <content type="html"><![CDATA[
-<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
-
-<blockquote>
-<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
-</blockquote>
-
-<p>在models.py中新建一个model继承自AbstractUser</p>
-
-<pre><code>from django.db import models
-
-# Create your models here.
-from django.contrib.auth.models import AbstractUser
-from enum import Enum
-
-
-class UserProfile(AbstractUser):
-
-    GENDER = [
-        (0,&quot;未知&quot;),
-        (1,&quot;男性&quot;),
-        (2,&quot;女性&quot;)
-    ]
-
-    nickname = models.CharField(max_length=50)
-    intro = models.CharField(max_length=500)
-    mobile = models.CharField(max_length=13)
-    gender = models.IntegerField(choices=GENDER,default=0)
-
-    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
-
-</code></pre>
-
-<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
-
-<pre><code>AUTH_USER_MODEL = &#39;User.UserProfile&#39;
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[利用Scrapy-Splash抓取JS动态渲染的网页数据]]></title>
-    <link href="https://blog.mylonly.com/15052000291680.html"/>
-    <updated>2017-09-12T15:07:09+08:00</updated>
-    <id>https://blog.mylonly.com/15052000291680.html</id>
-    <content type="html"><![CDATA[
-<p>随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法：</p>
-
-<ol>
-<li>通过分析网站，找到对应数据的接口，模拟接口去获取我们需要的数据(参见<a href="https://www.mylonly.com/14945011244738.html">Scrapy抓取Ajax动态页面</a>),但是一旦该网站的接口隐藏的很深，或者接口的加密过于复杂，此种方法可能就有点行不通了</li>
-<li>借助JS内核，将获取到的含有JS脚本的页面交由JS内核去渲染，最后将渲染后生成的html返回给Scrapy分析，比较常见的WebKit和Scrapy-Splash</li>
-</ol>
-
-<p>本篇文章的目的就是用来介绍如何使用Scrapy-Splash来配合Scrapy抓取动态页面这个问题。</p>
-
-<h3 id="toc_0">准备工作</h3>
-
-<ol>
-<li><p>Docker安装,具体安装步骤参考<a href="https://docs.docker.com/engine/installation/">Docker官网</a></p>
-
-<blockquote>
-<p>为什么要安装Docker?<br/>
-因为Scrapy-Splash使用了<code>Splash HTTP API</code>,所以你需要提供一个Splash实例，而在Docker镜像中已经有现成的Splash实例了，可以很方便的使用。</p>
-</blockquote></li>
-<li><p>Docker镜像源更改,参考<a href="https://ieevee.com/tech/2016/09/28/docker-mirror.html">国内 docker 仓库镜像对比</a></p></li>
-<li><p>安装运行Splash</p>
-
-<pre><code>docker pull scrapinghub/splash   #从docker镜像中拉取splash实例
-docker run -p 8050:8050 scrapinghub/splash  #启动splash实例
-</code></pre></li>
-</ol>
-
-<h3 id="toc_1">Scrapy配置</h3>
-
-<p>在Scrapy项目的setting.py中加入如下内容：</p>
-
-<pre><code class="language-Python">SPLASH_URL = &#39;http://localhost:8050&#39;  
-
-DOWNLOADER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashCookiesMiddleware&#39;: 723,
-&#39;scrapy_splash.SplashMiddleware&#39;: 725,
-&#39;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&#39;: 810,
-}
-
-SPIDER_MIDDLEWARES = {
-&#39;scrapy_splash.SplashDeduplicateArgsMiddleware&#39;: 100,
-}
-
-DUPEFILTER_CLASS = &#39;scrapy_splash.SplashAwareDupeFilter&#39;
-
-HTTPCACHE_STORAGE = &#39;scrapy_splash.SplashAwareFSCacheStorage&#39;
-
-</code></pre>
-
-<h3 id="toc_2">实际代码解析</h3>
-
-<p>我们以<a href="http://stock.qq.com/l/stock/ywq/list20150423143546.htm">腾讯证券</a>这个页面为例，腾讯的证券新闻列表是js动态渲染而成</p>
-
-<p>我们直接打开这个链接，然后打开开发者工具，定位到新闻列表处:<br/>
-<img src="https://pic.mylonly.com/2017-09-12-074653.jpg" alt=""/></p>
-
-<p>我们在从network中查看第一次请求的Response时发现，返回的html中该列表页处是空的<br/><br/>
-<img src="https://pic.mylonly.com/2017-09-12-075028.jpg" alt=""/></p>
-
-<p>实际的数据被藏着JS里，加载完成后由JS操作DOM插入完成<br/>
-<img src="https://pic.mylonly.com/2017-09-12-075305.jpg" alt=""/></p>
-
-<p>此处由于实际数据被塞到了一段JS的变量里面，并不是由Ajax调用接口获取的，因此为了避免自己手动去截取js变量，我们便将该页面交给Scrapy-Splash渲染</p>
-
-<pre><code class="language-Python">import scrapy
-from FinancialInfoSpider.items import ArticleItem
-from scrapy_splash import SplashRequest
-from w3lib.html import remove_tags
-import re
-from bs4 import BeautifulSoup
-
-class TencentStockSpider(scrapy.Spider):
-    name = &quot;TencentStock&quot;
-    def start_requests(self):
-        urls = [
-           &#39;http://stock.qq.com/l/stock/ywq/list20150423143546.htm&#39;,
-        ]
-
-        for url in urls:
-            yield SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-
-    def parse(self,response):
-
-        sel = scrapy.Selector(response)
-        links = sel.xpath(&quot;//div[@class=&#39;qq_main&#39;]//ul[@class=&#39;listInfo&#39;]//li//div[@class=&#39;info&#39;]//h3//a/@href&quot;).extract()
-        requests = []
-        
-        for link in links:
-            request = scrapy.Request(link, callback =self.parse_article)
-            requests.append(request)
-        return requests
-
-    def parse_article(self,response):
-
-        sel = scrapy.Selector(response)
-
-        article = ArticleItem()
-        article[&#39;title&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/h1/text()&#39;).extract()[0]
-        article[&#39;source&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[2]&#39;).xpath(&#39;string(.)&#39;).extract()[0]
-        article[&#39;pub_time&#39;] = sel.xpath(&#39;//*[@id=&quot;Main-Article-QQ&quot;]/div/div[1]/div[1]/div[1]/div/div[1]/span[3]/text()&#39;).extract()[0]
-        
-        html_content = sel.xpath(&#39;//*[@id=&quot;Cnt-Main-Article-QQ&quot;]&#39;).extract()[0]
-        article[&#39;content&#39;] = self.remove_html_tags(html_content)
-        return article
-
-
-    def remove_html_tags(self,html):
-        
-        soup = BeautifulSoup(html)
-        [s.extract() for s in soup(&#39;script&#39;)]
-        [s.extract() for s in soup(&#39;style&#39;)] 
-         
-        content = &#39;&#39;
-        for substring in soup.stripped_strings:
-            content = content + substring
-
-        return content       
-</code></pre>
-
-<p>主要代码就一句，将获取到的页面发送给本地的Splash实例去渲染解析，最后将结果返回给parse函数解析</p>
-
-<pre><code>SplashRequest(url, self.parse, args={&#39;wait&#39;: 0.5})
-</code></pre>
-
-<p>里面用了BeautifulSoup这个库去除了html中得script和style标签，具体用法可以参考这两篇文章:</p>
-
-<p><a href="http://cuiqingcai.com/1319.html">Python爬虫利器二之Beautiful Soup的用法</a><br/>
-<a href="https://my.oschina.net/letiantian/blog/504669">使用BeautifulSoup删除html中的script、注释</a></p>
-
-<p>输出结果:</p>
-
-<p><img src="https://pic.mylonly.com/2017-09-12-080930.jpg" alt=""/></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CentOS6 安装部署Zabbix]]></title>
-    <link href="https://blog.mylonly.com/14972546183511.html"/>
-    <updated>2017-06-12T16:03:38+08:00</updated>
-    <id>https://blog.mylonly.com/14972546183511.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>Zabbix是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题。</p>
-</blockquote>
-
-<h2 id="toc_0">部署LAMP|LNMP环境</h2>
-
-<p>由于Zabbix的Web管理页面是由php写的，所以需要服务器PHP环境的支持，Linux部署LAMP或者LNMP的教程很多，在此就不在赘述。<br/>
-需要注意的是:Zabbix支持的PHP最低版本是PHP5.4,而目前CentOS6中通过yum安装的php版本为5.3，所以最好采用源码编译安装。<br/>
-当然，如果你觉得自己搞不定源码安装的各种编译参数，本文也给出一种yum安装php5.5版本的方法</p>
-
-<h3 id="toc_1">Yum 安装PHP5.5</h3>
-
-<ol>
-<li>CentOS6安装PHP5.5源
-<code>rpm -ivh http://mirror.webtatic.com/yum/el6/latest.rpm</code></li>
-<li>安装php5.5
-<code>yum install php55w php55w-gd php55w-mbstring php55w-mysql php55w-fpm php55w-bcmath php55w-xmlreader php55w-xmlwriter</code></li>
-</ol>
-
-<p>修改PHP配置，编辑/etc/php.ini,修改下列参数</p>
-
-<pre><code>max_execution_time = 300
-max_input_time = 300
-memory_limit = 128M
-post_max_size = 32M
-date.timezone = Asia/Shanghai
-</code></pre>
-
-<h2 id="toc_2">zabbix数据库</h2>
-
-<ol>
-<li>从<a href="http://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/3.2.6/zabbix-3.2.6.tar.gz/download%5D">zabbix-3.2.6</a>下载最新版本的zabbix源码并解压至当前目录</li>
-<li>进入mysql数据库  <code>mysql -u root -p</code></li>
-<li>创建zabbix数据库 <code>create database zabbix character set utf8;</code></li>
-<li>创建zabbix用户并给与进入zabbix数据库的权限（用户名:zabbix,密码:123456） `grant all privileges on zabbix.* to zabbix@&#39;%&#39; identified by &#39;123456&#39;;</li>
-<li>刷新系统权限表 <code>flush privileges;</code></li>
-<li><p>进入之前下载的zabbix源码目录，找到database文件夹，里面有<code>schema.sql</code>、<code>images.sql</code>、<code>data.sql</code>，将这三个sql文件依次导入之前创建好的zabbix数据库中（PS,请按照schema-&gt;images-&gt;data的顺序依次导入，否则会出错）</p>
-
-<pre><code>mysql&gt; use zabbix;
-mysql&gt; source /root/zabbix-3.2.6/database/schema.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/images.sql;
-mysql&gt; source /root/zabbix-3.2.6/database/data.sql;
-</code></pre></li>
-</ol>
-
-<h2 id="toc_3">添加zabbix用户和组</h2>
-
-<pre><code>groupadd zabbix
-useradd -g zabbix -m zabbix
-</code></pre>
-
-<h2 id="toc_4">安装zabbix其他依赖包</h2>
-
-<pre><code>yum install net-snmp-devel curl curl-devel mysql-devel
-</code></pre>
-
-<h2 id="toc_5">编译安装zabbix</h2>
-
-<ol>
-<li><p>进入zabbix源码根目录，生成makefile</p>
-
-<pre><code>./configure --prefix=/usr/local/zabbix --with-mysql --with-net-snmp --with-libcurl --enable-server --enable-agent --enable-proxy
-</code></pre></li>
-<li><p>安装</p>
-
-<pre><code>make
-make install
-</code></pre></li>
-</ol>
-
-<h2 id="toc_6">添加zabbix服务对应的端口</h2>
-
-<pre><code>vim /etc/services ##在文件中加入以下端口
-zabbix-agent 10050/tcp # Zabbix Agent
-zabbix-agent 10050/udp # Zabbix Agent
-zabbix-trapper 10051/tcp # Zabbix Trapper
-zabbix-trapper 10051/udp # Zabbix Trapper
-</code></pre>
-
-<h2 id="toc_7">修改zabbix配置</h2>
-
-<ol>
-<li><p>修改 /usr/local/zabbix/etc/zabbix_server.conf</p>
-
-<pre><code>DBName=zabbix #数据库名称
-
-DBUser=zabbix #数据库用户名
-
-DBPassword=123456 #数据库密码
-
-ListenIP=127.0.0.1 #数据库ip地址
-
-AlertScriptsPath=/usr/local/zabbix/share/zabbix/alertscripts #zabbix运行脚本存放目录
-</code></pre></li>
-<li><p>修改 /usr/local/zabbix/etc/zabbix_agentd.conf</p>
-
-<pre><code>Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/
-</code></pre></li>
-</ol>
-
-<h2 id="toc_8">让zabbix开机启动</h2>
-
-<ol>
-<li><p>拷贝可执行文件至init.d目录</p>
-
-<pre><code>cp /usr/local/zabbix/sbin/zabbix_server /etc/rc.d/init.d/zabbix_server  #服务端
-cp /usr/local/zabbix/sbin/zabbix_agentd /etc/rc.d/init.d/zabbix_agentd  #客户端
-</code></pre></li>
-<li><p>添加脚本执行权限</p>
-
-<pre><code>chmod +x /etc/rc.d/init.d/zabbix_server
-chmod +x /etc/rc.d/init.d/zabbix_agentd 
-</code></pre></li>
-<li><p>加入开机启动</p>
-
-<pre><code>chkconfig zabbix_server on
-chkconfig zabbix_agentd on
-</code></pre></li>
-<li><p>修改开启启动脚本中zabbix的安装路径,分别用vim打开/etc/rc.d/init.d/zabbix_server和/etc/rc.d/init.d/zabbix_agentd,修改BASEDIR参数为/usr/local/zabbix</p>
-
-<pre><code>BASEDIR=/usr/local/zabbix/ #zabbix安装目录
-</code></pre></li>
-</ol>
-
-<h2 id="toc_9">安装zabbix web管理页面</h2>
-
-<ol>
-<li><p>拷贝zabbix源码当中的frontends/php下面的所有文件至web服务器的根目录，重启web服务器，如果你的LNMP环境或者LAMP环境没有问题的话，浏览器中输入服务器地址应该会出现zabbix的setup页面</p></li>
-<li><p>点击next按钮，之后会检测zabbix所需要的条件是否完全支持(PS:缺少什么就安装什么，一定要全部OK才可继续下去)</p></li>
-<li><p>之后会出现连接数据库的页面,填入之前创建zabbix数据库时的信息</p></li>
-<li><p>第4步出现当前zabbix服务器的一些基本信息，name填一下</p></li>
-<li><p>安装向导会自动在服务器根目录下的conf下创建一个zabbix.conf.php文件,如果你的根目录权限设置不正确导致向导无法写入文件，这时就需要你手动将这个文件上传到服务器的正确目录</p></li>
-<li><p>一切OK之后就会出现登录页面，初始用户名admin,初始密码zabbix</p></li>
 </ol>
 
 ]]></content>

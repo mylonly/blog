@@ -1,102 +1,518 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	iOS - 独自一人
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  iOS - 独自一人
   
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
-</head>
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-				 	<div class="profilepic">
-						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
-					</div>
-            	
-					
-					<h1><a href="index.html">独自一人</a></h1>
-					<p class="subtitle">独自一人,独自Coding...</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="self" href="index.html">Home</a></li>
-						
-						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
-						
-						</ul>
-					</nav>
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
 
-					<nav id="sub-nav">
-						<div class="social">
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
 
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="14957025459875.html">
+                
+                  <h1>Swift3.0 利用泛型设置基类属性的动态类型</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	Swift3.0 利用泛型设置基类属性的动态类型
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/25</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14951753262754.html">
+                
+                  <h1>基于BarrageRender自定义弹幕动画</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	[BarrageRender](https://github.com/unash/BarrageRenderer) 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，`BarrageFloatSprite`和`BarrageWalkSprite`。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/19</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14944977278738.html">
+                
+                  <h1>Swift要点</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
+
+<ol>
+<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
+<pre><code class="language-swift">let apples = 3
+let oranges = 5<br/>
+let appleSummary = &quot;I have \(apples) apples.&quot;<br/>
+let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-text">&quot;I have 3 apples&quot;
+&quot;I have 8 pieces of fruit&quot;
+</code></pre></li>
+<li><p>Swift声明数组或者字典可以声明指定类型</p>
+<pre><code class="language-swift">let emptyArray = [String]()
+let emptyDictionary = [String: Float]()
+</code></pre></li>
+<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
+<pre><code class="language-swift"> if score &gt; 50 {
+    teamScore += 3<br/>
+} else {<br/>
+       teamScore += 1<br/>
+}
+</code></pre>
+<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
+<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
+<pre><code class="language-swift">let vegetable = &quot;red pepper&quot;
+switch vegetable {<br/>
+case &quot;celery&quot;:<br/>
+    print(&quot;Add some raisins and make ants on a  log.&quot;)<br/>
+case &quot;cucumber&quot;, &quot;watercress&quot;:<br/>
+    print(&quot;That would make a good tea sandwich.&quot;)<br/>
+case let x where x.hasSuffix(&quot;pepper&quot;):<br/>
+    print(&quot;Is it a spicy \(x)?&quot;)<br/>
+default:<br/>
+    print(&quot;Everything tastes good in soup.&quot;)<br/>
+}
+</code></pre>
+<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
+<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
+<li><p>do{}while()被repeat{}while()取代</p>
+<pre><code class="language-swift">var m = 2
+repeat {<br/>
+    m = m * 2<br/>
+} while m &lt; 100<br/>
+print(m)
+</code></pre></li>
+<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
+<pre><code class="language-swift">var firstForLoop = 0
+for i in 0..&lt;4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)<br/>
+var firstForLoop = 0<br/>
+for i in 0...4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)
+</code></pre></li>
+<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:</p>
+<pre><code class="language-swift">func sumOf(numbers: Int...) -&gt; Int {
+var sum = 0<br/>
+for number in numbers {<br/>
+    sum += number<br/>
+}<br/>
+return sum<br/>
+}<br/>
+sumOf()<br/>
+sumOf(42, 597, 12)
+</code></pre></li>
+<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
+<pre><code class="language-swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
+func addOne(number: Int) -&gt; Int {<br/>
+    return 1 + number<br/>
+}<br/>
+return addOne<br/>
+}<br/>
+var increment = makeIncrementer()<br/>
+increment(7)
+</code></pre>
+<p>同理，函数也可以当做参数传入函数,</p>
+<pre><code class="language-swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
+for item in list {<br/>
+    if condition(item) {<br/>
+        return true<br/>
+    }<br/>
+}<br/>
+return false<br/>
+}<br/>
+func lessThanTen(number: Int) -&gt; Bool {<br/>
+    return number &lt; 10<br/>
+}<br/>
+var numbers = [20, 19, 7, 12]<br/>
+hasAnyMatches(numbers, condition: lessThanTen)
+</code></pre></li>
+<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
+<pre><code class="language-swift">class NamedShape {
+var numberOfSides: Int = 0<br/>
+var name: String<br/>
+init(name: String) {<br/>
+    self.name = name<br/>
+}<br/>
+func simpleDescription() -&gt; String {<br/>
+        return &quot;A shape with \(numberOfSides) sides.&quot;<br/>
+  }<br/>
+}<br/>
+class Square: NamedShape {<br/>
+var sideLength: Double<br/>
+init(sideLength: Double, name: String) {<br/>
+    self.sideLength = sideLength<br/>
+    super.init(name: name)<br/>
+    numberOfSides = 4<br/>
+}<br/>
+func area() -&gt;  Double {<br/>
+    return sideLength * sideLength<br/>
+}<br/>
+override func simpleDescription() -&gt; String {<br/>
+        return &quot;A square with sides of length \(sideLength).&quot;<br/>
+    }<br/>
+}<br/>
+let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)<br/>
+test.area()<br/>
+test.simpleDescription()
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/10/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14944977101213.html">
+                
+                  <h1>Swift学习要点-基础部分</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
+
+<blockquote>
+<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
+</blockquote>
+
+<ol>
+<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+<pre><code class="language-swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
+print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print<br/>
+print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
+</code></pre></li>
+<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+<pre><code class="language-swift">let paddedDouble = 000123.456
+let oneMillion = 1_000_000<br/>
+let justOverOneMillion = 1_000_000.000_000_1
+</code></pre></li>
+<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+<pre><code class="language-swift">typealias AudioSample = UInt16
+var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
+</code></pre></li>
+<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+<pre><code class="language-swift">var maxValue = UInt8.max
+var max64Value = Int64.max<br/>
+max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;<br/>
+max64Value = Int64(maxValue) //Ok<br/>
+let number = 3<br/>
+var str1 = String(number) //str1 = &quot;3&quot;<br/>
+var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
+</code></pre></li>
+<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
+<pre><code class="language-swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
+let (justTheStatusCode, _) = http404Error<br/>
+print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
+</code></pre></li>
+<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
+<pre><code class="language-swift">var serverResponseCode: Int? = 404
+// serverResponseCode 包含一个可选的 Int 值 404<br/>
+serverResponseCode = nil<br/>
+// serverResponseCode 现在不包含值
+</code></pre></li>
+<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
+<pre><code class="language-swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
+var str = &quot;\(option)&quot; //输出:&quot;nil&quot;<br/>
+str = &quot;\(option!)&quot;    //Error
+</code></pre></li>
+<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
+<pre><code class="language-swift">let const_a:String
+if (condition){<br/>
+    const_a = &quot;a&quot;<br/>
+}else{<br/>
+    const_a = &quot;b&quot;<br/>
+}
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/10/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14944975766543.html">
+                
+                  <h1>CocoaPods master仓库替换为国内源</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
+国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
+
+<ol>
+<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
+<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
+</ol>
+
+<p>执行如下命令替换Pods源</p>
+
+<pre><code class="language-bash">$ pod repo remove master
+$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
+</code></pre>
+
+<p> <br/>
+仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
+
+<pre><code class="language-bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
+Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
+</code></pre>
+
+<p> <br/>
+这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
+
+<pre><code class="language- bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
+platform :ios, &#39;6.0&#39;
+pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			 <a href="ios_1.html">&raquo; Next Page</a> 
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
 
 
 
@@ -108,905 +524,158 @@
 
 <a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
 <a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
 
-								
+             
 
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-25T16:55:45+08:00" itemprop="datePublished">2017/5/25</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14957025459875.html" itemprop="url">
-		Swift3.0 利用泛型设置基类属性的动态类型</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>在MVVM架构的项目中，我们一般会写一个viewModel的基类和一个controller的基类，在controller的对象中持有viewModel,如下代码</p>
-
-<pre><code class="language-Swift">class ViewModel{
-    
-}
-class Controller {
-
-    var viewModel:ViewModel
-    
-    init(viewModel:ViewModel) {
-        self.viewModel = viewModel
-    }
-}
-</code></pre>
-
-<p>然后在每一个具体的页面上，都会写一个对应的viewModel和controller分别继承自上面两个基类</p>
-
-<pre><code class="language-Swift">class Sub1ViewModel:ViewModel{
-    
-    let desc = &quot;Sub1&quot;
-
-}
-class Sub1Controller:Controller{
-    
-}
-</code></pre>
-
-<p>这时如果我想在Sub1Controller中访问Sub1ViewModel中的desc变量，只能在Sub1Controller中这样写</p>
-
-<pre><code class="language-Swift">class Sub1Controller:Controller{
-    var description{
-        let viewModel = self.viewModel as! Sub1ViewModel
-        return viewModel.desc
-    }
-}
-</code></pre>
-
-<p>由于Swift是强类型语言，不能像OC那样通过类型的强制转换来使基类的属性变成子类的类型，所以你每次使用基类的属性的时候都必须要用as强制转换成子类的类型之后才能访问子类的属性或者方法，当然你可以将这个强制转换包装成一个函数，或者提供另一个变量返回强制转换过的类型。</p>
-
-<pre><code class="language-Swift">class Sub1Controller:Controller{
-    var sub1ViewModel:Sub1ViewModel{
-        return self.viewModel as! Sub1ViewModel
-    }
-    var description{
-    //  let viewModel = self.viewModel as! Sub1ViewModel
-        return self.sub1ViewModel.desc  // Or: return self.sub1ViewModel().desc
-    }
-    
-    func sub1ViewModel() -&gt; Sub1ViewModel{
-        return self.viewModel as! Sub1ViewModel
-    }
-} 
-
-</code></pre>
-
-<p>但是这两种方法仍然不够优雅，产生了很多冗余的代码，笔者在实践中尝试着使用泛型来是基类的属性类型动态化，是代码看起来更优雅</p>
-
-<pre><code class="language-Swift">
-class ViewModel{
-}
-
-class Controller&lt;ModelType:ViewModel&gt; {
-    var viewModel:ModelType
-    init(viewModel:ModelType) {
-        self.viewModel = viewModel
-    }
-}
-
-class Sub1ViewModel:ViewModel{  
-    let desc = &quot;Sub1&quot;
-}
-
-class Sub1Controller:Controller&lt;Sub1ViewModel&gt;{
-      var description{
-        return self.viewModel.desc
-    }
-}
-</code></pre>
-
-<p>通过ModelType泛型类型，使得在Sub1Controller中直接通过viewModel就能访问到Sub1ViewModel的属性</p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2017-05-19T14:28:46+08:00" itemprop="datePublished">2017/5/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14951753262754.html" itemprop="url">
-		基于BarrageRender自定义弹幕动画</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p><a href="https://github.com/unash/BarrageRenderer">BarrageRender</a> 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，<code>BarrageFloatSprite</code>和<code>BarrageWalkSprite</code>。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程。</p>
-</blockquote>
-
-<p><mark><em>BarrageRender目前已更新到2.0.1,自定义弹幕的机制有改变，本篇文章的代码在2.0.1下不起作用，如果想按照本文中用的方法，请使用1.9.1版本的BarrageRender。后续会更新2.0.1版本下的自定义弹幕</em></mark></p>
-
-<h3 id="toc_0">先展示效果</h3>
-
-<p><img src="https://pic.mylonly.com/2017-05-19-1234.gif" alt="弹幕效果"/></p>
-
-<h3 id="toc_1">再介绍BarrageWalkSprite原理</h3>
-
-<blockquote>
-<p>BarrageWalkSprite和本文将要实现的自定义Sprite有一定的关联性，所以就通过分析BarrageWalkSprite的源码来展示BarrageRender渲染弹幕的原理，另外一个BarrageFloatSprite的渲染方式稍有不同，但是如果你能搞清楚BarrageWalkSprite的原理，理解FloatSprite的渲染方式也是很轻松的。</p>
-</blockquote>
-
-<h4 id="toc_2">弹幕的初始位置</h4>
-
-<p>BarrageRender在BarrageDispatcher的调度下触发activeWithContext方法，而在此方法中，BarrageRender调用了Sprite的originInBounds:withSprite方法来确定每个精灵的初始位置</p>
-
-<pre><code class="language-Objc">   - (void)activeWithContext:(NSDictionary *)context
-    {
-        CGRect rect = [[context objectForKey:kBarrageRendererContextCanvasBounds]CGRectValue];
-        NSArray * sprites = [context objectForKey:kBarrageRendererContextRelatedSpirts];
-        NSTimeInterval timestamp = [[context objectForKey:kBarrageRendererContextTimestamp]doubleValue];
-        _timestamp = timestamp;
-        _view = [self bindingView];
-        [self configView];
-        [_view sizeToFit];
-        if (!CGSizeEqualToSize(_mandatorySize, CGSizeZero)) {
-            _view.frame = CGRectMake(0, 0, _mandatorySize.width, _mandatorySize.height);
-        }
-        _origin = [self originInBounds:rect withSprites:sprites];
-        _view.frame = CGRectMake(_origin.x, _origin.y, self.size.width, self.size.height);
-    }
-</code></pre>
-
-<p>BarrageWalkSpirte在originInBounds:withSprite方法中,根据当前屏幕上已经存在的Sprite来计算自己的初始位置。</p>
-
-<pre><code class="language-Objc">    
-- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
-{
-   // 获取同方向精灵
-   NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
-   for (BarrageWalkSprite * sprite in sprites) {
-       if (sprite.direction == _direction &amp;&amp; sprite.side == self.side) { // 找寻同道中人
-           [synclasticSprites addObject:sprite];
-       }
-   }
-   
-   static BOOL const AVAERAGE_STRATEGY = YES; // YES:条纹平均精灵策略(体验会好一些); NO:最快时间策略
-   NSTimeInterval stripMaxActiveTimes[STRIP_NUM]={0}; // 每一条网格 已有精灵中最后退出屏幕的时间
-   NSUInteger stripSpriteNumbers[STRIP_NUM]={0}; // 每一条网格 包含精灵的数目
-   NSUInteger stripNum = MIN(STRIP_NUM, MAX(self.trackNumber, 1)); // between (1,STRIP_NUM)
-   CGFloat stripHeight = rect.size.height/stripNum; // 水平条高度
-   CGFloat stripWidth = rect.size.width/stripNum; // 竖直条宽度
-   BOOL oritation = _direction == BarrageWalkDirectionL2R || _direction == BarrageWalkDirectionR2L; // 方向, YES代表水平弹幕
-   BOOL rotation = self.side == [self defaultSideWithDirection:_direction];
-   /// 计算数据结构,便于应用算法
-   NSUInteger overlandStripNum = 1; // 横跨网格条数目
-   if (oritation) { // 水平
-       overlandStripNum = (NSUInteger)ceil((double)self.size.height/stripHeight);
-   }
-   else // 竖直
-   {
-       overlandStripNum = (NSUInteger)ceil((double)self.size.width/stripWidth);
-   }
-   /// 当前精灵需要的时间,左边碰到边界, 不是真实的活跃时间
-   NSTimeInterval maxActiveTime = oritation?rect.size.width/self.speed:rect.size.height/self.speed;
-   NSUInteger availableFrom = 0;
-   NSUInteger leastActiveTimeStrip = 0; // 最小时间的行
-   NSUInteger leastActiveSpriteStrip = 0; // 最小网格的行
-   
-   for (NSUInteger i = 0; i &lt; stripNum; i++) {
-       //寻找当前行里包含的sprites
-       CGFloat stripFrom = i * (oritation?stripHeight:stripWidth);
-       CGFloat stripTo = stripFrom + (oritation?stripHeight:stripWidth);
-       if (!rotation) {
-           CGFloat preStripFrom = stripFrom;
-           stripFrom = (oritation?rect.size.height:rect.size.width) - stripTo;
-           stripTo = (oritation?rect.size.height:rect.size.width) - preStripFrom;
-       }
-       CGFloat lastDistanceAllOut = YES;
-       for (BarrageWalkSprite * sprite in synclasticSprites) {
-           CGFloat spriteFrom = oritation?sprite.origin.y:sprite.origin.x;
-           CGFloat spriteTo = spriteFrom + (oritation?sprite.size.height:sprite.size.width);
-           if ((spriteTo-spriteFrom)+(stripTo-stripFrom)&gt;MAX(stripTo-spriteFrom, spriteTo-stripFrom)) { // 在条条里
-               stripSpriteNumbers[i]++;
-               NSTimeInterval activeTime = [sprite estimateActiveTime];
-               if (activeTime &gt; stripMaxActiveTimes[i]){ // 获取最慢的那个
-                   stripMaxActiveTimes[i] = activeTime;
-                   CGFloat distance = oritation?fabs(sprite.position.x-sprite.origin.x):fabs(sprite.position.y-sprite.origin.y);
-                   lastDistanceAllOut = distance &gt; (oritation?sprite.size.width:sprite.size.height);
-               }
-           }
-       }
-       if (stripMaxActiveTimes[i]&gt;maxActiveTime || !lastDistanceAllOut) {
-           availableFrom = i+1;
-       }
-       else if (i - availableFrom &gt;= overlandStripNum - 1){
-           break; // eureka!
-       }
-       if (i &lt;= stripNum - overlandStripNum) {
-           if (stripMaxActiveTimes[i] &lt; stripMaxActiveTimes[leastActiveTimeStrip]) {
-               leastActiveTimeStrip = i;
-           }
-           if (stripSpriteNumbers[i] &lt; stripSpriteNumbers[leastActiveSpriteStrip]) {
-               leastActiveSpriteStrip = i;
-           }
-       }
-   }
-   if (availableFrom &gt; stripNum - overlandStripNum) { // 那就是没有找到喽
-       availableFrom = AVAERAGE_STRATEGY?leastActiveSpriteStrip:leastActiveTimeStrip; // 使用最小个数 or 使用最短时间
-   }
-   
-   CGPoint origin = CGPointZero;
-   if (oritation) { // 水平
-       _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-       origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-       _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width:rect.origin.x - self.size.width;
-   }
-   else
-   {
-       _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-       origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-       _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height:rect.origin.y - self.size.height;
-   }
-   return origin;
-}
-</code></pre>
-
-<p>代码虽然很长，但是主要就是为了实现下面几个逻辑:</p>
-
-<pre><code>1. BarrageWalkSprite先获取了同方向的所有精灵
-2. 根据屏幕轨道的frame范围找到每一个轨道内的所有精灵
-3. 在同一轨道内的所有精灵中找到存活时间最长的精灵(速度最慢)
-4. 判断速度最慢的那个精灵的尾部是否已经完全进入弹幕显示区域
-5. 如果速度最慢的精灵尾部已经进入弹幕显示区域，则可以确定自己的可以紧跟在后面出现，如果还没有完全进入弹幕显示区域，则继续在下一个轨道获取合适的位置
-6. 根据计算得到的自己可以出现的轨道，加上该轨道上最后一个精灵的位置，得到自己的起始位置
-</code></pre>
-
-<h4 id="toc_3">弹幕的运动轨迹</h4>
-
-<p>BarrageRender绘制每个精灵的运动轨迹的方式非常简单，在BarrageRender中，内置的时钟引擎<code>BarrageClock</code>负责在间隔时间内调用所有已经激活精灵基类<code>BarrageSprite</code>中的updateWithTime方法。</p>
-
-<pre><code class="language-Objc">   - (void)initClock
-    {
-        __weak id weakSelf = self;
-        _clock = [BarrageClock clockWithHandler:^(NSTimeInterval time){
-            BarrageRenderer * strongSelf = weakSelf;
-            strongSelf-&gt;_time = time;
-            [strongSelf update];
-        }];
-    }
-    
-    /// 每个刷新周期执行一次
-    - (void)update
-    {
-        [_dispatcher dispatchSprites]; // 分发精灵
-        for (BarrageSprite * sprite in _dispatcher.activeSprites) {
-            [sprite updateWithTime:_time];
-        }
-    }
-
-</code></pre>
-
-<p>而在<code>BarrageSprite</code>的updateWithTime方法中, 每个精灵重新更改了自身的frame属性，以此来达到动画位移的效果。其中<code>_valid</code>属性是Sprite存活的唯一标志，标记为NO之后，Sprite就会从队列中彻底移除</p>
-
-<pre><code class="language-Objc">     //BarrageSprite
-   - (void)updateWithTime:(NSTimeInterval)time
-    {
-        _valid = [self validWithTime:time];
-        _view.frame = [self rectWithTime:time];
-    }
-</code></pre>
-
-<p>BarrageWalkSprite通过属性speed来实时改变自己的frame位置,同时计算剩下的destination和speed来算出自己的存活时间以用来标记valid属性</p>
-
-<pre><code class="language-Objc">  //BarrageWalkSprite
-  
-  - (BOOL)validWithTime:(NSTimeInterval)time
-    {
-        return [self estimateActiveTime] &gt; 0;
-    }
-    
-  - (NSTimeInterval)estimateActiveTime
-    {
-        CGFloat activeDistance = 0;
-        switch (_direction) {
-            case BarrageWalkDirectionR2L:
-                activeDistance = self.position.x - _destination.x;
-                break;
-            case BarrageWalkDirectionL2R:
-                activeDistance = _destination.x - self.position.x;
-                break;
-            case BarrageWalkDirectionT2B:
-                activeDistance = _destination.y - self.position.y;
-                break;
-            case BarrageWalkDirectionB2T:
-                activeDistance = self.position.y - _destination.y;
-            default:
-                break;
-        }
-        return activeDistance/self.speed;
-    }
-  
-  - (CGRect)rectWithTime:(NSTimeInterval)time
-    {
-        CGFloat X = self.destination.x - self.origin.x;
-        CGFloat Y = self.destination.y - self.origin.y;
-        CGFloat L = sqrt(X*X + Y*Y);
-        NSTimeInterval duration = time - self.timestamp;
-        CGPoint position = CGPointMake(self.origin.x + duration * self.speed * X/L, self.origin.y + duration * self.speed * Y/L);
-        return CGRectMake(position.x, position.y, self.size.width, self.size.height);
-    }
-    
-</code></pre>
-
-<h4 id="toc_4">弹幕终点</h4>
-
-<p>BarrageWalkSprite的终点计算很简单，弹幕的显示的距离加上Sprite自身的宽度就是整个精灵需要位移的距离，这个destination的计算已经体现在了起点位置的获取当中</p>
-
-<pre><code class="language-Objc">CGPoint origin = CGPointZero;
-if (oritation) { // 水平
-   _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-   origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-   _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width:rect.origin.x - self.size.width;
-}
-else
-{
-   _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-   origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-   _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height:rect.origin.y - self.size.height;
-}
-return origin;
-</code></pre>
-
-<h3 id="toc_5">自定义Sprite</h3>
-
-<blockquote>
-<p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite有很多重合之处，所以自定义的BarrageBubblingSprite直接继承BarrageWalkSprite以获取其direction,side,speed,trackNumber等多个属性，当然还需要另外加上加速度speedUp和停留时间stay属性</p>
-</blockquote>
-
-<pre><code class="language-Objc">@interface BarrrageBubblingSprite : BarrageWalkSprite
-
-@property (nonatomic,assign) CGFloat speedUp; //加速度
-
-@property (nonatomic,assign) CGFloat stay; //到达终点后的停留时间
-
-@end
-</code></pre>
-
-<h4 id="toc_6">起点位置</h4>
-
-<p>BubblingSprite的起点位置的获取逻辑和WalkSprite的起点逻辑类似，不同的地方在于:</p>
-
-<ol>
-<li><em>即使轨道内最慢的那个精灵已经完全进入弹幕显示区域，只要该精灵仍然存活，就不能紧跟其后,而是要另外找寻其他轨道</em></li>
-<li><em>当所有轨道都已经有精灵占据的时候，找到存活时间最短的那个精灵，通过将其的stay属性设置为0让其直接消失，然后让自己占据该精灵所在轨道</em></li>
-</ol>
-
-<pre><code class="language-Objc">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
-{
-    // 获取同方向精灵
-    NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
-    for (BarrageWalkSprite * sprite in sprites) {
-        if (sprite.direction == self.direction &amp;&amp; sprite.side == self.side) { // 找寻同道中人
-            [synclasticSprites addObject:sprite];
-        }
-    }
-    
-    NSUInteger stripNum = MIN(STRIP_NUM, MAX(self.trackNumber, 1)); // between (1,STRIP_NUM)
-    CGFloat stripHeight = rect.size.height/stripNum; // 水平条高度
-    CGFloat stripWidth = rect.size.width/stripNum; // 竖直条宽度
-    BOOL oritation = self.direction == BarrageWalkDirectionL2R || self.direction == BarrageWalkDirectionR2L; // 方向, YES代表水平弹幕
-    BOOL rotation = self.side == [self defaultSideWithDirection:self.direction];
-    /// 计算数据结构,便于应用算法
-    NSUInteger overlandStripNum = 1; // 横跨网格条数目
-    if (oritation) { // 水平
-        overlandStripNum = (NSUInteger)ceil((double)self.size.height/stripHeight);
-    }
-    else // 竖直
-    {
-        overlandStripNum = (NSUInteger)ceil((double)self.size.width/stripWidth);
-    }
-
-    NSUInteger availableFrom = 0;
-    BarrrageBubblingSprite* lastTimeSprite = self;
-    NSInteger lastSpriteIndex = 0;
-    
-    
-    for (NSUInteger i = 0; i &lt; stripNum; i++) {
-        //寻找当前行里包含的sprites
-        CGFloat stripFrom = i * (oritation?stripHeight:stripWidth);
-        CGFloat stripTo = stripFrom + (oritation?stripHeight:stripWidth);
-        if (!rotation) {
-            CGFloat preStripFrom = stripFrom;
-            stripFrom = (oritation?rect.size.height:rect.size.width) - stripTo;
-            stripTo = (oritation?rect.size.height:rect.size.width) - preStripFrom;
-        }
-        CGFloat exsitSprite = NO;
-        for (BarrrageBubblingSprite * sprite in synclasticSprites) {
-            CGFloat spriteFrom = oritation?sprite.origin.y:sprite.origin.x;
-            CGFloat spriteTo = spriteFrom + (oritation?sprite.size.height:sprite.size.width);
-            if ((spriteTo-spriteFrom)+(stripTo-stripFrom)&gt;MAX(stripTo-spriteFrom, spriteTo-stripFrom)) { // 在条条里
-                exsitSprite = YES;
-              
-                if (sprite.timestamp &lt; lastTimeSprite.timestamp){
-                    lastTimeSprite = sprite;
-                    lastSpriteIndex = i;
-                }
-                break;
-            }
-        }
-        if (exsitSprite) {
-            availableFrom = i+1;
-        }else{ //第一行就是空的
-            break;
-        }
+      	<p class="cat-list">
         
-    }
-    if (availableFrom == stripNum) { // 超出最大的轨道数，挤掉最上层精灵
-        availableFrom = lastSpriteIndex;
-        lastTimeSprite.stay = 0;
-    }
-    
-    CGPoint origin = CGPointZero;
-    if (oritation) { // 水平
-        _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
-        origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
-        _destination.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x + rect.size.width - self.size.width :rect.origin.x + self.size.width;
-    }
-    else
-    {
-        _destination.x = origin.x = (rotation?stripWidth*availableFrom:rect.size.width-stripWidth*availableFrom -self.size.width)+rect.origin.x;
-        origin.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y - self.size.height:rect.origin.y + rect.size.height;
-        _destination.y = (self.direction == BarrageWalkDirectionT2B)?rect.origin.y + rect.size.height - self.size.height:rect.origin.y + self.size.height;
-    }
-    return origin;
-
-</code></pre>
-
-<h4 id="toc_7">运动轨迹</h4>
-
-<p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite的运动轨迹不同的地方在于，BarrageWalkSprite是匀速前进，二BarrageBubblingSprite是加速前进，这样，在计算某个时段Sprite的位置就需要考虑加速度的存在。</p>
-
-<pre><code class="language-Objc">- (CGRect)rectWithTime:(NSTimeInterval)time{
-    CGFloat X = self.destination.x - self.origin.x;
-    CGFloat Y = self.destination.y - self.origin.y;
+            <a href="ios.html"><strong>iOS</strong></a>
         
-    CGFloat L = sqrt(X*X + Y*Y);
-    NSTimeInterval duration = time - self.timestamp;
-    CGPoint position = CGPointMake(self.origin.x + duration * self.speed * X/L, self.origin.y + duration * self.speed * Y/L);
-    if (position.x &gt;= self.destination.x) {
-        position.x = self.destination.x;
-    }else{
-        self.destinationStamp = time;
-        self.speed = duration*self.speedUp;
-    }
-    if(position.y &gt;= self.destination.y) {
-        position.y = self.destination.y;
-      
-    }else{
-        self.destinationStamp = time;
-        self.speed = duration*self.speedUp;
-    }
-    return CGRectMake(position.x, position.y, self.size.width, self.size.height);
-}
-</code></pre>
-
-<p>在存活时间上，与BarrageWalkSprite不同的地方在于，BarrageWalkSprite在位移到终点的时候消失，而BarrageBubblingSprite在到达终点之后仍然需要停留stay的时间。这里引入了currentStamp和destinationStamp时间戳用于来计算stay时间是否已经到达。</p>
-
-<pre><code class="language-Objc">//计算精灵的剩余存活时间
-
-- (double)countTimeByDistance:(CGFloat)distance{
-    CGFloat a = 0.5*self.speedUp;
-    CGFloat b = self.speed;
-    CGFloat c = -distance;
-    CGFloat delt = sqrt(b*b - 4*a*c);
-    double t = (-b+delt)/(2*a);
-    return t;
-}
-
-- (NSTimeInterval)estimateActiveTime
-{
-    CGFloat activeDistance = 0;
-    switch (self.direction) {
-        case BarrageWalkDirectionR2L:
-            activeDistance = self.position.x - _destination.x;
-            break;
-        case BarrageWalkDirectionL2R:
-            activeDistance = _destination.x - self.position.x;
-            break;
-        case BarrageWalkDirectionT2B:
-            activeDistance = _destination.y - self.position.y;
-            break;
-        case BarrageWalkDirectionB2T:
-            activeDistance = self.position.y - _destination.y;
-        default:
-            break;
-    }
-    NSTimeInterval leftTime = 0.0;
-    CGFloat time = [self countTimeByDistance:activeDistance];
-    if (time &gt; 0){
-        leftTime = time + self.stay;
-    }else{
-        leftTime = self.stay - (self.currentStamp - self.destinationStamp);
-    }
-    return leftTime;
-}
-
-- (BOOL)validWithTime:(NSTimeInterval)time{
-    self.currentStamp = time;
-    return  [self estimateActiveTime] &gt; 0;
-}
-</code></pre>
-
-<h4 id="toc_8">自定义弹幕样式</h4>
-
-<p>类似BarrageWalkImageSprite，我们也通过继承BarrageSpirte的bindingView 来将自定义的弹幕view返回给BarrageRender</p>
-
-<h3 id="toc_9">完整代码</h3>
-
-<p><a href="https://github.com/mylonly/BarrageRender-BubblingSprite">BarrageRender-BubblingSprite</a></p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-10-11T18:15:27+08:00" itemprop="datePublished">2016/10/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14944977278738.html" itemprop="url">
-		Swift要点</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
-
-<ol>
-<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
-
-<pre><code class="language-Swift">let apples = 3
-let oranges = 5
-let appleSummary = &quot;I have \(apples) apples.&quot;
-let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
-</code></pre>
-
-<p>输出:</p>
-
-<pre><code>&quot;I have 3 apples&quot;
-&quot;I have 8 pieces of fruit&quot;
-</code></pre></li>
-<li><p>Swift声明数组或者字典可以声明指定类型</p>
-
-<pre><code class="language-Swift">let emptyArray = [String]()
-let emptyDictionary = [String: Float]()
-</code></pre></li>
-<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
-
-<pre><code class="language-Swift"> if score &gt; 50 {
-    teamScore += 3
-} else {
-       teamScore += 1
-}
-</code></pre>
-
-<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
-<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
-
-<pre><code class="language-Swift">let vegetable = &quot;red pepper&quot;
-switch vegetable {
-case &quot;celery&quot;:
-    print(&quot;Add some raisins and make ants on a  log.&quot;)
-case &quot;cucumber&quot;, &quot;watercress&quot;:
-    print(&quot;That would make a good tea sandwich.&quot;)
-case let x where x.hasSuffix(&quot;pepper&quot;):
-    print(&quot;Is it a spicy \(x)?&quot;)
-default:
-    print(&quot;Everything tastes good in soup.&quot;)
-}
-</code></pre>
-
-<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
-<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
-<li><p>do{}while()被repeat{}while()取代</p>
-
-<pre><code class="language-Swift">var m = 2
-repeat {
-    m = m * 2
-} while m &lt; 100
-print(m)
-</code></pre></li>
-<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
-
-<pre><code class="language-Swift">var firstForLoop = 0
-for i in 0..&lt;4 {
-    firstForLoop += i
-}
-print(firstForLoop)
-
-var firstForLoop = 0
-for i in 0...4 {
-    firstForLoop += i
-}
-print(firstForLoop)
-</code></pre></li>
-<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:<br/>
-<code>Swift<br/>
-func sumOf(numbers: Int...) -&gt; Int {<br/>
-var sum = 0<br/>
-for number in numbers {<br/>
-    sum += number<br/>
-}<br/>
-return sum<br/>
-}<br/>
-sumOf()<br/>
-sumOf(42, 597, 12)<br/>
-</code></p></li>
-<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
-
-<pre><code class="language-Swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
-func addOne(number: Int) -&gt; Int {
-    return 1 + number
-}
-return addOne
-}
-var increment = makeIncrementer()
-increment(7)
-</code></pre>
-
-<p>同理，函数也可以当做参数传入函数,</p>
-
-<pre><code class="language-Swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
-for item in list {
-    if condition(item) {
-        return true
-    }
-}
-return false
-}
-func lessThanTen(number: Int) -&gt; Bool {
-    return number &lt; 10
-}
-var numbers = [20, 19, 7, 12]
-hasAnyMatches(numbers, condition: lessThanTen)
-</code></pre></li>
-<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
-
-<pre><code class="language-Swift">class NamedShape {
-var numberOfSides: Int = 0
-var name: String
-
-init(name: String) {
-    self.name = name
-}
-
-func simpleDescription() -&gt; String {
-        return &quot;A shape with \(numberOfSides) sides.&quot;
-  }
-}
-
-class Square: NamedShape {
-var sideLength: Double
-
-init(sideLength: Double, name: String) {
-    self.sideLength = sideLength
-    super.init(name: name)
-    numberOfSides = 4
-}
-
-func area() -&gt;  Double {
-    return sideLength * sideLength
-}
-
-override func simpleDescription() -&gt; String {
-        return &quot;A square with sides of length \(sideLength).&quot;
-    }
-}
-let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)
-test.area()
-test.simpleDescription()
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-10-11T18:15:10+08:00" itemprop="datePublished">2016/10/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14944977101213.html" itemprop="url">
-		Swift学习要点-基础部分</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
-
-<blockquote>
-<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
-</blockquote>
-
-<ol>
-<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
-
-<pre><code class="language-Swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
-print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print
-print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
-</code></pre></li>
-<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
-
-<pre><code class="language-Swift">let paddedDouble = 000123.456
-let oneMillion = 1_000_000
-let justOverOneMillion = 1_000_000.000_000_1
-</code></pre></li>
-<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
-
-<pre><code class="language-Swift">typealias AudioSample = UInt16
-var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
-</code></pre></li>
-<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
-
-<pre><code class="language-Swift">var maxValue = UInt8.max
-var max64Value = Int64.max
-
-max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;
-max64Value = Int64(maxValue) //Ok
-
-let number = 3
-var str1 = String(number) //str1 = &quot;3&quot;
-var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
-</code></pre></li>
-<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
-
-<pre><code class="language-Swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
-let (justTheStatusCode, _) = http404Error
-print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
-</code></pre></li>
-<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
-
-<pre><code class="language-Swift">var serverResponseCode: Int? = 404
-// serverResponseCode 包含一个可选的 Int 值 404
-serverResponseCode = nil
-// serverResponseCode 现在不包含值
-</code></pre></li>
-<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
-
-<pre><code class="language-Swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
-var str = &quot;\(option)&quot; //输出:&quot;nil&quot;
-str = &quot;\(option!)&quot;    //Error
-</code></pre></li>
-<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
-
-<pre><code class="language-Swift">let const_a:String
-if (condition){
-    const_a = &quot;a&quot;
-}else{
-    const_a = &quot;b&quot;
-}
-</code></pre></li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2016-05-11T18:12:56+08:00" itemprop="datePublished">2016/5/11</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ios.html'>iOS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="14944975766543.html" itemprop="url">
-		CocoaPods master仓库替换为国内源</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
-国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
-
-<ol>
-<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
-<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
-</ol>
-
-<p>执行如下命令替换Pods源</p>
-
-<pre><code class="language-Bash">$ pod repo remove master
-$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
-</code></pre>
-
-<p> <br/>
-仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
-
-<pre><code class="language-Bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
-Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
-</code></pre>
-
-<p> <br/>
-这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
-
-<pre><code class="language- Bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
-platform :ios, &#39;6.0&#39;
-pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
-</code></pre>
-
-
-			
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
-	 
-	 <a class="next" href="ios_1.html">Next</a> 
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
-
-</nav>
-
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
 </div>
 
-
-
-        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+        </section>
+      </div>
+    </div>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
 
 
-</body>
+
+  </body>
 </html>

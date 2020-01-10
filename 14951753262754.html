@@ -1,130 +1,147 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	基于BarrageRender自定义弹幕动画 - 独自一人
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  基于BarrageRender自定义弹幕动画 - 独自一人
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-				 	<div class="profilepic">
-						<img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" style="width:160px;">
-					</div>
-            	
-					
-					<h1><a href="index.html">独自一人</a></h1>
-					<p class="subtitle">独自一人,独自Coding...</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="self" href="index.html">Home</a></li>
-						
-						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  <meta name="keywords" content="[BarrageRender](https://github.com/unash/BarrageRenderer) 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，`BarrageFloatSprite`和`BarrageWalkSprite`。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程" />
+  <meta name="description" content="[BarrageRender](https://github.com/unash/BarrageRenderer) 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，`BarrageFloatSprite`和`BarrageWalkSprite`。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程" />
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Weex.html">Weex</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>基于BarrageRender自定义弹幕动画</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2017/05/19</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='ios.html'>iOS</a></span>
+           
+         
+          <span class="comments">
+            
 
-<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+            
+          </span>
 
-								
+        </div>
+      </div><!-- article -->
 
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">基于BarrageRender自定义弹幕动画</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
+      <div class="article-content">
+      <blockquote>
 <p><a href="https://github.com/unash/BarrageRenderer">BarrageRender</a> 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，<code>BarrageFloatSprite</code>和<code>BarrageWalkSprite</code>。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程。</p>
 </blockquote>
 
@@ -144,7 +161,7 @@
 
 <p>BarrageRender在BarrageDispatcher的调度下触发activeWithContext方法，而在此方法中，BarrageRender调用了Sprite的originInBounds:withSprite方法来确定每个精灵的初始位置</p>
 
-<pre><code class="language-Objc">   - (void)activeWithContext:(NSDictionary *)context
+<pre><code class="language-objectivec">   - (void)activeWithContext:(NSDictionary *)context
     {
         CGRect rect = [[context objectForKey:kBarrageRendererContextCanvasBounds]CGRectValue];
         NSArray * sprites = [context objectForKey:kBarrageRendererContextRelatedSpirts];
@@ -163,7 +180,7 @@
 
 <p>BarrageWalkSpirte在originInBounds:withSprite方法中,根据当前屏幕上已经存在的Sprite来计算自己的初始位置。</p>
 
-<pre><code class="language-Objc">    
+<pre><code class="language-objectivec">    
 - (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
 {
    // 获取同方向精灵
@@ -257,7 +274,7 @@
 
 <p>代码虽然很长，但是主要就是为了实现下面几个逻辑:</p>
 
-<pre><code>1. BarrageWalkSprite先获取了同方向的所有精灵
+<pre><code class="language-text">1. BarrageWalkSprite先获取了同方向的所有精灵
 2. 根据屏幕轨道的frame范围找到每一个轨道内的所有精灵
 3. 在同一轨道内的所有精灵中找到存活时间最长的精灵(速度最慢)
 4. 判断速度最慢的那个精灵的尾部是否已经完全进入弹幕显示区域
@@ -269,7 +286,7 @@
 
 <p>BarrageRender绘制每个精灵的运动轨迹的方式非常简单，在BarrageRender中，内置的时钟引擎<code>BarrageClock</code>负责在间隔时间内调用所有已经激活精灵基类<code>BarrageSprite</code>中的updateWithTime方法。</p>
 
-<pre><code class="language-Objc">   - (void)initClock
+<pre><code class="language-objectivec">   - (void)initClock
     {
         __weak id weakSelf = self;
         _clock = [BarrageClock clockWithHandler:^(NSTimeInterval time){
@@ -292,7 +309,7 @@
 
 <p>而在<code>BarrageSprite</code>的updateWithTime方法中, 每个精灵重新更改了自身的frame属性，以此来达到动画位移的效果。其中<code>_valid</code>属性是Sprite存活的唯一标志，标记为NO之后，Sprite就会从队列中彻底移除</p>
 
-<pre><code class="language-Objc">     //BarrageSprite
+<pre><code class="language-objectivec">     //BarrageSprite
    - (void)updateWithTime:(NSTimeInterval)time
     {
         _valid = [self validWithTime:time];
@@ -302,7 +319,7 @@
 
 <p>BarrageWalkSprite通过属性speed来实时改变自己的frame位置,同时计算剩下的destination和speed来算出自己的存活时间以用来标记valid属性</p>
 
-<pre><code class="language-Objc">  //BarrageWalkSprite
+<pre><code class="language-objectivec">  //BarrageWalkSprite
   
   - (BOOL)validWithTime:(NSTimeInterval)time
     {
@@ -346,7 +363,7 @@
 
 <p>BarrageWalkSprite的终点计算很简单，弹幕的显示的距离加上Sprite自身的宽度就是整个精灵需要位移的距离，这个destination的计算已经体现在了起点位置的获取当中</p>
 
-<pre><code class="language-Objc">CGPoint origin = CGPointZero;
+<pre><code class="language-objectivec">CGPoint origin = CGPointZero;
 if (oritation) { // 水平
    _destination.y = origin.y = (rotation?stripHeight*availableFrom:rect.size.height-stripHeight * availableFrom-self.size.height)+rect.origin.y;
    origin.x = (self.direction == BarrageWalkDirectionL2R)?rect.origin.x - self.size.width:rect.origin.x + rect.size.width;
@@ -367,7 +384,7 @@ return origin;
 <p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite有很多重合之处，所以自定义的BarrageBubblingSprite直接继承BarrageWalkSprite以获取其direction,side,speed,trackNumber等多个属性，当然还需要另外加上加速度speedUp和停留时间stay属性</p>
 </blockquote>
 
-<pre><code class="language-Objc">@interface BarrrageBubblingSprite : BarrageWalkSprite
+<pre><code class="language-objectivec">@interface BarrrageBubblingSprite : BarrageWalkSprite
 
 @property (nonatomic,assign) CGFloat speedUp; //加速度
 
@@ -385,7 +402,7 @@ return origin;
 <li><em>当所有轨道都已经有精灵占据的时候，找到存活时间最短的那个精灵，通过将其的stay属性设置为0让其直接消失，然后让自己占据该精灵所在轨道</em></li>
 </ol>
 
-<pre><code class="language-Objc">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
+<pre><code class="language-objectivec">- (CGPoint)originInBounds:(CGRect)rect withSprites:(NSArray *)sprites
 {
     // 获取同方向精灵
     NSMutableArray * synclasticSprites = [[NSMutableArray alloc]initWithCapacity:sprites.count];
@@ -470,7 +487,7 @@ return origin;
 
 <p>BarrageBubblingSprite的运动轨迹和BarrageWalkSprite的运动轨迹不同的地方在于，BarrageWalkSprite是匀速前进，二BarrageBubblingSprite是加速前进，这样，在计算某个时段Sprite的位置就需要考虑加速度的存在。</p>
 
-<pre><code class="language-Objc">- (CGRect)rectWithTime:(NSTimeInterval)time{
+<pre><code class="language-objectivec">- (CGRect)rectWithTime:(NSTimeInterval)time{
     CGFloat X = self.destination.x - self.origin.x;
     CGFloat Y = self.destination.y - self.origin.y;
         
@@ -496,7 +513,7 @@ return origin;
 
 <p>在存活时间上，与BarrageWalkSprite不同的地方在于，BarrageWalkSprite在位移到终点的时候消失，而BarrageBubblingSprite在到达终点之后仍然需要停留stay的时间。这里引入了currentStamp和destinationStamp时间戳用于来计算stay时间是否已经到达。</p>
 
-<pre><code class="language-Objc">//计算精灵的剩余存活时间
+<pre><code class="language-objectivec">//计算精灵的剩余存活时间
 
 - (double)countTimeByDistance:(CGFloat)distance{
     CGFloat a = 0.5*self.speedUp;
@@ -549,28 +566,230 @@ return origin;
 
 <p><a href="https://github.com/mylonly/BarrageRender-BubblingSprite">BarrageRender-BubblingSprite</a></p>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14957025459875.html" 
+          title="Previous Post: Swift3.0 利用泛型设置基类属性的动态类型">&laquo; Swift3.0 利用泛型设置基类属性的动态类型</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14945010672564.html" 
+          title="Next Post: 树莓派3安装Node.js">树莓派3安装Node.js &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+      <div id="gitalk-container"></div>
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: 'd91ffa1480549c466d2f',
+        clientSecret: '92600b8db63745566efb39c0ad9a15c2462b0008',
+        repo: 'blog.mylonly.com',
+        owner: 'mylonly',
+        admin: ['mylonly'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+      gitalk.render('gitalk-container')
+      </script>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Weex.html"><strong>Weex</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15516896130866.html">Docker</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15477022109795.html">别人的vim配置文件</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
 
 
-</body>
+
+  </body>
 </html>
