@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,22 +118,103 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="15253577270506.html">
+                <a class="clearlink" href="15445172404972.html">
                 
-                  <h1>Weex 问题集锦</h1>
+                  <h1>GitLabRunner配合SonarScanner针对每次commit做代码检查</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ol>
-<li><p>weex中通过ref访问组件的两种情况:</p>
-<pre><code class="language-text">&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-<pre><code class="language-text">&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
+                        	<h2 id="toc_0">Sonar GitLab-Plugin插件以及配置</h2>
+
+<ol>
+<li><p>下载安装插件</p>
+<p>admin登录SonarQube，点击 配置 —&gt; 系统 —&gt; 更新中心 —&gt; Available —&gt; Search，输入 GitLab，在列表中点击 install 安装，安装完毕后重启 SonarQube 即可<br/>
+<img src="https://pic.mylonly.com/2018-12-11-093357.png" alt=""/></p></li>
+<li><p>在GitLab上注册一个Sonarqube账号，获取Private Token</p></li>
 </ol>
+
+<p><img src="https://pic.mylonly.com/2018-12-11-093529.png" alt=""/></p>
+
+<ol>
+<li>回到SonarQube 配置插件
+<img src="https://pic.mylonly.com/2018-12-11-093642.png" alt=""/><br/></li>
+</ol>
+
+<h2 id="toc_1">Sonar Scanner 相关配置</h2>
+
+<p>依然采用docker方式</p>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull ciricihq/gitlab-sonar-scanner
+</code></pre></li>
+<li><p>在sonarqube上新建要测试的项目<br/>
+按照向导创建完项目之后记住所设置的<code>key</code><br/>
+<img src="https://pic.mylonly.com/2018-12-11-094008.png" alt=""/></p></li>
+<li><p>回到GitLab,在需要进行质量检测的项目中加入<code>.gitlab-ci.yml</code>,在末尾添加如下代码：</p>
+<pre><code class="language-text">stages:
+- analysis<br/>
+sonarqube:<br/>
+  stage: analysis<br/>
+  image: ciricihq/gitlab-sonar-scanner<br/>
+  variables:<br/>
+    SONAR_URL: http://sonarqube.domain.lan #你的sonarqube地址<br/>
+    SONAR_ANALYSIS_MODE: issues<br/>
+  script:<br/>
+  - gitlab-sonar-scanner<br/>
+sonarqube-reports:<br/>
+  stage: analysis<br/>
+  image: ciricihq/gitlab-sonar-scanner<br/>
+  variables:<br/>
+    SONAR_URL: http://sonarqube.domain.lan #你的sonarqube地址<br/>
+    SONAR_ANALYSIS_MODE: publish<br/>
+  script:<br/>
+  - gitlab-sonar-scanner
+</code></pre></li>
+<li><p>在项目根目录添加sonar scanner 配置文件 <code>sonar-project.properties</code></p>
+<pre><code class="language-text">sonar.projectKey=&lt;sonarqube上创建项目时填写的key&gt;
+sonar.sources=.<br/>
+sonar.gitlab.project_id=git@gitlab.domain.lan/awesome/xxx.git ##你的git仓库地址
+</code></pre></li>
+</ol>
+
+<h2 id="toc_2">GitLab Runner注册</h2>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull gitlab/gitlab-runner
+</code></pre></li>
+<li><p>利用docker注册镜像</p>
+<pre><code class="language-text">docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name  gitlab-runner gitlab/gitlab-runner register \
+  --non-interactive \<br/>
+  --executor &quot;docker&quot; \<br/>
+  --docker-image alpine:3 \<br/>
+  --url &quot;https://gitlab.com/&quot; \<br/>
+      --registration-token &quot;PROJECT_REGISTRATION_TOKEN&quot; \<br/>
+  --description &quot;docker-runner&quot; \<br/>
+  --tag-list &quot;docker,aws&quot; \<br/>
+  --run-untagged \<br/>
+  --locked=&quot;false&quot;
+</code></pre></li>
+<li><p>启动GitLab Runner</p>
+<pre><code class="language-text">docker run -d --name gitlab-runner --restart always \
+ -v /srv/gitlab-runner/config:/etc/gitlab-runner \<br/>
+ -v /var/run/docker.sock:/var/run/docker.sock \<br/>
+ gitlab/gitlab-runner
+</code></pre></li>
+</ol>
+
+<h2 id="toc_3">测试验证</h2>
+
+<p>修改代码提交到gitlab，观察gitlab的pipeline的状态，以及sonarqube上新建项目的状态。</p>
+
+<p><img src="https://pic.mylonly.com/2018-12-11-094744.png" alt="GitLab Pipeline"/><br/>
+<img src="https://pic.mylonly.com/2018-12-11-094806.png" alt="Sonarqube"/></p>
+
+<h2 id="toc_4">问题</h2>
+
+<p>观察redmine的日志，如果出现权限问题，请注意仓库的用户组需要为redmine:redmine</p>
 
                         
                       </div>
@@ -142,10 +223,10 @@
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/05/03</span>
+                    <span class="date">2018/12/11</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='Weex.html'>Weex</a></span>
+          					    <span class="posted-in"><a href='PM.html'>PM</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -159,45 +240,41 @@
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15249709962104.html">
+                <a class="clearlink" href="15444340190835.html">
                 
-                  <h1>解决VSCode编写Django代码时经常提示objects属性等不存在的错误</h1>
+                  <h1>SonarQube部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
+                        	<h2 id="toc_0">部署postgres</h2>
 
-<pre><code class="language-text">App.objects.all()
-</code></pre>
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull postgres
+</code></pre></li>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run --name postgres \
+-e POSTGRES_USER=&quot;sonar&quot; \<br/>
+-e POSTGRES_PASSWORD=****** \<br/>
+-d postgres
+</code></pre></li>
+</ol>
 
-<p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
+<h2 id="toc_1">部署SonarQube</h2>
 
-<blockquote>
-<p>Django使用了大量的元编程思想，其中会有大量的修改对象属性和行为的操作，pylint提示的不存在的属性和方法会在程序运行中被django动态的加入，所以并不会影响程序运行。</p>
-</blockquote>
-
-<p>所以在网上稍微找了下，发现这个叫做<code>pylint-django</code>的<code>pylint</code>的插件可以去掉这些恼人的提示。</p>
-
-<p>安装很简单,和pylint一样</p>
-
-<pre><code class="language-text">pip3 install pylint-django
-</code></pre>
-
-<p>然后通过pylint加载这个插件</p>
-
-<pre><code class="language-text">pylint --load-plugins pylint_django 
-</code></pre>
-
-<p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
-
-<pre><code class="language-text">&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
-</code></pre>
-
-<p>然后重启VSCode就好了</p>
-
-<p>参考:<br/>
-<a href="https://blog.landscape.io/using-pylint-on-django-projects-with-pylint-django.html">blog.landscape.io</a></p>
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull sonarqube
+</code></pre></li>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run -d --name sonarqube\
+    -p 80:9000     \<br/>
+    -e sonar.jdbc.username=sonar \<br/>
+    -e sonar.jdbc.password=****** \    <br/>
+    -e sonar.jdbc.url=jdbc:postgresql://192.168.2.191/sonar sonarqube
+</code></pre></li>
+</ol>
 
                         
                       </div>
@@ -206,10 +283,10 @@
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/04/29</span>
+                    <span class="date">2018/12/10</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -223,25 +300,179 @@
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15247238721302.html">
+                <a class="clearlink" href="15440788666202.html">
                 
-                  <h1>nginx 相关技巧</h1>
+                  <h1>利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ol>
-<li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
-<pre><code class="language-text">  server {
-      listen 80 default;<br/>
-      server_name _;<br/>
-      rewrite ^(.*) http://www.mylonly.com permanent;<br/>
-    }
+                        	<h2 id="toc_0">写在前面</h2>
+
+<p>我想很多公司由于安全考虑，一些内部系统(Git仓库、OA之类）的一定是放在公司内部的服务器上，只有在公司的网络下才能够访问，但是一些公司的随着业务的发展，肯定会出现一些外地的同事（外地的办事处、研发中心、销售团队等等）这种情况，这样一来，在内部服务不迁移到外网的前提下，如何让外地的同事能访问到内网这些资源就成了一个必须要解决的问题了。<br/>
+其实内网穿透有很很多种解决方案，本文只是利用SoftetherVPN以及Bind9这两个工具提供另一种解决思路。<br/>
+本文所提到的解决方案有如下优点:</p>
+
+<pre><code class="language-text">1. 原来的内部资源不需要额外的配置改动
+2. 需要身份认证，只有拥有权限的外部人员才能访问内部资源
+3. 只有加入了共享网络的内部资源才能被外部访问，没有开放共享的内部资源的无法访问
+4. 可以做到通过相同的域名访问同一个内部资源
+5. 通过LPTP,LPSec协议支持OS X以及iOS设备访问
+</code></pre>
+
+<p>当然也有如下不足:<br/>
+    1. 需要一台拥有公网IP的服务器作为中心服务器<br/>
+    2. 由于本文的解决方案是基于虚拟局域网来实现的，因此拥有局域网内一些无法回避的缺点。</p>
+
+<h2 id="toc_1">原理</h2>
+
+<p><img src="https://pic.mylonly.com/2018-12-06-%E7%BD%91%E7%BB%9C%E5%9B%BE%20-1-.png" alt=""/><br/>
+本解决方案利用了SoftetherVPN提供的Ad-Hoc VPN将内网服务器和外部用户通过VLAN连接在同一个局域网内，然后通过支持智能解析的DNS服务器，将域名解析到对应的虚拟局域网IP。<br/>
+如果是内网用户，则直接通过DNS服务器将域名解析到内部资源对应的内网IP。</p>
+
+<h2 id="toc_2">部署</h2>
+
+<p>本次部署大部分采用Docker方式部署，如果需要手动安装的，可以在<a href="https://www.softether-download.com/cn.aspx?product=softether">这个网站</a>下载对应的安装包</p>
+
+<h3 id="toc_3">Docker 环境</h3>
+
+<p>略，不再本文讨论范围之内</p>
+
+<h3 id="toc_4">安装Softether Server</h3>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">siomiz/softethervpn
 </code></pre></li>
-<li><p>Ubuntu developer tool</p>
-<pre><code class="language-text">sudo apt-get install build-essential
+<li><p>启动vpnserver</p>
+<pre><code class="language-text">docker run -d --cap-add NET_ADMIN \
+ -p 500:500/udp \<br/>
+ -p 4500:4500/udp \<br/>
+ -p 1701:1701/tcp \<br/>
+ -p 1194:1194/udp \<br/>
+ -p 5555:5555/tcp \<br/>
+ -p 443:443/tcp \<br/>
+ -p 992:992 \<br/>
+ siomiz/softethervpn
+</code></pre>
+<p>记得要开放对应的端口</p></li>
+</ol>
+
+<h3 id="toc_5">安装Softether ServerManger</h3>
+
+<p>虽然Softether 提供了mac版的安装包，但本人装完之后发现其实是套了一个wine的环境，在mac上体验极差，所以此处推荐找一个windows电脑安装vpn server manager，<a href="https://www.softether-download.com/cn.aspx?product=softether">下载地址</a>在此<br/>
+由于是windows上的安装教程，大部分都是图片，为了不占文章篇幅，就不放在文章里介绍了，各位可以参考<a href="https://www.softether.org/4-docs/2-howto/1.VPN_for_On-premise/1.Ad-hoc_VPN">官网</a>或者这篇<a href="http://www.leqii.com/download/yulan/d77/d77.html">博客</a></p>
+
+<p>其中需要注意的是，在<code>虚拟HUB管理页面</code>中的<code>虚拟NAT和虚拟DHCP服务器</code>，点击<code>SecureNAT</code>,然后设置DHCP服务器的网段，以及DNS服务器为下面将要搭建的DNS服务器地址<br/>
+<img src="https://pic.mylonly.com/2018-12-06-101214.png" alt=""/></p>
+
+<h3 id="toc_6">部署DNS服务器</h3>
+
+<ol>
+<li><p>安装bind9</p>
+<pre><code class="language-text">sudo apt-get install bind9
+</code></pre></li>
+<li><p>增加两个视图文件,在/etc/bind/目录下<br/>
+name.2.conf</p>
+<pre><code class="language-text">acl &quot;2&quot; {
+    192.168.2.0/24;<br/>
+};   
+</code></pre>
+<p>name.111.conf </p>
+<pre><code class="language-text">acl &quot;111&quot; {
+    192.168.111.0/24;<br/>
+};
+</code></pre>
+<p>两个视图文件主要是为了区分来源IP所在的网段，然后根据不同的网段返回不同的解析结果，在本解决方案当中，192.168.2.0/24网段为内网网段，   192.168.111.0/24为VPN生成的虚拟局域网的网段</p></li>
+<li><p>新建不同网段对应的不同的解析记录文件，也在/etc/bind/目录下</p>
+<p>1234tv.lan-2.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA      xxxx.xx. root.xxxx.xx. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      xxxx.xx.<br/>
+@       IN      A      192.168.2.222<br/>
+gitlab  IN      A       192.168.2.84
+</code></pre>
+<p>1234tv.lan-111.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA     xxxx.xx. root.xxxx.xx. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      xxxx.xx.<br/>
+@       IN      A       192.168.111.222<br/>
+gitlab  IN      A       192.168.111.84
+</code></pre></li>
+<li><p>将视图文件和解析文件写入Bind9主配置文件</p>
+<pre><code class="language-text">sudo vim /etc/bind/name.conf
+</code></pre>
+<p>增加如下内容，声明两个视图，view_2,view_11,可以注释掉默认带的配置文件，如果你没有其他的用途的话,注意每一行后面的分号，不可缺少。</p>
+<pre><code class="language-text">#include &quot;/etc/bind/named.conf.options&quot;;
+#include &quot;/etc/bind/named.conf.local&quot;;<br/>
+#include &quot;/etc/bind/named.conf.default-zones&quot;;<br/>
+include &quot;/etc/bind/name.2.conf&quot;;<br/>
+view &quot;View_2&quot; {<br/>
+        match-clients {&quot;2&quot;;};<br/>
+        zone &quot;xxxx.xxx&quot; IN {<br/>
+                type master;<br/>
+                file &quot;xxxx.xxx-2.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};<br/>
+include &quot;/etc/bind/name.111.conf&quot;;<br/>
+view &quot;View_111&quot; {<br/>
+        match-clients {&quot;111&quot;;};<br/>
+        zone &quot;xxxx.xxx&quot; IN {<br/>
+                type master;<br/>
+                file &quot;xxxx.xxx-111.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};
+</code></pre></li>
+<li><p>然后启动Bind9 服务</p>
+<pre><code class="language-text">sudo /etc/init.d/bind9 start
+</code></pre></li>
+<li><p>验证解析</p>
+<pre><code class="language-text">dig gitlab.xxx.xx @192.168.2.222
+</code></pre>
+<p><img src="media/15440788666202/15440920519061.jpg" alt="" style="width:460px;"/></p></li>
+</ol>
+
+<h4 id="toc_7">安装Vpn Client</h4>
+
+<p>所有需要共享给外部访问的内部服务器都需要安装vpn client连接上vpn server，下面的方法为linux 下docker方式部署vpn_client方法，windows端请参考这篇<a href="http://www.leqii.com/download/yulan/d77/d77.html">文章</a></p>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
+</code></pre></li>
+<li><p>启动镜像连接之前创建的vpn server</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient \
+--net=host --privileged \<br/>
+-e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
+-e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
+-e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
+-e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
+-e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
+-e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
+mitsutaka/softether-vpnclient<br/>
+```<br/>
+服务器端，VIRTUAL_HUB端填入之前在manager上新建的虚拟HUB名称 ，TAP_IPADDR，最好采用指定IP的方式，尤其是DNS服务器，需要固定IP地址
 </code></pre></li>
 </ol>
+
+<h2 id="toc_8">结束语</h2>
+
+<p>至此，这个简单的内网穿透方案算是部署完成，内网用户可以直接通过设置内网DNS服务器来通过域名访问内部服务器，外网用户在使用vpn clinet连接上虚拟局域网之后也能通过相同的域名访问内部服务器资源。<br/>
+写这篇文章，一方面是觉得自己以后可能还会有此需求，怕自己遗忘，权且当做记录。另外也是想也可能有别的同学有这方面的需要，写出来共享一下。</p>
 
                         
                       </div>
@@ -250,7 +481,7 @@
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/04/26</span>
+                    <span class="date">2018/12/06</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
@@ -267,124 +498,53 @@
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15244672126240.html">
+                <a class="clearlink" href="15439862777767.html">
                 
-                  <h1>Django问题集锦</h1>
+                  <h1>SoftEther VPN 部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ol>
-<li><p>Csrf验证</p>
-<pre><code class="language-text">需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
-</code></pre></li>
-<li><p>Django允许跨域</p>
-<p>安装<code>django-cors-headers</code></p>
-<pre><code class="language-text">pip install django-cors-headers
+                        	<h2 id="toc_0">Server安装部署</h2>
+
+<p>点<a href="https://www.softether-download.com/cn.aspx?product=softether">这里</a>找到合适的软件包</p>
+
+<p>或者直接用下面这个链接    </p>
+
+<pre><code class="language-text">wget https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.28-9669-beta/softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
 </code></pre>
-<p>在setting.py中增加如下代码</p>
-<pre><code class="language-text">INSTALLED_APPS = [
-...<br/>
-&#39;corsheaders&#39;，<br/>
-...<br/>
- ] <br/>
-MIDDLEWARE_CLASSES = (<br/>
-    ...<br/>
-    &#39;corsheaders.middleware.CorsMiddleware&#39;,<br/>
-    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序<br/>
-    ...<br/>
-)<br/>
-#跨域增加忽略<br/>
-CORS_ALLOW_CREDENTIALS = True<br/>
-CORS_ORIGIN_ALLOW_ALL = True<br/>
-CORS_ORIGIN_WHITELIST = (<br/>
-    &#39;*&#39;<br/>
-)<br/>
-CORS_ALLOW_METHODS = (<br/>
-    &#39;DELETE&#39;,<br/>
-    &#39;GET&#39;,<br/>
-    &#39;OPTIONS&#39;,<br/>
-    &#39;PATCH&#39;,<br/>
-    &#39;POST&#39;,<br/>
-    &#39;PUT&#39;,<br/>
-    &#39;VIEW&#39;,<br/>
-)<br/>
-CORS_ALLOW_HEADERS = (<br/>
-    &#39;XMLHttpRequest&#39;,<br/>
-    &#39;X_FILENAME&#39;,<br/>
-    &#39;accept-encoding&#39;,<br/>
-    &#39;authorization&#39;,<br/>
-    &#39;content-type&#39;,<br/>
-    &#39;dnt&#39;,<br/>
-    &#39;origin&#39;,<br/>
-    &#39;user-agent&#39;,<br/>
-    &#39;x-csrftoken&#39;,<br/>
-    &#39;x-requested-with&#39;,<br/>
-    &#39;Pragma&#39;,<br/>
-)
+
+<ol>
+<li><p>解压完拷贝到/usr/local目录,然后make编译</p>
+<pre><code class="language-text">tar -zvxf softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
+mv vpnserver /usr/local/<br/>
+cd /usr/local/vpnserver<br/>
+make
 </code></pre></li>
-<li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
-<pre><code class="language-text">#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
-axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;<br/>
-axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
+<li><p>启动vpnserver</p>
+<pre><code class="language-text">/usr/local/vpnserver start
+#/usr/local/vpnserver stop
 </code></pre>
-<blockquote>
-<p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
-</blockquote>
-<p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
-<li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
-<p>需要两步：</p>
-<ul>
-<li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
-<li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
-</ul>
-<pre><code class="language-text">@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
-class login(views.APIView):<br/>
-authentication_classes = (BasicAuthentication,)<br/>
-def post(self, request, *args, **kwargs):<br/>
-username = request.data.get(&quot;username&quot;)<br/>
-password = request.data.get(&quot;password&quot;)<br/>
-user = auth.authenticate(request, username=username, password=password)<br/>
-if user is not None:<br/>
-  auth.login(request, user)<br/>
-  return ErosResponse()<br/>
-else:<br/>
-  return ErosResponse(status=ErosResponseStatus.INVALID_USER)
-</code></pre></li>
-<li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
-<p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
-<pre><code class="language-python">from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import OrderingFilter
-</code></pre></li>
-<li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
-<p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
-<pre><code class="language-text">mysql -u root -p
-use mysql；<br/>
-ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  <br/>
-FLUSH PRIVILEGES; 
-</code></pre></li>
-<li><p>Django-Filter自定义查询过滤字段</p>
-<pre><code class="language-python">from django_filters import FilterSet
-from django_filters import CharFilter<br/>
-class TagFilter(FilterSet):<br/>
-    ##自定义search字段<br/>
-    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)<br/>
-    class Meta:<br/>
-        model = Tag<br/>
-        fields = {<br/>
-          &#39;id&#39;: [&#39;exact&#39;],<br/>
-          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],<br/>
-          &#39;search&#39;: [&#39;exact&#39;],<br/>
-        }
+<p><em>注意：SoftEther默认监听443端口，记得防火墙打开443端口</em></p></li>
+<li><p>安装server manager</p>
+<p>点击<a href="http://www.leqii.com/download/yulan/d77/d77.html">这里</a>查看manager设置</p></li>
+<li><p>安装vpnclient</p>
+<p>拉取vpnclient镜像</p>
+<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
 </code></pre>
-<p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
-<li><p>DRF的OrderingFilter默认排序</p>
-<pre><code class="language-python">filter_backends = (DjangoFilterBackend, OrderingFilter)
-ordering_fields = (&#39;id&#39;, &#39;hot&#39;)<br/>
-ordering = (&#39;-hot&#39;,)
-</code></pre></li>
-<li><p>Django runserver指定setting配置</p>
-<pre><code class="language-text">python3 manage.py runserver 0.0.0.0:8000 --settings=OrionGraphQL.settings.dev
+<p>启动vpnclient</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient \
+--net=host --privileged \<br/>
+-e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
+-e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
+-e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
+-e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
+-e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
+-e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
+mitsutaka/softether-vpnclient
+</code></pre>
+<p>例子:</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient     --net=host --privileged     -e VPN_SERVER=120.132.55.152     -e VPN_PORT=443     -e ACCOUNT_USER=test     -e ACCOUNT_PASS=1234TV.com     -e VIRTUAL_HUB=1234TV   -e TAP_IPADDR=192.168.111.79/255.255.255.0 mitsutaka/softether-vpnclient
 </code></pre></li>
 </ol>
 
@@ -395,10 +555,10 @@ ordering = (&#39;-hot&#39;,)
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/04/23</span>
+                    <span class="date">2018/12/05</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -412,38 +572,95 @@ ordering = (&#39;-hot&#39;,)
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15244545128606.html">
+                <a class="clearlink" href="15439814205804.html">
                 
-                  <h1>Python 错误集锦</h1>
+                  <h1>GitLab Docker部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<ol>
-<li><p>ValueError: unknown locale: UTF-8 <br/>
-<img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
-<p>添加下面代码至用户目录的.bash_profile文件   </p>
-<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
-export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
-export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
-export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
-export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
-export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
-export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
-export LC_ALL=
+<li><p>安装Docker</p>
+<pre><code class="language-text">sudo wget -qO- https://get.docker.com/ | sh
 </code></pre></li>
-<li><p>zip()函数在Python2和Python3中的区别</p>
-<p>在Python2中，zip返回的是元祖的列表<br/>
-而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
-<pre><code class="language-text">x = [1, 2, 3]
-y = [a, b, c]<br/>
-#python3<br/>
-n = list(zip(x,y))<br/>
-print(n)<br/>
-#python2<br/>
-n = zip(x,y)<br/>
-print n
+<li><p>非root用户需要将用户加到docker用户组中</p>
+<pre><code class="language-text">sudo usermod -aG docker ubuntu
 </code></pre></li>
+<li><p>启动docker</p>
+<pre><code class="language-text">sudo service docker start
+</code></pre></li>
+<li><p>拉取gitlab-ce镜像</p>
+<pre><code class="language-text">sudo docker pull gitlab/gitlab-ce
+</code></pre></li>
+<li><p>启动gitlab-ce docker镜像</p>
+<pre><code class="language-text">sudo docker run --detach \
+--hostname gitlab.example.com \<br/>
+--publish 443:443 --publish 80:80 --publish 22:22 \<br/>
+--name gitlab \<br/>
+--restart always \<br/>
+--volume /srv/gitlab/config:/etc/gitlab \<br/>
+--volume /srv/gitlab/logs:/var/log/gitlab \<br/>
+--volume /srv/gitlab/data:/var/opt/gitlab \<br/>
+gitlab/gitlab-ce:latest
+</code></pre>
+<p>具体的镜像命令可以参考<a href="https://docs.gitlab.com/omnibus/docker/">gitlab官方文档</a></p>
+<p>如果是新安装的Ubuntu服务器，记得用ufw添加端口</p>
+<pre><code class="language-text">sudo ufw allow 80/tcp
+</code></pre></li>
+</ol>
+
+<h2 id="toc_0">设置默认的管理员账号密码</h2>
+
+<ol>
+<li><p>进入gitlab容器</p>
+<pre><code class="language-text">docker exec -it gitlab /bin/bash
+</code></pre></li>
+<li><p>进入rails</p>
+<pre><code class="language-text">cd /opt/gitlab/bin
+gitlab-rails console production
+</code></pre></li>
+<li><p>设置root用户密码</p>
+<pre><code class="language-text">irb(main):001:0&gt; u = User.where(email: &#39;admin@example.com&#39;).first
+=&gt; #&lt;User id:1 @root&gt;<br/>
+irb(main):002:0&gt; u.password<br/>
+=&gt; nil<br/>
+irb(main):003:0&gt; u.password=&#39;12345678&#39;<br/>
+=&gt; &quot;12345678&quot;<br/>
+irb(main):004:0&gt; u.save!<br/>
+Enqueued ActionMailer::DeliveryJob (Job ID: b0e971db-4c6b-439c-82ee-86c7c277537e) to Sidekiq(mailers) with arguments: &quot;DeviseMailer&quot;, &quot;password_change&quot;, &quot;deliver_now&quot;, gid://gitlab/User/1<br/>
+=&gt; true
+</code></pre></li>
+</ol>
+
+<h2 id="toc_1">邮件配置</h2>
+
+<ol>
+<li><p>进入gitlab容器</p>
+<pre><code class="language-text">docker exec -it gitlab /bin/bash
+</code></pre></li>
+<li><p>修改配置文件 </p>
+<pre><code class="language-text">#vim /etc/gitlab/gitlab.rb，添加以下内容
+gitlab_rails[&#39;gitlab_email_enabled&#39;] = true<br/>
+gitlab_rails[&#39;gitlab_email_from&#39;] = &#39;gitlab@1234tv.com&#39;<br/>
+gitlab_rails[&#39;gitlab_email_display_name&#39;] = &#39;GitLab&#39;<br/>
+gitlab_rails[&#39;gitlab_email_reply_to&#39;] = &#39;noreply@1234tv.com&#39;<br/>
+gitlab_rails[&#39;smtp_enable&#39;] = true<br/>
+gitlab_rails[&#39;smtp_address&#39;] = &quot;smtp.exmail.qq.com&quot;<br/>
+gitlab_rails[&#39;smtp_port&#39;] = 465<br/>
+gitlab_rails[&#39;smtp_user_name&#39;] = &quot;gitlab@1234tv.com&quot;<br/>
+gitlab_rails[&#39;smtp_password&#39;] = &quot;******&quot;<br/>
+gitlab_rails[&#39;smtp_authentication&#39;] = &quot;login&quot;<br/>
+gitlab_rails[&#39;smtp_enable_starttls_auto&#39;] = true<br/>
+gitlab_rails[&#39;smtp_tls&#39;] = true
+</code></pre></li>
+<li><p>重新加载配置文件，并验证是否生效</p>
+<pre><code class="language-text">gitlab-ctl reconfigure ##重新加载配置
+gitlab-rails console  ##进入rails
+</code></pre>
+<p>输入 <code>ActionMailer::Base.delivery_method</code>:</p>
+<pre><code class="language-text">irb(main):002:0* ActionMailer::Base.delivery_method
+</code></pre>
+<p>如果出现<code>=&gt;:smtp</code>说明设置成功了</p></li>
 </ol>
 
                         
@@ -453,10 +670,10 @@ print n
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/04/23</span>
+                    <span class="date">2018/12/05</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -533,8 +750,6 @@ print n
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -542,6 +757,8 @@ print n
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -558,31 +775,31 @@ print n
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

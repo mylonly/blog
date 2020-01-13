@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -117,6 +117,135 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15773244836718.html">
+                
+                  <h1>ubuntu安装NFS-Server提供NFS服务</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>如果没有现成的NFS服务,可以利用现有服务器部署一套</p>
+
+<p>安装NFS服务端</p>
+
+<pre><code class="language-text">    sudo apt-get install nfs-kernel-server
+</code></pre>
+
+<p>编辑/etc/exports文件,增加你要提供nfs服务的路径</p>
+
+<pre><code class="language-text"># /etc/exports: the access control list for filesystems which may be exported
+#       to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+
+/data/charts *(rw,sync,no_subtree_check,no_root_squash)
+/data/mysql *(rw,sync,no_subtree_check,no_root_squash)
+/data/redis *(rw,sync,no_subtree_check,no_root_squash)
+</code></pre>
+
+<p>更改共享目录权限，修改为777 (目前还不清楚最低要求权限是多少)</p>
+
+<pre><code class="language-text">sudo chown 777  /data/charts
+</code></pre>
+
+<p>重启NFS服务</p>
+
+<pre><code class="language-text">sudo /etc/init.d/nfs-kernel-server restart
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/12/26</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15761310581680.html">
+                
+                  <h1>HAProxy</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0"> 验证配置文件</h2>
+
+<pre><code class="language-text">    haproxy -c -f /etc/haproxy/haproxy.cfg
+</code></pre>
+
+<h2 id="toc_1">负载均衡配置</h2>
+
+<pre><code class="language-text">frontend k8s-api
+
+  bind 0.0.0.0:6443
+
+  log global
+
+  mode tcp
+
+  default_backend k8s-api-server
+
+backend k8s-api-server
+
+  mode tcp
+
+  log global
+
+  balance roundrobin
+
+  server ucloud-bj-k8s-master-01 10.9.142.180:6443 weight 1 maxconn 1000 check inter 2000 rise 2 fall 3
+
+  server ucloud-bj-k8s-master-02 10.9.175.27:6443 weight 1 maxconn 1000 check inter 2000 rise 2 fall 3
+
+  server ucloud-bj-k8s-master-03 10.9.91.143:6443 weight 1 maxconn 1000 check inter 2000 rise 2 fall 3
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15595559159421.html">
                 
@@ -189,650 +318,6 @@ util=磁盘利用率</p>
                   <div class="more-left left">
                   
                     <span class="date">2019/06/03</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15480624203516.html">
-                
-                  <h1>Ubuntu安装开发者工具包(make,g++,cc之类工具)</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<pre><code class="language-text">sudo apt-get install build-essential
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2019/01/21</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15477022109795.html">
-                
-                  <h1>别人的vim配置文件</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<ol>
-<li><p>下载vundle插件</p>
-<pre><code class="language-text">git clonehttps://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-</code></pre></li>
-<li><p>拷贝至~/.vimrc</p>
-<pre><code class="language-text">
-&quot;========================================  <br/>
-&quot; File Name: .vimrc  <br/>
-&quot; Author: Ricky.K <br/>
-&quot; Description: Vim配置文档  <br/>
-&quot; Date: 2014.7.12  <br/>
-&quot;========================================  <br/>
-let mapleader = &#39;,&#39;  <br/>
-let g:mapleader = &#39;,&#39;  <br/>
-&quot;==========================================<br/>
-&quot; General Settings<br/>
-&quot;==========================================<br/>
-&quot; 开启语法高亮  <br/>
-syntax enable  <br/>
-&quot; 开启语法高亮<br/>
-syntax on  <br/>
-&quot; 设置字体  <br/>
-set guifont=Monaco\ 12<br/>
-&quot; 设置历史记录条数  <br/>
-set history=2000  <br/>
-&quot; 检测文件类型  <br/>
-filetype on  <br/>
-&quot; 针对不同的文件，采用不同的缩进方式  <br/>
-filetype indent on  <br/>
-&quot; 允许插件  <br/>
-filetype plugin on  <br/>
-&quot; 启动自动补全<br/>
-filetype plugin indent on<br/>
-&quot; 文件修改之后自动读入<br/>
-set autoread<br/>
-&quot; 启动后不显示提示<br/>
-&quot;set shortmess=atI<br/>
-&quot; 备份,到另一个位置. 防止误删, 目前是取消备份<br/>
-&quot;set backup<br/>
-&quot;set backupext=.bak<br/>
-&quot;set backupdir=/tmp/vimbk/<br/>
-&quot; 设置取消备份，禁止临时文件生成  <br/>
-set nobackup  <br/>
-set noswapfile  <br/>
-&quot; create undo file<br/>
-set undolevels=1000 &quot; how many undos<br/>
-set undoreload=10000 &quot; number of lines to save for undo<br/>
-if v:version &gt;= 730<br/>
-    set undofile     &quot; keep a persistent backup file<br/>
-    set undodir=/tmp/vimundo/<br/>
-endif<br/>
-&quot;set wildignore=*.swp,*.bak,*.pyc,*.class,.svn<br/>
-&quot; 显示当前横竖线  <br/>
-&quot;set cursorline  <br/>
-&quot;set cursorcolumn  <br/>
-&quot; 设置退出Vim之后内容显示在终端屏幕，可以用于查看和复制<br/>
-&quot; 好处:误删什么，如果以前屏幕打开可以用来找回<br/>
-&quot; set t_ti= t_te=<br/>
-&quot; 设置在Vim中可以使用鼠标，防止终端无法拷贝  <br/>
-set mouse=a  <br/>
-&quot; 修复ctrl+m多光标操作选择的bug,但是改变了ctrl+v进行字符选中将包含光标下的字符<br/>
-&quot; set selection=inclusive<br/>
-&quot; set selectmode=mouse,key<br/>
-&quot; no errors sound<br/>
-set title &quot; change ther terminal&#39;s title<br/>
-set novisualbell &quot; don&#39;t beep<br/>
-set noerrorbells &quot; don&#39;t beep<br/>
-set t_vb=<br/>
-set tm=500<br/>
-&quot; remember info about open buffers on close<br/>
-set viminfo^=%<br/>
-&quot; for regular expression turn magic on<br/>
-set magic<br/>
-&quot; configure backspace so it acts as it should act<br/>
-set backspace=eol,start,indent<br/>
-set whichwrap+=&lt;,&gt;,h,l<br/>
-&quot; FuzzyFinder and ctrlp couldn&#39;t auto change dir you must manual add cd in<br/>
-&quot; command mode, so add this command to auto change current dir for these<br/>
-&quot; plugins<br/>
-&quot; set autochdir<br/>
-&quot;==========================================<br/>
-&quot; Display Settings<br/>
-&quot;==========================================<br/>
-&quot;<br/>
-&quot; 显示当前行号和列号<br/>
-set ruler<br/>
-&quot; 在状态栏显示正在输入的命令<br/>
-set showcmd<br/>
-&quot; 左下角显示当前Vim模式<br/>
-set showmode<br/>
-&quot; 光标移动至少保留的行数<br/>
-&quot;set scrolloff=7<br/>
-&quot; 命令行（在状态行下）的高度，默认为1，这里是2<br/>
-set statusline=%&lt;%f\ %h%m%r%=%k[%{(&amp;fenc==\&quot;\&quot;)?&amp;enc:&amp;fenc}%{(&amp;bomb?\&quot;,BOM\&quot;:\&quot;\&quot;)}]\ %-14.(%l,%c%V%)\ %P<br/>
-&quot; 总是显示状态栏(Powerline需要2行)  <br/>
-set laststatus=2  <br/>
-&quot; 显示行号  <br/>
-set number  <br/>
-&quot; 指定不折行<br/>
-set nowrap  <br/>
-&quot; 设置代码匹配,包括括号匹配情况  <br/>
-set showmatch  <br/>
-&quot; how many tenths of a second to blink when matching brackets<br/>
-&quot; setmatchtime=2<br/>
-&quot; 开启及时搜索(is)  <br/>
-set incsearch  <br/>
-&quot; 设置搜索高亮(hlsearch)  <br/>
-set hls  <br/>
-&quot; 设置搜索时忽略大小写  <br/>
-set ignorecase  <br/>
-&quot; 当搜索的时候尝试smart  <br/>
-set smartcase  <br/>
-&quot; 设置代码折叠<br/>
-&quot;set foldenable<br/>
-&quot; 折叠方法<br/>
-&quot; manual 手工折叠<br/>
-&quot; indent 缩进折叠<br/>
-&quot; expr 表达式折叠<br/>
-&quot; syntax 语法折叠<br/>
-&quot; diff 对没有更改的文件折叠<br/>
-&quot; marker 标记折叠<br/>
-&quot;set foldmethod=indent<br/>
-&quot;set foldlevel=99<br/>
-&quot; 设置C/C++方式自动对齐  <br/>
-set autoindent  <br/>
-set cindent  <br/>
-set smartindent  <br/>
-&quot; 设置tab宽度  <br/>
-set tabstop=4  <br/>
-&quot; 设置自动对齐空格数  <br/>
-set shiftwidth=4  <br/>
-&quot; 按退格键时可以一次删除4个空格<br/>
-&quot;set softtabstop=4<br/>
- &quot; 编辑的时候将所有的tab设置为空格(expandtab)  <br/>
- set et  <br/>
- &quot; 使用Backspace直接删除tab  <br/>
- set smarttab  <br/>
-&quot; 不在单词中间折行  <br/>
-set lbr  <br/>
- &quot; 缩进时取整use multiple of shiftwidth when indenting with &#39;&lt;&#39; and &#39;&gt;&#39;<br/>
- &quot; set shiftround<br/>
- &quot; a buffer becomes hidden when it is abandoned<br/>
- &quot; set hidden<br/>
- &quot; set wildmode=list:longest<br/>
- &quot; set ttyfast<br/>
- &quot; 00x增减数字时使用十进制<br/>
- &quot;set nrformats=<br/>
- &quot;<br/>
- &quot;==========================================<br/>
- &quot; FileEncode Settings<br/>
- &quot;==========================================<br/>
- &quot; 设置编码方式  <br/>
- set encoding=utf-8  <br/>
- &quot; 设置打开文件的编码格式  <br/>
- set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1  <br/>
- set helplang=cn <br/>
- &quot; 只对终端影响(默认)<br/>
- set termencoding=utf-8<br/>
- &quot; use UNIX as the standard file type<br/>
- set ffs=unix,dos,mac<br/>
-&quot; 如遇Unicode值大于255的文本，不必等到空格再折行。<br/>
-set formatoptions+=m<br/>
-&quot; 合并两行中文时，不在中间加空格：<br/>
-set formatoptions+=B<br/>
-&quot;==========================================<br/>
-&quot; Other Settings<br/>
-&quot;==========================================<br/>
- &quot;autocmd! bufwritepost _vimrc source %    &quot; .vimrc修改之后自动加载(Windows)<br/>
- &quot;autocmd! bufwritepost .vimrc source %    &quot; .vimrc修改之后自动加载(Linux)<br/>
- &quot; 自动补全配置让Vim补全菜单行为跟IDE一致<br/>
- set completeopt=longest,menu<br/>
- &quot; 增强模式中的命令行自动完成操作<br/>
- set wildmenu<br/>
- &quot; ignore compiled files<br/>
- &quot; set wildignore=*.o,*~,*.pyc,*.class<br/>
-&quot;离开插入模式后自动关闭预览窗口<br/>
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif<br/>
-&quot;回车即选中当前项<br/>
-inoremap &lt;expr&gt; &lt;CR&gt;       pumvisible() ? &quot;\&lt;C-y&gt;&quot; : &quot;\&lt;CR&gt;&quot;<br/>
-&quot;上下左右键的行为 会显示其他信息<br/>
-inoremap &lt;expr&gt; &lt;Down&gt;     pumvisible() ? &quot;\&lt;C-n&gt;&quot; : &quot;\&lt;Down&gt;&quot;<br/>
-inoremap &lt;expr&gt; &lt;Up&gt;       pumvisible() ? &quot;\&lt;C-p&gt;&quot; : &quot;\&lt;Up&gt;&quot;<br/>
-inoremap &lt;expr&gt; &lt;PageDown&gt; pumvisible() ? &quot;\&lt;PageDown&gt;\&lt;C-p&gt;\&lt;C-n&gt;&quot; : &quot;\&lt;PageDown&gt;&quot;<br/>
-inoremap &lt;expr&gt; &lt;PageUp&gt;   pumvisible() ? &quot;\&lt;PageUp&gt;\&lt;C-p&gt;\&lt;C-n&gt;&quot; : &quot;\&lt;PageUp&gt;&quot;<br/>
-&quot; if this not work ,make sure .viminfo is writable for you<br/>
-if has(&quot;autocmd&quot;)<br/>
-  au BufReadPost * if line(&quot;&#39;\&quot;&quot;) &gt; 1 &amp;&amp; line(&quot;&#39;\&quot;&quot;) &lt;= line(&quot;$&quot;) | exe &quot;normal! g&#39;\&quot;&quot; | endif<br/>
-endif<br/>
-&quot;==========================================<br/>
-&quot; HotKey Settings<br/>
-&quot;==========================================<br/>
-&quot;<br/>
-&quot; 去掉搜索高亮<br/>
-&quot;noremap &lt;silent&gt;&lt;leader&gt;/ :nohls&lt;CR&gt;<br/>
-map &lt;leader&gt;/ :nohls&lt;CR&gt;<br/>
-map &lt;leader&gt;tn :tabnew&lt;cr&gt;<br/>
-map &lt;leader&gt;to :tabonly&lt;cr&gt;<br/>
-map &lt;leader&gt;tc :tabclose&lt;cr&gt;<br/>
-map &lt;leader&gt;tm :tabmove<br/>
-&quot; Opens a new tab with the current buffer&#39;s path<br/>
-&quot; Super useful when editing files in the same directory<br/>
-map &lt;leader&gt;te :tabedit &lt;c-r&gt;=expand(&quot;%:p:h&quot;)&lt;cr&gt;/<br/>
-&quot; Quickly edit/reload the vimrc file<br/>
-nmap &lt;silent&gt; &lt;leader&gt;ev :e $MYVIMRC&lt;CR&gt;<br/>
-nmap &lt;silent&gt; &lt;leader&gt;sv :so $MYVIMRC&lt;CR&gt;<br/>
-&quot; 手动刷新tags(含cscope)<br/>
-nmap tg :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q *&lt;CR&gt;:set tags+=./tags&lt;CR&gt;:!cscope -Rbq&lt;CR&gt;:cs add ./cscope.out .&lt;CR&gt;<br/>
-&quot; 切换buffer<br/>
-nnoremap [b :bp&lt;CR&gt;<br/>
-nnoremap ]b :bn&lt;CR&gt;<br/>
-&quot; cscope设置<br/>
-if has(&quot;cscope&quot;)<br/>
-    set csprg=/usr/bin/cscope   &quot; 制定cscope命令<br/>
-    set csto=0                  &quot; ctags查找顺序，0表示先cscope数据库再标签文件，1表示先标签文件爱<br/>
-    set cst                     &quot; 同时搜索tag文件和cscope数据库<br/>
-    set cscopequickfix=s-,c-,d-,i-,t-,e-  &quot;使用QucikFix窗口来显示cscope查找结果<br/>
-    set nocsverb<br/>
-    if filereadable(&quot;cscope.out&quot;)  &quot;如果当前目录下有cscope.out则加载进Vim<br/>
-        cs add cscope.out<br/>
-    elseif $CSCOPE_DB != &quot;&quot;       &quot;否则只要环境变量不为空就添加制定的数据库到Vim<br/>
-        cs add $CSCOPE_DB<br/>
-    endif<br/>
-    set csverb<br/>
-endif<br/>
-&quot;map &lt;F4&gt;:!cscope -Rbq&lt;CR&gt;:cs add ./cscope.out .&lt;CR&gt;&lt;CR&gt;&lt;CR&gt; :cs reset&lt;CR&gt;<br/>
-&quot; 查找符号<br/>
-nmap &lt;leader&gt;css :cs find s &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt; :copen&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找定义<br/>
-nmap &lt;leader&gt;csg :cs find g &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找被这个函数调用的函数<br/>
-nmap &lt;leader&gt;csd :cs find d &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt; :copen&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找调用这个函数的函数<br/>
-nmap &lt;leader&gt;csc :cs find c &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;:copen&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找这个字符串<br/>
-nmap &lt;leader&gt;cst :cs find t &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;:copen&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找这个egrep匹配模式<br/>
-nmap &lt;leader&gt;cse :cs find e &lt;C-R&gt;=expand(&quot;&lt;cword&gt;&quot;)&lt;CR&gt;&lt;CR&gt;:copen&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找这个文件<br/>
-nmap &lt;leader&gt;csf :cs find f &lt;C-R&gt;=expand(&quot;&lt;cfile&gt;&quot;)&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 查找include这个文件的文件<br/>
-nmap &lt;leader&gt;csi :cs find i &lt;C-R&gt;=expand(&quot;&lt;cfile&gt;&quot;)&lt;CR&gt;&lt;CR&gt; :copen&lt;CR&gt;&lt;CR&gt;<br/>
-&quot; 设定是否使用QuickFix来显示结果<br/>
-set cscopequickfix=s-,c-,d-,i-,t-,e-<br/>
-&quot; QuickFix open and close<br/>
-nnoremap &lt;F11&gt; :copen&lt;CR&gt;<br/>
-nnoremap &lt;F12&gt; :cclose&lt;CR&gt;<br/>
-&quot; QucikFix next and prev<br/>
-nnoremap &lt;F9&gt; :cn&lt;CR&gt;<br/>
-nnoremap &lt;F10&gt; :cp&lt;CR&gt;<br/>
-&quot;==========================================<br/>
-&quot; Theme Settings<br/>
-&quot;==========================================<br/>
-&quot; Set extra options when running in GUI mode<br/>
-&quot;if has(&quot;gui_running&quot;)<br/>
-&quot;    set guifont=Monaco\ 12<br/>
-&quot;    set guioptions-=T<br/>
-&quot;    set guioptions+=e<br/>
-&quot;    set guioptions-=r<br/>
-&quot;    set guioptions-=L<br/>
-&quot;    set guitablabel=%M\ %t<br/>
-&quot;    set showtabline=1 <br/>
-&quot;    set linespace=2 <br/>
-&quot;    set noimd   <br/>
-&quot;    set t_Co=256<br/>
-&quot;endif<br/>
-&quot; 设置主题  <br/>
-set background=dark<br/>
-colorscheme molokai  <br/>
-&quot;colorscheme solarized<br/>
-set t_Co=256<br/>
-&quot; 添加水平滚动条  <br/>
-&quot;set guioptions+=b  <br/>
-&quot; 取消菜单栏和导航栏  <br/>
-set guioptions-=m  <br/>
-set guioptions-=T  <br/>
-&quot; 去除左右两边滚动条<br/>
-set go-=r<br/>
-set go-=L<br/>
-&quot; 设置水平行数和竖直列数  <br/>
-set lines=35  <br/>
-set columns=99  <br/>
-&quot; 使pathogen生效(插件管理器,只需将插件放入bundle，将pathogen.vim放入autoload即可)  <br/>
-&quot;execute pathogen#infect()  <br/>
-&quot;<br/>
-&quot;==========================================<br/>
-&quot; Vundle Settings<br/>
-&quot;==========================================<br/>
- &quot; 关闭vi的一致性模式，避免以前版本的一些Bug和局限  <br/>
-set nocompatible  <br/>
-filetype off &quot; Vundle必须要求使用filetype off，如果不设置该选项，UltiSnips无法使用  <br/>
-if has(&#39;win32&#39;) || has(&#39;win64&#39;)<br/>
-    set rtp+=$HOME/vimfiles/vundle<br/>
-    call vundle#rc(&#39;$HOME/vimfiles/bundle/&#39;)<br/>
-else<br/>
-   set rtp+=~/.vim/bundle/vundle  <br/>
-   call vundle#rc()  <br/>
-endi<br/>
-&quot; let Vundle manage Vundle   <br/>
-&quot; required  <br/>
-Bundle &#39;gmarik/vundle&#39;  <br/>
-&quot; My bundles here:  <br/>
-&quot; original repos on GitHub  <br/>
-Bundle &#39;tpope/vim-fugitive&#39;  <br/>
-Bundle &#39;Lokaltog/vim-easymotion&#39;  <br/>
-&quot; 自动补全单引号，双引号等<br/>
-Bundle &#39;Raimondi/delimitMate&#39;<br/>
-&quot; 快速加入修改环绕字符<br/>
-Bundle &#39;tpope/vim-surround&#39;<br/>
-&quot; for repeat -&gt; enhance surround.vim, . to repeat command<br/>
-Bundle &#39;tpope/vim-repeat&#39;<br/>
-&quot; 多光标编辑 (该插件的ctrl-p可以正常使用，当到达最后一个的时候ctrlp才会起作用)<br/>
-Bundle &#39;terryma/vim-multiple-cursors&#39;<br/>
-&quot; 对括号等进行光标的控制辅助  <br/>
-&quot;Bundle &#39;rstacruz/sparkup&#39;, {&#39;rtp&#39;: &#39;vim/&#39;}  <br/>
-&quot;Bundle &#39;tpope/vim-rails.git&#39;  <br/>
-Bundle &#39;Valloric/ListToggle&#39;  <br/>
-Bundle &#39;L9&#39;  <br/>
-&quot; vim-scripts repos  <br/>
-Bundle &#39;a.vim&#39;  <br/>
-Bundle &#39;grep.vim&#39;<br/>
-&quot;Bundle &#39;easytags.vim&#39;  <br/>
-&quot;Bundle &#39;c.vim&#39;  <br/>
-&quot; non-GitHub repos  <br/>
-&quot;Bundle &#39;git://git.wincent.com/command-t.git&#39;  <br/>
-&quot; Git repos on your local machine (i.e. when working on your own plugin)  <br/>
-&quot;Bundle &#39;file:///Users/gmarik/path/to/plugin&#39;  <br/>
-&quot;==========================================<br/>
-&quot; ctrlp settings  <br/>
-&quot;==========================================<br/>
-Bundle &#39;kien/ctrlp.vim&#39;  <br/>
-&quot;let g:ctrlp_map = &#39;&lt;leader&gt;p&#39;<br/>
-&quot;let g:ctrlp_cmd = &#39;CtrlP&#39;<br/>
-&quot;map &lt;leader&gt;f :CtrlPMRU&lt;CR&gt;<br/>
-&quot;set wildignore+=*/tmp/*,*.so,*.swp,*.zip     &quot; MacOSX/Linux<br/>
-&quot;let g:ctrlp_custom_ignore = {<br/>
-&quot;    \ &#39;dir&#39;:  &#39;\v[\/]\.(git|hg|svn|rvm)$&#39;,<br/>
-&quot;    \ &#39;file&#39;: &#39;\v\.(exe|so|dll|zip|tar|tar.gz)$&#39;,<br/>
-&quot;    \ &#39;link&#39;: &#39;SOME_BAD_SYMBOLIC_LINKS&#39;,<br/>
-&quot;    \ }<br/>
-let g:ctrlp_custom_ignore = {<br/>
-   \ &#39;file&#39;: &#39;\v\.(exe|so|dll|zip|tar|tar.gz|lib|out|png|img|bak|db|o)&#39;<br/>
-    \ }<br/>
-&quot; 在每次进行切换分支或者重新设定custome_ignore选项的时候,必须手动清除CtrlP的缓存,<br/>
-&quot; 也可以使用下句不让它进行缓存处理，但扫描时间会比较耗时<br/>
-&quot;let g:ctrlp_use_caching = 0<br/>
-let g:ctrlp_working_path_mode=0<br/>
-let g:ctrlp_match_window_bottom=1<br/>
-let g:ctrlp_max_height=15<br/>
-let g:ctrlp_match_window_reversed=0<br/>
-let g:ctrlp_mruf_max=500<br/>
-let g:ctrlp_follow_symlinks=1<br/>
-nnoremap &lt;leader&gt;b :CtrlPBuffer&lt;CR&gt;<br/>
-nnoremap &lt;leader&gt;d :CtrlPDir&lt;CR&gt;<br/>
-&quot;==============================================================<br/>
-&quot; ctrlp-funky settings  ctrlp插件 - 不用ctag进行函数快速跳转<br/>
-&quot;==============================================================<br/>
-Bundle &#39;tacahiroy/ctrlp-funky&#39;<br/>
-&quot;nnoremap &lt;Leader&gt;fu :CtrlPFunky&lt;Cr&gt;<br/>
-nnoremap &lt;Leader&gt;f :CtrlPFunky&lt;Cr&gt;<br/>
-&quot; narrow the list down with a word under cursor<br/>
-&quot;nnoremap &lt;Leader&gt;fU :execute &#39;CtrlPFunky &#39; . expand(&#39;&lt;cword&gt;&#39;)&lt;Cr&gt;<br/>
-let g:ctrlp_funky_syntax_highlight = 1<br/>
-let g:ctrlp_extensions = [&#39;funky&#39;]<br/>
-&quot;==========================================<br/>
-&quot; nerdcommenter settings  快速注释<br/>
-&quot;==========================================<br/>
-Bundle &#39;scrooloose/nerdcommenter&#39;<br/>
-&quot; 注释与代码之间留存的空格数<br/>
-let g:NERDSpaceDelims = 1<br/>
-&quot;==========================================<br/>
-&quot; Airline settings<br/>
-&quot;==========================================<br/>
-&quot;Bundle &#39;bling/vim-airline&#39;<br/>
-&quot;Bundle &#39;bling/vim-bufferline&#39;<br/>
-&quot;if !exists(&#39;g:airline_symbols&#39;)<br/>
-&quot;let g:airline_symbols = {}<br/>
-&quot;endif<br/>
-&quot;let g:airline_left_sep = &#39;▶&#39;<br/>
-&quot;let g:airline_left_alt_sep = &#39;❯&#39;<br/>
-&quot;let g:airline_right_sep = &#39;◀&#39;<br/>
-&quot;let g:airline_right_alt_sep = &#39;❮&#39;<br/>
-&quot;let g:airline_symbols.linenr = &#39;¶&#39;<br/>
-&quot;let g:airline_symbols.branch = &#39;⎇&#39;<br/>
-&quot;&quot; 开启tabline<br/>
-&quot;let g:airline#extensions#tabline#enabled = 1<br/>
-&quot;&quot; tabline中当前buffer两端的分隔符<br/>
-&quot;let g:airline#extensions#tabline#left_sep = &#39; &#39;<br/>
-&quot;&quot; tabline为激活的buffer的两端字符<br/>
-&quot;let g:airline#extensions#tabline#left_alt_sep = &#39;|&#39;<br/>
-&quot;&quot; tabline中buffer显示编号<br/>
-&quot;let g:airline#extensions#tabline#buffer_nr_show = 1<br/>
-&quot;let g:airline#extensions#buffline#enabled = 1<br/>
-&quot;let g:airline#extensions#bufferline#overwrite_variables = 1<br/>
-&quot;&quot; airline主题<br/>
-&quot;let g:airline_theme = &#39;powerlineish&#39; <br/>
-&quot;括号显示增强<br/>
-&quot;Bundle &#39;kien/rainbow_parentheses.vim&#39;<br/>
-&quot;let g:rbpt_colorpairs = [<br/>
-&quot;    \ [&#39;brown&#39;,       &#39;RoyalBlue3&#39;],<br/>
-&quot;    \ [&#39;Darkblue&#39;,    &#39;SeaGreen3&#39;],<br/>
-&quot;    \ [&#39;darkgray&#39;,    &#39;DarkOrchid3&#39;],<br/>
-&quot;    \ [&#39;darkgreen&#39;,   &#39;firebrick3&#39;],<br/>
-&quot;    \ [&#39;darkcyan&#39;,    &#39;RoyalBlue3&#39;],<br/>
-&quot;    \ [&#39;darkred&#39;,     &#39;SeaGreen3&#39;],<br/>
-&quot;    \ [&#39;darkmagenta&#39;, &#39;DarkOrchid3&#39;],<br/>
-&quot;    \ [&#39;brown&#39;,       &#39;firebrick3&#39;],<br/>
-&quot;    \ [&#39;gray&#39;,        &#39;RoyalBlue3&#39;],<br/>
-&quot;    \ [&#39;black&#39;,       &#39;SeaGreen3&#39;],<br/>
-&quot;    \ [&#39;darkmagenta&#39;, &#39;DarkOrchid3&#39;],<br/>
-&quot;    \ [&#39;Darkblue&#39;,    &#39;firebrick3&#39;],<br/>
-&quot;    \ [&#39;darkgreen&#39;,   &#39;RoyalBlue3&#39;],<br/>
-&quot;    \ [&#39;darkcyan&#39;,    &#39;SeaGreen3&#39;],<br/>
-&quot;    \ [&#39;darkred&#39;,     &#39;DarkOrchid3&#39;],<br/>
-&quot;    \ [&#39;red&#39;,         &#39;firebrick3&#39;],<br/>
-&quot;    \ ]<br/>
-&quot;let g:rbpt_max = 40<br/>
-&quot;let g:rbpt_loadcmd_toggle = 0<br/>
-&quot;au VimEnter * RainbowParenthesesToggle<br/>
-&quot;au Syntax * RainbowParenthesesLoadRound<br/>
-&quot;au Syntax * RainbowParenthesesLoadSquare<br/>
-&quot;au Syntax * RainbowParenthesesLoadBraces<br/>
-&quot; 主题 solarized <br/>
-Bundle &#39;altercation/vim-colors-solarized&#39;<br/>
-&quot;let g:solarized_termcolors=256<br/>
-let g:solarized_termtrans=1<br/>
-let g:solarized_contrast=&quot;normal&quot;<br/>
-let g:solarized_visibility=&quot;normal&quot;<br/>
-&quot; 主题 molokai <br/>
-Bundle &#39;tomasr/molokai&#39;<br/>
-&quot;==========================================<br/>
-&quot; TagList settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;taglist.vim&#39;  <br/>
-&quot; increase the width of the taglist window  <br/>
-&quot;let Tlist_WinWidth=20  <br/>
-&quot; 自动打开TagList的window  <br/>
-let Tlist_Auto_Open=0  <br/>
-&quot; 当只剩下Tlist的时候自动关闭  <br/>
-let Tlist_Exit_OnlyWindow=1  <br/>
-&quot; 打开tags用单击  <br/>
-let Tlist_Use_SingleClick=1  <br/>
-&quot; close tag folders for inactive buffers  <br/>
-let Tlist_File_Fold_Auto_Close=1  <br/>
-&quot; show the fold indiactor column in the taglist window  <br/>
-let Tlist_Enable_Fold_Column=1  <br/>
-&quot; 自动更新TagList包含最新编辑的文件  <br/>
-let Tlist_Auto_Update=1  <br/>
-&quot; 显示一个文件的tag  <br/>
-let Tlist_Show_One_File=1  <br/>
-&quot; 在右侧显示窗口  <br/>
-let Tlist_Use_Right_Window=1  <br/>
-&quot; 按照名称排序  <br/>
-let Tlist_Sort_Type=&quot;name&quot;  <br/>
-&quot; 让TagList始终解释文件中的tag,不管TagList窗口有没有打开  <br/>
-let Tlist_Process_File_Always=1  <br/>
-&quot; 设置leader键  <br/>
-nnoremap &lt;leader&gt;tl :TlistToggle&lt;CR&gt;  <br/>
-&quot;==========================================<br/>
-&quot; YouCompleteMe settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;Valloric/YouCompleteMe&#39;  <br/>
-&quot;let g:ycm_key_list_select_completion=[&#39;&lt;c-n&gt;&#39;]<br/>
-&quot;let g:ycm_key_list_previous_completion=[&#39;&lt;c-p&gt;&#39;]<br/>
-let g:ycm_global_ycm_extra_conf=&#39;~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py&#39;  <br/>
-let g:ycm_collect_indentifiers_from_tags_files=1  <br/>
-let g:ycm_seed_identifiers_with_syntax=1  <br/>
-&quot; 避免YCM每次加载都对用户提示是否加载  <br/>
-let g:ycm_confirm_extra_conf=0  <br/>
-let g:ycm_autoclose_preview_window_after_completion=1  <br/>
-let g:ycm_complete_in_comments = 1  &quot;在注释输入中也能补全<br/>
-let g:ycm_complete_in_strings = 1   &quot;在字符串输入中也能补全<br/>
-let g:ycm_collect_identifiers_from_comments_and_strings = 1   &quot;注释和字符串中的文字也会被收入补全<br/>
-&quot; 跳到定义或声明  <br/>
-nnoremap &lt;F2&gt; :YcmCompleter GoToDefinitionElseDeclaration&lt;CR&gt;  <br/>
-&quot; 强制进行编译  <br/>
-nnoremap &lt;F5&gt; :YcmForceCompileAndDiagnostics&lt;CR&gt;  <br/>
-&quot;==========================================<br/>
-&quot; Syntastic settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;scrooloose/syntastic&#39;  <br/>
-&quot; 在打开文件的时候检查  <br/>
-let g:syntastic_check_on_open = 1  <br/>
-let g:syntastic_cpp_include_dirs = [&#39;/usr/include/&#39;]  <br/>
-let g:syntastic_cpp_remove_include_errors = 1  <br/>
-let g:syntastic_cpp_check_header = 1  <br/>
-let g:syntastic_cpp_compiler = &#39;clang++&#39;  <br/>
-let g:syntastic_cpp_compiler_options = &#39;-std=c++11 -stdlib=libstdc++&#39;  <br/>
-&quot;set error or warning signs  <br/>
-let g:syntastic_error_symbol = &#39;✗&#39;  <br/>
-let g:syntastic_warning_symbol = &#39;⚠&#39;  <br/>
-&quot;whether to show balloons  <br/>
-let g:syntastic_enable_balloons = 1  <br/>
-let g:syntastic_always_populate_loc_list = 1  <br/>
-&quot;==========================================<br/>
-&quot; ListToggle settings<br/>
-&quot;==========================================<br/>
-let g:lt_location_list_toggle_map = &#39;&lt;leader&gt;l&#39;  <br/>
-let g:lt_quickfix_list_toggle_map = &#39;&lt;leader&gt;q&#39;  <br/>
-&quot;==========================================<br/>
-&quot; NERDtree settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;scrooloose/nerdtree&#39;  <br/>
-let NERDTreeWinPos=&#39;left&#39;  <br/>
-let NERDTreeHighlightCursorline=1<br/>
-nnoremap &lt;leader&gt;n :NERDTreeToggle&lt;CR&gt;  <br/>
-autocmd bufenter * if (winnr(&quot;$&quot;) == 1 &amp;&amp; exists(&quot;b:NERDTreeType&quot;) &amp;&amp;b:NERDTreeType == &quot;primary&quot;) | q | endif  <br/>
-&quot;==========================================<br/>
-&quot; miniBufExpl settings<br/>
-&quot;==========================================<br/>
-&quot;Bundle &#39;fholgado/minibufexpl.vim&#39;<br/>
-&quot;let g:miniBufExplMapWindowNavVim = 1<br/>
-&quot;let g:miniBufExplMapWindowNavArrows = 1<br/>
-&quot;let g:miniBufExplMapCTabSwitchBufs = 1<br/>
-&quot;let g:miniBufExplModSelTarget = 1<br/>
-&quot;&quot;解决FileExplorer窗口变小问题<br/>
-&quot;let g:miniBufExplForceSyntaxEnable = 1<br/>
-&quot;let g:miniBufExplorerMoreThanOne=2<br/>
-&quot;let g:miniBufExplCycleArround=1<br/>
-&quot;&quot; 默认方向键左右可以切换buffer<br/>
-&quot;nnoremap &lt;TAB&gt; :MBEbn&lt;CR&gt;<br/>
-&quot;nnoremap &lt;s-TAB&gt; :MBEbp&lt;CR&gt;<br/>
-&quot;noremap &lt;leader&gt;bn :MBEbn&lt;CR&gt;<br/>
-&quot;noremap &lt;leader&gt;bp :MBEbp&lt;CR&gt;<br/>
-&quot;noremap &lt;leader&gt;bd :MBEbd&lt;CR&gt;<br/>
-&quot;==========================================<br/>
-&quot; FuzzyFinder settings<br/>
-&quot;==========================================<br/>
-&quot;Bundle &#39;FuzzyFinder&#39;  <br/>
-&quot;nnoremap &lt;leader&gt;f :FufFile&lt;CR&gt;  <br/>
-&quot;nnoremap &lt;leader&gt;b :FufBuffer&lt;CR&gt;  <br/>
-&quot;nnoremap &lt;leader&gt;d :FufDir&lt;CR&gt;  <br/>
-&quot;==========================================<br/>
-&quot; UltiSnips settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;SirVer/ultisnips&#39;  <br/>
-Bundle &#39;honza/vim-snippets&#39;<br/>
-let g:UltiSnipsExpandTrigger = &quot;&lt;c-j&gt;&quot;<br/>
-let g:UltiSnipsJumpForwardTrigger = &quot;&lt;c-j&gt;&quot;<br/>
-let g:UltiSnipsJumpBackwardTrigger = &quot;&lt;c-k&gt;&quot;<br/>
-&quot; 定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示<br/>
-let g:UltiSnipsSnippetDirectories=[&quot;additional_snippets&quot;, &#39;UltiSnips&#39;]<br/>
-&quot;==========================================<br/>
-&quot; closetag settings 自动补全html/xml标签<br/>
-&quot;==========================================<br/>
-&quot;Bundle &#39;docunext/closetag.vim&#39;<br/>
-&quot;let g:closetag_html_style=1<br/>
-&quot;==========================================<br/>
-&quot; Markdown settings<br/>
-&quot;==========================================<br/>
-&quot;Bundle &#39;plasticboy/vim-markdown&#39;<br/>
-&quot;let g:vim_markdown_folding_disabled=1<br/>
-&quot;==========================================<br/>
-&quot; Tagbar settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;majutsushi/tagbar&#39;  <br/>
-nnoremap &lt;leader&gt;tb :Tagbar&lt;CR&gt;  <br/>
-let g:tagbar_autofocus = 1<br/>
-&quot;==========================================<br/>
-&quot; A settings<br/>
-&quot;==========================================<br/>
-nnoremap &lt;F4&gt; :A&lt;CR&gt;  <br/>
-&quot;==========================================<br/>
-&quot; Powerline settings<br/>
-&quot;==========================================<br/>
-Bundle &#39;Lokaltog/vim-powerline&#39;  <br/>
-let g:Powerline_symbolsa = &#39;fancy&#39;  <br/>
-let g:Powerline_cache_enabled = 1  <br/>
-&quot;&quot;let g:session_autoload=&#39;yes&#39;  <br/>
-&quot;&quot;let g:session_autosave=&#39;yes&#39;  <br/>
-&quot; 因为Vundle需要关闭filetype,而之后的插件如果想要正常使用，必须要打开filetype<br/>
-&quot; 所以必须确保所有插件的加载过程在之前已经全部添加完毕<br/>
-filetype on             <br/>
-&quot; 参考链接:  <br/>
-&quot; amix vimrc模板地址参考:amix.dk/vim/vimrc.html  <br/>
-&quot; k-vim https://github.com/wklken/k-vim
-</code></pre></li>
-<li><p>打开vim,执行<code>:BundleInstall</code></p></li>
-</ol>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2019/01/17</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
@@ -1047,21 +532,55 @@ mitsutaka/softether-vpnclient<br/>
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15319308951102.html">
+                <a class="clearlink" href="15439862777767.html">
                 
-                  <h1>PT924光猫 更改桥接模式/路由模式</h1>
+                  <h1>SoftEther VPN 部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ol>
-<li><p><a href="http://192.168.1.1:8080/cgi-bin/index2.asp">http://192.168.1.1:8080/cgi-bin/index2.asp</a> 进入这个页面<br/>
-用useradmin账号密码登录</p></li>
-<li><p>将地址改为<a href="http://192.168.1.1:8080/cgi-bin/net-wanset.asp">http://192.168.1.1:8080/cgi-bin/net-wanset.asp</a> 进入internet设置页面(更改其他地址也会进入其他页面)</p>
-<p><img src="media/15319308951102/15319310908143.jpg" alt="" style="width:532px;"/></p></li>
-</ol>
+                        	<h2 id="toc_0">Server安装部署</h2>
 
-<p>其中<code>6_INTERNET_B_VID_229</code>是桥接模式，路由器需要拨号，而<code>5_INTERNET_R_VID_229</code>是路由模式，由猫拨号，路由器不需要拨号</p>
+<p>点<a href="https://www.softether-download.com/cn.aspx?product=softether">这里</a>找到合适的软件包</p>
+
+<p>或者直接用下面这个链接    </p>
+
+<pre><code class="language-text">wget https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.28-9669-beta/softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
+</code></pre>
+
+<ol>
+<li><p>解压完拷贝到/usr/local目录,然后make编译</p>
+<pre><code class="language-text">tar -zvxf softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
+mv vpnserver /usr/local/<br/>
+cd /usr/local/vpnserver<br/>
+make
+</code></pre></li>
+<li><p>启动vpnserver</p>
+<pre><code class="language-text">/usr/local/vpnserver start
+#/usr/local/vpnserver stop
+</code></pre>
+<p><em>注意：SoftEther默认监听443端口，记得防火墙打开443端口</em></p></li>
+<li><p>安装server manager</p>
+<p>点击<a href="http://www.leqii.com/download/yulan/d77/d77.html">这里</a>查看manager设置</p></li>
+<li><p>安装vpnclient</p>
+<p>拉取vpnclient镜像</p>
+<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
+</code></pre>
+<p>启动vpnclient</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient \
+--net=host --privileged \<br/>
+-e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
+-e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
+-e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
+-e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
+-e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
+-e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
+mitsutaka/softether-vpnclient
+</code></pre>
+<p>例子:</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient     --net=host --privileged     -e VPN_SERVER=120.132.55.152     -e VPN_PORT=443     -e ACCOUNT_USER=test     -e ACCOUNT_PASS=1234TV.com     -e VIRTUAL_HUB=1234TV   -e TAP_IPADDR=192.168.111.79/255.255.255.0 mitsutaka/softether-vpnclient
+</code></pre></li>
+</ol>
 
                         
                       </div>
@@ -1070,7 +589,7 @@ mitsutaka/softether-vpnclient<br/>
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/07/19</span>
+                    <span class="date">2018/12/05</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
@@ -1150,8 +669,6 @@ mitsutaka/softether-vpnclient<br/>
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -1159,6 +676,8 @@ mitsutaka/softether-vpnclient<br/>
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -1175,31 +694,31 @@ mitsutaka/softether-vpnclient<br/>
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

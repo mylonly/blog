@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,42 +118,139 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="14944975766543.html">
+                <a class="clearlink" href="14944977278738.html">
                 
-                  <h1>CocoaPods master仓库替换为国内源</h1>
+                  <h1>Swift要点</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
-国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
+                        	<p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
 
 <ol>
-<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
-<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
+<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
+<pre><code class="language-swift">let apples = 3
+let oranges = 5<br/>
+let appleSummary = &quot;I have \(apples) apples.&quot;<br/>
+let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-text">&quot;I have 3 apples&quot;
+&quot;I have 8 pieces of fruit&quot;
+</code></pre></li>
+<li><p>Swift声明数组或者字典可以声明指定类型</p>
+<pre><code class="language-swift">let emptyArray = [String]()
+let emptyDictionary = [String: Float]()
+</code></pre></li>
+<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
+<pre><code class="language-swift"> if score &gt; 50 {
+    teamScore += 3<br/>
+} else {<br/>
+       teamScore += 1<br/>
+}
+</code></pre>
+<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
+<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
+<pre><code class="language-swift">let vegetable = &quot;red pepper&quot;
+switch vegetable {<br/>
+case &quot;celery&quot;:<br/>
+    print(&quot;Add some raisins and make ants on a  log.&quot;)<br/>
+case &quot;cucumber&quot;, &quot;watercress&quot;:<br/>
+    print(&quot;That would make a good tea sandwich.&quot;)<br/>
+case let x where x.hasSuffix(&quot;pepper&quot;):<br/>
+    print(&quot;Is it a spicy \(x)?&quot;)<br/>
+default:<br/>
+    print(&quot;Everything tastes good in soup.&quot;)<br/>
+}
+</code></pre>
+<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
+<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
+<li><p>do{}while()被repeat{}while()取代</p>
+<pre><code class="language-swift">var m = 2
+repeat {<br/>
+    m = m * 2<br/>
+} while m &lt; 100<br/>
+print(m)
+</code></pre></li>
+<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
+<pre><code class="language-swift">var firstForLoop = 0
+for i in 0..&lt;4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)<br/>
+var firstForLoop = 0<br/>
+for i in 0...4 {<br/>
+    firstForLoop += i<br/>
+}<br/>
+print(firstForLoop)
+</code></pre></li>
+<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:</p>
+<pre><code class="language-swift">func sumOf(numbers: Int...) -&gt; Int {
+var sum = 0<br/>
+for number in numbers {<br/>
+    sum += number<br/>
+}<br/>
+return sum<br/>
+}<br/>
+sumOf()<br/>
+sumOf(42, 597, 12)
+</code></pre></li>
+<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
+<pre><code class="language-swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
+func addOne(number: Int) -&gt; Int {<br/>
+    return 1 + number<br/>
+}<br/>
+return addOne<br/>
+}<br/>
+var increment = makeIncrementer()<br/>
+increment(7)
+</code></pre>
+<p>同理，函数也可以当做参数传入函数,</p>
+<pre><code class="language-swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
+for item in list {<br/>
+    if condition(item) {<br/>
+        return true<br/>
+    }<br/>
+}<br/>
+return false<br/>
+}<br/>
+func lessThanTen(number: Int) -&gt; Bool {<br/>
+    return number &lt; 10<br/>
+}<br/>
+var numbers = [20, 19, 7, 12]<br/>
+hasAnyMatches(numbers, condition: lessThanTen)
+</code></pre></li>
+<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
+<pre><code class="language-swift">class NamedShape {
+var numberOfSides: Int = 0<br/>
+var name: String<br/>
+init(name: String) {<br/>
+    self.name = name<br/>
+}<br/>
+func simpleDescription() -&gt; String {<br/>
+        return &quot;A shape with \(numberOfSides) sides.&quot;<br/>
+  }<br/>
+}<br/>
+class Square: NamedShape {<br/>
+var sideLength: Double<br/>
+init(sideLength: Double, name: String) {<br/>
+    self.sideLength = sideLength<br/>
+    super.init(name: name)<br/>
+    numberOfSides = 4<br/>
+}<br/>
+func area() -&gt;  Double {<br/>
+    return sideLength * sideLength<br/>
+}<br/>
+override func simpleDescription() -&gt; String {<br/>
+        return &quot;A square with sides of length \(sideLength).&quot;<br/>
+    }<br/>
+}<br/>
+let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)<br/>
+test.area()<br/>
+test.simpleDescription()
+</code></pre></li>
 </ol>
 
-<p>执行如下命令替换Pods源</p>
-
-<pre><code class="language-bash">$ pod repo remove master
-$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
-</code></pre>
-
-<p> <br/>
-仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
-
-<pre><code class="language-bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
-Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
-</code></pre>
-
-<p> <br/>
-这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
-
-<pre><code class="language- bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
-platform :ios, &#39;6.0&#39;
-pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
-</code></pre>
-
                         
                       </div>
                   </div>
@@ -161,7 +258,7 @@ pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/05/11</span>
+                    <span class="date">2016/10/11</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
@@ -178,105 +275,68 @@ pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15278142400055.html">
+                <a class="clearlink" href="14944977101213.html">
                 
-                  <h1>Objective-C语言特性——强引用、弱引用（Strong、Weak）</h1>
+                  <h1>Swift学习要点-基础部分</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>编写Objective-C代码的很大一部分工作是管理可执行代码保持的对象引用，还有被引用对象保持的对另外一个对象的引用。在ARC出现之前，Objective-C在IOS中使用手动内存管理，在OS X中还可使用垃圾回收机制。这两个方法都有他们各自的优缺点。现在Objective-C使用ARC，其结合了这两种方法最好的一面。<br/>
-ARC，中文简称自动引用计数，是一种编译器机制，在编译期间编译器将手动内存管理的调用插入到代码中。这段内存管理代码通过判断一旦对象没有任何进来的强引用，它将被释放，如果它是最后一个持有另一些对象强引用的对象，则这些对象也会被释放，对它们的其他对象的处理以此类推,编译器非常智能，ARC代码被优化的很好。尽管ARC将开发者从编写手动内存管理代码的工作中解放出来，但如同使用垃圾回收的平台，它仍然不能打破引用循环。因为这个原因，开发者需要给编译器某些指导以避免引用循环。下图展示了一个引用循环：</p>
+                        	<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
 
-<p><img src="https://pic.mylonly.com/2018-06-01-BA81AC12-9449-492E-8798-A04AB3FB2E31.jpg" alt=""/></p>
-
-<p>只有对象C释放了对象A后其才能被释放，而只要对象B有一个对它的强引用那么对象C就永远不会被释放。最后，除非对象A被释放否则对象B永远不会被释放。这就是一个引用循环，将导致引用程序发生内存泄漏。<br/>
-但是，如果我们在上图中将对象C持有的对象A的引用（在途中用实线表示）被替换成一个弱引用（用虚线表示），如下图</p>
-
-<p><img src="media/15278142400055/633E3597-FBF7-4111-A7B2-77124042975D.jpg" alt="633E3597-FBF7-4111-A7B2-77124042975D"/></p>
-
-<p>弱引用不阻止对象被释放，所以对象A被释放，接着是对象B，最后是对象C。<br/>
-如果熟悉C或C++，你可能会注意到一个使用弱引用的问题。如果对象可在任何时候被释放，并且你有一个该对象的弱引用，那么最终会得到一个悬空指针（这个指针的地址指向的地址仍然存在，但是对象已经被释放）。在ARC中，这个现象不会存在，一旦对象被释放则指向这些对象的弱引用将会变为nil。<br/>
-Objective-C中，默认情况下，没有使用任何关键字的声明的实例变量和局部变量都是强引用，将变量声明为弱引用需使用weak关键字。<br/>
-如何在写代码的时候判断变量是该用强引用还是弱引用？</p>
-
-<p>一个常见的方法就是将强引用和弱引用分别想象为“拥有”和“被拥有”。如果一个对象完全属于包含它的对象，那么它使用强引用。如果一个对象被两个以上的对象所拥有，并不完全属于一个对象，则使用弱引用，尽管该方法不是对于所有引用逗适用，但它确实是一个记住Objective-C内存管理约定的好技巧。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2015/06/01</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15277756114249.html">
-                
-                  <h1>OpenSSL心血漏洞的检测和修复方法</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<blockquote>
-<p>近日，Linux社区爆出了关于Linux上Bash的安全漏洞，该漏洞源于你调用的bash shell之前创建的特殊的环境变量，这些变量可以包含代码，同时会被bash执行。 不同于之前的SSL的HeartBlood漏洞，这个Bash漏洞能让黑客通过嵌入恶意命令完全控制目标机器，而不像HeartBlood只是可以嗅探敏感信息。<br/>
-对于所有安装GNU bash 版本小于或者等于4.3的Linux操作系统都应该检测并修复该漏洞，以免造成不必要的损失。</p>
+<blockquote>
+<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
 </blockquote>
 
-<h2 id="toc_0">检测方法</h2>
-
-<p>命令行中输入：</p>
-
-<pre><code class="language-text">env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test”  
-</code></pre>
-
-<p>如果显示了如下红色加粗内容，说明你的linux系统存在该漏洞，请立即修复。</p>
-
-<pre><code class="language-text">vulnerable
-this is a test
-</code></pre>
-
-<h2 id="toc_1">修复方法</h2>
-
-<p>RedHat系操作系统(RedHat,CentOS),安装完成需要重启</p>
-
-<pre><code class="language-text">yum update bash 
-</code></pre>
-
-<p>Ubuntu系列(无需重启)：      </p>
-
-<pre><code class="language-text">apt-get update   
-apt-get install bash
-</code></pre>
-
-<h2 id="toc_2">验证是否修复成功</h2>
-
-<p>命令行输入 ：</p>
-
-<pre><code class="language-text">env x=&#39;() { :;}; echo vulnerable’ bash -c “echo this is a test” 
-</code></pre>
-
-<p>显示如下信息表示修复成功:</p>
-
-<pre><code class="language-text">bash: warning: x: ignoring function definition attempt 
-bash: error importing function definition for `x’ 
-this is a test
-</code></pre>
+<ol>
+<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
+<pre><code class="language-swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
+print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print<br/>
+print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
+</code></pre></li>
+<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
+<pre><code class="language-swift">let paddedDouble = 000123.456
+let oneMillion = 1_000_000<br/>
+let justOverOneMillion = 1_000_000.000_000_1
+</code></pre></li>
+<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
+<pre><code class="language-swift">typealias AudioSample = UInt16
+var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
+</code></pre></li>
+<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
+<pre><code class="language-swift">var maxValue = UInt8.max
+var max64Value = Int64.max<br/>
+max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;<br/>
+max64Value = Int64(maxValue) //Ok<br/>
+let number = 3<br/>
+var str1 = String(number) //str1 = &quot;3&quot;<br/>
+var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
+</code></pre></li>
+<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
+<pre><code class="language-swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
+let (justTheStatusCode, _) = http404Error<br/>
+print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
+</code></pre></li>
+<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
+<pre><code class="language-swift">var serverResponseCode: Int? = 404
+// serverResponseCode 包含一个可选的 Int 值 404<br/>
+serverResponseCode = nil<br/>
+// serverResponseCode 现在不包含值
+</code></pre></li>
+<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
+<pre><code class="language-swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
+var str = &quot;\(option)&quot; //输出:&quot;nil&quot;<br/>
+str = &quot;\(option!)&quot;    //Error
+</code></pre></li>
+<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
+<pre><code class="language-swift">let const_a:String
+if (condition){<br/>
+    const_a = &quot;a&quot;<br/>
+}else{<br/>
+    const_a = &quot;b&quot;<br/>
+}
+</code></pre></li>
+</ol>
 
                         
                       </div>
@@ -285,10 +345,10 @@ this is a test
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2015/04/21</span>
+                    <span class="date">2016/10/11</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -302,24 +362,227 @@ this is a test
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15277746404762.html">
+                <a class="clearlink" href="14945010480752.html">
                 
-                  <h1>数据路由过程</h1>
+                  <h1>各种程序的源码安装</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">nginx</h2>
+
+<pre><code class="language-text">#安装编译nginx必须的依赖
+yum install gcc-c++
+yum install pcre pcre-devel  
+yum install zlib zlib-devel 
+yum install openssl openssl--devel
+
+#下载nginx源码
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+
+#解压
+tar -zvxf nginx-1.9.15.tar.gz -C ../document/
+
+#编译安装
+cd ../document/nginx-1.9.15
+./configure
+make
+make install
+</code></pre>
+
+<h2 id="toc_1">setuptools 安装</h2>
+
+<pre><code class="language-text">wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+
+</code></pre>
+
+<h2 id="toc_2">pip源码安装</h2>
+
+<pre><code class="language-text">[pip官网安装](https://pypi.python.org/pypi/pip)
+</code></pre>
+
+<h2 id="toc_3">源码安装Git</h2>
+
+<ol>
+<li><p>安装依赖</p>
+<pre><code class="language-text"> yum install curl
+ yum install curl-devel<br/>
+ yum install zlib-devel<br/>
+ yum install openssl-devel<br/>
+ yum install perl<br/>
+ yum install perl-devel<br/>
+ yum install cpio<br/>
+ yum install expat-devel<br/>
+ yum install gettext-devel
+</code></pre></li>
+<li><p>下载源码编译安装</p>
+<pre><code class="language-text">wget https://www.kernel.org/pub/software/scm/git/git-2.8.2.tar.gz
+tar xzvf git-2.8.2.tar.gz<br/>
+cd git-2.8.2<br/>
+autoconf<br/>
+./configure<br/>
+make | make install
+</code></pre></li>
+<li><p>配置环境变量</p>
+<p>修改用户目录下的.bashrc或者bash_profile,末尾增加</p>
+<pre><code class="language-text">export PATH=$PATH:/usr/local/bin
+</code></pre>
+<p>然后重新加载profile</p>
+<pre><code class="language-text">source ~/.bashrc
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/09/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14944978089747.html">
+                
+                  <h1>Linux常用命令</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<ol>
-<li><p>如果一个mac上对应有多个ip地址，那么数据按照协议栈向下封装时，怎么确定封装ip头的时候使用哪个ip地址呢？<br/>
-这个是靠数据目的ip决定的，首先系统会根据设备的其他网段的ip和掩码确定目的ip是否是内网的，如果是则用相应的内网ip封装ip头，如果不是，就说明这个数据包时发送到外网的，这个时候就封装外网ip。并将该数据包发送给网关进行转发。<br/>
-如果把一个网段掩码改了，让这个内网变小，那么本来是用内网ip封的数据包，就会改用外网ip封装。</p></li>
-<li><p>路由器怎么区分外网传进来的数据是给内网哪台设备的？</p>
-<p>通信过程要考虑传输层，传输层有端口号。比如用的TCP协议。外网C获得主机AB的IP地址都是路由器的地址说明做了nat的。你a和b同时访问C的时候 经过你内网路由器的时候是做了nat的，a的数据包出去的时候目标是C的ip和C的端口，c收到的数据包源ip会是路由的 但是源端口是XXXX ，b同时出去访问c的时候目标是C的ip和C的同一个端口，c收到的数据包源ip也是路由的，但是源端口不会是XXXX而是另外一个YYYY， 路由器做nat的时候端口不会出现重复的，并且会做对照记录，然后c在回复时候会分别回复给相同ip,但是端口是路由器的两个不同端口，然后路由两个收到两个端口数据后会比照刚才那个对照表 然后分别转发给A和B。</p></li>
-<li><p>路由器怎么区分这个数据包是内网的还是外网的？</p>
-<p>这个是靠封装数据包中链路层的目的mac地址决定的，当封装的mac地址是内网mac时就说明这个数据包是发送给内网的某一台设备的，从而路由器或交换机会根据自己的mac端口映射表和背部总线，将数据包发送给对应端口。如果这个目的mac封装的是网关的mac就说明这个数据包是要发送到外网的，路由器将会根据自己的路由表将这个据包发送到下一跳。</p></li>
-<li><p>路由器在公网下的转发数据时怎么完成的？</p>
-<p>内网的设备发送数据包的时候，首先要经过网关做NAT转换，即将内网ip替换成网关的ip。之后数据包在路由器之间交换的时候只需要替换目的mac即可，数据包回来的时候也可以看成是一次反向的发送，然后仍然是根据路由表替换目的mac即可。</p></li>
+<li>磁盘挂载</li>
 </ol>
+
+<pre><code class="language-text">fdisk -l #查看磁盘信息
+mkfs.ext4 /dev/vdb #如果挂在不上提示文件类型错误，可以先初始化磁盘
+mount /dev/xvdb1 /mnt #挂载磁盘
+</code></pre>
+
+<ol>
+<li>设置开机自动加载磁盘</li>
+</ol>
+
+<pre><code class="language-text">vim /etc/fstab
+写入 /dev/xvdb1 /mnt ext4 defaults 1 1
+Or(Ubuntu)  /dev/xvdb1 /mnt ext4 defaults 0 1
+</code></pre>
+
+<p>利用磁盘UUID挂载</p>
+
+<pre><code class="language-text">sudo blkid #找到磁盘对应的UUID
+#/dev/mmcblk0p1: LABEL=&quot;boot&quot; UUID=&quot;9304-D9FD&quot; TYPE=&quot;vfat&quot; #PARTUUID=&quot;d28f3641-01&quot;
+#/dev/mmcblk0p2: LABEL=&quot;rootfs&quot; UUID=&quot;29075e46-f0d4-44e2-#a9e7-55ac02d6e6cc&quot; TYPE=&quot;ext4&quot; PARTUUID=&quot;d28f3641-02&quot;
+#/dev/mmcblk0: PTUUID=&quot;d28f3641&quot; PTTYPE=&quot;dos&quot;
+#/dev/sda: UUID=&quot;3a69a0c7-b0b7-4af4-bb33-1321a070ffaa&quot; TYPE=&quot;ext4&quot;
+</code></pre>
+
+<p>往/etc/fstab中写入</p>
+
+<pre><code class="language-text">UUID=XXX    /home/pi/hdd    ext4    defaults    0    0
+</code></pre>
+
+<p>fstab中最后两列数字含义为</p>
+
+<pre><code class="language-text">第五列是dump备份设置。
+
+当其值设置为1时，将允许dump备份程序备份；设置为0时，忽略备份操作；
+
+第六列是fsck磁盘检查设置。
+
+其值是一个顺序。当其值为0时，永远不检查；而 / 根目录分区永远都为1。其它分区从2开始，数字越小越先检查，如果两个分区的数字相同，则同时检查。
+
+当修改完此文件并保存后，重启服务器生效。
+
+</code></pre>
+
+<ol>
+<li>修改主机名</li>
+</ol>
+
+<pre><code class="language-text">vim /etc/sysconfig/network #修改里面的HOSTNAME值
+</code></pre>
+
+<ol>
+<li>设置ssh自动认证</li>
+</ol>
+
+<pre><code class="language-text">ssh-keygen -t rsa #在客户机生成秘钥，
+scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
+#将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
+最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
+cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+
+<ol>
+<li>dd命令实现ISO文件块拷贝</li>
+</ol>
+
+<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdb bs=1M
+</code></pre>
+
+<p>查看dd命令进度</p>
+
+<pre><code class="language-text">sudo kill -SIGINFO 30564 ##PID
+</code></pre>
+
+<ol>
+<li>apt-get 设置代理</li>
+</ol>
+
+<pre><code class="language-text">#vim /etc/apt/apt.conf
+Acquire::http::proxy &quot;http://127.0.0.1:8000/&quot;;
+Acquire::ftp::proxy &quot;ftp://127.0.0.1:8000/&quot;;
+Acquire::https::proxy &quot;https://127.0.0.1:8000/&quot;;
+</code></pre>
+
+<p>手动制动配置文件</p>
+
+<pre><code class="language-text">sudo apt-get -c ~/apt_proxy.conf update
+sudo apt-get -o Acquire::http::proxy=&quot;http://127.0.0.1:8000/&quot; update
+</code></pre>
+
+<ol>
+<li>Ubuntu新增用户</li>
+</ol>
+
+<pre><code class="language-text">useradd xxx -m -s /bin/bash
+</code></pre>
+
+<ol>
+<li>加到sudo用户组</li>
+</ol>
+
+<pre><code class="language-text">usermod -aG sudo xxx
+</code></pre>
+
+<ol>
+<li>关闭SELinux</li>
+</ol>
+
+<p>在Linux下启动Nginx经常会遇到<code>bind() to 0.0.0.0:8088 failed (13: Permission denied)</code>这种错，可是检查时又发现端口没有被占用，而且启动时也是用root身份启动的，这种错大部分是由selinux默认只允许80,81,443,8008,8009,8443,9000作为http端口</p>
+
+<pre><code class="language-text">setenforce 0 #临时关闭
+</code></pre>
+
+<p>vim /etc/sysconfig/selinux</p>
+
+<pre><code class="language-text">SELINUX=enforcing 改为 SELINUX=disabled #永久关闭
+
+</code></pre>
 
                         
                       </div>
@@ -328,10 +591,10 @@ this is a test
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2013/05/31</span>
+                    <span class="date">2016/09/11</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -345,31 +608,93 @@ this is a test
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15277738508394.html">
+                <a class="clearlink" href="14945010337427.html">
                 
-                  <h1>Mimetic库分析3——Mime头Header</h1>
+                  <h1>利用树莓派搭建迅雷远程下载服务器</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>Mimetic的header和body以一个空格来区分。如下</p>
+                        	<blockquote>
+<p>树莓派系统为Raspberry Pi</p>
+</blockquote>
 
-<p><img src="https://pic.mylonly.com/2018-05-31-%E6%8D%95%E8%8E%B7.PNG" alt=""/></p>
-
-<p>红线以上部分就是Header了，红线以下部分就是body。<br/>
-Mimetic中Header的继承关系如下</p>
-
-<p><code>Header：public Rfc822Header：public std:deque&lt;Field&gt;</code></p>
-
-<p>可以看到Header中存放的值是一个deque队列，队列里面的每一项都是一个name-value的pari对，name就是header中每一行冒号左边的字符串，而value就是冒号右边的字符串。mimetic将这两部分组成一个pair存放在deque中。然后在Header类中提供相应的接口存取这些值。</p>
-
-<p>下图是Header的接口</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-1.png" alt=""/></p>
-
-<p>RfcHeader的接口</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-2.PNG" alt=""/></p>
+<ol>
+<li><p>树莓派安装迅雷路由器固件<br/>
+可以在迅雷论坛上下载到最新的固件:<a href="http://luyou.xunlei.com/">官网论坛</a>,记得要下arm版本的固件<code>armel_v5te_glibc</code><br/>
+或者下载我共享的这个<a href="http://pan.baidu.com/s/1nvvoX7b">Xware1.0.31_armel_v5te_glibc</a> 提取码:e223<br/>
+在树莓派上解压到某个目录，例如我的是<code>/root/xunlei</code>下面</p>
+<pre><code class="language-shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
+</code></pre>
+<p>进入<code>/root/xunlei</code>目录 执行:</p>
+<pre><code class="language-shell">./portal
+</code></pre>
+<p>稍等片刻，会在最后输出一个激活码，类似下图中涂红的部分</p>
+<p><img src="https://pic.mylonly.com/2016-07-13_15:19:59.jpg" alt="2016-07-13_15:19:59.jpg"/> </p></li>
+<li><p>在迅雷远程下载页面绑定树莓派<br/>
+登录<a href="http://yuancheng.xunlei.com/">迅雷远程下载主页</a>,登录之后，左侧会有一个添加按钮，点击添加按钮，弹出如下界面:<br/>
+<img src="https://pic.mylonly.com/2016-07-13_15:22:45.jpg" alt="2016-07-13_15:22:45.jpg"/></p>
+<p>将树莓派上获得的激活码填入框中，点击<code>绑定</code>后左侧就会出现树莓派对应的设备列表了，但是，如果我们此时就在右侧点击<code>新建</code>之后会发现,弹出的新建页面中会提示找不到挂载磁盘，如下图：</p>
+<p><img src="http://pic.mylonly.com/2016-07-13_15:25:18.jpg" alt="2016-07-13_15:25:18.jpg"/></p></li>
+<li><p>自定义迅雷的下载目录</p>
+<p>进入<code>/mnt</code>目录，创建目录TDDOWNLOAD(名字随意)<br/>
+执行命令:</p>
+<pre><code class="language-shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
+</code></pre>
+<p>其中/data/TDDOWNLOAD就是自定义的下载目录，你可以指定为其他任何目录。</p>
+<p>然后再刚刚迅雷固件的解压目录下创建目录<code>etc</code>,同时创建文件<code>thunder_mounts.cfg</code>,编辑此文件</p>
+<pre><code class="language-shell">vim /root/xunlei/etc/thunder_mounts.cfg
+</code></pre>
+<p>内容为:</p>
+<pre><code class="language-shell">avaliable_mount_path_pattern
+{<br/>
+    /mnt/TDDOWNLOAD<br/>
+}
+</code></pre>
+<p>保存后重启迅雷路由器固件:</p>
+<pre><code class="language-shell">./root/xunlei/portal
+</code></pre>
+<p>再进入远程下载界面新建下载就没有了没挂载磁盘的提示了</p></li>
+<li><p>迅雷路由器固件开机启动</p>
+<p>在/etc/init.d/下新建xunlei脚本，写入:</p>
+<pre><code class="language-text">```Shell
+#!/bin/sh<br/>
+#<br/>
+# Xunlei initscript<br/>
+#<br/>
+### BEGIN INIT INFO<br/>
+# Provides:          xunlei<br/>
+# Required-Start:    $network $local_fs $remote_fs<br/>
+# Required-Stop::    $network $local_fs $remote_fs<br/>
+# Should-Start:      $all<br/>
+# Should-Stop:       $all<br/>
+# Default-Start:     2 3 4 5<br/>
+# Default-Stop:      0 1 6<br/>
+# Short-Description: Start xunlei at boot time<br/>
+# Description:       A downloader<br/>
+### END INIT INFO<br/>
+do_start()<br/>
+{<br/>
+        ./root/xunlei/portal<br/>
+}<br/>
+do_stop()<br/>
+{<br/>
+        ./root/xunlei/portal -s<br/>
+}<br/>
+case &quot;$1&quot; in<br/>
+  start)<br/>
+    do_start<br/>
+    ;;<br/>
+  stop)<br/>
+    do_stop<br/>
+    ;;<br/>
+esac<br/>
+``` 
+</code></pre>
+<p>然后将该脚本加入默认自启动中</p>
+<pre><code class="language-shell">update-rc.d xunlei defaults
+</code></pre></li>
+</ol>
 
                         
                       </div>
@@ -378,10 +703,10 @@ Mimetic中Header的继承关系如下</p>
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2013/05/31</span>
+                    <span class="date">2016/07/13</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -458,8 +783,6 @@ Mimetic中Header的继承关系如下</p>
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -467,6 +790,8 @@ Mimetic中Header的继承关系如下</p>
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -483,31 +808,31 @@ Mimetic中Header的继承关系如下</p>
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -117,6 +117,102 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15451201223625.html">
+                
+                  <h1>Python 单元测试以及单元测试覆盖率</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">单元测试</h2>
+
+<ol>
+<li><p>安装nosetest</p>
+<pre><code class="language-text">pip install nose
+</code></pre></li>
+<li><p>执行测试并输出xunit格式xml文件</p>
+<pre><code class="language-text">nosetest --with-xunit -v
+</code></pre>
+<p>如果你想指定输出的文件名</p>
+<pre><code class="language-text">nosetest --with-xunit --xunit-file=xunittest.xml -v
+</code></pre></li>
+</ol>
+
+<h2 id="toc_1">测试覆盖率</h2>
+
+<ol>
+<li><p>安装coverage</p>
+<pre><code class="language-text">pip install coverage
+</code></pre></li>
+<li><p>测试指定的测试代码或者模块</p>
+<pre><code class="language-text">coverage run test.py
+</code></pre>
+<p>以上操作会在当前目录下生成<code>.coverage</code>目录</p></li>
+<li><p>生成xml报告或者html报告</p>
+<pre><code class="language-text">coverage html
+coverage xml
+</code></pre></li>
+</ol>
+
+<h2 id="toc_2">在Django 中使用nose和coverage</h2>
+
+<p>如果仅仅是使用coverage</p>
+
+<pre><code class="language-text">coverage run manage.py test #执行django的单元测试
+coverage xml #生成xml报告
+</code></pre>
+
+<p>如果需要同时使用nosetest和coverage</p>
+
+<ol>
+<li><p>下载安装django-nose</p>
+<pre><code class="language-text">pip install django-nose
+</code></pre></li>
+<li><p>将django-nose添加到项目的setting.py文件当中</p>
+<pre><code class="language-text">INSTALLED_APPS = (
+...<br/>
+&#39;django_nose&#39;, # Append to INSTALLED_APPS<br/>
+...<br/>
+)<br/>
+TEST_RUNNER = &#39;django_nose.NoseTestSuiteRunner&#39;<br/>
+NOSE_ARGS = [<br/>
+   &#39;--with-coverage&#39;,<br/>
+    &#39;--with-xunit&#39;,<br/>
+    &#39;--xunit-file=xunittest.xml&#39;<br/>
+]
+</code></pre></li>
+<li><p>执行单元测试</p>
+<pre><code class="language-text">python manage.py test
+</code></pre></li>
+<li><p>生成单元测试覆盖率</p>
+<pre><code class="language-text">coverage xml
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/18</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15308616208129.html">
                 
@@ -782,38 +878,6 @@ print n
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="14945011465578.html">
-                
-                  <h1>利用pxssh暴力破解ssh密码</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/06/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -878,8 +942,6 @@ print n
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -887,6 +949,8 @@ print n
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -903,31 +967,31 @@ print n
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

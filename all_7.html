@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,91 +118,114 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="14945010337427.html">
+                <a class="clearlink" href="15225570687324.html">
                 
-                  <h1>利用树莓派搭建迅雷远程下载服务器</h1>
+                  <h1>Kali渗透教程笔记</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<blockquote>
-<p>树莓派系统为Raspberry Pi</p>
-</blockquote>
-
-<ol>
-<li><p>树莓派安装迅雷路由器固件<br/>
-可以在迅雷论坛上下载到最新的固件:<a href="http://luyou.xunlei.com/">官网论坛</a>,记得要下arm版本的固件<code>armel_v5te_glibc</code><br/>
-或者下载我共享的这个<a href="http://pan.baidu.com/s/1nvvoX7b">Xware1.0.31_armel_v5te_glibc</a> 提取码:e223<br/>
-在树莓派上解压到某个目录，例如我的是<code>/root/xunlei</code>下面</p>
-<pre><code class="language-shell">unzip Xware1.0.31_armel_v5te_glibc.zip -d /root/xunlei
+                        	<ol>
+<li><p>全新安装的Metasploitable2 系统需要修改<code>/var/www/mutillidae/config.inc</code>文件，将其中的<code>$dbname</code>修改为<code>owasp10</code>，否则会导致任意模拟渗透测试无效</p>
+<pre><code class="language-text">$dbhost = &#39;localhost&#39;;
+$dbuser = &#39;root&#39;;<br/>
+$dbpass = &#39;&#39;;<br/>
+$dbname = &#39;owasp10&#39;; #原本的值为metasploitable
+</code></pre></li>
+<li><p>nc 命令可以用于电子取证的过程中在不修改目标主机的情况下将一些信息传递给取证机器，首先需要在取证机器上用nc监听某个端口</p>
+<pre><code class="language-text">#取证机器(10.1.1.12)
+nc -l -p 3000  #监听3000端口<br/>
+#目标机器<br/>
+ls -al | nc -nv 10.1.1.12 3000  #将ls -al 获取到的信息直接传递给取证机器<br/>
+ps aux | nv -nv 10.1.1.12 3000 -q 1 #参数-q 1的作用是当命令执行完成1秒后自动退出nc
+</code></pre></li>
+<li><p>nc 传输文件</p>
+<pre><code class="language-text">#接受从目标机器传回的文件
+nc -l -p 3000 &gt; a.txt #监听端口，将收到的信息写入a.txt<br/>
+nc -nv 10.1.1.12 3000 -q 1 &lt; a.txt #利用管道命令将a.txt传输给取证机器<br/>
+#发送文件给目标机器<br/>
+nc -q 1 -lp 3000 &lt; a.txt<br/>
+nc -nv 10.1.1.12 3000 &gt; a.txt
+</code></pre></li>
+<li><p>nc 传输目录</p>
+<p>传入目录文件其实就是先将目录打包成文件，然后利用文件传输给目标机器</p>
+<pre><code class="language-text">tar -cvf - music | nc -lp 3000 -q 1
+nc -nv 10.1.12 3000 | tar -xvf -
+</code></pre></li>
+<li><p>加密文件传输也是类似，先用加密指令将文件加密，然后目标机器接收到之后再解密即可</p></li>
+<li><p>nslookup 用法</p>
+<pre><code class="language-bash">#基本用法
+root@kali:~# nslookup<br/>
+&gt; www.sina.com<br/>
+Server:     192.168.31.1<br/>
+Address:    192.168.31.1#53<br/>
+Non-authoritative answer:<br/>
+www.sina.com    canonical name = us.sina.com.cn.<br/>
+us.sina.com.cn  canonical name = spool.grid.sinaedge.com.<br/>
+Name:   spool.grid.sinaedge.com<br/>
+Address: 202.102.94.124
 </code></pre>
-<p>进入<code>/root/xunlei</code>目录 执行:</p>
-<pre><code class="language-shell">./portal
+<pre><code class="language-text">#只查询A记录  (还有个AAAA记录，为IPv6地址)
+Address: 202.102.94.124<br/>
+&gt; set type=a<br/>
+&gt; sina.com<br/>
+Server:     192.168.31.1<br/>
+Address:    192.168.31.1#53<br/>
+Non-authoritative answer:<br/>
+Name:   sina.com<br/>
+Address: 66.102.251.33
 </code></pre>
-<p>稍等片刻，会在最后输出一个激活码，类似下图中涂红的部分</p>
-<p><img src="https://pic.mylonly.com/2016-07-13_15:19:59.jpg" alt="2016-07-13_15:19:59.jpg"/> </p></li>
-<li><p>在迅雷远程下载页面绑定树莓派<br/>
-登录<a href="http://yuancheng.xunlei.com/">迅雷远程下载主页</a>,登录之后，左侧会有一个添加按钮，点击添加按钮，弹出如下界面:<br/>
-<img src="https://pic.mylonly.com/2016-07-13_15:22:45.jpg" alt="2016-07-13_15:22:45.jpg"/></p>
-<p>将树莓派上获得的激活码填入框中，点击<code>绑定</code>后左侧就会出现树莓派对应的设备列表了，但是，如果我们此时就在右侧点击<code>新建</code>之后会发现,弹出的新建页面中会提示找不到挂载磁盘，如下图：</p>
-<p><img src="http://pic.mylonly.com/2016-07-13_15:25:18.jpg" alt="2016-07-13_15:25:18.jpg"/></p></li>
-<li><p>自定义迅雷的下载目录</p>
-<p>进入<code>/mnt</code>目录，创建目录TDDOWNLOAD(名字随意)<br/>
-执行命令:</p>
-<pre><code class="language-shell">mount --bind /data/TDDOWNLOAD /mnt/TDDOWNLOAD
+<pre><code class="language-text"># 查询邮件MX记录
+Address: 66.102.251.33<br/>
+&gt; set type=mx<br/>
+&gt; sina.com<br/>
+Server:     192.168.31.1<br/>
+Address:    192.168.31.1#53<br/>
+Non-authoritative answer:<br/>
+sina.com    mail exchanger = 5 freemx1.sinamail.sina.com.cn.<br/>
+sina.com    mail exchanger = 10 freemx3.sinamail.sina.com.cn.<br/>
+sina.com    mail exchanger = 10 freemx2.sinamail.sina.com.cn.<br/>
+Authoritative answers can be found from:
 </code></pre>
-<p>其中/data/TDDOWNLOAD就是自定义的下载目录，你可以指定为其他任何目录。</p>
-<p>然后再刚刚迅雷固件的解压目录下创建目录<code>etc</code>,同时创建文件<code>thunder_mounts.cfg</code>,编辑此文件</p>
-<pre><code class="language-shell">vim /root/xunlei/etc/thunder_mounts.cfg
+<pre><code class="language-text">#反向查询
+&gt; set type=ptr<br/>
+&gt; 106.14.114.55<br/>
+Server:     114.114.114.114<br/>
+Address:    114.114.114.114#53<br/>
+** server can&#39;t find 55.114.14.106.in-addr.arpa: NXDOMAIN
 </code></pre>
-<p>内容为:</p>
-<pre><code class="language-shell">avaliable_mount_path_pattern
-{<br/>
-    /mnt/TDDOWNLOAD<br/>
-}
-</code></pre>
-<p>保存后重启迅雷路由器固件:</p>
-<pre><code class="language-shell">./root/xunlei/portal
-</code></pre>
-<p>再进入远程下载界面新建下载就没有了没挂载磁盘的提示了</p></li>
-<li><p>迅雷路由器固件开机启动</p>
-<p>在/etc/init.d/下新建xunlei脚本，写入:</p>
-<pre><code class="language-text">```Shell
-#!/bin/sh<br/>
-#<br/>
-# Xunlei initscript<br/>
-#<br/>
-### BEGIN INIT INFO<br/>
-# Provides:          xunlei<br/>
-# Required-Start:    $network $local_fs $remote_fs<br/>
-# Required-Stop::    $network $local_fs $remote_fs<br/>
-# Should-Start:      $all<br/>
-# Should-Stop:       $all<br/>
-# Default-Start:     2 3 4 5<br/>
-# Default-Stop:      0 1 6<br/>
-# Short-Description: Start xunlei at boot time<br/>
-# Description:       A downloader<br/>
-### END INIT INFO<br/>
-do_start()<br/>
-{<br/>
-        ./root/xunlei/portal<br/>
-}<br/>
-do_stop()<br/>
-{<br/>
-        ./root/xunlei/portal -s<br/>
-}<br/>
-case &quot;$1&quot; in<br/>
-  start)<br/>
-    do_start<br/>
-    ;;<br/>
-  stop)<br/>
-    do_stop<br/>
-    ;;<br/>
-esac<br/>
-``` 
-</code></pre>
-<p>然后将该脚本加入默认自启动中</p>
-<pre><code class="language-shell">update-rc.d xunlei defaults
+<h4 id="toc_0">由于反向域名解析要ISP完成，但是国内的ISP基本上没有对外开放这个功能，所以如果要验证反向域名解析，可以使用国外的DNS Server解析国外的网址IP</h4>
+<pre><code class="language-text">Address: 8.8.8.8#53
+&gt; set type=ptr<br/>
+&gt; set type=any<br/>
+&gt; google.com<br/>
+Server:     8.8.8.8<br/>
+Address:    8.8.8.8#53<br/>
+Non-authoritative answer:<br/>
+Name:   google.com<br/>
+Address: 216.58.200.238<br/>
+Name:   google.com<br/>
+Address: 2404:6800:4008:802::200e<br/>
+google.com  nameserver = ns3.google.com.<br/>
+google.com  text = &quot;docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e&quot;<br/>
+google.com  mail exchanger = 30 alt2.aspmx.l.google.com.<br/>
+google.com  nameserver = ns2.google.com.<br/>
+google.com  text = &quot;v=spf1 include:_spf.google.com ~all&quot;<br/>
+google.com  mail exchanger = 50 alt4.aspmx.l.google.com.<br/>
+google.com  rdata_257 = 0 issue &quot;pki.goog&quot;<br/>
+google.com  mail exchanger = 10 aspmx.l.google.com.<br/>
+google.com  mail exchanger = 20 alt1.aspmx.l.google.com.<br/>
+google.com<br/>
+    origin = ns1.google.com<br/>
+    mail addr = dns-admin.google.com<br/>
+    serial = 191277663<br/>
+    refresh = 900<br/>
+    retry = 900<br/>
+    expire = 1800<br/>
+    minimum = 60<br/>
+google.com  mail exchanger = 40 alt3.aspmx.l.google.com.<br/>
+google.com  nameserver = ns4.google.com.<br/>
+google.com  nameserver = ns1.google.com.
 </code></pre></li>
 </ol>
 
@@ -213,7 +236,65 @@ esac<br/>
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/07/13</span>
+                    <span class="date">2018/04/01</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15126534156721.html">
+                
+                  <h1>Ubuntu 安装uwsgi</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>先源码安装python3.6（记得先用apt-get 安装好一些系统库zlib_dev,openssl_dev）<br/>
+然后利用pip3 安装uwsgi</p>
+
+<pre><code class="language-shell">wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+tar -xvf Python-3.6.3.tar.xz
+cd Python-3.6.3/
+
+apt-get install zlib1g-dev
+apt-get install libssl-dev
+apt-get install sqlite3
+
+
+./configure --enable-loadable-sqlite-extensions
+
+make &amp;&amp; sudo make install
+
+
+pip3 install uwsgi
+
+uwsgi -i /data/web/xxxx.ini
+</code></pre>
+
+<p>uwsgi 配置侦测文件改动自动自动重启，在ini中加入</p>
+
+<pre><code class="language-text">py-autoreload = 1
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/12/07</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
@@ -230,14 +311,65 @@ esac<br/>
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14945011244738.html">
+                <a class="clearlink" href="15119665687635.html">
                 
-                  <h1>Scrapy抓取Ajax动态页面</h1>
+                  <h1>Django 发送html格式的邮件</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦
+                        	<p>django中默认提供了发送邮件的库<code>mail</code>，通过这个库我们可以很方便的通过django发送一份电子邮件</p>
+
+<h5 id="toc_0">1. 在setting 中指定邮件服务器的基本信息</h5>
+
+<pre><code class="language-python">EMAIL_USE_SSL = True    
+EMAIL_HOST = &#39;smtp.exmail.qq.com&#39;  # 如果是 163 改成 smtp.163.com
+EMAIL_PORT = 465
+EMAIL_HOST_USER = &#39;***@domain.com&#39; # 帐号
+EMAIL_HOST_PASSWORD = &#39;password&#39;  # 密码
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+</code></pre>
+
+<h5 id="toc_1">2. 引用mail库发送邮件</h5>
+
+<pre><code class="language-python">from django.core.mail import EmailMessage
+from Across.settings import EMAIL_HOST_USER
+
+msg = EmailMessage(&quot;邮件标题&quot;,&quot;邮件内容&quot;,EMAIL_HOST_USER,[接受邮件列表])
+msg.send()
+</code></pre>
+
+<h5 id="toc_2">3.发送html模板邮件</h5>
+
+<p>可以利用Django的template库读取指定的html模板，然后将参数代入，首选需要在settings中设置template的目录</p>
+
+<pre><code class="language-python">TEMPLATES = [
+    {
+        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
+        &#39;DIRS&#39;: [
+            os.path.join(BASE_DIR,&#39;templates&#39;)  ##你的模板目录
+        ],
+        &#39;APP_DIRS&#39;: True,
+        &#39;OPTIONS&#39;: {
+            &#39;context_processors&#39;: [
+                &#39;django.template.context_processors.debug&#39;,
+                &#39;django.template.context_processors.request&#39;,
+                &#39;django.contrib.auth.context_processors.auth&#39;,
+                &#39;django.contrib.messages.context_processors.messages&#39;,
+            ],
+        },
+    },
+]
+</code></pre>
+
+<p>然后将你准备好的html模板放入该目录，然后就是利用temlate的loader函数加载模板传入指定参数</p>
+
+<pre><code class="language-python">html_content = loader.render_to_string(&#39;email.html&#39;,{&#39;authcode&#39;:random,&#39;title&#39;:&quot;标题标题&quot;,&#39;operation&#39;:operation_str})
+msg = EmailMessage(&quot;您的验证码&quot;,html_content,EMAIL_HOST_USER,[email])
+msg.content_subtype = &quot;html&quot; # Main content is now text/html
+msg.send()
+</code></pre>
+
                         
                       </div>
                   </div>
@@ -245,10 +377,10 @@ esac<br/>
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/07/04</span>
+                    <span class="date">2017/11/29</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -262,101 +394,49 @@ esac<br/>
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14945009892942.html">
+                <a class="clearlink" href="15117871248079.html">
                 
-                  <h1>利用Github的Webhook功能和Node.js完成项目的自动部署</h1>
+                  <h1>Django扩展默认的User Model</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
-
-<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
-
-<pre><code class="language-node.js">var http = require(&#39;http&#39;)
-var createHandler = require(&#39;github-webhook-handler&#39;)
-var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
-// 上面的 secret 保持和 GitHub 后台设置的一致
-
-function run_cmd(cmd, args, callback) {
-  var spawn = require(&#39;child_process&#39;).spawn;
-  var child = spawn(cmd, args);
-  var resp = &quot;&quot;;
-
-  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
-  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
-}
-
-http.createServer(function (req, res) {
-  handler(req, res, function (err) {
-    res.statusCode = 404
-    res.end(&#39;no such location&#39;)
-  })
-}).listen(7777)
-
-handler.on(&#39;error&#39;, function (err) {
-  console.error(&#39;Error:&#39;, err.message)
-})
-
-handler.on(&#39;push&#39;, function (event) {
-  console.log(&#39;Received a push event for %s to %s&#39;,
-    event.payload.repository.name,
-    event.payload.ref);
-    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
-})
-</code></pre>
-
-<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
-
-<p>还有代码这行:</p>
-
-<pre><code class="language-text">var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) 
-</code></pre>
-
-<p>其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
-
-<h3 id="toc_1">完成deploy.sh脚本</h3>
-
-<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
-
-<pre><code class="language-bash"> #!/bin/bash
-
-WEB_PATH=&#39;/root/tools/&#39;$1
-WEB_USER=&#39;root&#39;
-WEB_USERGROUP=&#39;root&#39;
-
-echo &quot;Start deployment&quot;
-cd $WEB_PATH
-echo &quot;pulling source code...&quot;
-git reset --hard origin/master
-git clean -f
-git pull
-git checkout master
-echo &quot;changing permissions...&quot;
-chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
-echo &quot;Finished.&quot;
-</code></pre>
-
-<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
+                        	<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
 
 <blockquote>
-<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
-你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
+<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
 </blockquote>
 
-<h3 id="toc_2">后台运行deploy.js</h3>
+<p>在models.py中新建一个model继承自AbstractUser</p>
 
-<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
+<pre><code class="language-text">from django.db import models
 
-<pre><code class="language-text">nohup node deploy.js &gt; deploy.log &amp;
+# Create your models here.
+from django.contrib.auth.models import AbstractUser
+from enum import Enum
+
+
+class UserProfile(AbstractUser):
+
+    GENDER = [
+        (0,&quot;未知&quot;),
+        (1,&quot;男性&quot;),
+        (2,&quot;女性&quot;)
+    ]
+
+    nickname = models.CharField(max_length=50)
+    intro = models.CharField(max_length=500)
+    mobile = models.CharField(max_length=13)
+    gender = models.IntegerField(choices=GENDER,default=0)
+
+    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
+
 </code></pre>
 
-<h3 id="toc_3">去Github后台添加webhook</h3>
+<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
 
-<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
+<pre><code class="language-text">AUTH_USER_MODEL = &#39;User.UserProfile&#39;
+</code></pre>
 
                         
                       </div>
@@ -365,10 +445,10 @@ echo &quot;Finished.&quot;
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/07/02</span>
+                    <span class="date">2017/11/27</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -382,14 +462,14 @@ echo &quot;Finished.&quot;
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14945011465578.html">
+                <a class="clearlink" href="15052000291680.html">
                 
-                  <h1>利用pxssh暴力破解ssh密码</h1>
+                  <h1>利用Scrapy-Splash抓取JS动态渲染的网页数据</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。
+                        	随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法
                         
                       </div>
                   </div>
@@ -397,39 +477,7 @@ echo &quot;Finished.&quot;
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/06/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945011027951.html">
-                
-                  <h1>Python利用Pexpect模拟ssh交互</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	Pexpect 是 Don Libes 的 Expect 语言的一个 Python 实现，是一个用来启动子程序，并使用正则表达式对程序输出做出特定响应，以此实现与其自动交互的 Python 模块。 Pexpect 的使用范围很广，可以用来实现与 ssh、ftp 、telnet 等程序的自动交互；可以用来自动复制软件安装包并在不同机器自动安装；还可以用来实现软件测试中与命令行交互的自动化。
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/06/24</span>
+                    <span class="date">2017/09/12</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='python.html'>Python</a></span>
@@ -509,8 +557,6 @@ echo &quot;Finished.&quot;
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -518,6 +564,8 @@ echo &quot;Finished.&quot;
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -534,31 +582,31 @@ echo &quot;Finished.&quot;
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

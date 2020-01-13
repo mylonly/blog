@@ -1,0 +1,532 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  PM - 独自一人
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="15445994167623.html">
+                
+                  <h1>GitLab和Redmine深度集成</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">Redmine Issue Tracker</h2>
+
+<ol>
+<li><p>设置Redmine Issue Tracker<br/>
+在GitLab的项目setting里面找到integrations，找到redmine<br/>
+修改如下:<br/>
+<img src="https://pic.mylonly.com/2018-12-12-072609.png" alt=""/></p></li>
+<li><p>关闭内置issue</p>
+<p>setting-&gt;general-&gt;Permissions</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-072807.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_1">Redmine 启用版本库</h2>
+
+<ol>
+<li><p>进入redmine容器</p>
+<pre><code class="language-text">docker exec -it redmine /bin/bash
+</code></pre></li>
+<li><p>安装插件<code>redmine_gitlab_hook</code></p>
+<p>进入<code>/usr/src/redmine/plugins</code>目录</p>
+<pre><code class="language-text">git clone https://github.com/phlegx/redmine_gitlab_hook.git
+</code></pre>
+<p>登录redmine管理员，管理-&gt;插件，找到<code>Redmine GitLab Hook plugin</code>,进入配置</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-101517.png" alt=""/></p></li>
+<li><p>创建本地git仓库并拉取</p>
+<pre><code class="language-text">mkdir -p /home/redmine/git-repo #创建本地git仓库
+cd /home/redmine/git-repo/<br/>
+git clone --mirror http://username:password@gitlab.1234tv.lan:/awesome/python-test.git #此处最好采用http加上用户名和密码的方式拉取git仓库<br/>
+chmod -R redmine:redmine python-test.git ##记得修改用户组为redmine:redmine
+</code></pre></li>
+<li><p>登录redmine管理员，启用版本库</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-073502.png" alt=""/></p></li>
+<li><p>配置版本库</p>
+<p>进入到和gitlab项目对应的项目中，进入设置页面<br/>
+git clone时加了-mirror参数,使用下面参数<br/>
+<img src="https://pic.mylonly.com/2018-12-12-101134.png" alt=""/><br/>
+如果git clone 时没有使用-mirror参数，使用下面的配置<br/>
+<img src="https://pic.mylonly.com/2018-12-12-073658.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_2">配置GitLab Webhook</h2>
+
+<p>进入GitLab的项目中，在setting-&gt;Integrations中添加如下webhooks地址</p>
+
+<p>webhook url格式:</p>
+
+<pre><code class="language-text">{redmine_installation_url}/gitlab_hook?key={redmine_repository_API_key}&amp;project_id={redmine_project_identifier}
+</code></pre>
+
+<p><img src="https://pic.mylonly.com/2018-12-12-101954.png" alt=""/></p>
+
+<p>如果redmine的项目名称和版本库的标识不一致，需要带上<code>repository_name</code>参数，手动指定redmine上的版本库</p>
+
+<p>如果需要gitlab webhook插件自动创建版本库,还需要加上<code>repository_git_url</code>、<code>repository_namespace</code>、<code>repository_name</code>这几个参数,</p>
+
+<p>其中<code>repository_git_url</code>为需要克隆的远程仓库的地址<br/>
+而<code>repository_namespace</code>和<code>repository_name</code>自由填写，会在redmine的版本库里生成类似 <code>{repository_namespace}_{repository_name}</code>样式的版本库标识</p>
+
+<h2 id="toc_3">验证</h2>
+
+<ol>
+<li>在redmine里创建一个issue，状态为新建</li>
+<li>本地clone项目，少许修改，commit日志填写&quot;bugfix #<id>&quot; (<code>id为redmine上的issue id</code>),然后push 到服务器上</li>
+<li>查看redmine上该issue的状态是否改变</li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='PM.html'>PM</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15445172404972.html">
+                
+                  <h1>GitLabRunner配合SonarScanner针对每次commit做代码检查</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">Sonar GitLab-Plugin插件以及配置</h2>
+
+<ol>
+<li><p>下载安装插件</p>
+<p>admin登录SonarQube，点击 配置 —&gt; 系统 —&gt; 更新中心 —&gt; Available —&gt; Search，输入 GitLab，在列表中点击 install 安装，安装完毕后重启 SonarQube 即可<br/>
+<img src="https://pic.mylonly.com/2018-12-11-093357.png" alt=""/></p></li>
+<li><p>在GitLab上注册一个Sonarqube账号，获取Private Token</p></li>
+</ol>
+
+<p><img src="https://pic.mylonly.com/2018-12-11-093529.png" alt=""/></p>
+
+<ol>
+<li>回到SonarQube 配置插件
+<img src="https://pic.mylonly.com/2018-12-11-093642.png" alt=""/><br/></li>
+</ol>
+
+<h2 id="toc_1">Sonar Scanner 相关配置</h2>
+
+<p>依然采用docker方式</p>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull ciricihq/gitlab-sonar-scanner
+</code></pre></li>
+<li><p>在sonarqube上新建要测试的项目<br/>
+按照向导创建完项目之后记住所设置的<code>key</code><br/>
+<img src="https://pic.mylonly.com/2018-12-11-094008.png" alt=""/></p></li>
+<li><p>回到GitLab,在需要进行质量检测的项目中加入<code>.gitlab-ci.yml</code>,在末尾添加如下代码：</p>
+<pre><code class="language-text">stages:
+- analysis<br/>
+sonarqube:<br/>
+  stage: analysis<br/>
+  image: ciricihq/gitlab-sonar-scanner<br/>
+  variables:<br/>
+    SONAR_URL: http://sonarqube.domain.lan #你的sonarqube地址<br/>
+    SONAR_ANALYSIS_MODE: issues<br/>
+  script:<br/>
+  - gitlab-sonar-scanner<br/>
+sonarqube-reports:<br/>
+  stage: analysis<br/>
+  image: ciricihq/gitlab-sonar-scanner<br/>
+  variables:<br/>
+    SONAR_URL: http://sonarqube.domain.lan #你的sonarqube地址<br/>
+    SONAR_ANALYSIS_MODE: publish<br/>
+  script:<br/>
+  - gitlab-sonar-scanner
+</code></pre></li>
+<li><p>在项目根目录添加sonar scanner 配置文件 <code>sonar-project.properties</code></p>
+<pre><code class="language-text">sonar.projectKey=&lt;sonarqube上创建项目时填写的key&gt;
+sonar.sources=.<br/>
+sonar.gitlab.project_id=git@gitlab.domain.lan/awesome/xxx.git ##你的git仓库地址
+</code></pre></li>
+</ol>
+
+<h2 id="toc_2">GitLab Runner注册</h2>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull gitlab/gitlab-runner
+</code></pre></li>
+<li><p>利用docker注册镜像</p>
+<pre><code class="language-text">docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name  gitlab-runner gitlab/gitlab-runner register \
+  --non-interactive \<br/>
+  --executor &quot;docker&quot; \<br/>
+  --docker-image alpine:3 \<br/>
+  --url &quot;https://gitlab.com/&quot; \<br/>
+      --registration-token &quot;PROJECT_REGISTRATION_TOKEN&quot; \<br/>
+  --description &quot;docker-runner&quot; \<br/>
+  --tag-list &quot;docker,aws&quot; \<br/>
+  --run-untagged \<br/>
+  --locked=&quot;false&quot;
+</code></pre></li>
+<li><p>启动GitLab Runner</p>
+<pre><code class="language-text">docker run -d --name gitlab-runner --restart always \
+ -v /srv/gitlab-runner/config:/etc/gitlab-runner \<br/>
+ -v /var/run/docker.sock:/var/run/docker.sock \<br/>
+ gitlab/gitlab-runner
+</code></pre></li>
+</ol>
+
+<h2 id="toc_3">测试验证</h2>
+
+<p>修改代码提交到gitlab，观察gitlab的pipeline的状态，以及sonarqube上新建项目的状态。</p>
+
+<p><img src="https://pic.mylonly.com/2018-12-11-094744.png" alt="GitLab Pipeline"/><br/>
+<img src="https://pic.mylonly.com/2018-12-11-094806.png" alt="Sonarqube"/></p>
+
+<h2 id="toc_4">问题</h2>
+
+<p>观察redmine的日志，如果出现权限问题，请注意仓库的用户组需要为redmine:redmine</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='PM.html'>PM</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
+
+
+
+  </body>
+</html>

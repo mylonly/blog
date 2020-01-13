@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,592 +118,25 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="14945010588526.html">
+                <a class="clearlink" href="15247238721302.html">
                 
-                  <h1>树莓派3命令行连接WiFi和蓝牙设备</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<h3 id="toc_0">WiFi连接</h3>
-
-<pre><code class="language-text">pi@raspi3:~ $ iwlist scan
-wlan0 Scan completed :
-Cell 01 - Address: 00:1E:20:50:AA:BB
-Channel:8
-Frequency:2.447 GHz (Channel 8)
-Quality=70/70 Signal level=-32 dBm
-Encryption key:on
-ESSID:&quot;WIFINAME&quot;
-Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
-9 Mb/s; 12 Mb/s; 18 Mb/s
-Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
-Mode:Master
-Extra:tsf=0000000000000000
-Extra: Last beacon: 2157000ms ago
-IE: Unknown: 000546616E6379
-IE: Unknown: 010882848B960C121824
-IE: Unknown: 030108
-IE: Unknown: 050401020000
-IE: Unknown: 0706303020010B14
-IE: Unknown: 2A0100
-IE: Unknown: 32043048606C
-IE: IEEE 802.11i/WPA2 Version 1
-Group Cipher : TKIP
-Pairwise Ciphers (2) : CCMP TKIP
-Authentication Suites (1) : PSK
-IE: Unknown: 7F080000000000000040
-IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
- 
-可以看到周围的wifi热点信息
-配置连接到某个热点:
- 
-# 编辑wifi文件
-sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
-# 在该文件最后添加下面的话
-network={
-  ssid=&quot;WIFINAME&quot;
-  psk=&quot;password&quot;
-}
-# 引号部分分别为wifi的名字和密码
-# 保存文件后几秒钟应该就会自动连接到该wifi
-# 查看是否连接成功
-ifconfig wlan0
-
-</code></pre>
-
-<h3 id="toc_1">蓝牙连接</h3>
-
-<pre><code class="language-text">pi@raspi3:~ $ sudo bluetoothctl
-[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
-[bluetooth]# list
-Controller BB:27:EB:0D:9D:DD raspi3 [default]
-[bluetooth]# power on
-Changing power on succeeded
-[bluetooth]# scan on
-Discovery started
-[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
-[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
-[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
-[bluetooth]# agent on
-Agent registered
-[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
-[bluetooth]# pair E8:07:BF:3A:25:AA
-Attempting to pair with E8:07:BF:3A:25:AA
-[CHG] Device E8:07:BF:3A:25:AA Connected: yes
-[CHG] Device E8:07:BF:3A:25:AA UUIDs:
-    00001108-0000-1000-8000-00805f9b34ff
-[CHG] Device E8:07:BF:3A:25:AA Paired: yes
-Pairing successful
-[CHG] Device E8:07:BF:3A:25:AA Connected: no
-[bluetooth]# trust E8:07:BF:3A:25:AA
-[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
-Changing E8:07:BF:3A:25:AA trust succeeded
-[bluetooth]# connect E8:07:BF:3A:25:AA
-
-</code></pre>
-
-<p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
- ```<br/>
-sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
-
-<pre><code class="language-text">
-
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/05/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14944977278738.html">
-                
-                  <h1>Swift要点</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>(本文所有代码样例全部来自Swift2.0官方文档)</p>
-
-<ol>
-<li><p>Swift类型间不会隐式转换，必须要显式转换。将值转换成字符串除了使用String()显式转换外，还有中简单的方法,如下:</p>
-<pre><code class="language-swift">let apples = 3
-let oranges = 5<br/>
-let appleSummary = &quot;I have \(apples) apples.&quot;<br/>
-let fruitSummary = &quot;I have \(apples + oranges)  pieces of fruit.&quot;
-</code></pre>
-<p>输出:</p>
-<pre><code class="language-text">&quot;I have 3 apples&quot;
-&quot;I have 8 pieces of fruit&quot;
-</code></pre></li>
-<li><p>Swift声明数组或者字典可以声明指定类型</p>
-<pre><code class="language-swift">let emptyArray = [String]()
-let emptyDictionary = [String: Float]()
-</code></pre></li>
-<li><p>if语句中，条件必须是一个布尔表达式,如下:</p>
-<pre><code class="language-swift"> if score &gt; 50 {
-    teamScore += 3<br/>
-} else {<br/>
-       teamScore += 1<br/>
-}
-</code></pre>
-<p><code>if 1 {}</code> 这样代码会报错，但是<code>if true{}</code>这样的代码是可  以的。</p></li>
-<li><p>Switch 支持任意类型的数据以及各种比较，不仅仅限于整数以及判断是否相等,而且Switch匹配到相应的子句之后就会推出整个Switch,不需要给每个Switch子句写上break了。</p>
-<pre><code class="language-swift">let vegetable = &quot;red pepper&quot;
-switch vegetable {<br/>
-case &quot;celery&quot;:<br/>
-    print(&quot;Add some raisins and make ants on a  log.&quot;)<br/>
-case &quot;cucumber&quot;, &quot;watercress&quot;:<br/>
-    print(&quot;That would make a good tea sandwich.&quot;)<br/>
-case let x where x.hasSuffix(&quot;pepper&quot;):<br/>
-    print(&quot;Is it a spicy \(x)?&quot;)<br/>
-default:<br/>
-    print(&quot;Everything tastes good in soup.&quot;)<br/>
-}
-</code></pre>
-<p><em>Swift 子句中必须要遍历所有可能，否则会报错</em><br/>
-<em>上述代码中的lex表达式将匹配等式的值赋给变量x</em></p></li>
-<li><p>do{}while()被repeat{}while()取代</p>
-<pre><code class="language-swift">var m = 2
-repeat {<br/>
-    m = m * 2<br/>
-} while m &lt; 100<br/>
-print(m)
-</code></pre></li>
-<li><p>循环有更简便的写法,0..&lt;4表示遍历0到4(不包含4，包含4用0...4),传统写法也是支持的。</p>
-<pre><code class="language-swift">var firstForLoop = 0
-for i in 0..&lt;4 {<br/>
-    firstForLoop += i<br/>
-}<br/>
-print(firstForLoop)<br/>
-var firstForLoop = 0<br/>
-for i in 0...4 {<br/>
-    firstForLoop += i<br/>
-}<br/>
-print(firstForLoop)
-</code></pre></li>
-<li><p>函数可以传入可变的参数，参数在函数内表现为数组形式:</p>
-<pre><code class="language-swift">func sumOf(numbers: Int...) -&gt; Int {
-var sum = 0<br/>
-for number in numbers {<br/>
-    sum += number<br/>
-}<br/>
-return sum<br/>
-}<br/>
-sumOf()<br/>
-sumOf(42, 597, 12)
-</code></pre></li>
-<li><p>函数可以作为另一个函数的返回值，类似于OC中的block</p>
-<pre><code class="language-swift">func makeIncrementer() -&gt; (Int -&gt; Int) {
-func addOne(number: Int) -&gt; Int {<br/>
-    return 1 + number<br/>
-}<br/>
-return addOne<br/>
-}<br/>
-var increment = makeIncrementer()<br/>
-increment(7)
-</code></pre>
-<p>同理，函数也可以当做参数传入函数,</p>
-<pre><code class="language-swift">func hasAnyMatches(list: [Int], condition: Int -&gt;   Bool) -&gt; Bool {
-for item in list {<br/>
-    if condition(item) {<br/>
-        return true<br/>
-    }<br/>
-}<br/>
-return false<br/>
-}<br/>
-func lessThanTen(number: Int) -&gt; Bool {<br/>
-    return number &lt; 10<br/>
-}<br/>
-var numbers = [20, 19, 7, 12]<br/>
-hasAnyMatches(numbers, condition: lessThanTen)
-</code></pre></li>
-<li><p>子类中，如果需要重写父类的方法，需要使用override标记</p>
-<pre><code class="language-swift">class NamedShape {
-var numberOfSides: Int = 0<br/>
-var name: String<br/>
-init(name: String) {<br/>
-    self.name = name<br/>
-}<br/>
-func simpleDescription() -&gt; String {<br/>
-        return &quot;A shape with \(numberOfSides) sides.&quot;<br/>
-  }<br/>
-}<br/>
-class Square: NamedShape {<br/>
-var sideLength: Double<br/>
-init(sideLength: Double, name: String) {<br/>
-    self.sideLength = sideLength<br/>
-    super.init(name: name)<br/>
-    numberOfSides = 4<br/>
-}<br/>
-func area() -&gt;  Double {<br/>
-    return sideLength * sideLength<br/>
-}<br/>
-override func simpleDescription() -&gt; String {<br/>
-        return &quot;A square with sides of length \(sideLength).&quot;<br/>
-    }<br/>
-}<br/>
-let test = Square(sideLength: 5.2, name: &quot;my test   square&quot;)<br/>
-test.area()<br/>
-test.simpleDescription()
-</code></pre></li>
-</ol>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/10/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14944977101213.html">
-                
-                  <h1>Swift学习要点-基础部分</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p><img src="https://pic.mylonly.com/2016-06-29_15:09:33.jpg" alt="2016-06-29_15:09:33.jpg"/></p>
-
-<blockquote>
-<p>这一系列的文章都是我本人在学习Swift语法过程中认为需要注意的语法部分，所以介绍的并不会很完整。</p>
-</blockquote>
-
-<ol>
-<li><p>print函数:<code>print(_:separator:terminator:)</code>,默认情况下print会以换行符当做结束符，此外你可以通过terminator参数更改结束符，例如:</p>
-<pre><code class="language-swift">print(&quot;正常的print结尾时换行符&quot;)                  //输出:正常的print结尾时换行符\n
-print(&quot;没有换行符的print&quot;,terminator:&quot;&quot;)         //输出:没有换行符的print<br/>
-print(&quot;稀奇古怪的结束符都可以&quot;,terminator:&quot;(^^)&quot;)  //输出:稀奇古怪的结束符都可以(^^)
-</code></pre></li>
-<li><p>数值类字面量，包括整数和浮点数可以添加额外的零并且包含下划线，并不会影响字面量的值</p>
-<pre><code class="language-swift">let paddedDouble = 000123.456
-let oneMillion = 1_000_000<br/>
-let justOverOneMillion = 1_000_000.000_000_1
-</code></pre></li>
-<li><p>可以通过<code>typealias</code>关键字来定义类型的别名</p>
-<pre><code class="language-swift">typealias AudioSample = UInt16
-var maxAmplitudeFound = AudioSample.min // maxAmplitudeFound 现在是 0
-</code></pre></li>
-<li><p>不同的数据类型之间不会隐式转换,必须要用类型名加上括号的方式进入显示转换,其中显示转换成字符串除了使用String()之外，还可以直接在字符串中适用(其他类型值)来转换</p>
-<pre><code class="language-swift">var maxValue = UInt8.max
-var max64Value = Int64.max<br/>
-max64Value = maxValue  //Error:Cannot assign value of type &#39;UInt8&#39; to type &#39;Int64&#39;<br/>
-max64Value = Int64(maxValue) //Ok<br/>
-let number = 3<br/>
-var str1 = String(number) //str1 = &quot;3&quot;<br/>
-var str2 = &quot;\(number)&quot;    //str2 = &quot;3&quot; 
-</code></pre></li>
-<li><p>如果你只需要一部分元组值，分解的时候可以把要忽略的部分用下划线（_）标记：</p>
-<pre><code class="language-swift">let http404Error = (404, &quot;Not Found&quot;)  // http404Error 的类型是 (Int, String)，值是 (404, &quot;Not Found&quot;)
-let (justTheStatusCode, _) = http404Error<br/>
-print(&quot;The status code is \(justTheStatusCode)&quot;) // 输出 &quot;The status code is 404&quot;
-</code></pre></li>
-<li><p>Swift 的<code>nil</code>和 Objective-C 中的<code>nil</code>并不一样。在 Objective-C 中，<code>nil</code>是一个指向不存在对象的指针。在 Swift 中，<code>nil</code>不是指针——它是一个确定的值，用来表示值缺失。任何类型的可选状态都可以被设置为<code>nil</code>，不只是对象类型。</p>
-<pre><code class="language-swift">var serverResponseCode: Int? = 404
-// serverResponseCode 包含一个可选的 Int 值 404<br/>
-serverResponseCode = nil<br/>
-// serverResponseCode 现在不包含值
-</code></pre></li>
-<li><p>使用!来强制解析值之前，一定要确定可选包含一个非nil的值，否则当强制解析一个nil值时会报错。</p>
-<pre><code class="language-swift">var option:Int?    //没有初始值的可选类型变量默认值为nil
-var str = &quot;\(option)&quot; //输出:&quot;nil&quot;<br/>
-str = &quot;\(option!)&quot;    //Error
-</code></pre></li>
-<li><p>常量的值一旦被确定就不能修改，但是用let声明常量时可以不必紧跟其后为其设置初始值。</p>
-<pre><code class="language-swift">let const_a:String
-if (condition){<br/>
-    const_a = &quot;a&quot;<br/>
-}else{<br/>
-    const_a = &quot;b&quot;<br/>
-}
-</code></pre></li>
-</ol>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/10/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945010480752.html">
-                
-                  <h1>各种程序的源码安装</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">nginx</h2>
-
-<pre><code class="language-text">#安装编译nginx必须的依赖
-yum install gcc-c++
-yum install pcre pcre-devel  
-yum install zlib zlib-devel 
-yum install openssl openssl--devel
-
-#下载nginx源码
-wget http://nginx.org/download/nginx-1.9.15.tar.gz
-
-#解压
-tar -zvxf nginx-1.9.15.tar.gz -C ../document/
-
-#编译安装
-cd ../document/nginx-1.9.15
-./configure
-make
-make install
-</code></pre>
-
-<h2 id="toc_1">setuptools 安装</h2>
-
-<pre><code class="language-text">wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-
-</code></pre>
-
-<h2 id="toc_2">pip源码安装</h2>
-
-<pre><code class="language-text">[pip官网安装](https://pypi.python.org/pypi/pip)
-</code></pre>
-
-<h2 id="toc_3">源码安装Git</h2>
-
-<ol>
-<li><p>安装依赖</p>
-<pre><code class="language-text"> yum install curl
- yum install curl-devel<br/>
- yum install zlib-devel<br/>
- yum install openssl-devel<br/>
- yum install perl<br/>
- yum install perl-devel<br/>
- yum install cpio<br/>
- yum install expat-devel<br/>
- yum install gettext-devel
-</code></pre></li>
-<li><p>下载源码编译安装</p>
-<pre><code class="language-text">wget https://www.kernel.org/pub/software/scm/git/git-2.8.2.tar.gz
-tar xzvf git-2.8.2.tar.gz<br/>
-cd git-2.8.2<br/>
-autoconf<br/>
-./configure<br/>
-make | make install
-</code></pre></li>
-<li><p>配置环境变量</p>
-<p>修改用户目录下的.bashrc或者bash_profile,末尾增加</p>
-<pre><code class="language-text">export PATH=$PATH:/usr/local/bin
-</code></pre>
-<p>然后重新加载profile</p>
-<pre><code class="language-text">source ~/.bashrc
-</code></pre></li>
-</ol>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/09/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14944978089747.html">
-                
-                  <h1>Linux常用命令</h1>
+                  <h1>nginx 相关技巧</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<ol>
-<li>磁盘挂载</li>
+<li><p>防止域名被人恶意指向，由于nginx存在默认的空主机头问题，可以通过添加如下配置，将未配置的域名强行重定向，或者return 404</p>
+<pre><code class="language-text">  server {
+      listen 80 default;<br/>
+      server_name _;<br/>
+      rewrite ^(.*) http://www.mylonly.com permanent;<br/>
+    }
+</code></pre></li>
+<li><p>Ubuntu developer tool</p>
+<pre><code class="language-text">sudo apt-get install build-essential
+</code></pre></li>
 </ol>
-
-<pre><code class="language-text">fdisk -l #查看磁盘信息
-mkfs.ext4 /dev/vdb #如果挂在不上提示文件类型错误，可以先初始化磁盘
-mount /dev/xvdb1 /mnt #挂载磁盘
-</code></pre>
-
-<ol>
-<li>设置开机自动加载磁盘</li>
-</ol>
-
-<pre><code class="language-text">vim /etc/fstab
-写入 /dev/xvdb1 /mnt ext4 defaults 1 1
-Or(Ubuntu)  /dev/xvdb1 /mnt ext4 defaults 0 1
-</code></pre>
-
-<p>利用磁盘UUID挂载</p>
-
-<pre><code class="language-text">sudo blkid #找到磁盘对应的UUID
-#/dev/mmcblk0p1: LABEL=&quot;boot&quot; UUID=&quot;9304-D9FD&quot; TYPE=&quot;vfat&quot; #PARTUUID=&quot;d28f3641-01&quot;
-#/dev/mmcblk0p2: LABEL=&quot;rootfs&quot; UUID=&quot;29075e46-f0d4-44e2-#a9e7-55ac02d6e6cc&quot; TYPE=&quot;ext4&quot; PARTUUID=&quot;d28f3641-02&quot;
-#/dev/mmcblk0: PTUUID=&quot;d28f3641&quot; PTTYPE=&quot;dos&quot;
-#/dev/sda: UUID=&quot;3a69a0c7-b0b7-4af4-bb33-1321a070ffaa&quot; TYPE=&quot;ext4&quot;
-</code></pre>
-
-<p>往/etc/fstab中写入</p>
-
-<pre><code class="language-text">UUID=XXX    /home/pi/hdd    ext4    defaults    0    0
-</code></pre>
-
-<p>fstab中最后两列数字含义为</p>
-
-<pre><code class="language-text">第五列是dump备份设置。
-
-当其值设置为1时，将允许dump备份程序备份；设置为0时，忽略备份操作；
-
-第六列是fsck磁盘检查设置。
-
-其值是一个顺序。当其值为0时，永远不检查；而 / 根目录分区永远都为1。其它分区从2开始，数字越小越先检查，如果两个分区的数字相同，则同时检查。
-
-当修改完此文件并保存后，重启服务器生效。
-
-</code></pre>
-
-<ol>
-<li>修改主机名</li>
-</ol>
-
-<pre><code class="language-text">vim /etc/sysconfig/network #修改里面的HOSTNAME值
-</code></pre>
-
-<ol>
-<li>设置ssh自动认证</li>
-</ol>
-
-<pre><code class="language-text">ssh-keygen -t rsa #在客户机生成秘钥，
-scp ~/.ssh/id_rsa.pub root@xxx.com:/home/xxx/ #将客户端生成的公钥文件发送到服务器上
-#将id_rsa.pub文件写入服务器的.ssh/authorized_keys中，
-最好用cat命令写入,手动创建authorized_keys文件会出现各种各样的权限认证问题
-cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
-</code></pre>
-
-<ol>
-<li>dd命令实现ISO文件块拷贝</li>
-</ol>
-
-<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdb bs=1M
-</code></pre>
-
-<p>查看dd命令进度</p>
-
-<pre><code class="language-text">sudo kill -SIGINFO 30564 ##PID
-</code></pre>
-
-<ol>
-<li>apt-get 设置代理</li>
-</ol>
-
-<pre><code class="language-text">#vim /etc/apt/apt.conf
-Acquire::http::proxy &quot;http://127.0.0.1:8000/&quot;;
-Acquire::ftp::proxy &quot;ftp://127.0.0.1:8000/&quot;;
-Acquire::https::proxy &quot;https://127.0.0.1:8000/&quot;;
-</code></pre>
-
-<p>手动制动配置文件</p>
-
-<pre><code class="language-text">sudo apt-get -c ~/apt_proxy.conf update
-sudo apt-get -o Acquire::http::proxy=&quot;http://127.0.0.1:8000/&quot; update
-</code></pre>
-
-<ol>
-<li>Ubuntu新增用户</li>
-</ol>
-
-<pre><code class="language-text">useradd xxx -m -s /bin/bash
-</code></pre>
-
-<ol>
-<li>加到sudo用户组</li>
-</ol>
-
-<pre><code class="language-text">usermod -aG sudo xxx
-</code></pre>
-
-<ol>
-<li>关闭SELinux</li>
-</ol>
-
-<p>在Linux下启动Nginx经常会遇到<code>bind() to 0.0.0.0:8088 failed (13: Permission denied)</code>这种错，可是检查时又发现端口没有被占用，而且启动时也是用root身份启动的，这种错大部分是由selinux默认只允许80,81,443,8008,8009,8443,9000作为http端口</p>
-
-<pre><code class="language-text">setenforce 0 #临时关闭
-</code></pre>
-
-<p>vim /etc/sysconfig/selinux</p>
-
-<pre><code class="language-text">SELINUX=enforcing 改为 SELINUX=disabled #永久关闭
-
-</code></pre>
 
                         
                       </div>
@@ -712,10 +145,495 @@ sudo apt-get -o Acquire::http::proxy=&quot;http://127.0.0.1:8000/&quot; update
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/09/11</span>
+                    <span class="date">2018/04/26</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15244672126240.html">
+                
+                  <h1>Django问题集锦</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>Csrf验证</p>
+<pre><code class="language-text">需要在表单中加入`csrfmiddlewaretoken`或者在http头中`X-CSRFToken`请求头，具体值来自cookie当中的`csrftoken`
+</code></pre></li>
+<li><p>Django允许跨域</p>
+<p>安装<code>django-cors-headers</code></p>
+<pre><code class="language-text">pip install django-cors-headers
+</code></pre>
+<p>在setting.py中增加如下代码</p>
+<pre><code class="language-text">INSTALLED_APPS = [
+...<br/>
+&#39;corsheaders&#39;，<br/>
+...<br/>
+ ] <br/>
+MIDDLEWARE_CLASSES = (<br/>
+    ...<br/>
+    &#39;corsheaders.middleware.CorsMiddleware&#39;,<br/>
+    &#39;django.middleware.common.CommonMiddleware&#39;, # 注意顺序<br/>
+    ...<br/>
+)<br/>
+#跨域增加忽略<br/>
+CORS_ALLOW_CREDENTIALS = True<br/>
+CORS_ORIGIN_ALLOW_ALL = True<br/>
+CORS_ORIGIN_WHITELIST = (<br/>
+    &#39;*&#39;<br/>
+)<br/>
+CORS_ALLOW_METHODS = (<br/>
+    &#39;DELETE&#39;,<br/>
+    &#39;GET&#39;,<br/>
+    &#39;OPTIONS&#39;,<br/>
+    &#39;PATCH&#39;,<br/>
+    &#39;POST&#39;,<br/>
+    &#39;PUT&#39;,<br/>
+    &#39;VIEW&#39;,<br/>
+)<br/>
+CORS_ALLOW_HEADERS = (<br/>
+    &#39;XMLHttpRequest&#39;,<br/>
+    &#39;X_FILENAME&#39;,<br/>
+    &#39;accept-encoding&#39;,<br/>
+    &#39;authorization&#39;,<br/>
+    &#39;content-type&#39;,<br/>
+    &#39;dnt&#39;,<br/>
+    &#39;origin&#39;,<br/>
+    &#39;user-agent&#39;,<br/>
+    &#39;x-csrftoken&#39;,<br/>
+    &#39;x-requested-with&#39;,<br/>
+    &#39;Pragma&#39;,<br/>
+)
+</code></pre></li>
+<li><p>axios 默认支持csrf功能，需要修改其属性和服务器返回的csrfcookiename一致</p>
+<pre><code class="language-text">#Django返回的cookie中的csrf字段名字为csrftoken,会从request的header中读取X-CSRFTOKEN来校验csrf
+axios.defaults.xsrfHeaderName = &quot;X-CSRFTOKEN&quot;;<br/>
+axios.defaults.xsrfCookieName = &quot;csrftoken&quot;;
+</code></pre>
+<blockquote>
+<p>如果axios要访问的接口和前端页面属于跨域状态，那么axios无法读取xsrfCookie,则也无法设置xsrfHeader,此时则需要后端将csrftoken放入response中而不是cookie当中，axios在request阻截器中手动设置xsrfHeader</p>
+</blockquote>
+<p><img src="media/15244672126240/15258764072402.jpg" alt=""/></p></li>
+<li><p>Django使用django-rest-framework 单独某个view取消csrf验证</p>
+<p>需要两步：</p>
+<ul>
+<li>关掉django的csrf验证,利用<code>@csrf_exempt</code>(针对function view)，或者用<code>@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)</code>(针对class view)</li>
+<li>关掉drf框架的验证，在class view 中将<code>authentication_classes</code>设置为<code>BasicAuthentication</code></li>
+</ul>
+<pre><code class="language-text">@method_decorator(csrf_exempt, name=&quot;dispatch&quot;)
+class login(views.APIView):<br/>
+authentication_classes = (BasicAuthentication,)<br/>
+def post(self, request, *args, **kwargs):<br/>
+username = request.data.get(&quot;username&quot;)<br/>
+password = request.data.get(&quot;password&quot;)<br/>
+user = auth.authenticate(request, username=username, password=password)<br/>
+if user is not None:<br/>
+  auth.login(request, user)<br/>
+  return ErosResponse()<br/>
+else:<br/>
+  return ErosResponse(status=ErosResponseStatus.INVALID_USER)
+</code></pre></li>
+<li><p>使用<code>OrderFilter</code>过程中遇到<code>OrderingFilter object has no attribute &#39;filter_queryset&#39;</code>:</p>
+<p>需要使用从rest_framework.filters中导入的OrderingFilter，而不是django_filters</p>
+<pre><code class="language-python">from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+</code></pre></li>
+<li><p>Django链接Mysql 8.0 出现错误(1045:Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: NO) 的一种解决方法</p>
+<p>出现此错误的原因是MySQL8.0 密码的加密方式发生了改变，采用了cha2加密方法，我们可以利用下面的语句将MySQL的密码加密方式修改为之前的版本</p>
+<pre><code class="language-text">mysql -u root -p
+use mysql；<br/>
+ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;newpassword&#39;;  <br/>
+FLUSH PRIVILEGES; 
+</code></pre></li>
+<li><p>Django-Filter自定义查询过滤字段</p>
+<pre><code class="language-python">from django_filters import FilterSet
+from django_filters import CharFilter<br/>
+class TagFilter(FilterSet):<br/>
+    ##自定义search字段<br/>
+    search = CharFilter(name=&quot;name&quot;, lookup_expr=&quot;contains&quot;)<br/>
+    class Meta:<br/>
+        model = Tag<br/>
+        fields = {<br/>
+          &#39;id&#39;: [&#39;exact&#39;],<br/>
+          &#39;name&#39;: [&#39;exact&#39;, &#39;contains&#39;],<br/>
+          &#39;search&#39;: [&#39;exact&#39;],<br/>
+        }
+</code></pre>
+<p>具体Django-Filter的用法可以<a href="http://django-filter.readthedocs.io/en/1.1.0/">参考文档</a></p></li>
+<li><p>DRF的OrderingFilter默认排序</p>
+<pre><code class="language-python">filter_backends = (DjangoFilterBackend, OrderingFilter)
+ordering_fields = (&#39;id&#39;, &#39;hot&#39;)<br/>
+ordering = (&#39;-hot&#39;,)
+</code></pre></li>
+<li><p>Django runserver指定setting配置</p>
+<pre><code class="language-text">python3 manage.py runserver 0.0.0.0:8000 --settings=OrionGraphQL.settings.dev
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/23</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15244545128606.html">
+                
+                  <h1>Python 错误集锦</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>ValueError: unknown locale: UTF-8 <br/>
+<img src="https://pic.mylonly.com/2018-04-23-15244561735556.jpg" alt=""/></p>
+<p>添加下面代码至用户目录的.bash_profile文件   </p>
+<pre><code class="language-bash">export LANG=&quot;en_US.UTF-8&quot;
+export LC_COLLATE=&quot;en_US.UTF-8&quot;<br/>
+export LC_CTYPE=&quot;en_US.UTF-8&quot;<br/>
+export LC_MESSAGES=&quot;en_US.UTF-8&quot;<br/>
+export LC_MONETARY=&quot;en_US.UTF-8&quot;<br/>
+export LC_NUMERIC=&quot;en_US.UTF-8&quot;<br/>
+export LC_TIME=&quot;en_US.UTF-8&quot;<br/>
+export LC_ALL=
+</code></pre></li>
+<li><p>zip()函数在Python2和Python3中的区别</p>
+<p>在Python2中，zip返回的是元祖的列表<br/>
+而在Python3中，zip返回的是元祖组成的迭代器，得套个list函数才能将其转换为列表</p>
+<pre><code class="language-text">x = [1, 2, 3]
+y = [a, b, c]<br/>
+#python3<br/>
+n = list(zip(x,y))<br/>
+print(n)<br/>
+#python2<br/>
+n = zip(x,y)<br/>
+print n
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/23</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15241105353902.html">
+                
+                  <h1>利用GitLab提供的GitLab-CI以及GitLab-Runner搭建持续集成/部署环境</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">简介</h2>
+
+<ol>
+<li><p>GitLab</p>
+<blockquote>
+<p>是一套基于Ruby开发的开源Git项目管理应用，其提供的功能和Github类似，不同的是GitLab提供一个GitLab CE社区版本，用户可以将其部署在自己的服务器上，这样就可以用于团队内部的项目代码托管仓库。</p>
+</blockquote></li>
+<li><p>GitLab CI</p>
+<blockquote>
+<p>是GitLab 提供的持续集成服务(从8.0版本之后，GitLab CI已经集成在GitLab中了)，只要在你的仓库根目录下创建一个.gitlab-ci.yml 文件， 并为该项目指派一个Runner，当有合并请求或者Push操作时，你写在.gitlab-ci.yml中的构建脚本就会开始执行。</p>
+</blockquote></li>
+<li><p>GitLab Runner</p>
+<blockquote>
+<p>是配合GitLab CI进行构建任务的应用程序，GitLab CI负责yml文件中各种阶段流程的执行，而GitLab Runner就是具体的负责执行每个阶段的脚本执行，一般来说GitLab Runner需要安装在单独的机器上通过其提供的注册操作跟GitLab CI进行绑定，当然，你也可以让其和GitLab安装在一起，只是有的情况下，你代码的构建过程对资源消耗十分严重的时候，会拖累GitLab给其他用户提供政策的Git服务。</p>
+</blockquote></li>
+<li><p>持续集成/部署环境</p>
+<blockquote>
+<p>持续集成是程序开发人员在频繁的提交代码之后，能有相应的环境能对其提交的代码自动执行构建(Build)、测试(Test),然后根据测试结果判断新提交的代码能否合并加入主分支当中,而持续部署也就是在持续集成之后自动将代码部署(Deploy)到生成环境上</p>
+</blockquote></li>
+</ol>
+
+<h2 id="toc_1">开启GitLab CI功能</h2>
+
+<p>在GitLab 8.0版本之后,你可以通过如下两部启用GitLab CI功能</p>
+
+<ol>
+<li> 新建一个<code>.gitlab-ci.yml</code>文件在你项目的根目录</li>
+<li> 为你的项目配置一个GitLab Runner</li>
+</ol>
+
+<h4 id="toc_2">配置一个<code>.gitlab-ci.yml</code>文件</h4>
+
+<p><code>.gitlab-ci.yml</code>文件是用来配置GitLab CI进行构建流程的配置文件，其采用YAML语法,所以你需要额外注意要用空格来代替缩进，而不是Tabs。下面通过我自己项目中的<code>.gitlab-ci.yml</code>文件来具体介绍其规则</p>
+
+<pre><code class="language-yaml">stages:
+  - init
+  - check
+  - build
+  - deploy
+
+cache:
+  key: ${CI_BUILD_REF_NAME}
+  paths:
+  - node_modules/
+  - dist/
+
+#定义一个叫init的Job任务
+init:
+  stage: init
+  script:
+  -  cnpm install
+
+#master_check Job:检查master分支上关键内容
+master_check:
+  stage: check
+  script:
+  - echo &quot;Start Check Eros Config ...&quot;
+  - bash check.sh release 
+  only:
+  - master
+  
+#dev_check Job: 检查dev分支上关键内容
+dev_check:
+  stage: check
+  script:
+  - echo &quot;Start Check Eros Config ...&quot;
+  - bash check.sh debug
+  only:
+  - dev
+
+js_build:
+  stage: build
+  script:
+  - eros build
+
+master_deploy:
+  stage: deploy
+  script:
+  - bash deploy.sh release
+  only:
+  - master
+
+dev_deploy:
+  stage: deploy
+  script:
+  - bash deploy.sh debug
+  only:
+  - dev
+
+</code></pre>
+
+<p>在上面的例子中，我们利用<code>stages</code>关键字来定义持续构建过程中的四个阶段init、chec、build、deploy</p>
+
+<blockquote>
+<p>关于GitLab CI中的stages,有如下几个特点:</p>
+</blockquote>
+
+<pre><code class="language-text">1. 所有 Stages 会按照顺序运行，即当一个 Stage 完成后，下一个 Stage 才会开始
+2. 只有当所有 Stages 完成后，该构建任务 (Pipeline) 才会成功
+3. 如果任何一个 Stage 失败，那么后面的 Stages 不会执行，该构建任务 (Pipeline) 失败
+</code></pre>
+
+<p>然后我们利用<code>caches</code>字段来指定下面将要进行的job任务中需要共享的文件目录,如果没有，每个Job开始的时候，GitLab Runner都会删掉<code>.gitignore</code>里面的文件</p>
+
+<p>紧接着，我们定义了一个叫做<code>init</code>的job，其通过stage字段声明属于<code>init</code>阶段，因此，这个job会第一个执行，我们在这个job当中，执行一些环境的初始化工作。</p>
+
+<p>接下来是<code>check</code>阶段,用来检查代码的一些基础错误(代码规范之类不会被编译器发现的问题)，以及一些配置文件的检查，我将其命名为<code>master_check</code>和<code>dev_check</code>,通过only字段来告诉GitLab CI 只有当对应的分支有push操作的时候才会触发这个job。</p>
+
+<p>然后就是代码的<code>build</code>阶段，由于此阶段不像上个极端，没有需要区分不同分支的命令，所以就只需要定义一个job就够了</p>
+
+<p>最后的<code>deploy</code>，因为不同的分支需要发布到不同的环境，所以依然通过only来区分两个job。</p>
+
+<blockquote>
+<p>关于GitLab CI中的Jobs,也有如下几个特点:</p>
+</blockquote>
+
+<pre><code class="language-text">1. 相同 Stage 中的 Jobs 会并行执行
+2. 相同 Stage 中的 Jobs 都执行成功时，该 Stage 才会成功
+3. 如果任何一个 Job 失败，那么该 Stage 失败，即该构建任务 (Pipeline) 失败
+</code></pre>
+
+<p>在我的这个构建任务当中，根据我的业务情况只用到了少许关键字,还有更多的类似于<code>before_script</code>、<code>after_script</code>等关键字，具体的可以参阅<a href="https://docs.gitlab.com/ce/ci/yaml/README.html">GitLab的官方文档</a></p>
+
+<p>在我们完成<code>.gitlab-ci.yml</code>的流程编写之后，就可以将其放在项目的根目录下，然后push到我们的GitLab上，这时，如果你打开项目首页的Piplines标签页，会发现一个状态标识为<code>pending</code>的构建任务，如下图所示：<br/>
+<img src="https://pic.mylonly.com/2018-04-19-075009.jpg" alt=""/><br/>
+这时由于这个构建任务还有找到可用的GitLab Runner来执行其构建脚本，等我们接下来为我们的项目接入GitLab Runner之后，这些任务的状态就会由<code>pendding</code>变成<code>running</code>了</p>
+
+<h4 id="toc_3">安装GitLab Runner</h4>
+
+<p>找一台适合安装GitLab Runner的机器，无论是Windows或者Mac还是Linux都行，最好是那种比较空闲的能24小时开启的机器，我们在<a href="https://docs.gitlab.com/runner/install/">GitLab Runner的官网</a>找到我们平台的安装文件，以及对应的安装流程。由于笔者我准备安装GitLab Runner是一台闲置的iMac电脑，因此我就在演示MacOS下GitLab Runner的安装：</p>
+
+<blockquote>
+<p>GitLab Runner 在macOS和Linux/UNIX下安装流程是一样的，都是直接下载已编译好的二进制包</p>
+</blockquote>
+
+<ol>
+<li><p>下载对应GitLab 版本的GitLab Runner</p>
+<ul>
+<li>如果你的GitLab是10.0之后的版本，GitLab Runner可执行文件改名为<code>gitlab-runner</code></li>
+</ul>
+<pre><code class="language-text">sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-runner
+</code></pre>
+<ul>
+<li>9.0~10.0之间的版本</li>
+</ul>
+<pre><code class="language-text">sudo curl --output /usr/local/bin/gitlab-ci-multi-runner https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+<ul>
+<li>9.0 之前,由于9.0之后启用全新的API4接口，所以如果你的GitLab是9.0以前的版本,需要下载下面的版本,否则会导致你的GitLab Runner注册不上</li>
+</ul>
+<pre><code class="language-text">sudo curl --output /usr/local/bin/gitlab-ci-multi-runnerhttps://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/v1.11.1/binaries/gitlab-ci-multi-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+</code></pre>
+<blockquote>
+<p>不知道各位有没有注意到上面下载地址链接当中的v1.11.1,这个就是对应的Gitlab Runner,如果你的GitLab是9.0之前的版本，使用GitLab Runner v1.11.1这个版本仍然注册不上，可以尝试使用降几个版本的GitLab Runner,所有GitLab Runner发行的版本可以在<a href="https://gitlab.com/gitlab-org/gitlab-runner/tags">GitLab Runner Tags</a>找到</p>
+</blockquote>
+<p>假如你遇到不能通过登录服务器来确定GitLab版本号时，可以通过直接访问gitlab的首页，后面加上help，如下图：<br/>
+<img src="https://pic.mylonly.com/2018-04-19-083100.png" alt=""/></p></li>
+<li><p>注册GitLab Runner</p>
+<p>执行下面命令，</p>
+<pre><code class="language-text">sudo gitlab-ci-multi-runner register
+</code></pre>
+<p>如果你的终端提示找不到命令，请通过<code>export PATH=/usr/local/bin:$PATH</code>将/usr/local/bin目录加入环境变量,或者你遗漏了上面的chmod命令导致文件不可执行。</p>
+<p>执行完上面的命令之后，会让你输入下面的信息:</p>
+<ul>
+<li>Please enter the gitlab-ci coordinator URL:</li>
+<li>Please enter the gitlab-ci token for this runner:</li>
+<li>Please enter the gitlab-ci description for this runner</li>
+<li>Please enter the gitlab-ci tags for this runner (comma separated):</li>
+<li>Whether to run untagged builds [true/false]:</li>
+<li>Please enter the executor:</li>
+</ul>
+<p>其中coordinator URL和token可以在你需要进行持续集成的项目的Runner标签页中找到<br/>
+<img src="https://pic.mylonly.com/2018-04-19-084819.jpg" alt=""/><br/>
+description和tags可以自己定义，是否build没有tag的提交这个也是根据你自己的需求来选择，默认是false，executer选择shell</p>
+<p>填写完成之后如果提示<code>Registering runner... succeeded</code>表明这个Runner已经被注册成功了，之后你在返回进入项目的Runners页面，会发现下面多了一个处于Active状态的Runner</p>
+<p>紧接着最后一步，启动我们刚注册的Runner</p>
+<pre><code class="language-text">sudo  gitlab-ci-multi-runner start
+</code></pre>
+<p>现在，我们切回项目的Pipelines当中，肯定会发现之前处于peding状态的任务已经开始running了，我们可以通过点击这个状态按钮来实时查看每个阶段的输出日志<br/>
+<img src="https://pic.mylonly.com/2018-04-19-085612.jpg" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_4">开启构建状态的邮件提醒</h2>
+
+<p>如果你想收到关于每个构建任务的实时状态的邮件，你可以在在项目中的service标签野种启用Build Emails这个服务。</p>
+
+<p><img src="https://pic.mylonly.com/2018-04-19-085906.png" alt=""/></p>
+
+<h2 id="toc_5">结语</h2>
+
+<p>搭建一个快速方便的持续集成、持续部署环境对于项目的开发来说是一个很重要的举措，无论你是采用大名鼎鼎的jenkins还是本文介绍的GitLab CI,它不仅仅可以帮助我们节省大量的时间在调试发布部署当中，也减少了我们因为人为因素导致的发布过程中出现的意外，有效的较低了项目开发当中的风险。</p>
+
+<h4 id="toc_6">如果你想和我交流，可以关注我的订阅号:</h4>
+
+<p><img src="https://pic.mylonly.com/2018-04-19-wechat-mylonly.jpg" alt=""/></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/19</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tools.html'>Tools</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15226772044493.html">
+                
+                  <h1>DIG命令用法</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>基本用法</p>
+<pre><code class="language-text">```
+#查询sina.com 的所有域名记录 利用114.114.114.114为DNS server，如果不填默认为当前主机的DNS服务器<br/>
+dig sina.com any @114.114.114.114<br/>
+```
+</code></pre></li>
+<li><p>过滤信息</p>
+<pre><code class="language-text">dig +noall +answer mail.163.com any
+</code></pre></li>
+<li><p>反向查询</p>
+<pre><code class="language-text">dig -x 202.108.33.60  
+</code></pre></li>
+<li><p>查询BIND信息</p>
+<pre><code class="language-text">dig @ns3.dnsv3.com version.bind txt chaos
+</code></pre></li>
+<li><p>DIG 追踪查询和递归查询比较,利用wireshare追踪分析数据包</p>
+<pre><code class="language-text">dig +trace 1234tv.com
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/02</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -792,8 +710,6 @@ sudo apt-get -o Acquire::http::proxy=&quot;http://127.0.0.1:8000/&quot; update
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -801,6 +717,8 @@ sudo apt-get -o Acquire::http::proxy=&quot;http://127.0.0.1:8000/&quot; update
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -817,31 +735,31 @@ sudo apt-get -o Acquire::http::proxy=&quot;http://127.0.0.1:8000/&quot; update
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

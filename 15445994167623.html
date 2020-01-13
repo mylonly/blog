@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  Ubuntu安装开发者工具包(make,g++,cc之类工具) - 独自一人
+  GitLab和Redmine深度集成 - 独自一人
   
   </title>
   
@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -121,14 +121,14 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>Ubuntu安装开发者工具包(make,g++,cc之类工具)</h1>
+          <h1>GitLab和Redmine深度集成</h1>
      
         <div class="read-more clearfix">
-          <span class="date">2019/01/21</span>
+          <span class="date">2018/12/12</span>
 
           <span>posted in&nbsp;</span> 
           
-              <span class="posted-in"><a href='linux.html'>Linux</a></span>
+              <span class="posted-in"><a href='PM.html'>PM</a></span>
            
          
           <span class="comments">
@@ -141,8 +141,71 @@
       </div><!-- article -->
 
       <div class="article-content">
-      <pre><code class="language-text">sudo apt-get install build-essential
+      <h2 id="toc_0">Redmine Issue Tracker</h2>
+
+<ol>
+<li><p>设置Redmine Issue Tracker<br/>
+在GitLab的项目setting里面找到integrations，找到redmine<br/>
+修改如下:<br/>
+<img src="https://pic.mylonly.com/2018-12-12-072609.png" alt=""/></p></li>
+<li><p>关闭内置issue</p>
+<p>setting-&gt;general-&gt;Permissions</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-072807.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_1">Redmine 启用版本库</h2>
+
+<ol>
+<li><p>进入redmine容器</p>
+<pre><code class="language-text">docker exec -it redmine /bin/bash
+</code></pre></li>
+<li><p>安装插件<code>redmine_gitlab_hook</code></p>
+<p>进入<code>/usr/src/redmine/plugins</code>目录</p>
+<pre><code class="language-text">git clone https://github.com/phlegx/redmine_gitlab_hook.git
 </code></pre>
+<p>登录redmine管理员，管理-&gt;插件，找到<code>Redmine GitLab Hook plugin</code>,进入配置</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-101517.png" alt=""/></p></li>
+<li><p>创建本地git仓库并拉取</p>
+<pre><code class="language-text">mkdir -p /home/redmine/git-repo #创建本地git仓库
+cd /home/redmine/git-repo/<br/>
+git clone --mirror http://username:password@gitlab.1234tv.lan:/awesome/python-test.git #此处最好采用http加上用户名和密码的方式拉取git仓库<br/>
+chmod -R redmine:redmine python-test.git ##记得修改用户组为redmine:redmine
+</code></pre></li>
+<li><p>登录redmine管理员，启用版本库</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-073502.png" alt=""/></p></li>
+<li><p>配置版本库</p>
+<p>进入到和gitlab项目对应的项目中，进入设置页面<br/>
+git clone时加了-mirror参数,使用下面参数<br/>
+<img src="https://pic.mylonly.com/2018-12-12-101134.png" alt=""/><br/>
+如果git clone 时没有使用-mirror参数，使用下面的配置<br/>
+<img src="https://pic.mylonly.com/2018-12-12-073658.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_2">配置GitLab Webhook</h2>
+
+<p>进入GitLab的项目中，在setting-&gt;Integrations中添加如下webhooks地址</p>
+
+<p>webhook url格式:</p>
+
+<pre><code class="language-text">{redmine_installation_url}/gitlab_hook?key={redmine_repository_API_key}&amp;project_id={redmine_project_identifier}
+</code></pre>
+
+<p><img src="https://pic.mylonly.com/2018-12-12-101954.png" alt=""/></p>
+
+<p>如果redmine的项目名称和版本库的标识不一致，需要带上<code>repository_name</code>参数，手动指定redmine上的版本库</p>
+
+<p>如果需要gitlab webhook插件自动创建版本库,还需要加上<code>repository_git_url</code>、<code>repository_namespace</code>、<code>repository_name</code>这几个参数,</p>
+
+<p>其中<code>repository_git_url</code>为需要克隆的远程仓库的地址<br/>
+而<code>repository_namespace</code>和<code>repository_name</code>自由填写，会在redmine的版本库里生成类似 <code>{repository_namespace}_{repository_name}</code>样式的版本库标识</p>
+
+<h2 id="toc_3">验证</h2>
+
+<ol>
+<li>在redmine里创建一个issue，状态为新建</li>
+<li>本地clone项目，少许修改，commit日志填写&quot;bugfix #<id>&quot; (<code>id为redmine上的issue id</code>),然后push 到服务器上</li>
+<li>查看redmine上该issue的状态是否改变</li>
+</ol>
 
 
     
@@ -153,16 +216,16 @@
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="15516896130866.html" 
-          title="Previous Post: Docker">&laquo; Docker</a>
+          <a href="15446089404193.html" 
+          title="Previous Post: Redmine Docker部署">&laquo; Redmine Docker部署</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="15477022109795.html" 
-          title="Next Post: 别人的vim配置文件">别人的vim配置文件 &raquo;</a>
+          <a  href="15445172404972.html" 
+          title="Next Post: GitLabRunner配合SonarScanner针对每次commit做代码检查">GitLabRunner配合SonarScanner针对每次commit做代码检查 &raquo;</a>
       
       </p>
         </div>
@@ -241,8 +304,6 @@
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -250,6 +311,8 @@
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -266,31 +329,31 @@
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

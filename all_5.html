@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,153 +118,44 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="15052000291680.html">
+                <a class="clearlink" href="15277767431151.html">
                 
-                  <h1>利用Scrapy-Splash抓取JS动态渲染的网页数据</h1>
+                  <h1>uwsgi重启shell脚本</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/09/12</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
+                        	<pre><code class="language-text">#!/bin/bash
+if [ ! -n &quot;$1&quot; ]
+then
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+    exit 0
+fi
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14972546183511.html">
-                
-                  <h1>CentOS6 安装部署Zabbix</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	Zabbix是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/06/12</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
+if [ $1 = start ]
+then
+    psid=`ps aux | grep &quot;uwsgi&quot; | grep -v &quot;grep&quot; | wc -l`
+    if [ $psid -gt 4 ]
+    then
+        echo &quot;uwsgi is running!&quot;
+        exit 0
+    else
+        uwsgi /etc/uwsgi.ini
+        echo &quot;Start uwsgi service [OK]&quot;
+    fi
+    
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14957025459875.html">
-                
-                  <h1>Swift3.0 利用泛型设置基类属性的动态类型</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	Swift3.0 利用泛型设置基类属性的动态类型
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/05/25</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
+elif [ $1 = stop ];then
+    killall -9 uwsgi
+    echo &quot;Stop uwsgi service [OK]&quot;
+elif [ $1 = restart ];then
+    killall -9 uwsgi
+    /usr/bin/uwsgi --ini /etc/uwsgi.ini #修改成自己业务的配置文件或命令
+    echo &quot;Restart uwsgi service [OK]&quot;
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14951753262754.html">
-                
-                  <h1>基于BarrageRender自定义弹幕动画</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	[BarrageRender](https://github.com/unash/BarrageRenderer) 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，`BarrageFloatSprite`和`BarrageWalkSprite`。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/05/19</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945010672564.html">
-                
-                  <h1>树莓派3安装Node.js</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>(树莓派官方系统)<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<pre><code class="language-bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
-tar zxvf node-v5.2.0-linux-armv7l.tar.gz
-cd node-v5.2.0-linux-armv7l
-sudo cp bin/* /usr/bin/ -r
-sudo cp include/ /usr/include/ -r
-sudo cp lib/ /usr/lib/ -r
-sudo cp share/ /usr/share/ -r
-cd ..
-node --version
+else
+    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
+fi
 </code></pre>
 
                         
@@ -274,10 +165,197 @@ node --version
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2017/05/11</span>
+                    <span class="date">2018/05/31</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15277545119360.html">
+                
+                  <h1>Pyplot相关</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>subplot</p>
+<pre><code class="language-text">plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
+plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图<br/>
+plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
+</code></pre>
+<p>subplot(numRows, numCols, plotNum)<br/>
+如果3个参数都小于10的话，可以统一成一个整数<br/>
+subplot(221) = subplot(2,2,1)</p></li>
+<li><p><img src="media/15277545119360/15277557443176.jpg" alt=""/></p></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/05/31</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Tensorflow.html'>Tensorflow</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15276700222671.html">
+                
+                  <h1>Pandas相关</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>Pandas 读取列数据</p>
+<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
+population = pd.Series([852469, 1015785, 485199])<br/>
+data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
+data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
+data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/05/30</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Tensorflow.html'>Tensorflow</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15274889837567.html">
+                
+                  <h1>Tensorflow错误集锦</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
+加入以下代码</p>
+<pre><code class="language-text">import os 
+os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/05/28</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Tensorflow.html'>Tensorflow</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15249709962104.html">
+                
+                  <h1>解决VSCode编写Django代码时经常提示objects属性等不存在的错误</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>如果你仅仅是装了pylint用来检测python代码，那么你在写django程序，尤其是使用model的一些查询语句时，如</p>
+
+<pre><code class="language-text">App.objects.all()
+</code></pre>
+
+<p>肯定会经常会被VSCode提示<code>App 没有objects这个属性</code>，虽然这个不影响代码的运行，但作为有强迫症的我们，怎么能容忍我们的代码还没运行就被标识为错误,实在是很影响心情。</p>
+
+<blockquote>
+<p>Django使用了大量的元编程思想，其中会有大量的修改对象属性和行为的操作，pylint提示的不存在的属性和方法会在程序运行中被django动态的加入，所以并不会影响程序运行。</p>
+</blockquote>
+
+<p>所以在网上稍微找了下，发现这个叫做<code>pylint-django</code>的<code>pylint</code>的插件可以去掉这些恼人的提示。</p>
+
+<p>安装很简单,和pylint一样</p>
+
+<pre><code class="language-text">pip3 install pylint-django
+</code></pre>
+
+<p>然后通过pylint加载这个插件</p>
+
+<pre><code class="language-text">pylint --load-plugins pylint_django 
+</code></pre>
+
+<p>在VSCode里可以通过修改setting中的<code>python.linting.pylintArgs</code>这个键的值达到同样的目的</p>
+
+<pre><code class="language-text">&quot;python.linting.pylintArgs&quot;: [&quot;--load-plugins&quot;, &quot;pylint_django&quot;]
+</code></pre>
+
+<p>然后重启VSCode就好了</p>
+
+<p>参考:<br/>
+<a href="https://blog.landscape.io/using-pylint-on-django-projects-with-pylint-django.html">blog.landscape.io</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/29</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -354,8 +432,6 @@ node --version
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -363,6 +439,8 @@ node --version
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -379,31 +457,31 @@ node --version
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

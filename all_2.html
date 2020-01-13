@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,115 +118,123 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="15277767431151.html">
+                <a class="clearlink" href="15535769948107.html">
                 
-                  <h1>uwsgi重启shell脚本</h1>
+                  <h1>Confluence安装</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<pre><code class="language-text">#!/bin/bash
-if [ ! -n &quot;$1&quot; ]
-then
-    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
-    exit 0
-fi
+                        	<ol>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run -d --restart always -v /home/ubuntu/confluence:/var/atlassian/application-data/confluence --name=&quot;confluence&quot; -d -p 80:8090 -p 8091:8091 atlassian/confluence-server:6.12
+</code></pre></li>
+</ol>
 
-if [ $1 = start ]
-then
-    psid=`ps aux | grep &quot;uwsgi&quot; | grep -v &quot;grep&quot; | wc -l`
-    if [ $psid -gt 4 ]
-    then
-        echo &quot;uwsgi is running!&quot;
-        exit 0
-    else
-        uwsgi /etc/uwsgi.ini
-        echo &quot;Start uwsgi service [OK]&quot;
-    fi
-    
+<h2 id="toc_0">下载</h2>
 
-elif [ $1 = stop ];then
-    killall -9 uwsgi
-    echo &quot;Stop uwsgi service [OK]&quot;
-elif [ $1 = restart ];then
-    killall -9 uwsgi
-    /usr/bin/uwsgi --ini /etc/uwsgi.ini #修改成自己业务的配置文件或命令
-    echo &quot;Restart uwsgi service [OK]&quot;
+<p>官网下载confluence的tar包(v6.12.2)</p>
 
-else
-    echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
-fi
+<h2 id="toc_1">安装</h2>
+
+<p>解压缩（这里解压到/server/confluence目录），打开该目录下confluence/WEB-INF/classes/confluence-init.properties文件，添加行：</p>
+
+<pre><code class="language-text">confluence.home=/server/confluence
 </code></pre>
 
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2018/05/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
+<h2 id="toc_2">启动</h2>
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15277762940932.html">
-                
-                  <h1>Linux问题集锦</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<ol>
-<li><p>CentOS python升级之后yum无法使用解决</p>
-<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-<pre><code class="language-text">vim /usr/bin/yum
+<blockquote>
+<p>\( cd /server/confluence<br/>
+\) ./bin/start-confluence.sh </p>
+</blockquote>
+
+<h2 id="toc_3">浏览器访问</h2>
+
+<p>输入 <a href="http://localhost:8090/">http://localhost:8090/</a> 进行安装，期间会要求输入license，导向到官网申请之；进入数据库步骤，如果选择mysql，要依次逆行：</p>
+
+<ol>
+<li>下载mysql驱动放到WEB-INF/lib目录，重新启动confluence服务器</li>
+<li><p>创建数据库时，编码COLLATE 应选：utf8_bin，如：</p>
+<blockquote>
+<p>CREATE DATABASE IF NOT EXISTS confluence DEFAULT CHARSET utf8 COLLATE utf8_bin; <br/>
+如果没有创建数据用户，可以创建：<br/>
+GRANT ALL ON <em>.</em> TO banyuan@localhost IDENTIFIED BY &quot;Banyuan2019&quot;; </p>
+</blockquote></li>
+<li><p>事务默认级别应设置为：READ-COMMITTED。具体操作过程可能如下：</p>
+<ul>
+<li>a.查看mysql的conf文件所在位置：<br/>
+&gt; $ mysqld --verbose --help|grep -A 1 &#39;Default options&#39;<br/>
+可能返回结果：/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf </li>
+<li>b. 编辑my.conf，如：/usr/local/etc/my.cnf ，在 [mysqld]节增加行：
+<code>
+[mysqld]<br/>
+...<br/>
+transaction-isolation=READ-COMMITTED
+</code>
+然后重启服务。可以进入mysql控制台，执行下面的命令确认是否修改过了。<br/>
+&gt; show variables like &#39;transaction_isolation&#39;;</li>
+</ul></li>
+</ol>
+
+<p>以上这些步骤，在实际安装过程中都是有提示的，所以不必特别担心。</p>
+
+<p>安装完毕后，仍会检查mysql的一些设置，比如可能提示如下两个变量设置值：</p>
+
+<blockquote>
+<p>成功最大允许数据包 - max_allowed_packet：一般不小于34m<br/>
+InnoDB 日志文件大小 - innodb_log_file_size：一般不小于256M</p>
+
+<p>character-set-server = utf8<br/>
+innodb_log_file_size = 256M<br/>
+max_allowed_packet = 34M</p>
+</blockquote>
+
+<h2 id="toc_4">破解</h2>
+
+<p>破解需要在安装过程中进行，安装进入到授权码页面时，开始破解：</p>
+
+<ol>
+<li>使用【附件】目录confluence-crack.zip解压缩，比如解到/cracked目录。</li>
+<li>把confluence的WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar 文件复制到/cracked目录，重命名为atlassian-extras-2.4.jar</li>
+<li>运行/cracked目录下的confluence_keygen.jar，点.patch!，依提示选择atlassian-extras-2.4.jar，就可以在/cracked目录看到atlassian-extras-2.4.jar和atlassian-extras-2.4.bak两个文件，这里atlassian-extras-2.4.jar已经是破解好的了；</li>
+<li>然后在patch软件里输入安装Web页上的Server Id，点击.gen!产生key</li>
+<li>将atlassian-extras-2.4.jar名字改回来：atlassian-extras-decoder-v2-3.4.1，复制回confluence的WEB-INF/lib/目录，重新启动confluence</li>
+<li>复制key到Web页，进行下一步<br/>
+## 邮件服务器配置<br/>
+直接填写地址、协议死活不工作，不得已配置了JNDI：</li>
+</ol>
+
+<p>A. 在{confluence-install}/conf/server.xml中<Context>的末尾加代码：</p>
+
+<pre><code class="language-text">&lt;Context path=&quot;&quot; docBase=&quot;../confluence&quot; debug=&quot;0&quot; reloadable=&quot;false&quot; useHttpOnly=&quot;true&quot;&gt;
+....
+&lt;Resource name=&quot;mail/BanyuanSMTPServer&quot;
+    auth=&quot;Container&quot;
+    type=&quot;javax.mail.Session&quot;
+    mail.smtp.host=&quot;smtp.banyuan.club&quot;
+    mail.smtp.port=&quot;465&quot;
+    mail.smtp.auth=&quot;true&quot;
+    mail.smtp.user=&quot;admin@banyuan.club&quot;
+    password=&quot;SemiCircle2019&quot;
+    mail.smtp.starttls.enable=&quot;true&quot;
+    mail.transport.protocol=&quot;smtps&quot;
+    mail.smtp.socketFactory.class=&quot;javax.net.ssl.SSLSocketFactory&quot;
+/&gt;
+&lt;/Context&gt;
 </code></pre>
-<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
-<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
-<pre><code class="language-text">[program:ErosUpdate]
-command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
-;priority=999                ; the relative start priority (default 999)<br/>
-autostart=true              ; start at supervisord start (default: true)<br/>
-autorestart=true            ; retstart at unexpected quit (default: true)<br/>
-startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
-startretries=3              ; max # of serial start failures (default 3)<br/>
-nodaemon=true<br/>
-;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
-;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
-;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
-user=root                 ; setuid to this UNIX account to run the program<br/>
-log_stdout=true             ; if true, log program stdout (default true)<br/>
-log_stderr=true             ; if true, log program stderr (def false)<br/>
-logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
-logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
-logfile_backups=20          ; # of logfile backups (default 10)
-</code></pre></li>
-<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
-<pre><code class="language-text">[uwsgi]
-socket=127.0.0.1:3030<br/>
-chdir=/data/weex/projects/ErosUpdate<br/>
-wsgi-file = ErosUpdate/wsgi.py<br/>
-max-requests=5000<br/>
-processes = 4<br/>
-threads = 4<br/>
-logto=/data/logs/uwsgi/ErosUpdate.log<br/>
-#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
-pidfile=/tmp/ErosUpdate.pid
-</code></pre></li>
-</ol>
+
+<p>B. 然后移动{confluence-install}/confluence/WEB-INF/lib/mail-x.x.x.jar到{confluence-install}/lib目录（移动不是拷贝）<br/>
+C. 重启服务器，<br/>
+D. 进入后台邮件服务器配置JNDI服务名为：java:comp/env/mail/BanyuanSMTPServer，注意：SMTP单独配置选项都要为空（可以只能配置用户名，同mail.smtp.user），然后发送测试邮件，通过。</p>
+
+<h2 id="toc_5">RestAPI调用</h2>
+
+<p>官方文档： <a href="https://developer.atlassian.com/server/confluence/confluence-server-rest-api/">https://developer.atlassian.com/server/confluence/confluence-server-rest-api/</a></p>
+
+<p>例：<br/>
+获取文章内容：<a href="http://localhost:8090/rest/api/content/327696?expand=body.storage">http://localhost:8090/rest/api/content/327696?expand=body.storage</a><br/>
+获取文章里宏：<a href="http://localhost:8090/rest/api/content/327696/history/2/macro/id/0efe0e6f-e80e-4528-81d8-968f47a87907">http://localhost:8090/rest/api/content/327696/history/2/macro/id/0efe0e6f-e80e-4528-81d8-968f47a87907</a></p>
 
                         
                       </div>
@@ -235,10 +243,10 @@ pidfile=/tmp/ErosUpdate.pid
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/05/31</span>
+                    <span class="date">2019/03/26</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -252,23 +260,27 @@ pidfile=/tmp/ErosUpdate.pid
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15277545119360.html">
+                <a class="clearlink" href="15526315084700.html">
                 
-                  <h1>Pyplot相关</h1>
+                  <h1>Mac 安装MiniKube</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<ol>
-<li><p>subplot</p>
-<pre><code class="language-text">plt.subplot(221) # 表示分成两行两列，占用第一个，即第一行第一列的子图
-plt.subplot(222) # 表示分成两行两列，占用第二个，即第一行第二列的子图<br/>
-plt.subplot(212) # 表示分成两行一列，占用第二个，即第二行第一列的子图
+<li><p>安装kubectl</p>
+<pre><code class="language-text">brew install kubernetes-cli
+</code></pre></li>
+<li><p>安装minikube</p>
+<p>官方原版，需要科学上网</p>
+<pre><code class="language-text">brew cask install minikube
 </code></pre>
-<p>subplot(numRows, numCols, plotNum)<br/>
-如果3个参数都小于10的话，可以统一成一个整数<br/>
-subplot(221) = subplot(2,2,1)</p></li>
-<li><p><img src="media/15277545119360/15277557443176.jpg" alt=""/></p></li>
+<p>阿里云的minikube</p>
+<pre><code class="language-text">curl -Lo minikube http://kubernetes.oss-cn-hangzhou.aliyuncs.com/minikube/releases/v0.30.0/minikube-darwin-amd64 &amp;&amp; chmod +xminikube &amp;&amp; sudo mv minikube /usr/local/bin/
+</code></pre></li>
+<li><p>minikube 启动命令</p>
+<pre><code class="language-text">minikube start --docker-env HTTP_PROXY=192.168.2.114:31210 --docker-env HTTPS_PROXY=192.168.2.114:31210
+</code></pre></li>
 </ol>
 
                         
@@ -278,10 +290,10 @@ subplot(221) = subplot(2,2,1)</p></li>
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/05/31</span>
+                    <span class="date">2019/03/15</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='Tensorflow.html'>Tensorflow</a></span>
+          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -295,20 +307,75 @@ subplot(221) = subplot(2,2,1)</p></li>
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15276700222671.html">
+                <a class="clearlink" href="15451201223625.html">
                 
-                  <h1>Pandas相关</h1>
+                  <h1>Python 单元测试以及单元测试覆盖率</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ol>
-<li><p>Pandas 读取列数据</p>
-<pre><code class="language-python">city_names = pd.Series([&#39;San Francisco&#39;, &#39;San Jose&#39;, &#39;Sacramento&#39;])
-population = pd.Series([852469, 1015785, 485199])<br/>
-data = pd.DataFrame({ &#39;City name&#39;: city_names, &#39;Population&#39;: population })<br/>
-data[&#39;City_Name&#39;]  #获取&#39;City_Name&#39;这个列对象，返回值类型为Series<br/>
-data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返回值类型为DateFrame
+                        	<h2 id="toc_0">单元测试</h2>
+
+<ol>
+<li><p>安装nosetest</p>
+<pre><code class="language-text">pip install nose
+</code></pre></li>
+<li><p>执行测试并输出xunit格式xml文件</p>
+<pre><code class="language-text">nosetest --with-xunit -v
+</code></pre>
+<p>如果你想指定输出的文件名</p>
+<pre><code class="language-text">nosetest --with-xunit --xunit-file=xunittest.xml -v
+</code></pre></li>
+</ol>
+
+<h2 id="toc_1">测试覆盖率</h2>
+
+<ol>
+<li><p>安装coverage</p>
+<pre><code class="language-text">pip install coverage
+</code></pre></li>
+<li><p>测试指定的测试代码或者模块</p>
+<pre><code class="language-text">coverage run test.py
+</code></pre>
+<p>以上操作会在当前目录下生成<code>.coverage</code>目录</p></li>
+<li><p>生成xml报告或者html报告</p>
+<pre><code class="language-text">coverage html
+coverage xml
+</code></pre></li>
+</ol>
+
+<h2 id="toc_2">在Django 中使用nose和coverage</h2>
+
+<p>如果仅仅是使用coverage</p>
+
+<pre><code class="language-text">coverage run manage.py test #执行django的单元测试
+coverage xml #生成xml报告
+</code></pre>
+
+<p>如果需要同时使用nosetest和coverage</p>
+
+<ol>
+<li><p>下载安装django-nose</p>
+<pre><code class="language-text">pip install django-nose
+</code></pre></li>
+<li><p>将django-nose添加到项目的setting.py文件当中</p>
+<pre><code class="language-text">INSTALLED_APPS = (
+...<br/>
+&#39;django_nose&#39;, # Append to INSTALLED_APPS<br/>
+...<br/>
+)<br/>
+TEST_RUNNER = &#39;django_nose.NoseTestSuiteRunner&#39;<br/>
+NOSE_ARGS = [<br/>
+   &#39;--with-coverage&#39;,<br/>
+    &#39;--with-xunit&#39;,<br/>
+    &#39;--xunit-file=xunittest.xml&#39;<br/>
+]
+</code></pre></li>
+<li><p>执行单元测试</p>
+<pre><code class="language-text">python manage.py test
+</code></pre></li>
+<li><p>生成单元测试覆盖率</p>
+<pre><code class="language-text">coverage xml
 </code></pre></li>
 </ol>
 
@@ -319,10 +386,10 @@ data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返�
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/05/30</span>
+                    <span class="date">2018/12/18</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='Tensorflow.html'>Tensorflow</a></span>
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -336,18 +403,24 @@ data[[&#39;City_Name&#39;]] #获取&#39;City_Name&#39;列包含的数据，返�
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15274889837567.html">
+                <a class="clearlink" href="15446089404193.html">
                 
-                  <h1>Tensorflow错误集锦</h1>
+                  <h1>Redmine Docker部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<ol>
-<li><p>Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA<br/>
-加入以下代码</p>
-<pre><code class="language-text">import os 
-os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39; 
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull redmine
+</code></pre></li>
+<li><p>启动docker镜像</p>
+<pre><code class="language-text">docker run -d --name redmine \
+-e REDMINE_DB_MYSQL=192.168.2.191 \<br/>
+-e REDMINE_DB_USERNAME=root \<br/>
+-e REDMINE_DB_PASSWORD=www.1234TV.com \<br/>
+-e REDMINE_DB_DATABASE=redmine \<br/>
+-p 80:3000 redmine   
 </code></pre></li>
 </ol>
 
@@ -358,10 +431,107 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/05/28</span>
+                    <span class="date">2018/12/12</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='Tensorflow.html'>Tensorflow</a></span>
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15445994167623.html">
+                
+                  <h1>GitLab和Redmine深度集成</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">Redmine Issue Tracker</h2>
+
+<ol>
+<li><p>设置Redmine Issue Tracker<br/>
+在GitLab的项目setting里面找到integrations，找到redmine<br/>
+修改如下:<br/>
+<img src="https://pic.mylonly.com/2018-12-12-072609.png" alt=""/></p></li>
+<li><p>关闭内置issue</p>
+<p>setting-&gt;general-&gt;Permissions</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-072807.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_1">Redmine 启用版本库</h2>
+
+<ol>
+<li><p>进入redmine容器</p>
+<pre><code class="language-text">docker exec -it redmine /bin/bash
+</code></pre></li>
+<li><p>安装插件<code>redmine_gitlab_hook</code></p>
+<p>进入<code>/usr/src/redmine/plugins</code>目录</p>
+<pre><code class="language-text">git clone https://github.com/phlegx/redmine_gitlab_hook.git
+</code></pre>
+<p>登录redmine管理员，管理-&gt;插件，找到<code>Redmine GitLab Hook plugin</code>,进入配置</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-101517.png" alt=""/></p></li>
+<li><p>创建本地git仓库并拉取</p>
+<pre><code class="language-text">mkdir -p /home/redmine/git-repo #创建本地git仓库
+cd /home/redmine/git-repo/<br/>
+git clone --mirror http://username:password@gitlab.1234tv.lan:/awesome/python-test.git #此处最好采用http加上用户名和密码的方式拉取git仓库<br/>
+chmod -R redmine:redmine python-test.git ##记得修改用户组为redmine:redmine
+</code></pre></li>
+<li><p>登录redmine管理员，启用版本库</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-073502.png" alt=""/></p></li>
+<li><p>配置版本库</p>
+<p>进入到和gitlab项目对应的项目中，进入设置页面<br/>
+git clone时加了-mirror参数,使用下面参数<br/>
+<img src="https://pic.mylonly.com/2018-12-12-101134.png" alt=""/><br/>
+如果git clone 时没有使用-mirror参数，使用下面的配置<br/>
+<img src="https://pic.mylonly.com/2018-12-12-073658.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_2">配置GitLab Webhook</h2>
+
+<p>进入GitLab的项目中，在setting-&gt;Integrations中添加如下webhooks地址</p>
+
+<p>webhook url格式:</p>
+
+<pre><code class="language-text">{redmine_installation_url}/gitlab_hook?key={redmine_repository_API_key}&amp;project_id={redmine_project_identifier}
+</code></pre>
+
+<p><img src="https://pic.mylonly.com/2018-12-12-101954.png" alt=""/></p>
+
+<p>如果redmine的项目名称和版本库的标识不一致，需要带上<code>repository_name</code>参数，手动指定redmine上的版本库</p>
+
+<p>如果需要gitlab webhook插件自动创建版本库,还需要加上<code>repository_git_url</code>、<code>repository_namespace</code>、<code>repository_name</code>这几个参数,</p>
+
+<p>其中<code>repository_git_url</code>为需要克隆的远程仓库的地址<br/>
+而<code>repository_namespace</code>和<code>repository_name</code>自由填写，会在redmine的版本库里生成类似 <code>{repository_namespace}_{repository_name}</code>样式的版本库标识</p>
+
+<h2 id="toc_3">验证</h2>
+
+<ol>
+<li>在redmine里创建一个issue，状态为新建</li>
+<li>本地clone项目，少许修改，commit日志填写&quot;bugfix #<id>&quot; (<code>id为redmine上的issue id</code>),然后push 到服务器上</li>
+<li>查看redmine上该issue的状态是否改变</li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='PM.html'>PM</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -438,8 +608,6 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -447,6 +615,8 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -463,31 +633,31 @@ os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

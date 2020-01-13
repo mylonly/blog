@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  Linux问题集锦 - 独自一人
+  ubuntu安装NFS-Server提供NFS服务 - 独自一人
   
   </title>
   
@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -121,10 +121,10 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>Linux问题集锦</h1>
+          <h1>ubuntu安装NFS-Server提供NFS服务</h1>
      
         <div class="read-more clearfix">
-          <span class="date">2018/05/31</span>
+          <span class="date">2019/12/26</span>
 
           <span>posted in&nbsp;</span> 
           
@@ -141,44 +141,40 @@
       </div><!-- article -->
 
       <div class="article-content">
-      <ol>
-<li><p>CentOS python升级之后yum无法使用解决</p>
-<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-<pre><code class="language-text">vim /usr/bin/yum
+      <p>如果没有现成的NFS服务,可以利用现有服务器部署一套</p>
+
+<p>安装NFS服务端</p>
+
+<pre><code class="language-text">    sudo apt-get install nfs-kernel-server
 </code></pre>
-<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
-<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
-<pre><code class="language-text">[program:ErosUpdate]
-command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
-;priority=999                ; the relative start priority (default 999)<br/>
-autostart=true              ; start at supervisord start (default: true)<br/>
-autorestart=true            ; retstart at unexpected quit (default: true)<br/>
-startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
-startretries=3              ; max # of serial start failures (default 3)<br/>
-nodaemon=true<br/>
-;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
-;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
-;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
-user=root                 ; setuid to this UNIX account to run the program<br/>
-log_stdout=true             ; if true, log program stdout (default true)<br/>
-log_stderr=true             ; if true, log program stderr (def false)<br/>
-logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
-logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
-logfile_backups=20          ; # of logfile backups (default 10)
-</code></pre></li>
-<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
-<pre><code class="language-text">[uwsgi]
-socket=127.0.0.1:3030<br/>
-chdir=/data/weex/projects/ErosUpdate<br/>
-wsgi-file = ErosUpdate/wsgi.py<br/>
-max-requests=5000<br/>
-processes = 4<br/>
-threads = 4<br/>
-logto=/data/logs/uwsgi/ErosUpdate.log<br/>
-#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
-pidfile=/tmp/ErosUpdate.pid
-</code></pre></li>
-</ol>
+
+<p>编辑/etc/exports文件,增加你要提供nfs服务的路径</p>
+
+<pre><code class="language-text"># /etc/exports: the access control list for filesystems which may be exported
+#       to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+
+/data/charts *(rw,sync,no_subtree_check,no_root_squash)
+/data/mysql *(rw,sync,no_subtree_check,no_root_squash)
+/data/redis *(rw,sync,no_subtree_check,no_root_squash)
+</code></pre>
+
+<p>更改共享目录权限，修改为777 (目前还不清楚最低要求权限是多少)</p>
+
+<pre><code class="language-text">sudo chown 777  /data/charts
+</code></pre>
+
+<p>重启NFS服务</p>
+
+<pre><code class="language-text">sudo /etc/init.d/nfs-kernel-server restart
+</code></pre>
 
 
     
@@ -189,16 +185,16 @@ pidfile=/tmp/ErosUpdate.pid
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="15277767431151.html" 
-          title="Previous Post: uwsgi重启shell脚本">&laquo; uwsgi重启shell脚本</a>
+          <a href="15773284865375.html" 
+          title="Previous Post: WebDashboard UI部署">&laquo; WebDashboard UI部署</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="15277545119360.html" 
-          title="Next Post: Pyplot相关">Pyplot相关 &raquo;</a>
+          <a  href="15761310581680.html" 
+          title="Next Post: HAProxy">HAProxy &raquo;</a>
       
       </p>
         </div>
@@ -277,8 +273,6 @@ pidfile=/tmp/ErosUpdate.pid
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -286,6 +280,8 @@ pidfile=/tmp/ErosUpdate.pid
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -302,31 +298,31 @@ pidfile=/tmp/ErosUpdate.pid
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

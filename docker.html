@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,15 +118,167 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="15516896130866.html">
+                <a class="clearlink" href="15535769948107.html">
                 
-                  <h1>Docker</h1>
+                  <h1>Confluence安装</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<ol>
-<li>默认网桥上的容器只能通过 IP 地址互相访问，除非你使用 --link 选项，这被认为是遗留的。在用户自定义网桥中，容器之间可以通过名字会别名互相访问</li>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run -d --restart always -v /home/ubuntu/confluence:/var/atlassian/application-data/confluence --name=&quot;confluence&quot; -d -p 80:8090 -p 8091:8091 atlassian/confluence-server:6.12
+</code></pre></li>
+</ol>
+
+<h2 id="toc_0">下载</h2>
+
+<p>官网下载confluence的tar包(v6.12.2)</p>
+
+<h2 id="toc_1">安装</h2>
+
+<p>解压缩（这里解压到/server/confluence目录），打开该目录下confluence/WEB-INF/classes/confluence-init.properties文件，添加行：</p>
+
+<pre><code class="language-text">confluence.home=/server/confluence
+</code></pre>
+
+<h2 id="toc_2">启动</h2>
+
+<blockquote>
+<p>\( cd /server/confluence<br/>
+\) ./bin/start-confluence.sh </p>
+</blockquote>
+
+<h2 id="toc_3">浏览器访问</h2>
+
+<p>输入 <a href="http://localhost:8090/">http://localhost:8090/</a> 进行安装，期间会要求输入license，导向到官网申请之；进入数据库步骤，如果选择mysql，要依次逆行：</p>
+
+<ol>
+<li>下载mysql驱动放到WEB-INF/lib目录，重新启动confluence服务器</li>
+<li><p>创建数据库时，编码COLLATE 应选：utf8_bin，如：</p>
+<blockquote>
+<p>CREATE DATABASE IF NOT EXISTS confluence DEFAULT CHARSET utf8 COLLATE utf8_bin; <br/>
+如果没有创建数据用户，可以创建：<br/>
+GRANT ALL ON <em>.</em> TO banyuan@localhost IDENTIFIED BY &quot;Banyuan2019&quot;; </p>
+</blockquote></li>
+<li><p>事务默认级别应设置为：READ-COMMITTED。具体操作过程可能如下：</p>
+<ul>
+<li>a.查看mysql的conf文件所在位置：<br/>
+&gt; $ mysqld --verbose --help|grep -A 1 &#39;Default options&#39;<br/>
+可能返回结果：/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf </li>
+<li>b. 编辑my.conf，如：/usr/local/etc/my.cnf ，在 [mysqld]节增加行：
+<code>
+[mysqld]<br/>
+...<br/>
+transaction-isolation=READ-COMMITTED
+</code>
+然后重启服务。可以进入mysql控制台，执行下面的命令确认是否修改过了。<br/>
+&gt; show variables like &#39;transaction_isolation&#39;;</li>
+</ul></li>
+</ol>
+
+<p>以上这些步骤，在实际安装过程中都是有提示的，所以不必特别担心。</p>
+
+<p>安装完毕后，仍会检查mysql的一些设置，比如可能提示如下两个变量设置值：</p>
+
+<blockquote>
+<p>成功最大允许数据包 - max_allowed_packet：一般不小于34m<br/>
+InnoDB 日志文件大小 - innodb_log_file_size：一般不小于256M</p>
+
+<p>character-set-server = utf8<br/>
+innodb_log_file_size = 256M<br/>
+max_allowed_packet = 34M</p>
+</blockquote>
+
+<h2 id="toc_4">破解</h2>
+
+<p>破解需要在安装过程中进行，安装进入到授权码页面时，开始破解：</p>
+
+<ol>
+<li>使用【附件】目录confluence-crack.zip解压缩，比如解到/cracked目录。</li>
+<li>把confluence的WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar 文件复制到/cracked目录，重命名为atlassian-extras-2.4.jar</li>
+<li>运行/cracked目录下的confluence_keygen.jar，点.patch!，依提示选择atlassian-extras-2.4.jar，就可以在/cracked目录看到atlassian-extras-2.4.jar和atlassian-extras-2.4.bak两个文件，这里atlassian-extras-2.4.jar已经是破解好的了；</li>
+<li>然后在patch软件里输入安装Web页上的Server Id，点击.gen!产生key</li>
+<li>将atlassian-extras-2.4.jar名字改回来：atlassian-extras-decoder-v2-3.4.1，复制回confluence的WEB-INF/lib/目录，重新启动confluence</li>
+<li>复制key到Web页，进行下一步<br/>
+## 邮件服务器配置<br/>
+直接填写地址、协议死活不工作，不得已配置了JNDI：</li>
+</ol>
+
+<p>A. 在{confluence-install}/conf/server.xml中<Context>的末尾加代码：</p>
+
+<pre><code class="language-text">&lt;Context path=&quot;&quot; docBase=&quot;../confluence&quot; debug=&quot;0&quot; reloadable=&quot;false&quot; useHttpOnly=&quot;true&quot;&gt;
+....
+&lt;Resource name=&quot;mail/BanyuanSMTPServer&quot;
+    auth=&quot;Container&quot;
+    type=&quot;javax.mail.Session&quot;
+    mail.smtp.host=&quot;smtp.banyuan.club&quot;
+    mail.smtp.port=&quot;465&quot;
+    mail.smtp.auth=&quot;true&quot;
+    mail.smtp.user=&quot;admin@banyuan.club&quot;
+    password=&quot;SemiCircle2019&quot;
+    mail.smtp.starttls.enable=&quot;true&quot;
+    mail.transport.protocol=&quot;smtps&quot;
+    mail.smtp.socketFactory.class=&quot;javax.net.ssl.SSLSocketFactory&quot;
+/&gt;
+&lt;/Context&gt;
+</code></pre>
+
+<p>B. 然后移动{confluence-install}/confluence/WEB-INF/lib/mail-x.x.x.jar到{confluence-install}/lib目录（移动不是拷贝）<br/>
+C. 重启服务器，<br/>
+D. 进入后台邮件服务器配置JNDI服务名为：java:comp/env/mail/BanyuanSMTPServer，注意：SMTP单独配置选项都要为空（可以只能配置用户名，同mail.smtp.user），然后发送测试邮件，通过。</p>
+
+<h2 id="toc_5">RestAPI调用</h2>
+
+<p>官方文档： <a href="https://developer.atlassian.com/server/confluence/confluence-server-rest-api/">https://developer.atlassian.com/server/confluence/confluence-server-rest-api/</a></p>
+
+<p>例：<br/>
+获取文章内容：<a href="http://localhost:8090/rest/api/content/327696?expand=body.storage">http://localhost:8090/rest/api/content/327696?expand=body.storage</a><br/>
+获取文章里宏：<a href="http://localhost:8090/rest/api/content/327696/history/2/macro/id/0efe0e6f-e80e-4528-81d8-968f47a87907">http://localhost:8090/rest/api/content/327696/history/2/macro/id/0efe0e6f-e80e-4528-81d8-968f47a87907</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/03/26</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15446089404193.html">
+                
+                  <h1>Redmine Docker部署</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull redmine
+</code></pre></li>
+<li><p>启动docker镜像</p>
+<pre><code class="language-text">docker run -d --name redmine \
+-e REDMINE_DB_MYSQL=192.168.2.191 \<br/>
+-e REDMINE_DB_USERNAME=root \<br/>
+-e REDMINE_DB_PASSWORD=www.1234TV.com \<br/>
+-e REDMINE_DB_DATABASE=redmine \<br/>
+-p 80:3000 redmine   
+</code></pre></li>
 </ol>
 
                         
@@ -136,7 +288,182 @@
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2019/03/04</span>
+                    <span class="date">2018/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15444340190835.html">
+                
+                  <h1>SonarQube部署</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">部署postgres</h2>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull postgres
+</code></pre></li>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run --name postgres \
+-e POSTGRES_USER=&quot;sonar&quot; \<br/>
+-e POSTGRES_PASSWORD=****** \<br/>
+-d postgres
+</code></pre></li>
+</ol>
+
+<h2 id="toc_1">部署SonarQube</h2>
+
+<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull sonarqube
+</code></pre></li>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run -d --name sonarqube\
+    -p 80:9000     \<br/>
+    -e sonar.jdbc.username=sonar \<br/>
+    -e sonar.jdbc.password=****** \    <br/>
+    -e sonar.jdbc.url=jdbc:postgresql://192.168.2.191/sonar sonarqube
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/10</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15439814205804.html">
+                
+                  <h1>GitLab Docker部署</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>安装Docker</p>
+<pre><code class="language-text">sudo wget -qO- https://get.docker.com/ | sh
+</code></pre></li>
+<li><p>非root用户需要将用户加到docker用户组中</p>
+<pre><code class="language-text">sudo usermod -aG docker ubuntu
+</code></pre></li>
+<li><p>启动docker</p>
+<pre><code class="language-text">sudo service docker start
+</code></pre></li>
+<li><p>拉取gitlab-ce镜像</p>
+<pre><code class="language-text">sudo docker pull gitlab/gitlab-ce
+</code></pre></li>
+<li><p>启动gitlab-ce docker镜像</p>
+<pre><code class="language-text">sudo docker run --detach \
+--hostname gitlab.example.com \<br/>
+--publish 443:443 --publish 80:80 --publish 22:22 \<br/>
+--name gitlab \<br/>
+--restart always \<br/>
+--volume /srv/gitlab/config:/etc/gitlab \<br/>
+--volume /srv/gitlab/logs:/var/log/gitlab \<br/>
+--volume /srv/gitlab/data:/var/opt/gitlab \<br/>
+gitlab/gitlab-ce:latest
+</code></pre>
+<p>具体的镜像命令可以参考<a href="https://docs.gitlab.com/omnibus/docker/">gitlab官方文档</a></p>
+<p>如果是新安装的Ubuntu服务器，记得用ufw添加端口</p>
+<pre><code class="language-text">sudo ufw allow 80/tcp
+</code></pre></li>
+</ol>
+
+<h2 id="toc_0">设置默认的管理员账号密码</h2>
+
+<ol>
+<li><p>进入gitlab容器</p>
+<pre><code class="language-text">docker exec -it gitlab /bin/bash
+</code></pre></li>
+<li><p>进入rails</p>
+<pre><code class="language-text">cd /opt/gitlab/bin
+gitlab-rails console production
+</code></pre></li>
+<li><p>设置root用户密码</p>
+<pre><code class="language-text">irb(main):001:0&gt; u = User.where(email: &#39;admin@example.com&#39;).first
+=&gt; #&lt;User id:1 @root&gt;<br/>
+irb(main):002:0&gt; u.password<br/>
+=&gt; nil<br/>
+irb(main):003:0&gt; u.password=&#39;12345678&#39;<br/>
+=&gt; &quot;12345678&quot;<br/>
+irb(main):004:0&gt; u.save!<br/>
+Enqueued ActionMailer::DeliveryJob (Job ID: b0e971db-4c6b-439c-82ee-86c7c277537e) to Sidekiq(mailers) with arguments: &quot;DeviseMailer&quot;, &quot;password_change&quot;, &quot;deliver_now&quot;, gid://gitlab/User/1<br/>
+=&gt; true
+</code></pre></li>
+</ol>
+
+<h2 id="toc_1">邮件配置</h2>
+
+<ol>
+<li><p>进入gitlab容器</p>
+<pre><code class="language-text">docker exec -it gitlab /bin/bash
+</code></pre></li>
+<li><p>修改配置文件 </p>
+<pre><code class="language-text">#vim /etc/gitlab/gitlab.rb，添加以下内容
+gitlab_rails[&#39;gitlab_email_enabled&#39;] = true<br/>
+gitlab_rails[&#39;gitlab_email_from&#39;] = &#39;gitlab@1234tv.com&#39;<br/>
+gitlab_rails[&#39;gitlab_email_display_name&#39;] = &#39;GitLab&#39;<br/>
+gitlab_rails[&#39;gitlab_email_reply_to&#39;] = &#39;noreply@1234tv.com&#39;<br/>
+gitlab_rails[&#39;smtp_enable&#39;] = true<br/>
+gitlab_rails[&#39;smtp_address&#39;] = &quot;smtp.exmail.qq.com&quot;<br/>
+gitlab_rails[&#39;smtp_port&#39;] = 465<br/>
+gitlab_rails[&#39;smtp_user_name&#39;] = &quot;gitlab@1234tv.com&quot;<br/>
+gitlab_rails[&#39;smtp_password&#39;] = &quot;******&quot;<br/>
+gitlab_rails[&#39;smtp_authentication&#39;] = &quot;login&quot;<br/>
+gitlab_rails[&#39;smtp_enable_starttls_auto&#39;] = true<br/>
+gitlab_rails[&#39;smtp_tls&#39;] = true
+</code></pre></li>
+<li><p>重新加载配置文件，并验证是否生效</p>
+<pre><code class="language-text">gitlab-ctl reconfigure ##重新加载配置
+gitlab-rails console  ##进入rails
+</code></pre>
+<p>输入 <code>ActionMailer::Base.delivery_method</code>:</p>
+<pre><code class="language-text">irb(main):002:0* ActionMailer::Base.delivery_method
+</code></pre>
+<p>如果出现<code>=&gt;:smtp</code>说明设置成功了</p></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/05</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
@@ -216,8 +543,6 @@
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -225,6 +550,8 @@
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -241,31 +568,31 @@
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

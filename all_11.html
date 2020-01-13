@@ -1,0 +1,749 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  独自一人
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="14945011765615.html">
+                
+                  <h1>VSCode1.0更换回英文版本</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>VSCode1.0更新之后带来了本地语言的支持，但是，你怎么能连命令行的命令都汉化了？<br/>
+<img src="https://pic.mylonly.com/2016-05-04-14623468922061.jpg" alt=""/><br/>
+<code>表示实在受不了每次同步代码 选中git:拉的感觉，还有安装插件的命令也不再是install extension了，而是安装扩展</code></p>
+
+<h3 id="toc_0">将VSCode的语言修改为英文</h3>
+
+<p><a href="https://code.visualstudio.com/docs/customization/locales">官方文档设置语言</a></p>
+
+<p>快捷键Command+Shift+P（Win下为Control）打开命令行工具,输入<code>设置语言</code>，会打开一个locale.json的文件，如下面所示</p>
+
+<pre><code class="language-text">{
+    // 定义 VSCode 的显示语言。
+    // 请参阅 http://go.microsoft.com/fwlink/?LinkId=761051，了解支持的语言列表。
+    // 要更改值需要重启 VSCode。
+    &quot;locale&quot;:&quot;zh-CN&quot; 
+}
+</code></pre>
+
+<p>将locale的值改为en-US之后重启VSCode就恢复到英文版本的了!</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/28</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tools.html'>Tools</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011548149.html">
+                
+                  <h1>简单Scrapy爬虫</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>只是个小小的demo，自己测试了下，总共down了20几张图片</p>
+
+<pre><code class="language-python">#coding: utf-8 #############################################################
+# File Name: spiders/wallpaper.py
+# Author: mylonly
+# mail: tianxianggen@gmail.com
+#Blog:www.mylonly.com
+# Created Time: 2014年09月01日 星期一 14时20分07秒
+#########################################################################
+#!/usr/bin/python
+import urllib2
+import os
+ 
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from mylonly.items import wallpaperItem
+from scrapy.http import Request
+ 
+class wallpaper(CrawlSpider):
+    name = &quot;wallpaperSpider&quot;
+    allowed_domains = [&#39;sj.zol.com.cn&#39;]
+    start_urls = [&#39;http://sj.zol.com.cn/&#39;]
+    number = 0
+    rules = (
+    Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback =     &#39;parse_image&#39;,follow=True),)
+    def parse_image(self,response):
+        self.log(&#39;hi,this is an item page! %s&#39; % response.url)
+        sel = Selector(response)
+        sites = sel.xpath(&quot;//div[@class=&#39;wrapper        mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()
+        for site in sites:
+        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
+        print &#39;one page:&#39;,url
+        return Request(url,callback = self.parse_href)
+    def parse_href(self,response):
+        print &#39;I am in:&#39;,response.url
+        sel = Selector(response)
+        src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
+        self.download(src)
+ 
+    def download(self,url):
+        self.number += 1
+        savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
+        print &#39;正在下载...&#39;,url
+        try:
+            u = urllib2.urlopen(url)
+            r = u.read()
+            downloadFile = open(savePath,&#39;wb&#39;)
+            downloadFile.write(r)
+            u.close()
+            downloadFile.close()
+        except:
+            print savePath,&#39;can not download.&#39;
+ 
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011166438.html">
+                
+                  <h1>Scrapy——crawlSpider爬虫</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
+ <br/>
+要利用crawSpider和BaseSpider的区别在于crawSpider提供了一组Rule对象列表，这些Rule对象规定了爬虫抓取链接的行为，Rule规定的链接才会被抓取，交给相应的callback函数去处理。<br/>
+  <br/>
+在rules中通过SmglLinkExtractor提取希望获取的链接。<br/>
+ <br/>
+我此次的demo中rule只有一个，如下：</p>
+
+<pre><code class="language-python">allowed_domains = [&#39;sj.zol.com.cn&#39;]
+start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
+number = 0
+rules = (
+            Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
+            )
+</code></pre>
+
+<p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
+ <br/>
+SmglLinkExtractor主要参数：<br/>
+ </p>
+
+<ul>
+<li>allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。</li>
+<li>deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。</li>
+<li>allow_domains：会被提取的链接的domains。</li>
+<li>deny_domains：一定不会被提取链接的domains。</li>
+<li>restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
+ <br/>
+下面的内容就是利用Selector解析获得的response并赋值个item就行了：</li>
+</ul>
+
+<pre><code class="language-python">#coding: utf-8 #############################################################
+# File Name: spiders/wallpaper.py
+# Author: mylonly
+# mail: tianxianggen@gmail.com
+#Blog:www.mylonly.com
+# Created Time: 2014年09月01日 星期一 14时20分07秒
+#########################################################################
+#!/usr/bin/python
+import urllib2
+import os
+import re
+ 
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from mylonly.items import wallpaperItem
+from scrapy.http import Request
+ 
+class wallpaper(CrawlSpider):
+        name = &quot;wallpaperSpider&quot;
+        allowed_domains = [&#39;sj.zol.com.cn&#39;]
+        start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
+        number = 0
+        rules = (
+                        Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
+                        )
+        def parse_image(self,response):
+                self.log(&#39;hi,this is an item page! %s&#39; % response.url)
+                sel = Selector(response)
+                sites = sel.xpath(&quot;//div[@class=&#39;wrapper mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()       
+                for site in sites:
+                        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
+                        print &#39;one page:&#39;,url
+                        item = wallpaperItem()
+                        item[&#39;size&#39;] = re.search(&#39;\d*x\d*&#39;,site).group()
+                        item[&#39;altInfo&#39;] = sel.xpath(&quot;//h1//a/text()&quot;).extract()[0]
+                        return Request(url,meta = {&#39;item&#39;:item},callback = self.parse_href)
+        def parse_href(self,response):
+                print &#39;I am in:&#39;,response.url
+                item = response.meta[&#39;item&#39;]
+                items = []
+                sel = Selector(response)
+                src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
+                item[&#39;imgSrc&#39;] = src
+                items.append(item)
+                return items
+                #self.download(src)
+        def download(self,url):
+                self.number += 1
+                savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
+                print &#39;正在下载...&#39;,url
+                try:
+                        u = urllib2.urlopen(url)
+                        r = u.read()
+                        downloadFile = open(savePath,&#39;wb&#39;)
+                        downloadFile.write(r)
+                        u.close()
+                        downloadFile.close()
+                except:
+                        print savePath,&#39;can not download.&#39;
+</code></pre>
+
+<p> <br/>
+ <br/>
+ <br/>
+接下来看看我的Item.py的代码：</p>
+
+<pre><code class="language-python">class wallpaperItem(scrapy.Item):
+        size = scrapy.Field()
+        altInfo = scrapy.Field()
+        imgSrc = scrapy.Field()
+</code></pre>
+
+<p> <br/>
+还有pipilines.py:</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+ 
+# Define your item pipelines here
+#
+# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
+# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import MySQLdb
+ 
+ 
+class MylonlyPipeline(object):
+    def process_item(self, item, spider):
+        return item
+ 
+class wallpaperPipeline(object):
+        def process_item(self,item,spider):
+                print &#39;imgSrc:&#39;,item[&#39;imgSrc&#39;]
+                db = MySQLdb.connect(&quot;rdsauvva2auvva2.mysql.rds.aliyuncs.com&quot;,&quot;mylonly&quot;,&quot;703003659txg&quot;,&quot;wallpaper&quot;)
+                cursor = db.cursor()
+                db.set_character_set(&#39;utf8&#39;)
+                cursor.execute(&#39;SET NAMES utf8;&#39;)
+                cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
+                cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
+ 
+                sql =&quot;INSERT INTO mobile_download(wallpaper_size,wallpaper_info,wallpaper_src)\
+                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;size&#39;],item[&#39;altInfo&#39;],item[&#39;imgSrc&#39;])
+                try:
+                        print sql
+                        cursor.execute(sql)
+                        db.commit()
+                except MySQLdb.Error,e:
+                        print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
+                db.close()
+                return item
+</code></pre>
+
+<p> <br/>
+ <br/>
+ <br/>
+本例中我将传回的items数据存放到了数据库中，如果你不想这样，可以将我注释掉的self.download()取消注释，不反悔items，就可以将找到的所有图片链接全部下载下来，不过要找个大点的地方存储，因为总共有5W多条：<br/>
+<img src="https://pic.mylonly.com/2016-06-29_061712481319744.png" alt="2016-06-29_061712481319744.png"/></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945010159790.html">
+                
+                  <h1>CentOS中添加Swap交换文件</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>1.先检查是否存在Swap文件</p>
+
+<pre><code class="language-bash">swapon -s #返回的信息为空，说明没有其他交换文件
+</code></pre>
+
+<p>2.创建一个Swap文件，使用dd命令</p>
+
+<pre><code class="language-bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
+dd if=/dev/zero of=/home/swap bs=1024 count=1024000
+</code></pre>
+
+<p>3.将swap文件转换成swap格式</p>
+
+<pre><code class="language-bash">mkswap /home/swap
+</code></pre>
+
+<p>4.将swap文件挂载成swap分区</p>
+
+<pre><code class="language-bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
+</code></pre>
+
+<p>5.让swap文件自动挂载</p>
+
+<pre><code class="language-bash">vim /etc/fstab 
+#在文件末尾加上下面的命令
+/home/swap swap swap default 0 0 
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14944975766543.html">
+                
+                  <h1>CocoaPods master仓库替换为国内源</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p><img src="https://pic.mylonly.com/2016-06-29_1396084357114.jpg" alt="2016-06-29_1396084357114.jpg"/><br/>
+国内用CocoaPods 实在是太蛋疼了，一个pod update都要等好久，之前唐巧博客里面推荐的那个国内源已经不可用了，还好今天在V2EX上看到有人提供了别的CocoaPods源。</p>
+
+<ol>
+<li><a href="https://git.coding.net/hging/Specs.git">https://git.coding.net/hging/Specs.git</a></li>
+<li><a href="http://git.oschina.net/akuandev/Specs">http://git.oschina.net/akuandev/Specs</a></li>
+</ol>
+
+<p>执行如下命令替换Pods源</p>
+
+<pre><code class="language-bash">$ pod repo remove master
+$ pod repo add master &#39;http://git.oschina.net/akuandev/Specs.git&#39; 
+</code></pre>
+
+<p> <br/>
+仅仅这样使用pod update时发现仍然会从一个master-1这个官方源中clone</p>
+
+<pre><code class="language-bash">tianxianggendeMacBook-Air:upyun-batch-upload mylonly$ pod install
+Creating shallow clone of spec repo `master-1` from `https://github.com/CocoaPods/Specs.git`
+</code></pre>
+
+<p> <br/>
+这时候需要在Podfile中加入source命令，就可以直接从国内源更新了。</p>
+
+<pre><code class="language- bash">source &#39;http://git.oschina.net/akuandev/Specs.git&#39;
+platform :ios, &#39;6.0&#39;
+pod &#39;AFNetworking&#39;, &#39;~&gt; 1.3.4&#39;
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="all_10.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			 <a href="all_12.html">&raquo; Next Page</a> 
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
+
+
+
+  </body>
+</html>

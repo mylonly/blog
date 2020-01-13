@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  MySql 相关问题 - 独自一人
+  Mac 安装MiniKube - 独自一人
   
   </title>
   
@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -121,14 +121,14 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>MySql 相关问题</h1>
+          <h1>Mac 安装MiniKube</h1>
      
         <div class="read-more clearfix">
-          <span class="date">2018/07/05</span>
+          <span class="date">2019/03/15</span>
 
           <span>posted in&nbsp;</span> 
           
-              <span class="posted-in"><a href='linux.html'>Linux</a></span>
+              <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
            
          
           <span class="comments">
@@ -142,55 +142,19 @@
 
       <div class="article-content">
       <ol>
-<li><p>查看数据库服务器字符集</p>
-<pre><code class="language-text">mysql&gt; show variables like &#39;%char%&#39;;
-+--------------------------+-------------------------------------+------<br/>
-| Variable_name | Value |......<br/>
-+--------------------------+-------------------------------------+------<br/>
-| character_set_client | utf8 |...... -- 客户端字符集<br/>
-| character_set_connection | utf8 |......<br/>
-| character_set_database | utf8 |...... -- 数据库字符集<br/>
-| character_set_filesystem | binary |......<br/>
-| character_set_results | utf8 |......<br/>
-| character_set_server | utf8 |...... -- 服务器字符集<br/>
-| character_set_system | utf8 |......<br/>
-| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......<br/>
-+--------------------------+-------------------------------------+------
+<li><p>安装kubectl</p>
+<pre><code class="language-text">brew install kubernetes-cli
 </code></pre></li>
-<li><p>查看数据表(table)字符集</p>
-<pre><code class="language-text">mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
-+-----------+--------+---------+------------+------+-----------------+------<br/>
-| Name | Engine | Version | Row_format | Rows | Collation |......<br/>
-+-----------+--------+---------+------------+------+-----------------+------<br/>
-| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......<br/>
-+-----------+--------+---------+------------+------+-----------------+------
-</code></pre></li>
-<li><p>查看数据列(column)字符集</p>
-<pre><code class="language-text">mysql&gt; show full columns from countries;
-+----------------------+-------------+-----------------+--------<br/>
-| Field | Type | Collation | .......<br/>
-+----------------------+-------------+-----------------+--------<br/>
-| countries_id | int(11) | NULL | .......<br/>
-| countries_name | varchar(64) | utf8_general_ci | .......<br/>
-| countries_iso_code_2 | char(2) | utf8_general_ci | .......<br/>
-| countries_iso_code_3 | char(3) | utf8_general_ci | .......<br/>
-| address_format_id | int(11) | NULL | .......<br/>
-+----------------------+-------------+-----------------+--------
-</code></pre></li>
-<li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
-<pre><code class="language-text">alter database name character set utf8;
-create database name character set utf8;<br/>
-alter table 表名 convert to character set gbk;<br/>
-alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
-</code></pre></li>
-<li><p>通过数据库my.cnf配置文件设置字符集</p>
-<pre><code class="language-text">vi /etc/my.cnf
-#在[client]下添加<br/>
-default-character-set=utf8<br/>
-#在[mysqld]下添加<br/>
-default-character-set=utf8
+<li><p>安装minikube</p>
+<p>官方原版，需要科学上网</p>
+<pre><code class="language-text">brew cask install minikube
 </code></pre>
-<p>重启mysql</p></li>
+<p>阿里云的minikube</p>
+<pre><code class="language-text">curl -Lo minikube http://kubernetes.oss-cn-hangzhou.aliyuncs.com/minikube/releases/v0.30.0/minikube-darwin-amd64 &amp;&amp; chmod +xminikube &amp;&amp; sudo mv minikube /usr/local/bin/
+</code></pre></li>
+<li><p>minikube 启动命令</p>
+<pre><code class="language-text">minikube start --docker-env HTTP_PROXY=192.168.2.114:31210 --docker-env HTTPS_PROXY=192.168.2.114:31210
+</code></pre></li>
 </ol>
 
 
@@ -202,16 +166,16 @@ default-character-set=utf8
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="15308616208129.html" 
-          title="Previous Post: 我的豆瓣电影影评抓取之旅">&laquo; 我的豆瓣电影影评抓取之旅</a>
+          <a href="15535769948107.html" 
+          title="Previous Post: Confluence安装">&laquo; Confluence安装</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="15278621156583.html" 
-          title="Next Post: 制作Kali Linux 加密U盘启动盘">制作Kali Linux 加密U盘启动盘 &raquo;</a>
+          <a  href="15451201223625.html" 
+          title="Next Post: Python 单元测试以及单元测试覆盖率">Python 单元测试以及单元测试覆盖率 &raquo;</a>
       
       </p>
         </div>
@@ -290,8 +254,6 @@ default-character-set=utf8
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -299,6 +261,8 @@ default-character-set=utf8
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -315,31 +279,31 @@ default-character-set=utf8
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

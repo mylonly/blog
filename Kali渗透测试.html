@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -353,6 +353,193 @@ cryptsetup luksClose /dev/mapper/usb
                 </div>
               </div><!-- article -->
         
+			<div class="article">
+                <a class="clearlink" href="15226772044493.html">
+                
+                  <h1>DIG命令用法</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>基本用法</p>
+<pre><code class="language-text">```
+#查询sina.com 的所有域名记录 利用114.114.114.114为DNS server，如果不填默认为当前主机的DNS服务器<br/>
+dig sina.com any @114.114.114.114<br/>
+```
+</code></pre></li>
+<li><p>过滤信息</p>
+<pre><code class="language-text">dig +noall +answer mail.163.com any
+</code></pre></li>
+<li><p>反向查询</p>
+<pre><code class="language-text">dig -x 202.108.33.60  
+</code></pre></li>
+<li><p>查询BIND信息</p>
+<pre><code class="language-text">dig @ns3.dnsv3.com version.bind txt chaos
+</code></pre></li>
+<li><p>DIG 追踪查询和递归查询比较,利用wireshare追踪分析数据包</p>
+<pre><code class="language-text">dig +trace 1234tv.com
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/02</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15225570687324.html">
+                
+                  <h1>Kali渗透教程笔记</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>全新安装的Metasploitable2 系统需要修改<code>/var/www/mutillidae/config.inc</code>文件，将其中的<code>$dbname</code>修改为<code>owasp10</code>，否则会导致任意模拟渗透测试无效</p>
+<pre><code class="language-text">$dbhost = &#39;localhost&#39;;
+$dbuser = &#39;root&#39;;<br/>
+$dbpass = &#39;&#39;;<br/>
+$dbname = &#39;owasp10&#39;; #原本的值为metasploitable
+</code></pre></li>
+<li><p>nc 命令可以用于电子取证的过程中在不修改目标主机的情况下将一些信息传递给取证机器，首先需要在取证机器上用nc监听某个端口</p>
+<pre><code class="language-text">#取证机器(10.1.1.12)
+nc -l -p 3000  #监听3000端口<br/>
+#目标机器<br/>
+ls -al | nc -nv 10.1.1.12 3000  #将ls -al 获取到的信息直接传递给取证机器<br/>
+ps aux | nv -nv 10.1.1.12 3000 -q 1 #参数-q 1的作用是当命令执行完成1秒后自动退出nc
+</code></pre></li>
+<li><p>nc 传输文件</p>
+<pre><code class="language-text">#接受从目标机器传回的文件
+nc -l -p 3000 &gt; a.txt #监听端口，将收到的信息写入a.txt<br/>
+nc -nv 10.1.1.12 3000 -q 1 &lt; a.txt #利用管道命令将a.txt传输给取证机器<br/>
+#发送文件给目标机器<br/>
+nc -q 1 -lp 3000 &lt; a.txt<br/>
+nc -nv 10.1.1.12 3000 &gt; a.txt
+</code></pre></li>
+<li><p>nc 传输目录</p>
+<p>传入目录文件其实就是先将目录打包成文件，然后利用文件传输给目标机器</p>
+<pre><code class="language-text">tar -cvf - music | nc -lp 3000 -q 1
+nc -nv 10.1.12 3000 | tar -xvf -
+</code></pre></li>
+<li><p>加密文件传输也是类似，先用加密指令将文件加密，然后目标机器接收到之后再解密即可</p></li>
+<li><p>nslookup 用法</p>
+<pre><code class="language-bash">#基本用法
+root@kali:~# nslookup<br/>
+&gt; www.sina.com<br/>
+Server:     192.168.31.1<br/>
+Address:    192.168.31.1#53<br/>
+Non-authoritative answer:<br/>
+www.sina.com    canonical name = us.sina.com.cn.<br/>
+us.sina.com.cn  canonical name = spool.grid.sinaedge.com.<br/>
+Name:   spool.grid.sinaedge.com<br/>
+Address: 202.102.94.124
+</code></pre>
+<pre><code class="language-text">#只查询A记录  (还有个AAAA记录，为IPv6地址)
+Address: 202.102.94.124<br/>
+&gt; set type=a<br/>
+&gt; sina.com<br/>
+Server:     192.168.31.1<br/>
+Address:    192.168.31.1#53<br/>
+Non-authoritative answer:<br/>
+Name:   sina.com<br/>
+Address: 66.102.251.33
+</code></pre>
+<pre><code class="language-text"># 查询邮件MX记录
+Address: 66.102.251.33<br/>
+&gt; set type=mx<br/>
+&gt; sina.com<br/>
+Server:     192.168.31.1<br/>
+Address:    192.168.31.1#53<br/>
+Non-authoritative answer:<br/>
+sina.com    mail exchanger = 5 freemx1.sinamail.sina.com.cn.<br/>
+sina.com    mail exchanger = 10 freemx3.sinamail.sina.com.cn.<br/>
+sina.com    mail exchanger = 10 freemx2.sinamail.sina.com.cn.<br/>
+Authoritative answers can be found from:
+</code></pre>
+<pre><code class="language-text">#反向查询
+&gt; set type=ptr<br/>
+&gt; 106.14.114.55<br/>
+Server:     114.114.114.114<br/>
+Address:    114.114.114.114#53<br/>
+** server can&#39;t find 55.114.14.106.in-addr.arpa: NXDOMAIN
+</code></pre>
+<h4 id="toc_0">由于反向域名解析要ISP完成，但是国内的ISP基本上没有对外开放这个功能，所以如果要验证反向域名解析，可以使用国外的DNS Server解析国外的网址IP</h4>
+<pre><code class="language-text">Address: 8.8.8.8#53
+&gt; set type=ptr<br/>
+&gt; set type=any<br/>
+&gt; google.com<br/>
+Server:     8.8.8.8<br/>
+Address:    8.8.8.8#53<br/>
+Non-authoritative answer:<br/>
+Name:   google.com<br/>
+Address: 216.58.200.238<br/>
+Name:   google.com<br/>
+Address: 2404:6800:4008:802::200e<br/>
+google.com  nameserver = ns3.google.com.<br/>
+google.com  text = &quot;docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e&quot;<br/>
+google.com  mail exchanger = 30 alt2.aspmx.l.google.com.<br/>
+google.com  nameserver = ns2.google.com.<br/>
+google.com  text = &quot;v=spf1 include:_spf.google.com ~all&quot;<br/>
+google.com  mail exchanger = 50 alt4.aspmx.l.google.com.<br/>
+google.com  rdata_257 = 0 issue &quot;pki.goog&quot;<br/>
+google.com  mail exchanger = 10 aspmx.l.google.com.<br/>
+google.com  mail exchanger = 20 alt1.aspmx.l.google.com.<br/>
+google.com<br/>
+    origin = ns1.google.com<br/>
+    mail addr = dns-admin.google.com<br/>
+    serial = 191277663<br/>
+    refresh = 900<br/>
+    retry = 900<br/>
+    expire = 1800<br/>
+    minimum = 60<br/>
+google.com  mail exchanger = 40 alt3.aspmx.l.google.com.<br/>
+google.com  nameserver = ns4.google.com.<br/>
+google.com  nameserver = ns1.google.com.
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/04/01</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
               
 
 
@@ -417,8 +604,6 @@ cryptsetup luksClose /dev/mapper/usb
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -426,6 +611,8 @@ cryptsetup luksClose /dev/mapper/usb
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -442,31 +629,31 @@ cryptsetup luksClose /dev/mapper/usb
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

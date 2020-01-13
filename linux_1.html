@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,63 +118,107 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="15307740267953.html">
+                <a class="clearlink" href="15439800502653.html">
                 
-                  <h1>MySql 相关问题</h1>
+                  <h1>DNS服务器部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ol>
-<li><p>查看数据库服务器字符集</p>
-<pre><code class="language-text">mysql&gt; show variables like &#39;%char%&#39;;
-+--------------------------+-------------------------------------+------<br/>
-| Variable_name | Value |......<br/>
-+--------------------------+-------------------------------------+------<br/>
-| character_set_client | utf8 |...... -- 客户端字符集<br/>
-| character_set_connection | utf8 |......<br/>
-| character_set_database | utf8 |...... -- 数据库字符集<br/>
-| character_set_filesystem | binary |......<br/>
-| character_set_results | utf8 |......<br/>
-| character_set_server | utf8 |...... -- 服务器字符集<br/>
-| character_set_system | utf8 |......<br/>
-| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......<br/>
-+--------------------------+-------------------------------------+------
+                        	<h2 id="toc_0">简单DNS服务器部署</h2>
+
+<ol>
+<li><p>安装dnsmasq</p>
+<pre><code class="language-text">sudo apt-get install dnsmasq
 </code></pre></li>
-<li><p>查看数据表(table)字符集</p>
-<pre><code class="language-text">mysql&gt; show table status from sqlstudy_db like &#39;%countries%&#39;;
-+-----------+--------+---------+------------+------+-----------------+------<br/>
-| Name | Engine | Version | Row_format | Rows | Collation |......<br/>
-+-----------+--------+---------+------------+------+-----------------+------<br/>
-| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......<br/>
-+-----------+--------+---------+------------+------+-----------------+------
+<li><p>添加域名解析记录</p>
+<pre><code class="language-text">sudo vim /etc/hosts
+##加入你要解析的域名和ip<br/>
+192.168.1.10 example.xxx.com<br/>
+192.168.1.11 example2.xxx.com
 </code></pre></li>
-<li><p>查看数据列(column)字符集</p>
-<pre><code class="language-text">mysql&gt; show full columns from countries;
-+----------------------+-------------+-----------------+--------<br/>
-| Field | Type | Collation | .......<br/>
-+----------------------+-------------+-----------------+--------<br/>
-| countries_id | int(11) | NULL | .......<br/>
-| countries_name | varchar(64) | utf8_general_ci | .......<br/>
-| countries_iso_code_2 | char(2) | utf8_general_ci | .......<br/>
-| countries_iso_code_3 | char(3) | utf8_general_ci | .......<br/>
-| address_format_id | int(11) | NULL | .......<br/>
-+----------------------+-------------+-----------------+--------
+<li><p>设置静态IP以及上级DNS服务器</p>
+<pre><code class="language-text">sudo vim /etc/network/interface
+##加入下面的代码，其中enp0s3为网卡名称<br/>
+auto enp0s3<br/>
+iface enp0s3 inet static<br/>
+address 192.168.2.222<br/>
+netmask 255.255.255.0<br/>
+gateway 192.168.2.1<br/>
+dns-nameserver 114.114.114.114
 </code></pre></li>
-<li><p>修改数据库(database)，数据表(table)，数据列(column)字符集</p>
-<pre><code class="language-text">alter database name character set utf8;
-create database name character set utf8;<br/>
-alter table 表名 convert to character set gbk;<br/>
-alter table 表名 modify column &#39;字段名&#39; varchar(30) character set gbk not null;
+<li><p>启动服务</p>
+<pre><code class="language-text">sudo /etc/init.d/dnsmasq start
 </code></pre></li>
-<li><p>通过数据库my.cnf配置文件设置字符集</p>
-<pre><code class="language-text">vi /etc/my.cnf
-#在[client]下添加<br/>
-default-character-set=utf8<br/>
-#在[mysqld]下添加<br/>
-default-character-set=utf8
+</ol>
+
+<h2 id="toc_1">智能DNS解析部署,根据源IP的不同网段解析不同的IP地址</h2>
+
+<ol>
+<li><p>安装bind9</p>
+<pre><code class="language-text">sudo apt-get install bind9
+</code></pre></li>
+<li><p>修改配置文件</p>
+<pre><code class="language-text">sudo vim /etc/bind/named.conf
 </code></pre>
-<p>重启mysql</p></li>
+<p>增加如下内容，声明两个视图，view_2,view_11</p>
+<pre><code class="language-text">include &quot;/etc/bind/name.2.conf&quot;;
+view &quot;View_2&quot; {<br/>
+        match-clients {&quot;2&quot;;};<br/>
+        zone &quot;1234tv.lan&quot; IN {<br/>
+                type master;<br/>
+                file &quot;1234tv.lan-2.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};<br/>
+include &quot;/etc/bind/name.111.conf&quot;;<br/>
+view &quot;View_111&quot; {<br/>
+        match-clients {&quot;111&quot;;};<br/>
+        zone &quot;1234tv.lan&quot; IN {<br/>
+                type master;<br/>
+                file &quot;1234tv.lan-111.zone&quot;;<br/>
+                allow-update {none;};<br/>
+        };<br/>
+};
+</code></pre>
+<p>具体的视图文件如下:</p>
+<p>name.2.conf</p>
+<pre><code class="language-text">acl &quot;2&quot; {
+    192.168.2.0/24;<br/>
+};   
+</code></pre>
+<p>name.111.conf </p>
+<pre><code class="language-text">acl &quot;111&quot; {
+    192.168.111.0/24;<br/>
+};
+</code></pre>
+<p>DNS解析文件文件：</p>
+<p>1234tv.lan-2.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA     1234tv.lan. root.1234tv.lan. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      1234tv.lan.<br/>
+@       IN      A      192.168.2.222<br/>
+gitlab  IN      A       192.168.2.84
+</code></pre>
+<p>1234tv.lan-111.zone</p>
+<pre><code class="language-text">$TTL    604800
+@       IN      SOA     1234tv.lan. root.1234tv.lan. (<br/>
+                              2         ; Serial<br/>
+                         604800         ; Refresh<br/>
+                          86400         ; Retry<br/>
+                        2419200         ; Expire<br/>
+                         604800 )       ; Negative Cache TTL<br/>
+;<br/>
+@       IN      NS      1234tv.lan.<br/>
+@       IN      A       192.168.111.222<br/>
+gitlab  IN      A       192.168.111.84
+</code></pre></li>
 </ol>
 
                         
@@ -184,7 +228,47 @@ default-character-set=utf8
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2018/07/05</span>
+                    <span class="date">2018/12/05</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15319308951102.html">
+                
+                  <h1>PT924光猫 更改桥接模式/路由模式</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p><a href="http://192.168.1.1:8080/cgi-bin/index2.asp">http://192.168.1.1:8080/cgi-bin/index2.asp</a> 进入这个页面<br/>
+用useradmin账号密码登录</p></li>
+<li><p>将地址改为<a href="http://192.168.1.1:8080/cgi-bin/net-wanset.asp">http://192.168.1.1:8080/cgi-bin/net-wanset.asp</a> 进入internet设置页面(更改其他地址也会进入其他页面)</p>
+<p><img src="media/15319308951102/15319310908143.jpg" alt="" style="width:532px;"/></p></li>
+</ol>
+
+<p>其中<code>6_INTERNET_B_VID_229</code>是桥接模式，路由器需要拨号，而<code>5_INTERNET_R_VID_229</code>是路由模式，由猫拨号，路由器不需要拨号</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/07/19</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
@@ -240,76 +324,6 @@ else
     echo &quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;
 fi
 </code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2018/05/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15277762940932.html">
-                
-                  <h1>Linux问题集锦</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<ol>
-<li><p>CentOS python升级之后yum无法使用解决</p>
-<p>yum是基于python2.6.6实现的，修改办法如下,编辑yum脚本</p>
-<pre><code class="language-text">vim /usr/bin/yum
-</code></pre>
-<p>将文件头部的<code>#!/usr/bin/python</code>修改为<code>#!/usr/bin/python2.6.6</code></p></li>
-<li><p>Supervisor 只能监控处于前台状态的程序，如果程序是后台状态，需要改为前台状态</p>
-<pre><code class="language-text">[program:ErosUpdate]
-command=/root/.local/share/virtualenvs/ErosUpdate-itO0ZcNZ/bin/uwsgi -i /data/weex/projects/ErosUpdate/uwsgi.ini           ; the program (relative uses PATH, can take args)<br/>
-;priority=999                ; the relative start priority (default 999)<br/>
-autostart=true              ; start at supervisord start (default: true)<br/>
-autorestart=true            ; retstart at unexpected quit (default: true)<br/>
-startsecs=10                ; number of secs prog must stay running (def. 10)<br/>
-startretries=3              ; max # of serial start failures (default 3)<br/>
-nodaemon=true<br/>
-;exitcodes=0,2               ; &#39;expected&#39; exit codes for process (default 0,2)<br/>
-;stopsignal=QUIT             ; signal used to kill process (default TERM)<br/>
-;stopwaitsecs=10             ; max num secs to wait before SIGKILL (default 10)<br/>
-user=root                 ; setuid to this UNIX account to run the program<br/>
-log_stdout=true             ; if true, log program stdout (default true)<br/>
-log_stderr=true             ; if true, log program stderr (def false)<br/>
-logfile=/data/logs/supervisord/ErosUpdate.log    ; child log path, use NONE for none; default AUTO<br/>
-logfile_maxbytes=50MB        ; max # logfile bytes b4 rotation (default 50MB)<br/>
-logfile_backups=20          ; # of logfile backups (default 10)
-</code></pre></li>
-<li><p>uwsgi 修改为前台运行，只需要去掉<code>daemonize</code>配置项即可</p>
-<pre><code class="language-text">[uwsgi]
-socket=127.0.0.1:3030<br/>
-chdir=/data/weex/projects/ErosUpdate<br/>
-wsgi-file = ErosUpdate/wsgi.py<br/>
-max-requests=5000<br/>
-processes = 4<br/>
-threads = 4<br/>
-logto=/data/logs/uwsgi/ErosUpdate.log<br/>
-#daemonize=/data/logs/uwsgi/ErosUpdate.log<br/>
-pidfile=/tmp/ErosUpdate.pid
-</code></pre></li>
-</ol>
 
                         
                       </div>
@@ -500,8 +514,6 @@ uwsgi -i /data/web/xxxx.ini
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -509,6 +521,8 @@ uwsgi -i /data/web/xxxx.ini
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -525,31 +539,31 @@ uwsgi -i /data/web/xxxx.ini
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

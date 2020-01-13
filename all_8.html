@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,180 +118,242 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="14945011328774.html">
+                <a class="clearlink" href="14972546183511.html">
                 
-                  <h1>Scrapy模拟登陆知乎</h1>
+                  <h1>CentOS6 安装部署Zabbix</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
-感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
-</a></p>
+                        	Zabbix是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/06/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-<p>利用Scrapy提供的cookie中间价很容易做到网页的模拟登陆,下面就来介绍怎么利用这个cookie中间件来登陆知乎。</p>
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14957025459875.html">
+                
+                  <h1>Swift3.0 利用泛型设置基类属性的动态类型</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	Swift3.0 利用泛型设置基类属性的动态类型
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/25</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-<h3 id="toc_0">前期分析工作</h3>
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14951753262754.html">
+                
+                  <h1>基于BarrageRender自定义弹幕动画</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	[BarrageRender](https://github.com/unash/BarrageRenderer) 是iOS上一个非常出名的弹幕渲染开源框架,其可以让我们在App中非常方便的集成弹幕功能，其作者在代码中提供了两种方式的弹幕动画，`BarrageFloatSprite`和`BarrageWalkSprite`。可以说移动和浮动这两种动画方式基本上已经满足了大部分App的需求，但是仍然有部分App需要在弹幕的展现形式上更加的自由，例如各大直播平台的礼物弹幕。笔者将在这篇文章中分享自己在BarrageRender的基础上编写自定义礼物弹幕的过程
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/19</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ios.html'>iOS</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-<ul>
-<li><p>打开<a href="https://www.zhihu.com,%E5%88%A9%E7%94%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84Debug%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%AE%9A%E4%BD%8D%E5%88%B0%E7%99%BB%E9%99%86%E6%A1%86%E6%89%80%E5%9C%A8%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E6%89%80%E7%A4%BA">https://www.zhihu.com,利用Chrome浏览器的Debug功能，定位到登陆框所在的位置，如下图所示</a><br/>
-<img src="https://pic.mylonly.com/2016-06-29_14645980407304.jpg" alt="2016-06-29_14645980407304.jpg"/><br/>
-利用scrapy提供的xpath能很方便的获取到这个值(//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;)</p></li>
-<li><p>选中Debug窗口的Network选项，同时在输完账号密码后点击登陆，获取登陆操作后的post请求，见下图:</p></li>
-</ul>
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945010672564.html">
+                
+                  <h1>树莓派3安装Node.js</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>(树莓派官方系统)<br/>
+<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
 
-<p><img src="https://pic.mylonly.com/2016-06-29_14645982403637.jpg" alt="2016-06-29_14645982403637.jpg"/><br/>
-点击这个链接，确认这个链接就是提交登陆的url<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14645983258011.jpg" alt="2016-06-29_14645983258011.jpg"/><br/>
-从FormData里面可以看到<a href="https://www.zhihu.com/email/login%E5%B0%B1%E6%98%AF%E7%99%BB%E9%99%86POST%E8%AF%B7%E6%B1%82%E7%9A%84url%EF%BC%8C%E9%9C%80%E8%A6%81%E6%8F%90%E4%BA%A44%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%8C%E5%85%B6%E4%B8%AD_xsrf%E5%B0%B1%E6%98%AF%E9%A6%96%E9%A1%B5%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E9%9A%90%E8%97%8F%E8%A1%A8%E5%8D%95%E5%8F%82%E6%95%B0%EF%BC%8Cremember_me%E6%98%AF%E6%98%AF%E5%90%A6%E8%AE%B0%E4%BD%8Fcookie%E7%9A%84%E5%BC%80%E5%85%B3%EF%BC%8Cemail%E5%92%8Cpassword%E5%AF%B9%E5%BA%94%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81">https://www.zhihu.com/email/login就是登陆POST请求的url，需要提交4个参数，其中_xsrf就是首页可以获取到的隐藏表单参数，remember_me是是否记住cookie的开关，email和password对应账号和密码</a></p>
-
-<blockquote>
-<p>此处可能有不一样的地方，因为我的知乎账号是email注册的，根据这个url的特征推测别的账号类型可能存在不一样的Url</p>
-</blockquote>
-
-<h3 id="toc_1">编写蜘蛛代码</h3>
-
-<p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
-
-<pre><code class="language-python">def start_requests(self):
-        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+<pre><code class="language-bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
+tar zxvf node-v5.2.0-linux-armv7l.tar.gz
+cd node-v5.2.0-linux-armv7l
+sudo cp bin/* /usr/bin/ -r
+sudo cp include/ /usr/include/ -r
+sudo cp lib/ /usr/lib/ -r
+sudo cp share/ /usr/share/ -r
+cd ..
+node --version
 </code></pre>
 
-<p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-<pre><code class="language-pythoh">headers = {
-    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
-    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
-    &quot;Connection&quot;: &quot;keep-alive&quot;,
-    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
-    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
-    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945010588526.html">
+                
+                  <h1>树莓派3命令行连接WiFi和蓝牙设备</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
+
+<h3 id="toc_0">WiFi连接</h3>
+
+<pre><code class="language-text">pi@raspi3:~ $ iwlist scan
+wlan0 Scan completed :
+Cell 01 - Address: 00:1E:20:50:AA:BB
+Channel:8
+Frequency:2.447 GHz (Channel 8)
+Quality=70/70 Signal level=-32 dBm
+Encryption key:on
+ESSID:&quot;WIFINAME&quot;
+Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
+9 Mb/s; 12 Mb/s; 18 Mb/s
+Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
+Mode:Master
+Extra:tsf=0000000000000000
+Extra: Last beacon: 2157000ms ago
+IE: Unknown: 000546616E6379
+IE: Unknown: 010882848B960C121824
+IE: Unknown: 030108
+IE: Unknown: 050401020000
+IE: Unknown: 0706303020010B14
+IE: Unknown: 2A0100
+IE: Unknown: 32043048606C
+IE: IEEE 802.11i/WPA2 Version 1
+Group Cipher : TKIP
+Pairwise Ciphers (2) : CCMP TKIP
+Authentication Suites (1) : PSK
+IE: Unknown: 7F080000000000000040
+IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
+ 
+可以看到周围的wifi热点信息
+配置连接到某个热点:
+ 
+# 编辑wifi文件
+sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+# 在该文件最后添加下面的话
+network={
+  ssid=&quot;WIFINAME&quot;
+  psk=&quot;password&quot;
 }
+# 引号部分分别为wifi的名字和密码
+# 保存文件后几秒钟应该就会自动连接到该wifi
+# 查看是否连接成功
+ifconfig wlan0
+
 </code></pre>
 
-<p>meta中的cookiejar是Scrapy的Cookie中间件的关键字，具体可参考scrapy文档，这里因为只需要保存一个cookie，所以直接写1(注意:<code>并不是1个cookie才写的1，仅仅是个key，后面通过这个1这个key找到cookiejar中保存的cookie</code>)</p>
+<h3 id="toc_1">蓝牙连接</h3>
 
-<p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
+<pre><code class="language-text">pi@raspi3:~ $ sudo bluetoothctl
+[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# list
+Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
+[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
+[bluetooth]# agent on
+Agent registered
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
+[bluetooth]# pair E8:07:BF:3A:25:AA
+Attempting to pair with E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Connected: yes
+[CHG] Device E8:07:BF:3A:25:AA UUIDs:
+    00001108-0000-1000-8000-00805f9b34ff
+[CHG] Device E8:07:BF:3A:25:AA Paired: yes
+Pairing successful
+[CHG] Device E8:07:BF:3A:25:AA Connected: no
+[bluetooth]# trust E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
+Changing E8:07:BF:3A:25:AA trust succeeded
+[bluetooth]# connect E8:07:BF:3A:25:AA
 
-<pre><code class="language-python">def post_login(self,response):
-        self.log(&quot;preparing login...&quot;)
-        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
-        self.log(xsrf)
-        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:1},
-                                          headers = self.headers,
-                                          formdata = {
-                                             &#39;_xsrf&#39;:xsrf,
-                                             &#39;password&#39;:&#39;xgBKQTx7VnVLK9tv&#39;,
-                                             &#39;email&#39;:&#39;tianxianggen@gmail.com&#39;,
-                                             &#39;remember_me&#39;:&#39;true&#39;,
-                                          },
-                                          callback = self.after_login,
-                                          )
 </code></pre>
 
-<ol>
-<li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
-</ol>
+<p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
+ ```<br/>
+sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
 
-<pre><code class="language-python">def after_login(self,response):
-        for url in self.start_urls:
-            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
-</code></pre>
+<pre><code class="language-text">
 
-<p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
-
-<pre><code class="language-pythoh">rules = (
-        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
-    )
-</code></pre>
-
-<p>同时提供request_question函数</p>
-
-<pre><code class="language-python">def request_question(self,request):
-        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
-</code></pre>
-
-<p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
-
-<pre><code class="language-python">def parse_question(self,response):
-        sel = Selector(response)
-        item = zhihuItem()
-        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
-        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
-        return item
-</code></pre>
-
-<blockquote>
-<p>这个parse_question方法仅仅是获取问题名称和问题下面的所有图片链接。</p>
-</blockquote>
-
-<h3 id="toc_2">完整代码</h3>
-
-<pre><code class="language-python">import urllib2
-import os
-import re
-import codecs
-
-
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from MySpider.items import zhihuItem
-from scrapy.http import Request
-from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
-
-
-class zhihuSpider(CrawlSpider):
-    name = &quot;zhihu&quot;
-    allow_domians = [&quot;zhihu.com&quot;]
-    start_urls = [&quot;https://www.zhihu.com/collection/38624707&quot;]
-    rules = (
-        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
-    )
-    
-    headers = {
-    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
-    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
-    &quot;Connection&quot;: &quot;keep-alive&quot;,
-    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
-    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
-    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
-    }
-    
-    def start_requests(self):
-        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
-        
-    def post_login(self,response):
-        self.log(&quot;preparing login...&quot;)
-        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
-        self.log(xsrf)
-        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:response.meta[&#39;cookiejar&#39;]},
-                                          headers = self.headers,
-                                          formdata = {
-                                             &#39;_xsrf&#39;:xsrf,
-                                             &#39;password&#39;:&#39;差点就忘了删了&#39;,
-                                             &#39;email&#39;:&#39;邮箱也不能暴露&#39;,
-                                             &#39;remember_me&#39;:&#39;true&#39;,
-                                          },
-                                          callback = self.after_login,
-                                          )
-                                                      
-    def after_login(self,response):
-        for url in self.start_urls:
-            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
-   
-    def request_question(self,request):
-        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
-        
-    def parse_question(self,response):
-        sel = Selector(response)
-        item = zhihuItem()
-        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
-        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
-        return item
 </code></pre>
 
                         
@@ -301,383 +363,7 @@ class zhihuSpider(CrawlSpider):
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2016/05/30</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945011765615.html">
-                
-                  <h1>VSCode1.0更换回英文版本</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>VSCode1.0更新之后带来了本地语言的支持，但是，你怎么能连命令行的命令都汉化了？<br/>
-<img src="https://pic.mylonly.com/2016-05-04-14623468922061.jpg" alt=""/><br/>
-<code>表示实在受不了每次同步代码 选中git:拉的感觉，还有安装插件的命令也不再是install extension了，而是安装扩展</code></p>
-
-<h3 id="toc_0">将VSCode的语言修改为英文</h3>
-
-<p><a href="https://code.visualstudio.com/docs/customization/locales">官方文档设置语言</a></p>
-
-<p>快捷键Command+Shift+P（Win下为Control）打开命令行工具,输入<code>设置语言</code>，会打开一个locale.json的文件，如下面所示</p>
-
-<pre><code class="language-text">{
-    // 定义 VSCode 的显示语言。
-    // 请参阅 http://go.microsoft.com/fwlink/?LinkId=761051，了解支持的语言列表。
-    // 要更改值需要重启 VSCode。
-    &quot;locale&quot;:&quot;zh-CN&quot; 
-}
-</code></pre>
-
-<p>将locale的值改为en-US之后重启VSCode就恢复到英文版本的了!</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/05/28</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='tools.html'>Tools</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945011548149.html">
-                
-                  <h1>简单Scrapy爬虫</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>只是个小小的demo，自己测试了下，总共down了20几张图片</p>
-
-<pre><code class="language-python">#coding: utf-8 #############################################################
-# File Name: spiders/wallpaper.py
-# Author: mylonly
-# mail: tianxianggen@gmail.com
-#Blog:www.mylonly.com
-# Created Time: 2014年09月01日 星期一 14时20分07秒
-#########################################################################
-#!/usr/bin/python
-import urllib2
-import os
- 
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from mylonly.items import wallpaperItem
-from scrapy.http import Request
- 
-class wallpaper(CrawlSpider):
-    name = &quot;wallpaperSpider&quot;
-    allowed_domains = [&#39;sj.zol.com.cn&#39;]
-    start_urls = [&#39;http://sj.zol.com.cn/&#39;]
-    number = 0
-    rules = (
-    Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback =     &#39;parse_image&#39;,follow=True),)
-    def parse_image(self,response):
-        self.log(&#39;hi,this is an item page! %s&#39; % response.url)
-        sel = Selector(response)
-        sites = sel.xpath(&quot;//div[@class=&#39;wrapper        mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()
-        for site in sites:
-        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
-        print &#39;one page:&#39;,url
-        return Request(url,callback = self.parse_href)
-    def parse_href(self,response):
-        print &#39;I am in:&#39;,response.url
-        sel = Selector(response)
-        src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
-        self.download(src)
- 
-    def download(self,url):
-        self.number += 1
-        savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
-        print &#39;正在下载...&#39;,url
-        try:
-            u = urllib2.urlopen(url)
-            r = u.read()
-            downloadFile = open(savePath,&#39;wb&#39;)
-            downloadFile.write(r)
-            u.close()
-            downloadFile.close()
-        except:
-            print savePath,&#39;can not download.&#39;
- 
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/05/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945011166438.html">
-                
-                  <h1>Scrapy——crawlSpider爬虫</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>Scrapy中的BaseSpider爬虫类只能抓取start_urls中提供的链接，而利用Scrapy提供的crawlSpider类可以很方便的自动解析网页上符合要求的链接，从而达到爬虫自动抓取的功能。<br/>
- <br/>
-要利用crawSpider和BaseSpider的区别在于crawSpider提供了一组Rule对象列表，这些Rule对象规定了爬虫抓取链接的行为，Rule规定的链接才会被抓取，交给相应的callback函数去处理。<br/>
-  <br/>
-在rules中通过SmglLinkExtractor提取希望获取的链接。<br/>
- <br/>
-我此次的demo中rule只有一个，如下：</p>
-
-<pre><code class="language-python">allowed_domains = [&#39;sj.zol.com.cn&#39;]
-start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
-number = 0
-rules = (
-            Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
-            )
-</code></pre>
-
-<p>搜索起始链接下面符合allow中正则表达式的链接，并跟进解析，如果follow = False，则只会解析起始链接中找到的符合要求的链接<br/>
- <br/>
-SmglLinkExtractor主要参数：<br/>
- </p>
-
-<ul>
-<li>allow：满足括号中“正则表达式”的值会被提取，如果为空，则全部匹配。</li>
-<li>deny：与这个正则表达式(或正则表达式列表)不匹配的URL一定不提取。</li>
-<li>allow_domains：会被提取的链接的domains。</li>
-<li>deny_domains：一定不会被提取链接的domains。</li>
-<li>restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。<br/>
- <br/>
-下面的内容就是利用Selector解析获得的response并赋值个item就行了：</li>
-</ul>
-
-<pre><code class="language-python">#coding: utf-8 #############################################################
-# File Name: spiders/wallpaper.py
-# Author: mylonly
-# mail: tianxianggen@gmail.com
-#Blog:www.mylonly.com
-# Created Time: 2014年09月01日 星期一 14时20分07秒
-#########################################################################
-#!/usr/bin/python
-import urllib2
-import os
-import re
- 
-from scrapy.contrib.spiders import CrawlSpider,Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import Selector
-from mylonly.items import wallpaperItem
-from scrapy.http import Request
- 
-class wallpaper(CrawlSpider):
-        name = &quot;wallpaperSpider&quot;
-        allowed_domains = [&#39;sj.zol.com.cn&#39;]
-        start_urls = [&#39;http://sj.zol.com.cn/bizhi/&#39;]
-        number = 0
-        rules = (
-                        Rule(SgmlLinkExtractor(allow = (&#39;detail_\d{4}_\d{5}\.html&#39;)),callback = &#39;parse_image&#39;,follow=True),
-                        )
-        def parse_image(self,response):
-                self.log(&#39;hi,this is an item page! %s&#39; % response.url)
-                sel = Selector(response)
-                sites = sel.xpath(&quot;//div[@class=&#39;wrapper mt15&#39;]//dd[@id=&#39;tagfbl&#39;]//a[@target=&#39;_blank&#39;]/@href&quot;).extract()       
-                for site in sites:
-                        url = &#39;http://sj.zol.com.cn%s&#39; % (site)
-                        print &#39;one page:&#39;,url
-                        item = wallpaperItem()
-                        item[&#39;size&#39;] = re.search(&#39;\d*x\d*&#39;,site).group()
-                        item[&#39;altInfo&#39;] = sel.xpath(&quot;//h1//a/text()&quot;).extract()[0]
-                        return Request(url,meta = {&#39;item&#39;:item},callback = self.parse_href)
-        def parse_href(self,response):
-                print &#39;I am in:&#39;,response.url
-                item = response.meta[&#39;item&#39;]
-                items = []
-                sel = Selector(response)
-                src = sel.xpath(&quot;//body//img/@src&quot;).extract()[0]
-                item[&#39;imgSrc&#39;] = src
-                items.append(item)
-                return items
-                #self.download(src)
-        def download(self,url):
-                self.number += 1
-                savePath = &#39;/mnt/python_image/%d.jpg&#39; % (self.number)
-                print &#39;正在下载...&#39;,url
-                try:
-                        u = urllib2.urlopen(url)
-                        r = u.read()
-                        downloadFile = open(savePath,&#39;wb&#39;)
-                        downloadFile.write(r)
-                        u.close()
-                        downloadFile.close()
-                except:
-                        print savePath,&#39;can not download.&#39;
-</code></pre>
-
-<p> <br/>
- <br/>
- <br/>
-接下来看看我的Item.py的代码：</p>
-
-<pre><code class="language-python">class wallpaperItem(scrapy.Item):
-        size = scrapy.Field()
-        altInfo = scrapy.Field()
-        imgSrc = scrapy.Field()
-</code></pre>
-
-<p> <br/>
-还有pipilines.py:</p>
-
-<pre><code class="language-python"># -*- coding: utf-8 -*-
- 
-# Define your item pipelines here
-#
-# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-import MySQLdb
- 
- 
-class MylonlyPipeline(object):
-    def process_item(self, item, spider):
-        return item
- 
-class wallpaperPipeline(object):
-        def process_item(self,item,spider):
-                print &#39;imgSrc:&#39;,item[&#39;imgSrc&#39;]
-                db = MySQLdb.connect(&quot;rdsauvva2auvva2.mysql.rds.aliyuncs.com&quot;,&quot;mylonly&quot;,&quot;703003659txg&quot;,&quot;wallpaper&quot;)
-                cursor = db.cursor()
-                db.set_character_set(&#39;utf8&#39;)
-                cursor.execute(&#39;SET NAMES utf8;&#39;)
-                cursor.execute(&#39;SET CHARACTER SET utf8;&#39;)
-                cursor.execute(&#39;SET character_set_connection=utf8;&#39;)
- 
-                sql =&quot;INSERT INTO mobile_download(wallpaper_size,wallpaper_info,wallpaper_src)\
-                      VALUES(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;)&quot;%(item[&#39;size&#39;],item[&#39;altInfo&#39;],item[&#39;imgSrc&#39;])
-                try:
-                        print sql
-                        cursor.execute(sql)
-                        db.commit()
-                except MySQLdb.Error,e:
-                        print &quot;Mysql Error %d: %s&quot; % (e.args[0], e.args[1])
-                db.close()
-                return item
-</code></pre>
-
-<p> <br/>
- <br/>
- <br/>
-本例中我将传回的items数据存放到了数据库中，如果你不想这样，可以将我注释掉的self.download()取消注释，不反悔items，就可以将找到的所有图片链接全部下载下来，不过要找个大点的地方存储，因为总共有5W多条：<br/>
-<img src="https://pic.mylonly.com/2016-06-29_061712481319744.png" alt="2016-06-29_061712481319744.png"/></p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/05/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945010159790.html">
-                
-                  <h1>CentOS中添加Swap交换文件</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>1.先检查是否存在Swap文件</p>
-
-<pre><code class="language-bash">swapon -s #返回的信息为空，说明没有其他交换文件
-</code></pre>
-
-<p>2.创建一个Swap文件，使用dd命令</p>
-
-<pre><code class="language-bash">##of后面是swap文件的路径，可以自定义，count是swap文件的大小，推荐为内存的2倍
-dd if=/dev/zero of=/home/swap bs=1024 count=1024000
-</code></pre>
-
-<p>3.将swap文件转换成swap格式</p>
-
-<pre><code class="language-bash">mkswap /home/swap
-</code></pre>
-
-<p>4.将swap文件挂载成swap分区</p>
-
-<pre><code class="language-bash">swapon /home/swap #创建完成后可以用`free -m`看看是否成功
-</code></pre>
-
-<p>5.让swap文件自动挂载</p>
-
-<pre><code class="language-bash">vim /etc/fstab 
-#在文件末尾加上下面的命令
-/home/swap swap swap default 0 0 
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/05/11</span>
+                    <span class="date">2017/05/11</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
@@ -757,8 +443,6 @@ dd if=/dev/zero of=/home/swap bs=1024 count=1024000
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -766,6 +450,8 @@ dd if=/dev/zero of=/home/swap bs=1024 count=1024000
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -782,31 +468,31 @@ dd if=/dev/zero of=/home/swap bs=1024 count=1024000
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  Weex 问题集锦 - 独自一人
+  Confluence安装 - 独自一人
   
   </title>
   
@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -121,14 +121,14 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>Weex 问题集锦</h1>
+          <h1>Confluence安装</h1>
      
         <div class="read-more clearfix">
-          <span class="date">2018/05/03</span>
+          <span class="date">2019/03/26</span>
 
           <span>posted in&nbsp;</span> 
           
-              <span class="posted-in"><a href='Weex.html'>Weex</a></span>
+              <span class="posted-in"><a href='docker.html'>Docker</a></span>
            
          
           <span class="comments">
@@ -142,14 +142,115 @@
 
       <div class="article-content">
       <ol>
-<li><p>weex中通过ref访问组件的两种情况:</p>
-<pre><code class="language-text">&lt;div ref=&quot;test&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>这种直接写入的可以通过this.$refs[&#39;test&#39;]获取到组件对象</p>
-<pre><code class="language-text">&lt;div ref=&quot;&#39;test&#39;+index&quot; v-for=&quot;(item,index) in items&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>上面这种通过v-for或者其他vue语法动态嵌入的组件，则需要通过this.\(refs[`test\){index}<code>][0]去获取，因为淡出的this.$refs[&quot;</code>test${index}`&quot;]获取到的是包含一个元素的数组对象</p></li>
+<li><p>启动镜像</p>
+<pre><code class="language-text">docker run -d --restart always -v /home/ubuntu/confluence:/var/atlassian/application-data/confluence --name=&quot;confluence&quot; -d -p 80:8090 -p 8091:8091 atlassian/confluence-server:6.12
+</code></pre></li>
 </ol>
+
+<h2 id="toc_0">下载</h2>
+
+<p>官网下载confluence的tar包(v6.12.2)</p>
+
+<h2 id="toc_1">安装</h2>
+
+<p>解压缩（这里解压到/server/confluence目录），打开该目录下confluence/WEB-INF/classes/confluence-init.properties文件，添加行：</p>
+
+<pre><code class="language-text">confluence.home=/server/confluence
+</code></pre>
+
+<h2 id="toc_2">启动</h2>
+
+<blockquote>
+<p>\( cd /server/confluence<br/>
+\) ./bin/start-confluence.sh </p>
+</blockquote>
+
+<h2 id="toc_3">浏览器访问</h2>
+
+<p>输入 <a href="http://localhost:8090/">http://localhost:8090/</a> 进行安装，期间会要求输入license，导向到官网申请之；进入数据库步骤，如果选择mysql，要依次逆行：</p>
+
+<ol>
+<li>下载mysql驱动放到WEB-INF/lib目录，重新启动confluence服务器</li>
+<li><p>创建数据库时，编码COLLATE 应选：utf8_bin，如：</p>
+<blockquote>
+<p>CREATE DATABASE IF NOT EXISTS confluence DEFAULT CHARSET utf8 COLLATE utf8_bin; <br/>
+如果没有创建数据用户，可以创建：<br/>
+GRANT ALL ON <em>.</em> TO banyuan@localhost IDENTIFIED BY &quot;Banyuan2019&quot;; </p>
+</blockquote></li>
+<li><p>事务默认级别应设置为：READ-COMMITTED。具体操作过程可能如下：</p>
+<ul>
+<li>a.查看mysql的conf文件所在位置：<br/>
+&gt; $ mysqld --verbose --help|grep -A 1 &#39;Default options&#39;<br/>
+可能返回结果：/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf </li>
+<li>b. 编辑my.conf，如：/usr/local/etc/my.cnf ，在 [mysqld]节增加行：
+<code>
+[mysqld]<br/>
+...<br/>
+transaction-isolation=READ-COMMITTED
+</code>
+然后重启服务。可以进入mysql控制台，执行下面的命令确认是否修改过了。<br/>
+&gt; show variables like &#39;transaction_isolation&#39;;</li>
+</ul></li>
+</ol>
+
+<p>以上这些步骤，在实际安装过程中都是有提示的，所以不必特别担心。</p>
+
+<p>安装完毕后，仍会检查mysql的一些设置，比如可能提示如下两个变量设置值：</p>
+
+<blockquote>
+<p>成功最大允许数据包 - max_allowed_packet：一般不小于34m<br/>
+InnoDB 日志文件大小 - innodb_log_file_size：一般不小于256M</p>
+
+<p>character-set-server = utf8<br/>
+innodb_log_file_size = 256M<br/>
+max_allowed_packet = 34M</p>
+</blockquote>
+
+<h2 id="toc_4">破解</h2>
+
+<p>破解需要在安装过程中进行，安装进入到授权码页面时，开始破解：</p>
+
+<ol>
+<li>使用【附件】目录confluence-crack.zip解压缩，比如解到/cracked目录。</li>
+<li>把confluence的WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar 文件复制到/cracked目录，重命名为atlassian-extras-2.4.jar</li>
+<li>运行/cracked目录下的confluence_keygen.jar，点.patch!，依提示选择atlassian-extras-2.4.jar，就可以在/cracked目录看到atlassian-extras-2.4.jar和atlassian-extras-2.4.bak两个文件，这里atlassian-extras-2.4.jar已经是破解好的了；</li>
+<li>然后在patch软件里输入安装Web页上的Server Id，点击.gen!产生key</li>
+<li>将atlassian-extras-2.4.jar名字改回来：atlassian-extras-decoder-v2-3.4.1，复制回confluence的WEB-INF/lib/目录，重新启动confluence</li>
+<li>复制key到Web页，进行下一步<br/>
+## 邮件服务器配置<br/>
+直接填写地址、协议死活不工作，不得已配置了JNDI：</li>
+</ol>
+
+<p>A. 在{confluence-install}/conf/server.xml中<Context>的末尾加代码：</p>
+
+<pre><code class="language-text">&lt;Context path=&quot;&quot; docBase=&quot;../confluence&quot; debug=&quot;0&quot; reloadable=&quot;false&quot; useHttpOnly=&quot;true&quot;&gt;
+....
+&lt;Resource name=&quot;mail/BanyuanSMTPServer&quot;
+    auth=&quot;Container&quot;
+    type=&quot;javax.mail.Session&quot;
+    mail.smtp.host=&quot;smtp.banyuan.club&quot;
+    mail.smtp.port=&quot;465&quot;
+    mail.smtp.auth=&quot;true&quot;
+    mail.smtp.user=&quot;admin@banyuan.club&quot;
+    password=&quot;SemiCircle2019&quot;
+    mail.smtp.starttls.enable=&quot;true&quot;
+    mail.transport.protocol=&quot;smtps&quot;
+    mail.smtp.socketFactory.class=&quot;javax.net.ssl.SSLSocketFactory&quot;
+/&gt;
+&lt;/Context&gt;
+</code></pre>
+
+<p>B. 然后移动{confluence-install}/confluence/WEB-INF/lib/mail-x.x.x.jar到{confluence-install}/lib目录（移动不是拷贝）<br/>
+C. 重启服务器，<br/>
+D. 进入后台邮件服务器配置JNDI服务名为：java:comp/env/mail/BanyuanSMTPServer，注意：SMTP单独配置选项都要为空（可以只能配置用户名，同mail.smtp.user），然后发送测试邮件，通过。</p>
+
+<h2 id="toc_5">RestAPI调用</h2>
+
+<p>官方文档： <a href="https://developer.atlassian.com/server/confluence/confluence-server-rest-api/">https://developer.atlassian.com/server/confluence/confluence-server-rest-api/</a></p>
+
+<p>例：<br/>
+获取文章内容：<a href="http://localhost:8090/rest/api/content/327696?expand=body.storage">http://localhost:8090/rest/api/content/327696?expand=body.storage</a><br/>
+获取文章里宏：<a href="http://localhost:8090/rest/api/content/327696/history/2/macro/id/0efe0e6f-e80e-4528-81d8-968f47a87907">http://localhost:8090/rest/api/content/327696/history/2/macro/id/0efe0e6f-e80e-4528-81d8-968f47a87907</a></p>
 
 
     
@@ -160,16 +261,16 @@
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="15274889837567.html" 
-          title="Previous Post: Tensorflow错误集锦">&laquo; Tensorflow错误集锦</a>
+          <a href="15595559159421.html" 
+          title="Previous Post: Linux 测试磁盘性能">&laquo; Linux 测试磁盘性能</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="15249709962104.html" 
-          title="Next Post: 解决VSCode编写Django代码时经常提示objects属性等不存在的错误">解决VSCode编写Django代码时经常提示objects属性等不存在的错误 &raquo;</a>
+          <a  href="15526315084700.html" 
+          title="Next Post: Mac 安装MiniKube">Mac 安装MiniKube &raquo;</a>
       
       </p>
         </div>
@@ -248,8 +349,6 @@
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -257,6 +356,8 @@
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -273,31 +374,31 @@
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

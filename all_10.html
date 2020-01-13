@@ -87,8 +87,6 @@
         
             <li><a href="django-learn.html">Django学习</a></li>
         
-            <li><a href="Weex.html">Weex</a></li>
-        
             <li><a href="Tensorflow.html">Tensorflow</a></li>
         
             <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
@@ -96,6 +94,8 @@
             <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
         
             <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
          
 
       </ul>
@@ -118,63 +118,14 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="15277726988270.html">
+                <a class="clearlink" href="14945011244738.html">
                 
-                  <h1>Mimetic库分析2-——入口类MimeEntity</h1>
+                  <h1>Scrapy抓取Ajax动态页面</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>整个Mimetic的入口类就是MimeEntity类，整个MIME格式文件或者字符串都是在MimeEntity内部完成解析的。<br/>
-MimeEntity类很简单，其成员如下：</p>
-
-<p><img src="https://pic.mylonly.com/2018-05-31-1.PNG" alt=""/></p>
-
-<p>MimeEntity类提供了两种常用的初始化方式</p>
-
-<p>迭代器初始化：</p>
-
-<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);  //文件流
-ostrstream ostr&lt;&lt;ifstream;  //转换成strstream
-string str_eml=ostr.str();     //将ifstream转换成string字符串
-MimeEntity me(str_eml.begin(),str_eml.end());  
-</code></pre>
-
-<p>流初始化</p>
-
-<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);         
-MimeEntity me(file_in);
-</code></pre>
-
-<p>其中MimeEntity(Iterator beg,Iterator end,int mask = imNone)这个构造函数的第三个参数mask是解析参数，可以去下列值：</p>
-
-<pre><code class="language-text">imNone   //完整解析整个MIME格式文件
-imHeader  //忽略MIME头
-imBody     //忽略MIME正文
-imChildParts  //忽略嵌套的MIME
-imPreamble   //忽略冗余头
-imEpilogue    //忽略结束符
-</code></pre>
-
-<p>MimeEntity将整个MIME格式分成两部分，以空格（\r\n\r\n）为分割符，空格以上的为MIME头，存放在m_header中，空格以下的为MIME正文，存放在m_body中，可以分别通过调用成员函数header()和body()得到相应的类型值。</p>
-
-<pre><code class="language-text">#include&lt;iostream&gt;
-#include&lt;mimetic/mimetic.h&gt;
-    
-using namespace std;
-using namespace mimetic;
-    
-int main()
-{               
-    ifstream file_in(&quot;test.eml&quot;);         
-    if(!file_in)
-        return -1;
-    MimeEntity me(file_in);
-    cout&lt;&lt;me&lt;&lt;endl;   //可以直接打印出该邮件内容
-    return 0;
-}
-</code></pre>
-
+                        	一般来说爬虫类框架抓取Ajax动态页面都是通过一些第三方的webkit库去手动执行html页面中的js代码， 最后将生产的html代码交给spider分析。本篇文章则是通过浏览器提供的Debug工具分析Ajax页面的具体请求内容，找到获取数据的接口url，直接调用该接口获取数据，省去了引入python-webkit库的麻烦，而且由于一般ajax请求的数据都是结构化数据，这样更省去了我们利用xpath解析html的痛苦
                         
                       </div>
                   </div>
@@ -182,10 +133,10 @@ int main()
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2013/05/31</span>
+                    <span class="date">2016/07/04</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -199,67 +150,101 @@ int main()
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="15277718994557.html">
+                <a class="clearlink" href="14945009892942.html">
                 
-                  <h1>Mimetic库分析1——安装和使用mimetic</h1>
+                  <h1>利用Github的Webhook功能和Node.js完成项目的自动部署</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<blockquote>
-<p>Mimetic库是开源的MIME格式解析库，利用mimetic不仅可以解析标准的邮件文件(message/rfc822)，也可以用来解析某些协议中用到的MIME编码。例如webmail，其http报文中就有大量用MIME格式编码的信息。<br/>
-       mimetic库的项目主页是<a href="http://www.codesink.org/mimetic_mime_library.html%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%9C%A8%E4%B8%8A%E9%9D%A2%E4%B8%8B%E8%BD%BD%E5%88%B0%E6%9C%80%E6%96%B0%E7%9A%84mimetic%E5%BA%93%E3%80%82">http://www.codesink.org/mimetic_mime_library.html，可以在上面下载到最新的mimetic库。</a><br/>
-       目前最新的mimetic-0.9.7的下载地址如下:<a href="http://www.codesink.org/download/mimetic-0.9.7.tar.gz">http://www.codesink.org/download/mimetic-0.9.7.tar.gz</a></p>
-</blockquote>
+                        	<p><u>本文对任何提供Webhook的git仓库都适用</u></p>
 
-<h2 id="toc_0">安装</h2>
+<p><img src="https://pic.mylonly.com/2016-06-29_14635623250348.jpg" alt="2016-06-29_14635623250348.jpg"/></p>
 
-<p>将下载好的mimetic-0.9.7.tar.gz包放到指定目录,解压：</p>
+<h3 id="toc_0">首先完成Node.js服务器的代码构建，先上代码，再解释</h3>
 
-<pre><code class="language-text"> tar -zvxf mimetic-0.9.7.tar.gz
- cd mimetic
- ./configure
- make
- make install
-</code></pre>
+<pre><code class="language-node.js">var http = require(&#39;http&#39;)
+var createHandler = require(&#39;github-webhook-handler&#39;)
+var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; })
+// 上面的 secret 保持和 GitHub 后台设置的一致
 
-<h2 id="toc_1">初步使用</h2>
+function run_cmd(cmd, args, callback) {
+  var spawn = require(&#39;child_process&#39;).spawn;
+  var child = spawn(cmd, args);
+  var resp = &quot;&quot;;
 
-<p>安装好mimetic后就可以在程序中使用mimetic提供的库函数了,可以用官方提供的小例子测试下是否能正常使用</p>
-
-<pre><code class="language-text">#include&lt;iostream&gt;
-#include&lt;mimetic/mimetic.h&gt;
-
-using namespace mimetic;
-using namespace std;
-intmain()
-{
-    MimeEntity me;
-    me.header().from(&quot;me &lt;me@domain.com&gt;&quot;);
-    me.header().to(&quot;you &lt;you@domain.com&gt;&quot;);
-    me.header().subject(&quot;my first mimetic msg&quot;);
-    me.body().assign(&quot;hello there!&quot;);
-    cout &lt;&lt; me &lt;&lt; endl;
-    return0;
+  child.stdout.on(&#39;data&#39;, function(buffer) { resp += buffer.toString(); });
+  child.stdout.on(&#39;end&#39;, function() { callback (resp) });
 }
+
+http.createServer(function (req, res) {
+  handler(req, res, function (err) {
+    res.statusCode = 404
+    res.end(&#39;no such location&#39;)
+  })
+}).listen(7777)
+
+handler.on(&#39;error&#39;, function (err) {
+  console.error(&#39;Error:&#39;, err.message)
+})
+
+handler.on(&#39;push&#39;, function (event) {
+  console.log(&#39;Received a push event for %s to %s&#39;,
+    event.payload.repository.name,
+    event.payload.ref);
+    run_cmd(&#39;sh&#39;, [&#39;./deploy.sh&#39;,event.payload.repository.name], function(text){ console.log(text) });
+})
 </code></pre>
 
-<p>编译好后运行，如果可以正常输出，说明可以正确使用mimetic库了。</p>
+<p>上面的代码中用到了一个<code>github-webhook-handler</code>的中间价，你可以用<code>npm install -g github-webhook-handler</code>来全局安装</p>
+
+<p>还有代码这行:</p>
+
+<pre><code class="language-text">var handler = createHandler({ path: &#39;/&#39;, secret: &#39;root&#39; }) 
+</code></pre>
+
+<p>其中secret后的参数是你在github的项目中添加webhook时设置的secret值，替换成自己的就行了</p>
+
+<h3 id="toc_1">完成deploy.sh脚本</h3>
+
+<p>deploy.sh脚本负责进入项目的目录，然后利用git命令拉取最新的代码，还是直接贴代码:</p>
+
+<pre><code class="language-bash"> #!/bin/bash
+
+WEB_PATH=&#39;/root/tools/&#39;$1
+WEB_USER=&#39;root&#39;
+WEB_USERGROUP=&#39;root&#39;
+
+echo &quot;Start deployment&quot;
+cd $WEB_PATH
+echo &quot;pulling source code...&quot;
+git reset --hard origin/master
+git clean -f
+git pull
+git checkout master
+echo &quot;changing permissions...&quot;
+chown -R $WEB_USER:$WEB_USERGROUP $WEB_PATH
+echo &quot;Finished.&quot;
+</code></pre>
+
+<p>deploy.sh 会接受第一个参数当做项目名字，然后进入这个项目的目录执行git操作，这个参数是在deploy.js中根据hook返回的项目名字来的，代码应该比较容易懂，都是些简单的git命令。</p>
 
 <blockquote>
-<p>如果运行提示找不到libmimetic.so.o，将/usr/local/lib下的libmimetic.so.o拷贝到/usr/lib下就可以正常运行)。</p>
+<p>如果是全新的项目，需要在你的服务器上先clone要部署的项目<br/>
+你需要根据自己的实际项目位置，修改WEB_PATH的值</p>
 </blockquote>
 
-<h2 id="toc_2">mimetic帮助</h2>
+<h3 id="toc_2">后台运行deploy.js</h3>
 
-<p>mimetic的在线帮助地址如下:<a href="http://www.codesink.org/data/mimetic/docs/html/index.html">http://www.codesink.org/data/mimetic/docs/html/index.html</a><br/>
-  如果你想生成本地的mimetic文档，可以执行如下操作</p>
+<p>利用Linux提供的nohup命令，让deploy.js运行在后台</p>
 
-<pre><code class="language-text">  cd mimetic-0.9.7/doc #进入mimetic帮助目录
-  make docs #生成doc文档
+<pre><code class="language-text">nohup node deploy.js &gt; deploy.log &amp;
 </code></pre>
 
-<p>会生成一份html文档的本地帮助</p>
+<h3 id="toc_3">去Github后台添加webhook</h3>
+
+<p>进入你需要自动部署的项目的github地址，进入项目的设置页面，点击左侧的<code>Webhooks &amp; services</code><br/>
+<img src="https://pic.mylonly.com/2016-06-29_14635620989191.jpg" alt="2016-06-29_14635620989191.jpg"/></p>
 
                         
                       </div>
@@ -268,10 +253,274 @@ intmain()
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">2013/05/31</span>
+                    <span class="date">2016/07/02</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011465578.html">
+                
+                  <h1>利用pxssh暴力破解ssh密码</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	pxssh 是一个包含了pexpect库的专用脚本,它已经预先为我们写好了login(),logout()和prompt()等函数直接与SSH交互。由于pxssh.login()函数执行失败会抛出异常，因此我们可以利用try...catch来捕获相应的异常来判断密码是否正确。
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/06/24</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011027951.html">
+                
+                  <h1>Python利用Pexpect模拟ssh交互</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	Pexpect 是 Don Libes 的 Expect 语言的一个 Python 实现，是一个用来启动子程序，并使用正则表达式对程序输出做出特定响应，以此实现与其自动交互的 Python 模块。 Pexpect 的使用范围很广，可以用来实现与 ssh、ftp 、telnet 等程序的自动交互；可以用来自动复制软件安装包并在不同机器自动安装；还可以用来实现软件测试中与命令行交互的自动化。
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/06/24</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14945011328774.html">
+                
+                  <h1>Scrapy模拟登陆知乎</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p><img src="https://pic.mylonly.com/2016-06-29_14645998164473.jpg" alt="2016-06-29_14645998164473.jpg"/><br/>
+感谢简书作者<code>Andrew_liu</code>提供的思路,虽然知乎改版后，该文章上提供的方法已经失效<a href="http://www.jianshu.com/p/b7f41df6202d">Python爬虫(七)--Scrapy模拟登录<br/>
+</a></p>
+
+<p>利用Scrapy提供的cookie中间价很容易做到网页的模拟登陆,下面就来介绍怎么利用这个cookie中间件来登陆知乎。</p>
+
+<h3 id="toc_0">前期分析工作</h3>
+
+<ul>
+<li><p>打开<a href="https://www.zhihu.com,%E5%88%A9%E7%94%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84Debug%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%AE%9A%E4%BD%8D%E5%88%B0%E7%99%BB%E9%99%86%E6%A1%86%E6%89%80%E5%9C%A8%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E6%89%80%E7%A4%BA">https://www.zhihu.com,利用Chrome浏览器的Debug功能，定位到登陆框所在的位置，如下图所示</a><br/>
+<img src="https://pic.mylonly.com/2016-06-29_14645980407304.jpg" alt="2016-06-29_14645980407304.jpg"/><br/>
+利用scrapy提供的xpath能很方便的获取到这个值(//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;)</p></li>
+<li><p>选中Debug窗口的Network选项，同时在输完账号密码后点击登陆，获取登陆操作后的post请求，见下图:</p></li>
+</ul>
+
+<p><img src="https://pic.mylonly.com/2016-06-29_14645982403637.jpg" alt="2016-06-29_14645982403637.jpg"/><br/>
+点击这个链接，确认这个链接就是提交登陆的url<br/>
+<img src="https://pic.mylonly.com/2016-06-29_14645983258011.jpg" alt="2016-06-29_14645983258011.jpg"/><br/>
+从FormData里面可以看到<a href="https://www.zhihu.com/email/login%E5%B0%B1%E6%98%AF%E7%99%BB%E9%99%86POST%E8%AF%B7%E6%B1%82%E7%9A%84url%EF%BC%8C%E9%9C%80%E8%A6%81%E6%8F%90%E4%BA%A44%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%8C%E5%85%B6%E4%B8%AD_xsrf%E5%B0%B1%E6%98%AF%E9%A6%96%E9%A1%B5%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E9%9A%90%E8%97%8F%E8%A1%A8%E5%8D%95%E5%8F%82%E6%95%B0%EF%BC%8Cremember_me%E6%98%AF%E6%98%AF%E5%90%A6%E8%AE%B0%E4%BD%8Fcookie%E7%9A%84%E5%BC%80%E5%85%B3%EF%BC%8Cemail%E5%92%8Cpassword%E5%AF%B9%E5%BA%94%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81">https://www.zhihu.com/email/login就是登陆POST请求的url，需要提交4个参数，其中_xsrf就是首页可以获取到的隐藏表单参数，remember_me是是否记住cookie的开关，email和password对应账号和密码</a></p>
+
+<blockquote>
+<p>此处可能有不一样的地方，因为我的知乎账号是email注册的，根据这个url的特征推测别的账号类型可能存在不一样的Url</p>
+</blockquote>
+
+<h3 id="toc_1">编写蜘蛛代码</h3>
+
+<p>1.继承CrawlSpider,并重写spider的start_request方法，让spier先访问登录页再去爬取start_urls中的链接，在start_requests方法中，让spider先去访问知乎首页，去获取隐藏的表单项<code>_xsrf</code></p>
+
+<pre><code class="language-python">def start_requests(self):
+        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+</code></pre>
+
+<p>其中header需要自定义，因为知乎对spider做了限制，应该是检测User-Agent，你可以在setting.py中更改spider的默认UserAgent,也可以像我这样自己自定义一个</p>
+
+<pre><code class="language-pythoh">headers = {
+    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
+    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
+    &quot;Connection&quot;: &quot;keep-alive&quot;,
+    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
+    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
+    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+}
+</code></pre>
+
+<p>meta中的cookiejar是Scrapy的Cookie中间件的关键字，具体可参考scrapy文档，这里因为只需要保存一个cookie，所以直接写1(注意:<code>并不是1个cookie才写的1，仅仅是个key，后面通过这个1这个key找到cookiejar中保存的cookie</code>)</p>
+
+<p>2.解析首页内容，获取到_xsrf的值，同时提交登录请求:</p>
+
+<pre><code class="language-python">def post_login(self,response):
+        self.log(&quot;preparing login...&quot;)
+        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
+        self.log(xsrf)
+        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:1},
+                                          headers = self.headers,
+                                          formdata = {
+                                             &#39;_xsrf&#39;:xsrf,
+                                             &#39;password&#39;:&#39;xgBKQTx7VnVLK9tv&#39;,
+                                             &#39;email&#39;:&#39;tianxianggen@gmail.com&#39;,
+                                             &#39;remember_me&#39;:&#39;true&#39;,
+                                          },
+                                          callback = self.after_login,
+                                          )
+</code></pre>
+
+<ol>
+<li>将登录成功后获取到的cookie传递给每一个start_urls中链接的ruquest</li>
+</ol>
+
+<pre><code class="language-python">def after_login(self,response):
+        for url in self.start_urls:
+            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
+</code></pre>
+
+<p>4.由于cookiejar中的cookie并不会自动发送给每个链接，因此在urls通过Rule获取到的连接，也是需要我们手动将cookie加上，通过Rule提供的process_request参数重新创建带cookie的Request</p>
+
+<pre><code class="language-pythoh">rules = (
+        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
+    )
+</code></pre>
+
+<p>同时提供request_question函数</p>
+
+<pre><code class="language-python">def request_question(self,request):
+        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
+</code></pre>
+
+<p>5.由于已经有了process_link ,Rule中的callback参数就不再起作用了，而是调用新构造的Request中的callback函数。</p>
+
+<pre><code class="language-python">def parse_question(self,response):
+        sel = Selector(response)
+        item = zhihuItem()
+        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
+        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
+        return item
+</code></pre>
+
+<blockquote>
+<p>这个parse_question方法仅仅是获取问题名称和问题下面的所有图片链接。</p>
+</blockquote>
+
+<h3 id="toc_2">完整代码</h3>
+
+<pre><code class="language-python">import urllib2
+import os
+import re
+import codecs
+
+
+from scrapy.contrib.spiders import CrawlSpider,Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from MySpider.items import zhihuItem
+from scrapy.http import Request
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
+
+
+class zhihuSpider(CrawlSpider):
+    name = &quot;zhihu&quot;
+    allow_domians = [&quot;zhihu.com&quot;]
+    start_urls = [&quot;https://www.zhihu.com/collection/38624707&quot;]
+    rules = (
+        Rule(SgmlLinkExtractor(allow=(&#39;/question/\d*&#39;)),process_request=&quot;request_question&quot;),
+    )
+    
+    headers = {
+    &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,
+    &quot;Accept-Encoding&quot;: &quot;gzip,deflate&quot;,
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.8,zh-TW;q=0.6,zh;q=0.4&quot;,
+    &quot;Connection&quot;: &quot;keep-alive&quot;,
+    &quot;Content-Type&quot;:&quot; application/x-www-form-urlencoded; charset=UTF-8&quot;,
+    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&quot;,
+    &quot;Referer&quot;: &quot;http://www.zhihu.com&quot;
+    }
+    
+    def start_requests(self):
+        return [Request(&quot;https://www.zhihu.com/&quot;,headers = self.headers,meta={&quot;cookiejar&quot;:1},callback=self.post_login)]
+        
+    def post_login(self,response):
+        self.log(&quot;preparing login...&quot;)
+        xsrf = Selector(response).xpath(&#39;//div[@data-za-module=&quot;SignInForm&quot;]//form//input[@name=&quot;_xsrf&quot;]/@value&#39;).extract()[0]
+        self.log(xsrf)
+        return FormRequest(&quot;https://www.zhihu.com/login/email&quot;,meta={&#39;cookiejar&#39;:response.meta[&#39;cookiejar&#39;]},
+                                          headers = self.headers,
+                                          formdata = {
+                                             &#39;_xsrf&#39;:xsrf,
+                                             &#39;password&#39;:&#39;差点就忘了删了&#39;,
+                                             &#39;email&#39;:&#39;邮箱也不能暴露&#39;,
+                                             &#39;remember_me&#39;:&#39;true&#39;,
+                                          },
+                                          callback = self.after_login,
+                                          )
+                                                      
+    def after_login(self,response):
+        for url in self.start_urls:
+            yield Request(url,meta={&#39;cookiejar&#39;:1},headers = self.headers)
+   
+    def request_question(self,request):
+        return Request(request.url,meta={&#39;cookiejar&#39;:1},headers = self.headers,callback=self.parse_question)
+        
+    def parse_question(self,response):
+        sel = Selector(response)
+        item = zhihuItem()
+        item[&#39;qestionTitle&#39;] = sel.xpath(&quot;//div[@id=&#39;zh-question-title&#39;]//h2/text()&quot;).extract_first()
+        item[&#39;image_urls&#39;] = sel.xpath(&quot;//img[@class=&#39;origin_image zh-lightbox-thumb lazy&#39;]/@data-original&quot;).extract()
+        return item
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/05/30</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -295,7 +544,7 @@ intmain()
 			  </div>
 			  <div class="large-6 columns">
 			<p class="text-right" style="padding-top:25px;">
-			
+			 <a href="all_11.html">&raquo; Next Page</a> 
 			</p>
 			  </div>
 			</div>
@@ -348,8 +597,6 @@ intmain()
         
             <a href="django-learn.html"><strong>Django学习</strong></a>
         
-            <a href="Weex.html"><strong>Weex</strong></a>
-        
             <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
         
             <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
@@ -357,6 +604,8 @@ intmain()
             <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
         
             <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
          
         </p>
 
@@ -373,31 +622,31 @@ intmain()
 	      
 		      
 			      <li class="post">
-			        <a href="15595559159421.html">Linux 测试磁盘性能</a>
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15516896130866.html">Docker</a>
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15480624203516.html">Ubuntu安装开发者工具包(make,g++,cc之类工具)</a>
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15477022109795.html">别人的vim配置文件</a>
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="15440788666202.html">利用SoftetherVPN和Bind9穿透内网，共享局域网内部资源</a>
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

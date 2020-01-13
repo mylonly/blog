@@ -1,0 +1,567 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  k8s-1.16高可用集群部署 - 独自一人
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="独自一人" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:blog.xgtian.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 独自一人</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="ios.html">iOS</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="python.html">Python</a></li>
+        
+            <li><a href="tools.html">Tools</a></li>
+        
+            <li><a href="django-learn.html">Django学习</a></li>
+        
+            <li><a href="Tensorflow.html">Tensorflow</a></li>
+        
+            <li><a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html">远古知识</a></li>
+        
+            <li><a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html">Kali渗透测试</a></li>
+        
+            <li><a href="docker.html">Docker</a></li>
+        
+            <li><a href="Kubernetes.html">Kubernetes</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>k8s-1.16高可用集群部署</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2020/01/10</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <h2 id="toc_0">机器要求</h2>
+
+<p>高可用集群一般用于生产环境，官方推荐至少需要3台master节点机器，4台node节点机器</p>
+
+<table>
+<thead>
+<tr>
+<th>Hostname</th>
+<th>IP</th>
+<th>Role</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ucloud-bj-k8s-master-01</td>
+<td>10.9.142.180</td>
+<td>Master Node</td>
+</tr>
+<tr>
+<td>ucloud-bj-k8s-node-01</td>
+<td>10.9.165.222</td>
+<td>Worker Node</td>
+</tr>
+<tr>
+<td>ucloud-bj-k8s-node-02</td>
+<td>10.9.127.58</td>
+<td>Worker Node</td>
+</tr>
+<tr>
+<td>ucloud-bj-K8s-node-03</td>
+<td>10.9.57.4</td>
+<td>Worker Node</td>
+</tr>
+<tr>
+<td>ucloud-bj-K8s-node-04</td>
+<td>10.9.174.192</td>
+<td>Worker Node</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="toc_1">安装准备</h2>
+
+<ol>
+<li><p>禁用Swap<br/>
+k8s为了使容器的调度更符合机器的实际资源情况，k8s建议关闭内存交换   </p>
+<pre><code class="language-text">swapoff -a
+</code></pre>
+<p>同时删除<code>/etc/fstab</code>中swap那条记录</p>
+<p>当然，如果你的机器资源确实不多，需要利用swap，那么你可以不关闭swap交换空间，通过如下参数告诉k8s开启swap</p>
+<pre><code class="language-text">kubelet --fail-swap-on=false ...
+</code></pre></li>
+<li><p>端口开放(生产环境)</p>
+<p><img src="https://pic.mylonly.com/2020-01-10-070912.jpg" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_2">Docker安装(可选)</h2>
+
+<p>由于k8s需要安装指定docker18.06版本，所以如果你的版本不对，可以先卸载重新安装</p>
+
+<pre><code class="language-text">sudo apt-get remove docker docker-engine docker-ce docker.io
+</code></pre>
+
+<p>安装docker</p>
+
+<pre><code class="language-text"># 从 Ubuntu 的存储库安装 Docker：
+apt-get update
+apt-get install -y docker.io
+
+# 或者从 Docker 的 Ubuntu 或 Debian 镜像仓库中安装 Docker CE 18.06：
+
+## 安装环境准备。
+apt-get update &amp;&amp; apt-get install apt-transport-https ca-certificates curl software-properties-common
+
+## 下载 GPG 密钥。
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+## 添加 docker apt 镜像仓库。
+add-apt-repository \
+   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable&quot;
+
+## 安装 docker。
+apt-get update &amp;&amp; apt-get install docker-ce=18.06.0~ce~3-0~ubuntu
+
+# 设置守护进程。
+cat &gt; /etc/docker/daemon.json &lt;&lt;EOF
+{
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
+  &quot;log-driver&quot;: &quot;json-file&quot;,
+  &quot;log-opts&quot;: {
+    &quot;max-size&quot;: &quot;100m&quot;
+  },
+  &quot;storage-driver&quot;: &quot;overlay2&quot;
+}
+EOF
+
+mkdir -p /etc/systemd/system/docker.service.d
+
+# 重启 docker。
+systemctl daemon-reload
+systemctl restart docker
+</code></pre>
+
+<h2 id="toc_3">安装 <code>kubelet</code>,<code>kubeadm</code>,<code>kubectl</code></h2>
+
+<p>添加阿里源密钥</p>
+
+<pre><code class="language-text">curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
+</code></pre>
+
+<p>国内源(阿里)</p>
+
+<pre><code class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
+deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+EOF
+</code></pre>
+
+<p>安装</p>
+
+<pre><code class="language-text">apt-get update
+apt-get install -y kubelet=1.16.2-00 kubeadm=1.16.2-00 kubectl=1.16.2-00
+apt-mark hold kubelet kubeadm kubectl
+    
+</code></pre>
+
+<h2 id="toc_4">安装Master节点</h2>
+
+<pre><code class="language-text">kubeadm init --control-plane-endpoint &quot;k8s-api.youxuetong.com:6443&quot; --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --upload-certs
+</code></pre>
+
+<p>如果安装完成，最后后输出如下内容</p>
+
+<pre><code class="language-text">Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of control-plane nodes by copying certificate authorities
+and service account keys on each node and then running the following as root:
+
+  kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
+    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782 \
+    --control-plane
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
+    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782
+</code></pre>
+
+<h2 id="toc_5">部署CNI网络</h2>
+
+<pre><code class="language-text">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
+</code></pre>
+
+<h2 id="toc_6">接入其他Master节点</h2>
+
+<p>在其他master节点机器上执行</p>
+
+<pre><code class="language-text">  kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
+    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782 \
+    --control-plane
+</code></pre>
+
+<p>如果提示token失效，请利用下面的命令去第一个master节点重新生成token</p>
+
+<pre><code class="language-text">kubeadm token create --print-join-command
+</code></pre>
+
+<h2 id="toc_7">接入其他Node节点</h2>
+
+<pre><code class="language-text">kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
+    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782
+</code></pre>
+
+<h2 id="toc_8">安装完成</h2>
+
+<p>查看各节点状态</p>
+
+<pre><code class="language-text">ubuntu@ucloud-bj-k8s-master-01:~$ kubectl get nodes -o wide
+NAME                      STATUS   ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+ucloud-bj-k8s-master-01   Ready    master   26d   v1.16.2   10.9.142.180   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+ucloud-bj-k8s-master-02   Ready    master   26d   v1.16.2   10.9.175.27    &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+ucloud-bj-k8s-master-03   Ready    master   26d   v1.16.2   10.9.91.143    &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+ucloud-bj-k8s-node-01     Ready    &lt;none&gt;   26d   v1.16.2   10.9.165.222   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+ucloud-bj-k8s-node-02     Ready    &lt;none&gt;   26d   v1.16.2   10.9.127.58    &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+ucloud-bj-k8s-node-03     Ready    &lt;none&gt;   26d   v1.16.2   10.9.57.4      &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+ucloud-bj-k8s-node-04     Ready    &lt;none&gt;   26d   v1.16.2   10.9.174.192   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
+</code></pre>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="15786388799784.html" 
+          title="Next Post: k8s-1.16单主节点集群部署">k8s-1.16单主节点集群部署 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+      <div id="gitalk-container"></div>
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: 'd91ffa1480549c466d2f',
+        clientSecret: '92600b8db63745566efb39c0ad9a15c2462b0008',
+        repo: 'blog',
+        owner: 'mylonly',
+        admin: ['mylonly'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+      gitalk.render('gitalk-container')
+      </script>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <div class="site-a-logo"><img src="https://pic.mylonly.com/2017-05-11-IMG_1164.JPG" /></div>
+            
+                <h1>独自一人</h1>
+                <div class="site-des">独自一人,独自Coding...</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="https://github.com/mylonly" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:root@mylonly.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="ios.html"><strong>iOS</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="python.html"><strong>Python</strong></a>
+        
+            <a href="tools.html"><strong>Tools</strong></a>
+        
+            <a href="django-learn.html"><strong>Django学习</strong></a>
+        
+            <a href="Tensorflow.html"><strong>Tensorflow</strong></a>
+        
+            <a href="%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html"><strong>远古知识</strong></a>
+        
+            <a href="Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html"><strong>Kali渗透测试</strong></a>
+        
+            <a href="docker.html"><strong>Docker</strong></a>
+        
+            <a href="Kubernetes.html"><strong>Kubernetes</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15786401810709.html">k8s-1.16高可用集群部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15786388799784.html">k8s-1.16单主节点集群部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15774160287586.html">K8S日志系统EFK</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15773284865375.html">WebDashboard UI部署</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
+
+
+
+  </body>
+</html>
