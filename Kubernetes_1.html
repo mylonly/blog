@@ -77,6 +77,8 @@
     <li><label>Categories</label></li>
 
         
+            <li><a href="PM.html">PM</a></li>
+        
             <li><a href="ios.html">iOS</a></li>
         
             <li><a href="linux.html">Linux</a></li>
@@ -117,6 +119,123 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15768388508712.html">
+                
+                  <h1>基础服务组件安装</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">nginx-ingress</h2>
+
+<p>以NodePort的形式负载均衡，每个node上都会绑定80、443端口</p>
+
+<pre><code class="language-text">helm install nginx-ingress aliyun/nginx-ingress --set controller.service.type=NodePort,controller.service.externalTrafficPolicy=Local,controller.kind=DaemonSet,controller.daemonset.useHostPort=true -n kube-system
+</code></pre>
+
+<h2 id="toc_1">chartmuseum</h2>
+
+<pre><code class="language-text">helm install chartmuseum aliyun/chartmuseum  --set persistence.pv.enabled=true,persistence.pv.nfs.server=10.9.122.86,persistence.pv.nfs.path=/data/charts/,persistence.pv.pvname=charts --set ingress.enabled=true   --set ingress.hosts[0].name=charts.youxuetong.com   --set ingress.hosts[0].path=/ --set ingress.hosts[0].tls=true --set ingress.hosts[0].tlsSecret=chart-secret,env.open.DISABLE_API=false,env.open.ALLOW_OVERWRITE=true,env.secret.BASIC_AUTH_USER=yxt,env.secret.BASIC_AUTH_PASS=9cWcXrHPZiDj7jwL
+</code></pre>
+
+<h2 id="toc_2">NFS动态存储</h2>
+
+<pre><code class="language-text">helm install nfs-client-provisioner aliyun/nfs-client-provisioner --set nfs.server=192.168.122.9 --set nfs.path=/data -n share
+</code></pre>
+
+<p>如果需要将nfs-client当做默认storageclass，需要加上storageClass.defaultClass=true参数</p>
+
+<pre><code class="language-text">helm install nfs-client-provisioner aliyun/nfs-client-provisioner --set nfs.server=192.168.122.9,nfs.path=/data,storageClass.defaultClass=true -n share
+</code></pre>
+
+<blockquote>
+<p>需要所有node节点都安装nfs组件，否则挂载不上</p>
+
+<pre><code class="language-text">sudo apt-get install nfs-common
+</code></pre>
+</blockquote>
+
+<h2 id="toc_3">MySQL</h2>
+
+<pre><code class="language-text">helm install mysql aliyun/mysql --set root.password=4zxsM3XcTgVtydCK,db.user=dev,db.password=QLdTNpi6QQqiMp7B,db.name=passport_dev -n share
+</code></pre>
+
+<h2 id="toc_4">Redis</h2>
+
+<pre><code class="language-text">helm install redis aliyun/redis --set password=X2eH6BvahNqAuQkg,master.service.type=NodePort,master.service.nodePort=32765,slave.service.type=NodePort,slave.service.nodePort=32764 -n share
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/12/20</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15761212808457.html">
+                
+                  <h1>Kubernets 卸载清理</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<pre><code class="language-text">kubeadm reset -f
+modprobe -r ipip
+lsmod
+rm -rf ~/.kube/
+rm -rf /etc/kubernetes/
+rm -rf /etc/systemd/system/kubelet.service.d
+rm -rf /etc/systemd/system/kubelet.service
+rm -rf /usr/bin/kube*
+rm -rf /etc/cni
+rm -rf /opt/cni
+rm -rf /var/lib/etcd
+rm -rf /var/etcd
+
+
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15750110628081.html">
                 
@@ -362,6 +481,8 @@
 
       	<p class="cat-list">
         
+            <a href="PM.html"><strong>PM</strong></a>
+        
             <a href="ios.html"><strong>iOS</strong></a>
         
             <a href="linux.html"><strong>Linux</strong></a>
@@ -409,6 +530,12 @@
 		  
 		      
 			      <li class="post">
+			        <a href="15779359388855.html">Kubernets特性介绍</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
@@ -416,12 +543,6 @@
 		      
 			      <li class="post">
 			        <a href="15773284865375.html">WebDashboard UI部署</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

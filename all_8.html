@@ -77,6 +77,8 @@
     <li><label>Categories</label></li>
 
         
+            <li><a href="PM.html">PM</a></li>
+        
             <li><a href="ios.html">iOS</a></li>
         
             <li><a href="linux.html">Linux</a></li>
@@ -117,6 +119,106 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15117871248079.html">
+                
+                  <h1>Django扩展默认的User Model</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Django中为我们默认提供了用户模块<code>User</code>,但是其当中的字段可能并不能完全满足我们的需求，这时我们就需要自定义一个<code>User Model</code>出来,如果你对自带的User模型很满意，仅仅是需要添加几个额外的字段，你就可以新建一个model类继承<code>AbstractUser</code>, 或者你完全不需要User模型中提供的类似<code>first_name</code>、<code>last_name</code>这些字段，你可以将<code>model</code>类继承<code>AbstractBaseUser</code>,这样只会保留<code>password</code>,<code>last_login</code>,<code>is_active</code>这三个字段。</p>
+
+<blockquote>
+<p>本文介绍的是继承自<code>AbstractUser</code>的用法</p>
+</blockquote>
+
+<p>在models.py中新建一个model继承自AbstractUser</p>
+
+<pre><code class="language-text">from django.db import models
+
+# Create your models here.
+from django.contrib.auth.models import AbstractUser
+from enum import Enum
+
+
+class UserProfile(AbstractUser):
+
+    GENDER = [
+        (0,&quot;未知&quot;),
+        (1,&quot;男性&quot;),
+        (2,&quot;女性&quot;)
+    ]
+
+    nickname = models.CharField(max_length=50)
+    intro = models.CharField(max_length=500)
+    mobile = models.CharField(max_length=13)
+    gender = models.IntegerField(choices=GENDER,default=0)
+
+    REQUIRED_FIELDS = [&#39;nickname&#39;, &#39;intro&#39;, &#39;mobile&#39;, &#39;gender&#39;]
+
+</code></pre>
+
+<p>在setting.py中设置 <code>AUTH_USER_MODEL</code></p>
+
+<pre><code class="language-text">AUTH_USER_MODEL = &#39;User.UserProfile&#39;
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/11/27</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='django-learn.html'>Django学习</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15052000291680.html">
+                
+                  <h1>利用Scrapy-Splash抓取JS动态渲染的网页数据</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	随着越来越多的网站开始用JS在客户端浏览器动态渲染网站，导致很多我们需要的数据并不能由原始的html中获取，再加上Scrapy本身并不提供JS渲染解析的功能，通常对这类网站数据的爬取我们一般采用两种方法
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/09/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='python.html'>Python</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="14972546183511.html">
                 
@@ -213,172 +315,6 @@
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="14945010672564.html">
-                
-                  <h1>树莓派3安装Node.js</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>(树莓派官方系统)<br/>
-<img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<pre><code class="language-bash">wget https://nodejs.org/dist/v5.2.0/node-v5.2.0-linux-armv7l.tar.gz
-tar zxvf node-v5.2.0-linux-armv7l.tar.gz
-cd node-v5.2.0-linux-armv7l
-sudo cp bin/* /usr/bin/ -r
-sudo cp include/ /usr/include/ -r
-sudo cp lib/ /usr/lib/ -r
-sudo cp share/ /usr/share/ -r
-cd ..
-node --version
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/05/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14945010588526.html">
-                
-                  <h1>树莓派3命令行连接WiFi和蓝牙设备</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>转载<a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">原文链接</a></p>
-
-<p><img src="https://pic.mylonly.com/2016-06-29_14634631824044.jpg" alt="2016-06-29_14634631824044.jpg"/></p>
-
-<h3 id="toc_0">WiFi连接</h3>
-
-<pre><code class="language-text">pi@raspi3:~ $ iwlist scan
-wlan0 Scan completed :
-Cell 01 - Address: 00:1E:20:50:AA:BB
-Channel:8
-Frequency:2.447 GHz (Channel 8)
-Quality=70/70 Signal level=-32 dBm
-Encryption key:on
-ESSID:&quot;WIFINAME&quot;
-Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
-9 Mb/s; 12 Mb/s; 18 Mb/s
-Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
-Mode:Master
-Extra:tsf=0000000000000000
-Extra: Last beacon: 2157000ms ago
-IE: Unknown: 000546616E6379
-IE: Unknown: 010882848B960C121824
-IE: Unknown: 030108
-IE: Unknown: 050401020000
-IE: Unknown: 0706303020010B14
-IE: Unknown: 2A0100
-IE: Unknown: 32043048606C
-IE: IEEE 802.11i/WPA2 Version 1
-Group Cipher : TKIP
-Pairwise Ciphers (2) : CCMP TKIP
-Authentication Suites (1) : PSK
-IE: Unknown: 7F080000000000000040
-IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
- 
-可以看到周围的wifi热点信息
-配置连接到某个热点:
- 
-# 编辑wifi文件
-sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
-# 在该文件最后添加下面的话
-network={
-  ssid=&quot;WIFINAME&quot;
-  psk=&quot;password&quot;
-}
-# 引号部分分别为wifi的名字和密码
-# 保存文件后几秒钟应该就会自动连接到该wifi
-# 查看是否连接成功
-ifconfig wlan0
-
-</code></pre>
-
-<h3 id="toc_1">蓝牙连接</h3>
-
-<pre><code class="language-text">pi@raspi3:~ $ sudo bluetoothctl
-[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
-[bluetooth]# list
-Controller BB:27:EB:0D:9D:DD raspi3 [default]
-[bluetooth]# power on
-Changing power on succeeded
-[bluetooth]# scan on
-Discovery started
-[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
-[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
-[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
-[bluetooth]# agent on
-Agent registered
-[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
-[bluetooth]# pair E8:07:BF:3A:25:AA
-Attempting to pair with E8:07:BF:3A:25:AA
-[CHG] Device E8:07:BF:3A:25:AA Connected: yes
-[CHG] Device E8:07:BF:3A:25:AA UUIDs:
-    00001108-0000-1000-8000-00805f9b34ff
-[CHG] Device E8:07:BF:3A:25:AA Paired: yes
-Pairing successful
-[CHG] Device E8:07:BF:3A:25:AA Connected: no
-[bluetooth]# trust E8:07:BF:3A:25:AA
-[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
-Changing E8:07:BF:3A:25:AA trust succeeded
-[bluetooth]# connect E8:07:BF:3A:25:AA
-
-</code></pre>
-
-<p>这样就连上蓝牙设备了，如果是蓝牙音响的话还得装下支持软件:<br/>
- ```<br/>
-sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
-
-<pre><code class="language-text">
-
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2017/05/11</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -433,6 +369,8 @@ sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
 
       	<p class="cat-list">
         
+            <a href="PM.html"><strong>PM</strong></a>
+        
             <a href="ios.html"><strong>iOS</strong></a>
         
             <a href="linux.html"><strong>Linux</strong></a>
@@ -480,6 +418,12 @@ sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
 		  
 		      
 			      <li class="post">
+			        <a href="15779359388855.html">Kubernets特性介绍</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
@@ -487,12 +431,6 @@ sudo apt-get install pulseaudio pulseaudio-module-bluetooth</p>
 		      
 			      <li class="post">
 			        <a href="15773284865375.html">WebDashboard UI部署</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

@@ -77,6 +77,8 @@
     <li><label>Categories</label></li>
 
         
+            <li><a href="PM.html">PM</a></li>
+        
             <li><a href="ios.html">iOS</a></li>
         
             <li><a href="linux.html">Linux</a></li>
@@ -117,6 +119,195 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15439862777767.html">
+                
+                  <h1>SoftEther VPN 部署</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">Server安装部署</h2>
+
+<p>点<a href="https://www.softether-download.com/cn.aspx?product=softether">这里</a>找到合适的软件包</p>
+
+<p>或者直接用下面这个链接    </p>
+
+<pre><code class="language-text">wget https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.28-9669-beta/softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
+</code></pre>
+
+<ol>
+<li><p>解压完拷贝到/usr/local目录,然后make编译</p>
+<pre><code class="language-text">tar -zvxf softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
+mv vpnserver /usr/local/<br/>
+cd /usr/local/vpnserver<br/>
+make
+</code></pre></li>
+<li><p>启动vpnserver</p>
+<pre><code class="language-text">/usr/local/vpnserver start
+#/usr/local/vpnserver stop
+</code></pre>
+<p><em>注意：SoftEther默认监听443端口，记得防火墙打开443端口</em></p></li>
+<li><p>安装server manager</p>
+<p>点击<a href="http://www.leqii.com/download/yulan/d77/d77.html">这里</a>查看manager设置</p></li>
+<li><p>安装vpnclient</p>
+<p>拉取vpnclient镜像</p>
+<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
+</code></pre>
+<p>启动vpnclient</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient \
+--net=host --privileged \<br/>
+-e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
+-e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
+-e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
+-e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
+-e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
+-e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
+mitsutaka/softether-vpnclient
+</code></pre>
+<p>例子:</p>
+<pre><code class="language-text">docker run -d --name=softether-vpnclient     --net=host --privileged     -e VPN_SERVER=120.132.55.152     -e VPN_PORT=443     -e ACCOUNT_USER=test     -e ACCOUNT_PASS=1234TV.com     -e VIRTUAL_HUB=1234TV   -e TAP_IPADDR=192.168.111.79/255.255.255.0 mitsutaka/softether-vpnclient
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/05</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15439814205804.html">
+                
+                  <h1>GitLab Docker部署</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>安装Docker</p>
+<pre><code class="language-text">sudo wget -qO- https://get.docker.com/ | sh
+</code></pre></li>
+<li><p>非root用户需要将用户加到docker用户组中</p>
+<pre><code class="language-text">sudo usermod -aG docker ubuntu
+</code></pre></li>
+<li><p>启动docker</p>
+<pre><code class="language-text">sudo service docker start
+</code></pre></li>
+<li><p>拉取gitlab-ce镜像</p>
+<pre><code class="language-text">sudo docker pull gitlab/gitlab-ce
+</code></pre></li>
+<li><p>启动gitlab-ce docker镜像</p>
+<pre><code class="language-text">sudo docker run --detach \
+--hostname gitlab.example.com \<br/>
+--publish 443:443 --publish 80:80 --publish 22:22 \<br/>
+--name gitlab \<br/>
+--restart always \<br/>
+--volume /srv/gitlab/config:/etc/gitlab \<br/>
+--volume /srv/gitlab/logs:/var/log/gitlab \<br/>
+--volume /srv/gitlab/data:/var/opt/gitlab \<br/>
+gitlab/gitlab-ce:latest
+</code></pre>
+<p>具体的镜像命令可以参考<a href="https://docs.gitlab.com/omnibus/docker/">gitlab官方文档</a></p>
+<p>如果是新安装的Ubuntu服务器，记得用ufw添加端口</p>
+<pre><code class="language-text">sudo ufw allow 80/tcp
+</code></pre></li>
+</ol>
+
+<h2 id="toc_0">设置默认的管理员账号密码</h2>
+
+<ol>
+<li><p>进入gitlab容器</p>
+<pre><code class="language-text">docker exec -it gitlab /bin/bash
+</code></pre></li>
+<li><p>进入rails</p>
+<pre><code class="language-text">cd /opt/gitlab/bin
+gitlab-rails console production
+</code></pre></li>
+<li><p>设置root用户密码</p>
+<pre><code class="language-text">irb(main):001:0&gt; u = User.where(email: &#39;admin@example.com&#39;).first
+=&gt; #&lt;User id:1 @root&gt;<br/>
+irb(main):002:0&gt; u.password<br/>
+=&gt; nil<br/>
+irb(main):003:0&gt; u.password=&#39;12345678&#39;<br/>
+=&gt; &quot;12345678&quot;<br/>
+irb(main):004:0&gt; u.save!<br/>
+Enqueued ActionMailer::DeliveryJob (Job ID: b0e971db-4c6b-439c-82ee-86c7c277537e) to Sidekiq(mailers) with arguments: &quot;DeviseMailer&quot;, &quot;password_change&quot;, &quot;deliver_now&quot;, gid://gitlab/User/1<br/>
+=&gt; true
+</code></pre></li>
+</ol>
+
+<h2 id="toc_1">邮件配置</h2>
+
+<ol>
+<li><p>进入gitlab容器</p>
+<pre><code class="language-text">docker exec -it gitlab /bin/bash
+</code></pre></li>
+<li><p>修改配置文件 </p>
+<pre><code class="language-text">#vim /etc/gitlab/gitlab.rb，添加以下内容
+gitlab_rails[&#39;gitlab_email_enabled&#39;] = true<br/>
+gitlab_rails[&#39;gitlab_email_from&#39;] = &#39;gitlab@1234tv.com&#39;<br/>
+gitlab_rails[&#39;gitlab_email_display_name&#39;] = &#39;GitLab&#39;<br/>
+gitlab_rails[&#39;gitlab_email_reply_to&#39;] = &#39;noreply@1234tv.com&#39;<br/>
+gitlab_rails[&#39;smtp_enable&#39;] = true<br/>
+gitlab_rails[&#39;smtp_address&#39;] = &quot;smtp.exmail.qq.com&quot;<br/>
+gitlab_rails[&#39;smtp_port&#39;] = 465<br/>
+gitlab_rails[&#39;smtp_user_name&#39;] = &quot;gitlab@1234tv.com&quot;<br/>
+gitlab_rails[&#39;smtp_password&#39;] = &quot;******&quot;<br/>
+gitlab_rails[&#39;smtp_authentication&#39;] = &quot;login&quot;<br/>
+gitlab_rails[&#39;smtp_enable_starttls_auto&#39;] = true<br/>
+gitlab_rails[&#39;smtp_tls&#39;] = true
+</code></pre></li>
+<li><p>重新加载配置文件，并验证是否生效</p>
+<pre><code class="language-text">gitlab-ctl reconfigure ##重新加载配置
+gitlab-rails console  ##进入rails
+</code></pre>
+<p>输入 <code>ActionMailer::Base.delivery_method</code>:</p>
+<pre><code class="language-text">irb(main):002:0* ActionMailer::Base.delivery_method
+</code></pre>
+<p>如果出现<code>=&gt;:smtp</code>说明设置成功了</p></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/05</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15439800502653.html">
                 
@@ -394,675 +585,6 @@ apt-get -f install -y
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="15308616208129.html">
-                
-                  <h1>我的豆瓣电影影评抓取之旅</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p><a href="https://juejin.im/entry/5b42b4125188251b3950c25c/detail"><img src="https://badge.juejin.im/entry/5b42b4125188251b3950c25c/likes.svg?style=flat-square" alt=""/></a></p>
-
-<h2 id="toc_0">前言</h2>
-
-<p>由于最近一直在研究基于机器学习的推荐系统，需要大量的数据来训练AI模型，但是在模型的测试验证过程中，苦于中文数据集的缺失(或者说根本没有，国人在这方面做得实在是太差了)，只能利用国外公开的推荐系统数据集，有著名的<a href="https://grouplens.org/datasets/movielens/">MovieLens电影评分数据集</a>和<a href="http://del.icio.us">Del.icio.us链接推荐数据集</a>，虽然通过计算损失函数也能大致的评估推荐模型的优劣程度从而进行相应的优化，但是由于语言环境、文化等等的不同，国外人对某个电影的评分毕竟跟我们还是有一定差距的，在输出推荐结果时，即使给出的某个电影或者某个网站链接其相似度很高时，我仍然不确定这个推荐结果是否真的如损失函数计算的那样准确。所以，为了能拥有一个可以用于训练的中文的数据集，就有了本文所记录的豆瓣影评的抓取过程。</p>
-
-<h2 id="toc_1">网站分析</h2>
-
-<p>首先还是要分析一下要抓取的网站<a href="https://movie.douban.com/">豆瓣电影</a>,主要是通过搜索引擎或者浏览器的调试工具看看有没有可以利用的API，在没有找到任何api的前提下才开始分析网站的页面结构，找到可以提取的信息。<br/>
-通过搜索引擎，我找到了<a href="https://developers.douban.com/wiki/?title=api_v2">豆瓣开发者平台</a>，在<a href="https://developers.douban.com/wiki/?title=movie_v2">豆瓣电影</a>的文档中有获取电影，获取影评等等的详细接口，正当我以为接下来的数据采集将会变得非常简单之时，下面这张图还是让我冷静了下来<br/>
-<img src="https://pic.mylonly.com/2018-07-07-122829.jpg" alt=""/></p>
-
-<blockquote>
-<p>如果你在2015年之前注册过豆瓣的开发者，那么恭喜你,你可以通过豆瓣提供的API或者SDK获取你想获得的任何数据</p>
-</blockquote>
-
-<h3 id="toc_2">电影信息获取</h3>
-
-<p>虽然APIKey是不可能拿到了，但是通过文档我仍然发现了一些GET请求并不需要AUTH认证，也就是说有没有APIKey并不影响使用。其中，对我们有用的就是获取<code>TOP250电影列表</code>的接口:</p>
-
-<pre><code class="language-text">http://api.douban.com/v2/movie/top250
-</code></pre>
-
-<p>接口返回的格式大概如下:<br/>
-<img src="https://pic.mylonly.com/2018-07-07-122848.jpg" alt=""/><br/>
-里面包含了电影一些详细信息，对于推荐系统来说，这些数据足够了。</p>
-
-<p>此外，通过利用Chrome的调试工具，在<a href="https://movie.douban.com/tag/#/">豆瓣电影-分类</a>这个页面我发现了他们使用的一个JQuery接口,也是一个GET请求，不需要AUTH。</p>
-
-<p><img src="https://pic.mylonly.com/2018-07-07-122901.jpg" alt=""/><br/>
-<img src="https://pic.mylonly.com/2018-07-07-123038.jpg" alt=""/></p>
-
-<p>详细接口如下,可以通过更改start来迭代获取所有电影条目</p>
-
-<pre><code class="language-text">https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start=20
-</code></pre>
-
-<p>这个接口可以获取所有豆瓣上收录的电影，经过我的测试，start改为10000时，返回的数据就已经是空的了</p>
-
-<h3 id="toc_3">影评信息获取</h3>
-
-<p>获取电影信息的方法有了，接下来就是要分析如何获取影评信息了。<br/>
-在每部电影的详情页面里,如<a href="https://movie.douban.com/subject/1292064/">楚门的世界</a>，我们找到了如下这几个详情页面,分别显示了针对这部电影的影评和短评信息</p>
-
-<pre><code class="language-text">https://movie.douban.com/subject/1292064/reviews ##影评页面
-https://movie.douban.com/subject/1292064/comments ##短评页面
-</code></pre>
-
-<p><img src="https://pic.mylonly.com/2018-07-06-085101.png" alt=""/></p>
-
-<p>照例先用调试工具看看有没有可以用的api接口后，发现这次并没有那么好运了，这个影评页面是由服务器渲染完成的。</p>
-
-<p>没有了接口，我们来分析页面，依然通过调试工具:<br/>
-<img src="https://pic.mylonly.com/2018-07-07-122913.jpg" alt=""/><br/>
-每条评论都是在一个review-item的div块里面，而所有评论都是在一个review-list的div块里吗，我们通过xpath语法可以很容易的定位到每条评论的详细信息,下面是所有信息的xpath语句，在我们写爬虫时候就靠他提取内容了</p>
-
-<pre><code class="language-text">评论列表: &quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;
-
-评论ID: &quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;review-short&#39;]/@data-rid&quot;
-作者头像: &quot;./header[@class=&#39;main-hd&#39;]//a[@class=&#39;avator&#39;]//img/@src &quot;
-作者昵称: &quot;.//header//a[@class=&#39;name&#39;]/text()&quot;
-推荐程度(评分): &quot;.//header//span[contains(@class,&#39;main-title-rating&#39;)]/@title&quot;
-影评标题: &quot;.//div[@class=&#39;main-bd&#39;]//h2//a/text()&quot;
-影评摘要: &quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;short-content&#39;]/text()&quot;
-影评详情页链接: &quot;.//div[@class=&#39;main-bd&#39;]//h2//a/@href&quot;
-</code></pre>
-
-<p><img src="https://pic.mylonly.com/2018-07-06-090909.png" alt=""/></p>
-
-<p>其中具体的评分我们不能直接拿到，而是只能拿到具体的文字描述,经过我的验证，具体如下对应关系如下:</p>
-
-<pre><code class="language-text">&#39;力荐&#39;: 5,
-&#39;推荐&#39;: 4,
-&#39;还行&#39;: 3,
-&#39;较差&#39;: 2,
-&#39;很差&#39;: 1,  
-</code></pre>
-
-<p>在后续的代码编写过程中，我们会根据这个对应关系将其转换为对应的评分信息</p>
-
-<h2 id="toc_4">实现爬虫</h2>
-
-<p>既然已经分析的差不多了，我们所需要的信息基本都有途径可以获得，那么接下来我们就开始具体的爬虫实现，我们采用Scrapy这个Python爬虫框架来帮我们简化爬虫的开发过程。Scrapy的安装以及VirtualEnv环境的搭建就不详细说了，其并不再本文的讨论范围之内，附上<a href="http://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/overview.html">Scrapy的中文文档地址</a></p>
-
-<h3 id="toc_5">创建项目工程</h3>
-
-<pre><code class="language-text">##创建DoubanSpider工程
-scrapy startproject Douban
-</code></pre>
-
-<p>创建好的工程目录大致如下:<br/>
-<img src="https://pic.mylonly.com/2018-07-07-122926.jpg" alt=""/><br/>
-其中：</p>
-
-<pre><code class="language-text">    spiders: 爬虫文件夹,存放具体的爬虫代码，我们待会要编写的两个爬虫(电影信息和影评信息)就需要放在这个文件夹下
-    items.py: 模型类，所有需要结构化的数据都要预先在此文件中定义
-    middlewares.py: 中间件类，scrapy的核心之一，我们会用到其中的downloadMiddleware,
-    pipelines.py: 管道类，数据的输出管理，是存数据库还是存文件在这里决定
-    settings.py: 设置类，一些全局的爬虫设置，如果每个爬虫需要有自定义的地方，可以在爬虫中直接设置custom_settings属性
-</code></pre>
-
-<h3 id="toc_6">电影信息爬虫</h3>
-
-<blockquote>
-<p>由于电影信息的获取有API接口可以使用，所以此处页可以不采用爬虫来处理数据。</p>
-</blockquote>
-
-<p>在spiders中新建一个movies.py的文件，定义我们的爬虫</p>
-
-<p>由于我们爬取电影是通过api接口的形式获取，因此并不需要跟进解析，所以我们的爬虫直接继承Spider就可以了</p>
-
-<h4 id="toc_7">定义爬虫</h4>
-
-<pre><code class="language-text">class MovieSpider(Spider):
-    name = &#39;movie&#39; #爬虫名称
-    allow_dominas = [&quot;douban.com&quot;] #允许的域名
-    
-    #自定义的爬虫设置，会覆盖全局setting中的设置
-    custom_settings = {
-        &quot;ITEM_PIPELINES&quot;: {
-            &#39;Douban.pipelines.MoviePipeline&#39;: 300
-        },
-        &quot;DEFAULT_REQUEST_HEADERS&quot;: {
-            &#39;accept&#39;: &#39;application/json, text/javascript, */*; q=0.01&#39;,
-            &#39;accept-encoding&#39;: &#39;gzip, deflate&#39;,
-            &#39;accept-language&#39;: &#39;zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4&#39;,
-            &#39;referer&#39;: &#39;https://mm.taobao.com/search_tstar_model.htm?spm=719.1001036.1998606017.2.KDdsmP&#39;,
-            &#39;user-agent&#39;: &#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36&#39;,
-            &#39;x-requested-with&#39;: &#39;XMLHttpRequest&#39;,
-        },
-        &quot;ROBOTSTXT_OBEY&quot;:False #需要忽略ROBOTS.TXT文件
-    }
-
-</code></pre>
-
-<p>custom_setting中，<code>ITEM_PIPELINES</code>指定了获取数据后数据输出时使用的管道接口<br/>
-<code>DEFAULT_REQUEST_HEADERS</code>则是让我们的Spider伪装成一个浏览器，防止被豆瓣拦截掉。<br/>
-而<code>ROBOTSTXT_OBEY</code>则是让我们的爬虫忽略ROBOTS.txt的警告</p>
-
-<p>接下来通过<code>start_request</code>告诉爬虫要爬取的链接：</p>
-
-<pre><code class="language-python">
-    def start_requests(self):
-        url = &#39;&#39;&#39;https://movie.douban.com/j/new_search_subjects?sort=T&amp;range=0,10&amp;tags=&amp;start={start}&#39;&#39;&#39;
-        requests = []
-        for i in range(500):
-            request = Request(url.format(start=i*20), callback=self.parse_movie)
-            requests.append(request)
-        return requests
-</code></pre>
-
-<p>由于我们之前分析网站的时候已经分析过了，start参数到10000时就获取不到数据了，所以此处直接用这个数字循环获得所有链接</p>
-
-<p>接下来解析每个接口返回的内容:</p>
-
-<pre><code class="language-python">
-def parse_movie(self, response):
-    jsonBody = json.loads(response.body)
-    subjects = jsonBody[&#39;data&#39;]
-    movieItems = []
-    for subject in subjects:
-        item = MovieItem()
-        item[&#39;id&#39;] = int(subject[&#39;id&#39;])
-        item[&#39;title&#39;] = subject[&#39;title&#39;]
-        item[&#39;rating&#39;] = float(subject[&#39;rate&#39;])
-        item[&#39;alt&#39;] = subject[&#39;url&#39;]
-        item[&#39;image&#39;] = subject[&#39;cover&#39;]
-        movieItems.append(item)
-    return movieItems
-</code></pre>
-
-<p>在request中，我们指定了一个parse_movie的方法来解析返回的内容，此处我们需要使用一个在items.py中定义的Item,具体Item如下:</p>
-
-<h4 id="toc_8">定义Item</h4>
-
-<pre><code class="language-python">#定义你需要获取的数据
-class MovieItem(scrapy.Item):
-    id = scrapy.Field()
-    title = scrapy.Field()
-    rating = scrapy.Field()
-    genres = scrapy.Field()
-    original_title = scrapy.Field()
-    alt = scrapy.Field()
-    image = scrapy.Field()
-    year = scrapy.Field()
-</code></pre>
-
-<p>items返回给Scrapy之后，Scrapy会调用我们之前在custom_setting中指定的<code>Douban.pipelines.MoviePipeline</code>来处理获取到的item，MoviePipeline定义在pipelines.py中，具体内容如下:</p>
-
-<h4 id="toc_9">定义Pipeline</h4>
-
-<pre><code class="language-python">class MoviePipeline(object):
-
-    movieInsert = &#39;&#39;&#39;insert into movies(id,title,rating,genres,original_title,alt,image,year) values (&#39;{id}&#39;,&#39;{title}&#39;,&#39;{rating}&#39;,&#39;{genres}&#39;,&#39;{original_title}&#39;,&#39;{alt}&#39;,&#39;{image}&#39;,&#39;{year}&#39;)&#39;&#39;&#39;
-
-    def process_item(self, item, spider):
-
-        id = item[&#39;id&#39;]
-        sql = &#39;select * from movies where id=%s&#39;% id
-        self.cursor.execute(sql)
-        results = self.cursor.fetchall()
-        if len(results) &gt; 0:
-            rating = item[&#39;rating&#39;]
-            sql = &#39;update movies set rating=%f&#39; % rating
-            self.cursor.execute(sql)
-        else:
-            sqlinsert = self.movieInsert.format(
-                id=item[&#39;id&#39;],
-                title=pymysql.escape_string(item[&#39;title&#39;]),
-                rating=item[&#39;rating&#39;],
-                genres=item.get(&#39;genres&#39;),
-                original_title=item.get(&#39;original_title&#39;),
-                alt=pymysql.escape_string(item.get(&#39;alt&#39;)),
-                image=pymysql.escape_string(item.get(&#39;image&#39;)),
-                year=item.get(&#39;year&#39;)
-            )
-            self.cursor.execute(sqlinsert)
-        return item
-
-    def open_spider(self, spider):
-        self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
-        self.cursor = self.connect.cursor()
-        self.connect.autocommit(True)
-
-
-    def close_spider(self, spider):
-        self.cursor.close()
-        self.connect.close()
-
-</code></pre>
-
-<p>在此Pipeline中，我们通过连接mysql数据库将每次获取到的item插入到具体的数据表中</p>
-
-<h4 id="toc_10">运行爬虫</h4>
-
-<p>在命令行下输入:</p>
-
-<pre><code class="language-text">scrapy crawl movie
-</code></pre>
-
-<p><img src="https://pic.mylonly.com/2018-07-06-101458.png" alt=""/><br/>
-<img src="https://pic.mylonly.com/2018-07-06-101353.png" alt=""/></p>
-
-<h3 id="toc_11">影评爬虫</h3>
-
-<p>影评爬虫的难度要大很多了，因为获取电影信息我们是通过接口直接拿到的，这种接口返回的数据格式统一，基本不会出现异常情况，而且电影数量有限，很短时间就能爬取完毕，并不会触发豆瓣的防爬虫机制，而在影评爬虫的编写过程中，这些都会遇到。</p>
-
-<h4 id="toc_12">爬虫逻辑</h4>
-
-<pre><code class="language-text">class ReviewSpider(Spider):
-    name = &quot;review&quot;
-    allow_domain = [&#39;douban.com&#39;]
-    custom_settings = {
-        &quot;ITEM_PIPELINES&quot;: {
-            &#39;Douban.pipelines.ReviewPipeline&#39;: 300
-        },
-        &quot;DEFAULT_REQUEST_HEADERS&quot;: {
-            &#39;connection&#39;:&#39;keep-alive&#39;,
-            &#39;Upgrade-Insecure-Requests&#39;:&#39;1&#39;,
-            &#39;DNT&#39;:1,
-            &#39;Accept&#39;:&#39;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8&#39;,
-            &#39;Accept-Encoding&#39;:&#39;gzip, deflate, br&#39;,
-            &#39;Accept-Language&#39;:&#39;zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7&#39;,
-            &#39;Cookie&#39;:&#39;bid=wpnjOBND4DA; ll=&quot;118159&quot;; __utmc=30149280;&#39;,            &#39;user-agent&#39;: &#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) &#39;
-                          &#39;Chrome/67.0.3396.87 Safari/537.36&#39;,
-        },
-        &quot;ROBOTSTXT_OBEY&quot;: False,
-        # &quot;DOWNLOAD_DELAY&quot;: 1,
-        &quot;RETRY_TIMES&quot;: 9,
-        &quot;DOWNLOAD_TIMEOUT&quot;: 10
-    }
-</code></pre>
-
-<p>对比获取电影信息的爬虫，在custom_setting中多了几个设置：<br/>
-<code>RETRY_TIMES</code>：用来控制最大重试次数，因为豆瓣有反爬虫机制，当一个IP访问次数过多时就会限制这个IP访问，所以为了绕过这个机制，我们通过代理IP来爬取对应的页面，每爬取一个页面就更换一次IP，但是由于代理IP的质量参差不齐，收费的可能会好点，但还是会存在，为了避免出现因为代理连接不上导致某个页面被忽略掉，我们设置这个值，当重试次数大于设定的值时仍然没有获取到页面就会pass掉这个连接。如果你的代理IP质量不好，请增大此处的次数。<br/>
-<code>DOWNLOAD_TIMEOUT</code>: 下载超时时间，默认是60秒，此处修改为10秒是想让整体的爬取速度加快，因为RETRY_TIMES的缘故，需要RETRY的判定时间为1分钟，如果有很多这种有问题的页面，那么整个爬取的过程会十分漫长。<br/>
-<code>DOWNLOAD_DELAY</code>: 下载延迟，如果你使用代理IP之后还是会出现访问返回403的情况，请设置此值，因为某IP太频繁的访问页面会触发豆瓣的防爬虫机制。</p>
-
-<pre><code class="language-python">  def start_requests(self):
-        #从数据库中找到所有的moviesId
-        self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
-        self.cursor = self.connect.cursor()
-        self.connect.autocommit(True)
-        sql = &quot;select id,current_page,total_page from movies&quot;
-        self.cursor.execute(sql)
-        results = self.cursor.fetchall()
-        url_format = &#39;&#39;&#39;https://movie.douban.com/subject/{movieId}/reviews?start={offset}&#39;&#39;&#39;
-        for row in results:
-            movieId = row[0]
-            current_page = row[1]
-            total_page = row[2]
-            if current_page != total_page: ##说明评论没有爬完
-                url = url_format.format(movieId=movieId, offset=current_page*20)
-                request = Request(url, callback=self.parse_review, meta={&#39;movieId&#39;: movieId}, dont_filter=True)
-                yield request
-</code></pre>
-
-<p>照例，我们在start_request中告诉Scrapy要爬取的起始网址链接，通过我们之前的分析，影评页面的地址格式为:</p>
-
-<pre><code class="language-python">https://movie.douban.com/subject/{movieId}/reviews?start={offset}
-</code></pre>
-
-<p>而movieId,我们之前的爬虫已经将所有电影的信息抓取了下来，所以我们在此先通过查询数据库将所有的已抓取的电影信息获取到，取到其中的movieId，然后构造一个页面链接。</p>
-
-<pre><code class="language-python">url = url_format.format(movieId=movieId, offset=current_page*20)
-</code></pre>
-
-<p>因为抓取豆瓣影评的过程十分漫长，中间会出现各种各样的问题导致爬虫意外退出，因此我们需要一个机制让爬虫能从上次停止的地方继续爬取，current_page和total_page就是为此而服务的，在后面的数据解析过程中，每解析一个页面，就会将当期页面的页数存储下来，防止出现意外情况。</p>
-
-<pre><code class="language-python">    def parse_review(self, response):
-        movieId = response.request.meta[&#39;movieId&#39;]
-        review_list = response.xpath(&quot;//div[contains(@class,&#39;review-list&#39;)]//div[contains(@class,&#39;review-item&#39;)]&quot;)
-        for review in review_list:
-            item = ReviewItem()
-            item[&#39;id&#39;] = review.xpath(&quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;review-short&#39;]/@data-rid&quot;).extract()[0]
-            avator = review.xpath(&quot;.//header//a[@class=&#39;avator&#39;]/@href&quot;).extract()[0]
-            item[&#39;username&#39;] = avator.split(&#39;/&#39;)[-2]
-            item[&#39;avatar&#39;] = review.xpath(&quot;./header[@class=&#39;main-hd&#39;]//a[@class=&#39;avator&#39;]//img/@src&quot;).extract()[0]
-            item[&#39;nickname&#39;] = review.xpath(&quot;.//header//a[@class=&#39;name&#39;]/text()&quot;).extract()[0]
-            item[&#39;movieId&#39;] = movieId
-            rate = review.xpath(&quot;.//header//span[contains(@class,&#39;main-title-rating&#39;)]/@title&quot;).extract()
-            if len(rate)&gt;0:
-                rate = rate[0]
-                item[&#39;rating&#39;] = RATING_DICT.get(rate)
-                item[&#39;create_time&#39;] = review.xpath(&quot;.//header//span[@class=&#39;main-meta&#39;]/text()&quot;).extract()[0]
-                item[&#39;title&#39;] = review.xpath(&quot;.//div[@class=&#39;main-bd&#39;]//h2//a/text()&quot;).extract()[0]
-                item[&#39;alt&#39;] = review.xpath(&quot;.//div[@class=&#39;main-bd&#39;]//h2//a/@href&quot;).extract()[0]
-                summary = review.xpath(&quot;.//div[@class=&#39;main-bd&#39;]//div[@class=&#39;short-content&#39;]/text()&quot;).extract()[0]
-                item[&#39;summary&#39;] = summary.strip().replace(&#39;\n&#39;, &#39;&#39;).replace(&#39;\xa0(&#39;,&#39;&#39;)
-                yield item
-
-        current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
-        total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
-        paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extract()
-        if len(paginator) == 0 and len(review_list): ##不存在导航条，但是评论列表存在，说明评论只有一页
-
-            sql = &quot;update movies set current_page = 1, total_page=1 where id=&#39;%s&#39;&quot; % movieId
-            self.cursor.execute(sql)
-
-        elif len(paginator) and len(review_list):
-            current_page = int(current_page[0])
-            total_page = int(total_page[0])
-            sql = &quot;update movies set current_page = %d, total_page=%d where id=&#39;%s&#39;&quot; % (current_page, total_page, movieId)
-            self.cursor.execute(sql)
-            if current_page != total_page:
-                url_format = &#39;&#39;&#39;https://movie.douban.com/subject/{movieId}/reviews?start={offset}&#39;&#39;&#39;
-                next_request = Request(url_format.format(movieId=movieId, offset=current_page*20),
-                                       callback=self.parse_review,
-                                       dont_filter=True, meta={&#39;movieId&#39;: movieId})
-                yield next_request
-
-        else:
-            yield response.request
-</code></pre>
-
-<p>接下来，分析解析函数，DoubanItem的数据获取就不额外介绍了，利用之前分析时用到的xpath语句可以很容易的定义到具体内容。<br/>
-其中movieId是起始链接中通过Request中Meta属性传递过来的，当然你可以通过分析网页找到包含movieId的地方。</p>
-
-<pre><code class="language-text">current_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/text()&quot;).extract()
-total_page = response.xpath(&quot;//span[@class=&#39;thispage&#39;]/@data-total-page&quot;).extract()
-paginator = response.xpath(&quot;//div[@class=&#39;paginator&#39;]&quot;).extract()
-</code></pre>
-
-<p>上面基础代码的作用主要是为了获取影评页面的底部导航条</p>
-
-<p><img src="https://pic.mylonly.com/2018-07-07-122943.jpg" alt=""/></p>
-
-<p>但是这个导航条会有两种情况获取不到:</p>
-
-<pre><code class="language-text">1. 当某个电影的评论不足20条时，也就是只有一页评论。
-2. 当触发了豆瓣的反爬虫的机制时，返回的页面并不是评论页面，而是一个验证页面，自然也找不到导航条
-</code></pre>
-
-<p>所以在下面的代码中，我通过这几个变量来判断了以上几种情况：</p>
-
-<pre><code class="language-text">1. 情况1时，不需要继续爬取剩下的评论，直接将current_page和total_page设置为1保存到movie表即可
-2. 情况2时，由于此时触发了反爬虫机制，返回的页面没有我们的数据，如果我们直接忽略掉的话，会损失大量的数据（这种情况很常见），所以我们就干脆再试一次，返回request，让Scrapy重新爬取这个页面，因为每次重新爬取都会换一个新的代理IP，所以我们有很大概率下次抓取就是正常的。此处有一点需要注意：因为Scrapy默认会过滤掉重复请求，所以我们需要在构造Request的时候讲dont_filter参数设置为True,让其不要过滤重复链接。
-3. 正常情况时，通过xpath语法获取的下一页评论的链接地址然后构造一个request交给Scrapy继续爬取
-</code></pre>
-
-<h4 id="toc_13">影评下载中间件</h4>
-
-<p>上面说过，抓取影评页面时需要通过使用代理IP的方式来达到绕过豆瓣的反爬虫机制，具体代理的设置就需要在DownloadMiddleware中设置</p>
-
-<pre><code class="language-python">class DoubanDownloaderMiddleware(object):
-# Not all methods need to be defined. If a method is not defined,
-# scrapy acts as if the downloader middleware does not modify the
-# passed objects.
-
-ip_list = None
-
-@classmethod
-def from_crawler(cls, crawler):
-    # This method is used by Scrapy to create your spiders.
-    s = cls()
-    crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-    return s
-
-def process_request(self, request, spider):
-    # Called for each request that goes through the downloader
-    # middleware.
-
-    # Must either:
-    # - return None: continue processing this request
-    # - or return a Response object
-    # - or return a Request object
-    # - or raise IgnoreRequest: process_exception() methods of
-    #   installed downloader middleware will be called
-
-    if self.ip_list is None or len(self.ip_list) == 0:
-        response = requests.request(&#39;get&#39;,&#39;http://api3.xiguadaili.com/ip/?tid=555688914990728&amp;num=10&amp;protocol=https&#39;).text
-        self.ip_list = response.split(&#39;\r\n&#39;)
-
-    ip = random.choice(self.ip_list)
-    request.meta[&#39;proxy&#39;] = &quot;https://&quot;+ip
-    print(&quot;当前proxy:%s&quot; % ip)
-    self.ip_list.remove(ip)
-    return None
-
-def process_response(self, request, response, spider):
-    # Called with the response returned from the downloader.
-    # Must either;
-    # - return a Response object
-    # - return a Request object
-    # # - or raise IgnoreRequest
-
-    if response.status == 403:
-        res = parse.urlparse(request.url)
-        res = parse.parse_qs(res.query)
-        url = res.get(&#39;r&#39;)
-        if url and len(url) &gt; 0 :
-            request = request.replace(url=res[&#39;r&#39;][0])
-        return request
-
-    return response
-</code></pre>
-
-<p>其中主要就要实现两个函数，process_request和process_response，前者是每次爬取页面前Scrapy会调用这个函数，后者则是每次爬取完页面之后调用。<br/>
-    在前者方法里，我们通过调用一个在线的代理ip获取接口，获取一个代理IP，然后设置request的proxy属性达到更换代理的功能，当然，你也可以通过文件读取代理IP。<br/>
-    在后者的方法里，我们判断了状态码为403的状况，因为这个状态码标识当前的request被反爬虫禁止侦测并禁止了，而我们要做的就是把这个禁止的request地址重新包装下放到Scrapy的爬取队列当中。</p>
-
-<h4 id="toc_14">影评Item</h4>
-
-<pre><code class="language-python">class ReviewItem(scrapy.Item):
-id = scrapy.Field()
-username = scrapy.Field()
-nickname = scrapy.Field()
-avatar = scrapy.Field()
-movieId = scrapy.Field()
-rating = scrapy.Field()
-create_time = scrapy.Field()
-title = scrapy.Field()
-summary = scrapy.Field()
-alt = scrapy.Field()
-</code></pre>
-
-<p>没啥好说的，想存啥就写啥</p>
-
-<h4 id="toc_15">影评Pipeline</h4>
-
-<pre><code class="language-python">
-class ReviewPipeline(object):
-
-    reviewInsert = &#39;&#39;&#39;insert into reviews(id,username,nickname,avatar,summary,title,movieId,rating,create_time,alt) values (&quot;{id}&quot;,&quot;{username}&quot;, &quot;{nickname}&quot;,&quot;{avatar}&quot;, &quot;{summary}&quot;,&quot;{title}&quot;,&quot;{movieId}&quot;,&quot;{rating}&quot;,&quot;{create_time}&quot;,&quot;{alt}&quot;)&#39;&#39;&#39;
-
-    def process_item(self, item, spider):
-        sql_insert = self.reviewInsert.format(
-            id=item[&#39;id&#39;],
-            username=pymysql.escape_string(item[&#39;username&#39;]),
-            nickname=pymysql.escape_string(item[&#39;nickname&#39;]),
-            avatar=pymysql.escape_string(item[&#39;avatar&#39;]),
-            summary=pymysql.escape_string(item[&#39;summary&#39;]),
-            title=pymysql.escape_string(item[&#39;title&#39;]),
-            rating=item[&#39;rating&#39;],
-            movieId=item[&#39;movieId&#39;],
-            create_time=pymysql.escape_string(item[&#39;create_time&#39;]),
-            alt=pymysql.escape_string(item[&#39;alt&#39;])
-        )
-        print(&quot;SQL:&quot;, sql_insert)
-        self.cursor.execute(sql_insert)
-        return item
-
-    def open_spider(self, spider):
-        self.connect = pymysql.connect(&#39;localhost&#39;,&#39;root&#39;,&#39;******&#39;,&#39;douban&#39;, charset=&#39;utf8&#39;, use_unicode=True)
-        self.cursor = self.connect.cursor()
-        self.connect.autocommit(True)
-
-
-    def close_spider(self, spider):
-        self.cursor.close()
-        self.connect.close()
-</code></pre>
-
-<pre><code class="language-text">和之前的电影的pipeline类似，就是基本的数据库写操作。
-</code></pre>
-
-<h4 id="toc_16">运行爬虫</h4>
-
-<pre><code class="language-shell">scrapy crawl review
-</code></pre>
-
-<p>在我写完这篇文章时，影评的爬虫仍然还在爬取当中：<br/>
-<img src="https://pic.mylonly.com/2018-07-06-113420.png" alt=""/><br/>
-查看数据库，已经有97W的数据了:</p>
-
-<p><img src="https://pic.mylonly.com/2018-07-06-113210.png" alt=""/><br/>
-<img src="https://pic.mylonly.com/2018-07-06-113607.png" alt=""/></p>
-
-<p><em>如果你觉得我的文章对你有帮助，请赞助一杯☕️</em></p>
-
-<p><img src="https://pic.mylonly.com/2018-07-06-IMG_2094-1.JPG" alt=""/></p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2018/07/06</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='python.html'>Python</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15278621156583.html">
-                
-                  <h1>制作Kali Linux 加密U盘启动盘</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">前置条件</h2>
-
-<ol>
-<li>1个至少是32GB的U盘，最好是USB3.0接口的</li>
-<li>一台可以安装Virtual Box的电脑</li>
-</ol>
-
-<h2 id="toc_1">需要下载的文件</h2>
-
-<ol>
-<li>Kali Linux 64位 iso镜像文件: <a href="https://www.kali.org/downloads/">下载地址</a></li>
-<li>Virtual Box 安装包 <a href="https://www.virtualbox.org/wiki/Downloads">下载地址</a></li>
-<li>Kali Linux OVA镜像文件(OVA格式) <a href="https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-hyperv-image-download/">下载地址</a></li>
-<li>Virtual Box Extension Pack <a href="https://www.virtualbox.org/wiki/Downloads">下载地址</a></li>
-</ol>
-
-<h2 id="toc_2">安装Kali Linux 虚拟机</h2>
-
-<p>我们需要借助Kali里面的一些工具来帮助我们制作加密U盘，所以我们需要首先安装一个Kali Linux虚拟机，如果你已经有了类似的虚拟机，可以忽略这个步骤。</p>
-
-<p>利用安装包安装完VirtualBox之后：</p>
-
-<ol>
-<li>在菜单项<code>管理</code>当中选择<code>导入虚拟电脑</code>，然后选中之前下载好的Kali的OVA格式虚拟机镜像文件。</li>
-<li>安装Virtual Box Extension Pack，这步主要是让虚拟机能支持USB3.0的设备</li>
-<li>修改已经导入的Kali虚拟机的设置，在USB设备选项中选择<code>USB 3.0 控制器</code>
-<img src="https://pic.mylonly.com/2018-06-01-589FAFA6C598ACDFD296B6D320D525C7.jpg" alt=""/></li>
-<li>启动Kali虚拟机，进入Kali之后，点击VirtualBox的<code>设备</code>菜单项，选择<code>安装增强功能</code>,如果提示安装失败，可以直接将桌面上出现的光盘中的VBoxLinuxAdditions.run 拷贝至其他目录，修改其权限为755，然后手动运行此脚本即可。
-<img src="https://pic.mylonly.com/2018-06-01-151200.png" alt=""/></li>
-<li>设置共享文件夹，在VirtualBox当中操作，这步主要是方便后面将下载在windows里的Kali的iso文件拷贝至Kali当中。
-<img src="https://pic.mylonly.com/2018-06-01-56483D9C90D387A88824988AFDE2DCF1.jpg" alt=""/></li>
-</ol>
-
-<h2 id="toc_3">U盘初始设置</h2>
-
-<ol>
-<li>选择VirtualBox的<code>设备</code>菜单，在<code>USB</code>子菜单选中已经插在主机上的U盘设备，将U盘映射到虚拟机当中
-<img src="https://pic.mylonly.com/2018-06-01-151239.png" alt=""/></li>
-<li>找到Kali当中的GParted工具打开，选择已经挂载的U盘(如果你的虚拟机之前没有挂载过其他U盘,默认的挂载分区应该是<code>/dev/sdb</code>,本文演示截图当中显示为/dev/sdc是因为之前已经挂载过一个U盘)
-<img src="https://pic.mylonly.com/2018-07-07-123121.jpg" alt=""/></li>
-<li><p>然后先将U盘卸载，然后删除分区（记得执行顶部工具栏的回车样式的按钮）<br/>
-<img src="https://pic.mylonly.com/2018-07-07-123132.jpg" alt=""/></p>
-<h2 id="toc_4">写入镜像、U盘分区</h2></li>
-<li><p>将之前共享文件夹里已经下载好的Kali的iso文件拷贝至Kali当中</p></li>
-<li><p>利用如下命令将该iso文件拷贝至U盘当中</p></li>
-</ol>
-
-<pre><code class="language-text">dd if=kali-linux-2018.2-amd64.iso of=/dev/sdc bs=1M  
-</code></pre>
-
-<ol>
-<li>利用parted工具对U盘当中未使用的其他部分进行分区，命令如下</li>
-</ol>
-
-<pre><code class="language-bash">parted  #进入parted界面
-select /dev/sdc #选择U盘分区
-print #查看当前分区信息
-mkpart primary 2937 23417 #制作新的分区，起始位置从2937M开始，到23417位置结束
-print #查看新的分区信息
-</code></pre>
-
-<p><img src="https://pic.mylonly.com/2018-06-01-152223.jpg" alt=""/></p>
-
-<h2 id="toc_5">制作加密U盘</h2>
-
-<ol>
-<li><p>制作加密分区</p>
-<pre><code class="language-text">cryptsetup --verbose --verify-passphrase luksFormat /dev/sdc3 
-</code></pre>
-<p>确认覆盖分区，输入大写的YES，然后输入两遍密码之后，加密分区制作完毕<br/>
-<strong>注意/dev/sdc3,在上面利用parted制作新分区时，其属于/dev/sdc下面的第三个分区</strong><br/>
-<img src="https://pic.mylonly.com/2018-06-01-15A3CBD2C0856CCC83089E164F496957.png" alt=""/></p></li>
-<li><p>对加密分区格式化分区,分配卷标</p>
-<pre><code class="language-bash">cryptsetup luksOpen /dev/sdc3 usb  #打开加密的/dev/sdc3分区至usb文件
-ls /dev/mapper/usb #上面的命令执行完毕之后会在/dev/mapper目录下生成一个usb文件<br/>
-mkfs.ext4 /dev/mapper/usb #将打开的分区格式化成ext4格式<br/>
-e2label /dev/mapper/usb persistence #将分区卷标指定为persistence,名字必须为persistence
-</code></pre></li>
-<li><p>挂载新的分区,写入验证文件</p>
-<pre><code class="language-bash">mkdir -p /mnt/usb 
-mount /dev/mapper/usb /mnt/usb #将之前格式化的usb设备挂载到/mnt/usb目录下<br/>
-echo &quot;/ union&quot; &gt; /mnt/usb/persistence.conf<br/>
-#写入一个persistence.conf文件，此文件会在启动时用来确认此U盘是用来加密存储的分区
-</code></pre></li>
-<li><p>卸载分区，退出加密分区</p>
-<pre><code class="language-bash">umount /dev/mapper/usb
-cryptsetup luksClose /dev/mapper/usb
-</code></pre>
-<p><img src="https://pic.mylonly.com/2018-07-07-123146.jpg" alt=""/></p></li>
-</ol>
-
-<h2 id="toc_6">重启物理电脑，选择从U盘启动</h2>
-
-<p>进入Boot Menu之后，选择LIve USB Encrypted Persistence 进入系统，之后会让你输入之前创建加密分区时输入的密码，密码输入正确才能正确的进入系统，至此，整个制作加密Kali Linux U盘启动盘过程结束。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2018/06/01</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kali%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95.html'>Kali渗透测试</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -1117,6 +639,8 @@ cryptsetup luksClose /dev/mapper/usb
 
       	<p class="cat-list">
         
+            <a href="PM.html"><strong>PM</strong></a>
+        
             <a href="ios.html"><strong>iOS</strong></a>
         
             <a href="linux.html"><strong>Linux</strong></a>
@@ -1164,6 +688,12 @@ cryptsetup luksClose /dev/mapper/usb
 		  
 		      
 			      <li class="post">
+			        <a href="15779359388855.html">Kubernets特性介绍</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
@@ -1171,12 +701,6 @@ cryptsetup luksClose /dev/mapper/usb
 		      
 			      <li class="post">
 			        <a href="15773284865375.html">WebDashboard UI部署</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

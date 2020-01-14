@@ -77,6 +77,8 @@
     <li><label>Categories</label></li>
 
         
+            <li><a href="PM.html">PM</a></li>
+        
             <li><a href="ios.html">iOS</a></li>
         
             <li><a href="linux.html">Linux</a></li>
@@ -117,6 +119,137 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15277738508394.html">
+                
+                  <h1>Mimetic库分析3——Mime头Header</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Mimetic的header和body以一个空格来区分。如下</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-%E6%8D%95%E8%8E%B7.PNG" alt=""/></p>
+
+<p>红线以上部分就是Header了，红线以下部分就是body。<br/>
+Mimetic中Header的继承关系如下</p>
+
+<p><code>Header：public Rfc822Header：public std:deque&lt;Field&gt;</code></p>
+
+<p>可以看到Header中存放的值是一个deque队列，队列里面的每一项都是一个name-value的pari对，name就是header中每一行冒号左边的字符串，而value就是冒号右边的字符串。mimetic将这两部分组成一个pair存放在deque中。然后在Header类中提供相应的接口存取这些值。</p>
+
+<p>下图是Header的接口</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-1.png" alt=""/></p>
+
+<p>RfcHeader的接口</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-2.PNG" alt=""/></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2013/05/31</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15277726988270.html">
+                
+                  <h1>Mimetic库分析2-——入口类MimeEntity</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>整个Mimetic的入口类就是MimeEntity类，整个MIME格式文件或者字符串都是在MimeEntity内部完成解析的。<br/>
+MimeEntity类很简单，其成员如下：</p>
+
+<p><img src="https://pic.mylonly.com/2018-05-31-1.PNG" alt=""/></p>
+
+<p>MimeEntity类提供了两种常用的初始化方式</p>
+
+<p>迭代器初始化：</p>
+
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);  //文件流
+ostrstream ostr&lt;&lt;ifstream;  //转换成strstream
+string str_eml=ostr.str();     //将ifstream转换成string字符串
+MimeEntity me(str_eml.begin(),str_eml.end());  
+</code></pre>
+
+<p>流初始化</p>
+
+<pre><code class="language-text">ifstream file_in(&quot;test.eml&quot;);         
+MimeEntity me(file_in);
+</code></pre>
+
+<p>其中MimeEntity(Iterator beg,Iterator end,int mask = imNone)这个构造函数的第三个参数mask是解析参数，可以去下列值：</p>
+
+<pre><code class="language-text">imNone   //完整解析整个MIME格式文件
+imHeader  //忽略MIME头
+imBody     //忽略MIME正文
+imChildParts  //忽略嵌套的MIME
+imPreamble   //忽略冗余头
+imEpilogue    //忽略结束符
+</code></pre>
+
+<p>MimeEntity将整个MIME格式分成两部分，以空格（\r\n\r\n）为分割符，空格以上的为MIME头，存放在m_header中，空格以下的为MIME正文，存放在m_body中，可以分别通过调用成员函数header()和body()得到相应的类型值。</p>
+
+<pre><code class="language-text">#include&lt;iostream&gt;
+#include&lt;mimetic/mimetic.h&gt;
+    
+using namespace std;
+using namespace mimetic;
+    
+int main()
+{               
+    ifstream file_in(&quot;test.eml&quot;);         
+    if(!file_in)
+        return -1;
+    MimeEntity me(file_in);
+    cout&lt;&lt;me&lt;&lt;endl;   //可以直接打印出该邮件内容
+    return 0;
+}
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2013/05/31</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E8%BF%9C%E5%8F%A4%E7%9F%A5%E8%AF%86.html'>远古知识</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15277718994557.html">
                 
@@ -257,6 +390,8 @@ intmain()
 
       	<p class="cat-list">
         
+            <a href="PM.html"><strong>PM</strong></a>
+        
             <a href="ios.html"><strong>iOS</strong></a>
         
             <a href="linux.html"><strong>Linux</strong></a>
@@ -304,6 +439,12 @@ intmain()
 		  
 		      
 			      <li class="post">
+			        <a href="15779359388855.html">Kubernets特性介绍</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
@@ -311,12 +452,6 @@ intmain()
 		      
 			      <li class="post">
 			        <a href="15773284865375.html">WebDashboard UI部署</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

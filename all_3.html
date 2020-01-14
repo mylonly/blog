@@ -77,6 +77,8 @@
     <li><label>Categories</label></li>
 
         
+            <li><a href="PM.html">PM</a></li>
+        
             <li><a href="ios.html">iOS</a></li>
         
             <li><a href="linux.html">Linux</a></li>
@@ -117,6 +119,148 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15446089404193.html">
+                
+                  <h1>Redmine Docker部署</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li><p>拉取镜像</p>
+<pre><code class="language-text">docker pull redmine
+</code></pre></li>
+<li><p>启动docker镜像</p>
+<pre><code class="language-text">docker run -d --name redmine \
+-e REDMINE_DB_MYSQL=192.168.2.191 \<br/>
+-e REDMINE_DB_USERNAME=root \<br/>
+-e REDMINE_DB_PASSWORD=www.1234TV.com \<br/>
+-e REDMINE_DB_DATABASE=redmine \<br/>
+-p 80:3000 redmine   
+</code></pre></li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15445994167623.html">
+                
+                  <h1>GitLab和Redmine深度集成</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">Redmine Issue Tracker</h2>
+
+<ol>
+<li><p>设置Redmine Issue Tracker<br/>
+在GitLab的项目setting里面找到integrations，找到redmine<br/>
+修改如下:<br/>
+<img src="https://pic.mylonly.com/2018-12-12-072609.png" alt=""/></p></li>
+<li><p>关闭内置issue</p>
+<p>setting-&gt;general-&gt;Permissions</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-072807.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_1">Redmine 启用版本库</h2>
+
+<ol>
+<li><p>进入redmine容器</p>
+<pre><code class="language-text">docker exec -it redmine /bin/bash
+</code></pre></li>
+<li><p>安装插件<code>redmine_gitlab_hook</code></p>
+<p>进入<code>/usr/src/redmine/plugins</code>目录</p>
+<pre><code class="language-text">git clone https://github.com/phlegx/redmine_gitlab_hook.git
+</code></pre>
+<p>登录redmine管理员，管理-&gt;插件，找到<code>Redmine GitLab Hook plugin</code>,进入配置</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-101517.png" alt=""/></p></li>
+<li><p>创建本地git仓库并拉取</p>
+<pre><code class="language-text">mkdir -p /home/redmine/git-repo #创建本地git仓库
+cd /home/redmine/git-repo/<br/>
+git clone --mirror http://username:password@gitlab.1234tv.lan:/awesome/python-test.git #此处最好采用http加上用户名和密码的方式拉取git仓库<br/>
+chmod -R redmine:redmine python-test.git ##记得修改用户组为redmine:redmine
+</code></pre></li>
+<li><p>登录redmine管理员，启用版本库</p>
+<p><img src="https://pic.mylonly.com/2018-12-12-073502.png" alt=""/></p></li>
+<li><p>配置版本库</p>
+<p>进入到和gitlab项目对应的项目中，进入设置页面<br/>
+git clone时加了-mirror参数,使用下面参数<br/>
+<img src="https://pic.mylonly.com/2018-12-12-101134.png" alt=""/><br/>
+如果git clone 时没有使用-mirror参数，使用下面的配置<br/>
+<img src="https://pic.mylonly.com/2018-12-12-073658.png" alt=""/></p></li>
+</ol>
+
+<h2 id="toc_2">配置GitLab Webhook</h2>
+
+<p>进入GitLab的项目中，在setting-&gt;Integrations中添加如下webhooks地址</p>
+
+<p>webhook url格式:</p>
+
+<pre><code class="language-text">{redmine_installation_url}/gitlab_hook?key={redmine_repository_API_key}&amp;project_id={redmine_project_identifier}
+</code></pre>
+
+<p><img src="https://pic.mylonly.com/2018-12-12-101954.png" alt=""/></p>
+
+<p>如果redmine的项目名称和版本库的标识不一致，需要带上<code>repository_name</code>参数，手动指定redmine上的版本库</p>
+
+<p>如果需要gitlab webhook插件自动创建版本库,还需要加上<code>repository_git_url</code>、<code>repository_namespace</code>、<code>repository_name</code>这几个参数,</p>
+
+<p>其中<code>repository_git_url</code>为需要克隆的远程仓库的地址<br/>
+而<code>repository_namespace</code>和<code>repository_name</code>自由填写，会在redmine的版本库里生成类似 <code>{repository_namespace}_{repository_name}</code>样式的版本库标识</p>
+
+<h2 id="toc_3">验证</h2>
+
+<ol>
+<li>在redmine里创建一个issue，状态为新建</li>
+<li>本地clone项目，少许修改，commit日志填写&quot;bugfix #<id>&quot; (<code>id为redmine上的issue id</code>),然后push 到服务器上</li>
+<li>查看redmine上该issue的状态是否改变</li>
+</ol>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2018/12/12</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='PM.html'>PM</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15445172404972.html">
                 
@@ -497,195 +641,6 @@ mitsutaka/softether-vpnclient<br/>
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="15439862777767.html">
-                
-                  <h1>SoftEther VPN 部署</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">Server安装部署</h2>
-
-<p>点<a href="https://www.softether-download.com/cn.aspx?product=softether">这里</a>找到合适的软件包</p>
-
-<p>或者直接用下面这个链接    </p>
-
-<pre><code class="language-text">wget https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.28-9669-beta/softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
-</code></pre>
-
-<ol>
-<li><p>解压完拷贝到/usr/local目录,然后make编译</p>
-<pre><code class="language-text">tar -zvxf softether-vpnserver-v4.28-9669-beta-2018.09.11-linux-x64-64bit.tar.gz
-mv vpnserver /usr/local/<br/>
-cd /usr/local/vpnserver<br/>
-make
-</code></pre></li>
-<li><p>启动vpnserver</p>
-<pre><code class="language-text">/usr/local/vpnserver start
-#/usr/local/vpnserver stop
-</code></pre>
-<p><em>注意：SoftEther默认监听443端口，记得防火墙打开443端口</em></p></li>
-<li><p>安装server manager</p>
-<p>点击<a href="http://www.leqii.com/download/yulan/d77/d77.html">这里</a>查看manager设置</p></li>
-<li><p>安装vpnclient</p>
-<p>拉取vpnclient镜像</p>
-<pre><code class="language-text">sudo docker pull mitsutaka/softether-vpnclient
-</code></pre>
-<p>启动vpnclient</p>
-<pre><code class="language-text">docker run -d --name=softether-vpnclient \
---net=host --privileged \<br/>
--e VPN_SERVER=&lt;Softether VPN server&gt; \<br/>
--e VPN_PORT=&lt;Softether VPN port&gt; \<br/>
--e ACCOUNT_USER=&lt;Registered username&gt; \<br/>
--e ACCOUNT_PASS=&lt;Registered password&gt; \<br/>
--e VIRTUAL_HUB=&lt;Virtual Hub name&gt; \<br/>
--e TAP_IPADDR=&lt;IP address/netmask&gt; \<br/>
-mitsutaka/softether-vpnclient
-</code></pre>
-<p>例子:</p>
-<pre><code class="language-text">docker run -d --name=softether-vpnclient     --net=host --privileged     -e VPN_SERVER=120.132.55.152     -e VPN_PORT=443     -e ACCOUNT_USER=test     -e ACCOUNT_PASS=1234TV.com     -e VIRTUAL_HUB=1234TV   -e TAP_IPADDR=192.168.111.79/255.255.255.0 mitsutaka/softether-vpnclient
-</code></pre></li>
-</ol>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2018/12/05</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15439814205804.html">
-                
-                  <h1>GitLab Docker部署</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<ol>
-<li><p>安装Docker</p>
-<pre><code class="language-text">sudo wget -qO- https://get.docker.com/ | sh
-</code></pre></li>
-<li><p>非root用户需要将用户加到docker用户组中</p>
-<pre><code class="language-text">sudo usermod -aG docker ubuntu
-</code></pre></li>
-<li><p>启动docker</p>
-<pre><code class="language-text">sudo service docker start
-</code></pre></li>
-<li><p>拉取gitlab-ce镜像</p>
-<pre><code class="language-text">sudo docker pull gitlab/gitlab-ce
-</code></pre></li>
-<li><p>启动gitlab-ce docker镜像</p>
-<pre><code class="language-text">sudo docker run --detach \
---hostname gitlab.example.com \<br/>
---publish 443:443 --publish 80:80 --publish 22:22 \<br/>
---name gitlab \<br/>
---restart always \<br/>
---volume /srv/gitlab/config:/etc/gitlab \<br/>
---volume /srv/gitlab/logs:/var/log/gitlab \<br/>
---volume /srv/gitlab/data:/var/opt/gitlab \<br/>
-gitlab/gitlab-ce:latest
-</code></pre>
-<p>具体的镜像命令可以参考<a href="https://docs.gitlab.com/omnibus/docker/">gitlab官方文档</a></p>
-<p>如果是新安装的Ubuntu服务器，记得用ufw添加端口</p>
-<pre><code class="language-text">sudo ufw allow 80/tcp
-</code></pre></li>
-</ol>
-
-<h2 id="toc_0">设置默认的管理员账号密码</h2>
-
-<ol>
-<li><p>进入gitlab容器</p>
-<pre><code class="language-text">docker exec -it gitlab /bin/bash
-</code></pre></li>
-<li><p>进入rails</p>
-<pre><code class="language-text">cd /opt/gitlab/bin
-gitlab-rails console production
-</code></pre></li>
-<li><p>设置root用户密码</p>
-<pre><code class="language-text">irb(main):001:0&gt; u = User.where(email: &#39;admin@example.com&#39;).first
-=&gt; #&lt;User id:1 @root&gt;<br/>
-irb(main):002:0&gt; u.password<br/>
-=&gt; nil<br/>
-irb(main):003:0&gt; u.password=&#39;12345678&#39;<br/>
-=&gt; &quot;12345678&quot;<br/>
-irb(main):004:0&gt; u.save!<br/>
-Enqueued ActionMailer::DeliveryJob (Job ID: b0e971db-4c6b-439c-82ee-86c7c277537e) to Sidekiq(mailers) with arguments: &quot;DeviseMailer&quot;, &quot;password_change&quot;, &quot;deliver_now&quot;, gid://gitlab/User/1<br/>
-=&gt; true
-</code></pre></li>
-</ol>
-
-<h2 id="toc_1">邮件配置</h2>
-
-<ol>
-<li><p>进入gitlab容器</p>
-<pre><code class="language-text">docker exec -it gitlab /bin/bash
-</code></pre></li>
-<li><p>修改配置文件 </p>
-<pre><code class="language-text">#vim /etc/gitlab/gitlab.rb，添加以下内容
-gitlab_rails[&#39;gitlab_email_enabled&#39;] = true<br/>
-gitlab_rails[&#39;gitlab_email_from&#39;] = &#39;gitlab@1234tv.com&#39;<br/>
-gitlab_rails[&#39;gitlab_email_display_name&#39;] = &#39;GitLab&#39;<br/>
-gitlab_rails[&#39;gitlab_email_reply_to&#39;] = &#39;noreply@1234tv.com&#39;<br/>
-gitlab_rails[&#39;smtp_enable&#39;] = true<br/>
-gitlab_rails[&#39;smtp_address&#39;] = &quot;smtp.exmail.qq.com&quot;<br/>
-gitlab_rails[&#39;smtp_port&#39;] = 465<br/>
-gitlab_rails[&#39;smtp_user_name&#39;] = &quot;gitlab@1234tv.com&quot;<br/>
-gitlab_rails[&#39;smtp_password&#39;] = &quot;******&quot;<br/>
-gitlab_rails[&#39;smtp_authentication&#39;] = &quot;login&quot;<br/>
-gitlab_rails[&#39;smtp_enable_starttls_auto&#39;] = true<br/>
-gitlab_rails[&#39;smtp_tls&#39;] = true
-</code></pre></li>
-<li><p>重新加载配置文件，并验证是否生效</p>
-<pre><code class="language-text">gitlab-ctl reconfigure ##重新加载配置
-gitlab-rails console  ##进入rails
-</code></pre>
-<p>输入 <code>ActionMailer::Base.delivery_method</code>:</p>
-<pre><code class="language-text">irb(main):002:0* ActionMailer::Base.delivery_method
-</code></pre>
-<p>如果出现<code>=&gt;:smtp</code>说明设置成功了</p></li>
-</ol>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2018/12/05</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='docker.html'>Docker</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -740,6 +695,8 @@ gitlab-rails console  ##进入rails
 
       	<p class="cat-list">
         
+            <a href="PM.html"><strong>PM</strong></a>
+        
             <a href="ios.html"><strong>iOS</strong></a>
         
             <a href="linux.html"><strong>Linux</strong></a>
@@ -787,6 +744,12 @@ gitlab-rails console  ##进入rails
 		  
 		      
 			      <li class="post">
+			        <a href="15779359388855.html">Kubernets特性介绍</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
@@ -794,12 +757,6 @@ gitlab-rails console  ##进入rails
 		      
 			      <li class="post">
 			        <a href="15773284865375.html">WebDashboard UI部署</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

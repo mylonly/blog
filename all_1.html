@@ -77,6 +77,8 @@
     <li><label>Categories</label></li>
 
         
+            <li><a href="PM.html">PM</a></li>
+        
             <li><a href="ios.html">iOS</a></li>
         
             <li><a href="linux.html">Linux</a></li>
@@ -117,6 +119,142 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="15773244836718.html">
+                
+                  <h1>ubuntu安装NFS-Server提供NFS服务</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>如果没有现成的NFS服务,可以利用现有服务器部署一套</p>
+
+<p>安装NFS服务端</p>
+
+<pre><code class="language-text">    sudo apt-get install nfs-kernel-server
+</code></pre>
+
+<p>编辑/etc/exports文件,增加你要提供nfs服务的路径</p>
+
+<pre><code class="language-text"># /etc/exports: the access control list for filesystems which may be exported
+#       to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+
+/data/charts *(rw,sync,no_subtree_check,no_root_squash)
+/data/mysql *(rw,sync,no_subtree_check,no_root_squash)
+/data/redis *(rw,sync,no_subtree_check,no_root_squash)
+</code></pre>
+
+<p>更改共享目录权限，修改为777 (目前还不清楚最低要求权限是多少)</p>
+
+<pre><code class="language-text">sudo chown 777  /data/charts
+</code></pre>
+
+<p>重启NFS服务</p>
+
+<pre><code class="language-text">sudo /etc/init.d/nfs-kernel-server restart
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/12/26</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15768388508712.html">
+                
+                  <h1>基础服务组件安装</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">nginx-ingress</h2>
+
+<p>以NodePort的形式负载均衡，每个node上都会绑定80、443端口</p>
+
+<pre><code class="language-text">helm install nginx-ingress aliyun/nginx-ingress --set controller.service.type=NodePort,controller.service.externalTrafficPolicy=Local,controller.kind=DaemonSet,controller.daemonset.useHostPort=true -n kube-system
+</code></pre>
+
+<h2 id="toc_1">chartmuseum</h2>
+
+<pre><code class="language-text">helm install chartmuseum aliyun/chartmuseum  --set persistence.pv.enabled=true,persistence.pv.nfs.server=10.9.122.86,persistence.pv.nfs.path=/data/charts/,persistence.pv.pvname=charts --set ingress.enabled=true   --set ingress.hosts[0].name=charts.youxuetong.com   --set ingress.hosts[0].path=/ --set ingress.hosts[0].tls=true --set ingress.hosts[0].tlsSecret=chart-secret,env.open.DISABLE_API=false,env.open.ALLOW_OVERWRITE=true,env.secret.BASIC_AUTH_USER=yxt,env.secret.BASIC_AUTH_PASS=9cWcXrHPZiDj7jwL
+</code></pre>
+
+<h2 id="toc_2">NFS动态存储</h2>
+
+<pre><code class="language-text">helm install nfs-client-provisioner aliyun/nfs-client-provisioner --set nfs.server=192.168.122.9 --set nfs.path=/data -n share
+</code></pre>
+
+<p>如果需要将nfs-client当做默认storageclass，需要加上storageClass.defaultClass=true参数</p>
+
+<pre><code class="language-text">helm install nfs-client-provisioner aliyun/nfs-client-provisioner --set nfs.server=192.168.122.9,nfs.path=/data,storageClass.defaultClass=true -n share
+</code></pre>
+
+<blockquote>
+<p>需要所有node节点都安装nfs组件，否则挂载不上</p>
+
+<pre><code class="language-text">sudo apt-get install nfs-common
+</code></pre>
+</blockquote>
+
+<h2 id="toc_3">MySQL</h2>
+
+<pre><code class="language-text">helm install mysql aliyun/mysql --set root.password=4zxsM3XcTgVtydCK,db.user=dev,db.password=QLdTNpi6QQqiMp7B,db.name=passport_dev -n share
+</code></pre>
+
+<h2 id="toc_4">Redis</h2>
+
+<pre><code class="language-text">helm install redis aliyun/redis --set password=X2eH6BvahNqAuQkg,master.service.type=NodePort,master.service.nodePort=32765,slave.service.type=NodePort,slave.service.nodePort=32764 -n share
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/12/20</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="15761310581680.html">
                 
@@ -292,172 +430,6 @@ rm -rf /var/etcd
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="15743903332872.html">
-                
-                  <h1>helm基础介绍</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">helm安装</h2>
-
-<h3 id="toc_1">3.0版本</h3>
-
-<pre><code class="language-text">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-</code></pre>
-
-<h2 id="toc_2">helm仓库</h2>
-
-<pre><code class="language-text">http://mirror.azure.cn/kubernetes/charts/
-</code></pre>
-
-<p>使用方法</p>
-
-<pre><code class="language-text">helm repo add azure http://mirror.azure.cn/kubernetes/charts/
-</code></pre>
-
-<p>阿里云</p>
-
-<pre><code class="language-text">helm repo add aliyun https://apphub.aliyuncs.com/
-</code></pre>
-
-<h2 id="toc_3">搜索公共仓库</h2>
-
-<p><a href="https://hub.helm.sh/">仓库地址</a></p>
-
-<pre><code class="language-text">helm search hub wordpress
-</code></pre>
-
-<h2 id="toc_4">搜索私有仓库</h2>
-
-<pre><code class="language-text">helm search repo wordpress
-</code></pre>
-
-<h2 id="toc_5">Helm 如何管理多环境下 (Test、Staging、Production) 的业务配置？</h2>
-
-<p>Chart 是支持参数替换的，可以把业务配置相关的参数设置为模板变量。使用 helm install 命令部署的时候指定一个参数值文件，这样就可以把业务参数从 Chart 中剥离了。例如： helm install --values=values-production.yaml wordpress。</p>
-
-<h2 id="toc_6">helm push 插件</h2>
-
-<pre><code class="language-text">helm plugin install https://github.com/chartmuseum/helm-push
-</code></pre>
-
-<p>上传包</p>
-
-<pre><code class="language-text">helm push . http://192.168.1.24:8080
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2019/11/22</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15595559159421.html">
-                
-                  <h1>Linux 测试磁盘性能</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>测试场景：</p>
-
-<p>100%随机，100%读， 4K</p>
-
-<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=randread -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=rand_100read_4k
-</code></pre>
-
-<p>100%随机，100%写， 4K</p>
-
-<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=randwrite -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=rand_100write_4k
-</code></pre>
-
-<p>100%顺序，100%读 ，4K</p>
-
-<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=read -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=sqe_100read_4k
-</code></pre>
-
-<p>100%顺序，100%写 ，4K</p>
-
-<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=write -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=sqe_100write_4k
-</code></pre>
-
-<p>100%随机，70%读，30%写 4K</p>
-
-<pre><code class="language-text">fio -filename=/dev/emcpowerb -direct=1 -iodepth 1 -thread -rw=randrw -rwmixread=70 -ioengine=psync -bs=4k -size=1000G -numjobs=50 -runtime=180 -group_reporting -name=randrw_70read_4k
-</code></pre>
-
-<p>io=执行了多少M的IO</p>
-
-<p>bw=平均IO带宽<br/>
-iops=IOPS<br/>
-runt=线程运行时间<br/>
-slat=提交延迟<br/>
-clat=完成延迟<br/>
-lat=响应时间<br/>
-bw=带宽<br/>
-cpu=利用率<br/>
-IO depths=io队列<br/>
-IO submit=单个IO提交要提交的IO数<br/>
-IO complete=Like the above submit number, but for completions instead.<br/>
-IO issued=The number of read/write requests issued, and how many of them were short.<br/>
-IO latencies=IO完延迟的分布</p>
-
-<p>io=总共执行了多少size的IO<br/>
-aggrb=group总带宽<br/>
-minb=最小.平均带宽.<br/>
-maxb=最大平均带宽.<br/>
-mint=group中线程的最短运行时间.<br/>
-maxt=group中线程的最长运行时间.</p>
-
-<p>ios=所有group总共执行的IO数.<br/>
-merge=总共发生的IO合并数.<br/>
-ticks=Number of ticks we kept the disk busy.<br/>
-io_queue=花费在队列上的总共时间.<br/>
-util=磁盘利用率</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2019/06/03</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='linux.html'>Linux</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -512,6 +484,8 @@ util=磁盘利用率</p>
 
       	<p class="cat-list">
         
+            <a href="PM.html"><strong>PM</strong></a>
+        
             <a href="ios.html"><strong>iOS</strong></a>
         
             <a href="linux.html"><strong>Linux</strong></a>
@@ -559,6 +533,12 @@ util=磁盘利用率</p>
 		  
 		      
 			      <li class="post">
+			        <a href="15779359388855.html">Kubernets特性介绍</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15774160287586.html">K8S日志系统EFK</a>
 			      </li>
 		     
@@ -566,12 +546,6 @@ util=磁盘利用率</p>
 		      
 			      <li class="post">
 			        <a href="15773284865375.html">WebDashboard UI部署</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15773244836718.html">ubuntu安装NFS-Server提供NFS服务</a>
 			      </li>
 		     
 		  

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  独自一人
+  Kubernets特性介绍 - 独自一人
   
   </title>
   
@@ -111,545 +111,39 @@
        
 
  <script type="text/javascript">
-	$(function(){
-		$('#menu_item_index').addClass('is_active');
-	});
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
 <div class="row">
-	<div class="large-8 medium-8 columns">
-		<div class="markdown-body home-categories">
-		
-			<div class="article">
-                <a class="clearlink" href="15786401810709.html">
-                
-                  <h1>k8s-1.16高可用集群部署</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">机器要求</h2>
-
-<p>高可用集群一般用于生产环境，官方推荐至少需要3台master节点机器，4台node节点机器</p>
-
-<table>
-<thead>
-<tr>
-<th>Hostname</th>
-<th>IP</th>
-<th>Role</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>ucloud-bj-k8s-master-01</td>
-<td>10.9.142.180</td>
-<td>Master Node</td>
-</tr>
-<tr>
-<td>ucloud-bj-k8s-node-01</td>
-<td>10.9.165.222</td>
-<td>Worker Node</td>
-</tr>
-<tr>
-<td>ucloud-bj-k8s-node-02</td>
-<td>10.9.127.58</td>
-<td>Worker Node</td>
-</tr>
-<tr>
-<td>ucloud-bj-K8s-node-03</td>
-<td>10.9.57.4</td>
-<td>Worker Node</td>
-</tr>
-<tr>
-<td>ucloud-bj-K8s-node-04</td>
-<td>10.9.174.192</td>
-<td>Worker Node</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="toc_1">安装准备</h2>
-
-<ol>
-<li><p>禁用Swap<br/>
-k8s为了使容器的调度更符合机器的实际资源情况，k8s建议关闭内存交换   </p>
-<pre><code class="language-text">swapoff -a
-</code></pre>
-<p>同时删除<code>/etc/fstab</code>中swap那条记录</p>
-<p>当然，如果你的机器资源确实不多，需要利用swap，那么你可以不关闭swap交换空间，通过如下参数告诉k8s开启swap</p>
-<pre><code class="language-text">kubelet --fail-swap-on=false ...
-</code></pre></li>
-<li><p>端口开放(生产环境)</p>
-<p><img src="https://pic.mylonly.com/2020-01-10-070912.jpg" alt=""/></p></li>
-</ol>
-
-<h2 id="toc_2">Docker安装(可选)</h2>
-
-<p>由于k8s需要安装指定docker18.06版本，所以如果你的版本不对，可以先卸载重新安装</p>
-
-<pre><code class="language-text">sudo apt-get remove docker docker-engine docker-ce docker.io
-</code></pre>
-
-<p>安装docker</p>
-
-<pre><code class="language-text"># 从 Ubuntu 的存储库安装 Docker：
-apt-get update
-apt-get install -y docker.io
-
-# 或者从 Docker 的 Ubuntu 或 Debian 镜像仓库中安装 Docker CE 18.06：
-
-## 安装环境准备。
-apt-get update &amp;&amp; apt-get install apt-transport-https ca-certificates curl software-properties-common
-
-## 下载 GPG 密钥。
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-
-## 添加 docker apt 镜像仓库。
-add-apt-repository \
-   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable&quot;
-
-## 安装 docker。
-apt-get update &amp;&amp; apt-get install docker-ce=18.06.0~ce~3-0~ubuntu
-
-# 设置守护进程。
-cat &gt; /etc/docker/daemon.json &lt;&lt;EOF
-{
-  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
-  &quot;log-driver&quot;: &quot;json-file&quot;,
-  &quot;log-opts&quot;: {
-    &quot;max-size&quot;: &quot;100m&quot;
-  },
-  &quot;storage-driver&quot;: &quot;overlay2&quot;
-}
-EOF
-
-mkdir -p /etc/systemd/system/docker.service.d
-
-# 重启 docker。
-systemctl daemon-reload
-systemctl restart docker
-</code></pre>
-
-<h2 id="toc_3">安装 <code>kubelet</code>,<code>kubeadm</code>,<code>kubectl</code></h2>
-
-<p>添加阿里源密钥</p>
-
-<pre><code class="language-text">curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
-</code></pre>
-
-<p>国内源(阿里)</p>
-
-<pre><code class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
-deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
-EOF
-</code></pre>
-
-<p>安装</p>
-
-<pre><code class="language-text">apt-get update
-apt-get install -y kubelet=1.16.2-00 kubeadm=1.16.2-00 kubectl=1.16.2-00
-apt-mark hold kubelet kubeadm kubectl
-    
-</code></pre>
-
-<h2 id="toc_4">安装Master节点</h2>
-
-<pre><code class="language-text">kubeadm init --control-plane-endpoint &quot;k8s-api.youxuetong.com:6443&quot; --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --upload-certs
-</code></pre>
-
-<p>如果安装完成，最后后输出如下内容</p>
-
-<pre><code class="language-text">Your Kubernetes control-plane has initialized successfully!
-
-To start using your cluster, you need to run the following as a regular user:
-
-  mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-You should now deploy a pod network to the cluster.
-Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
-  https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-You can now join any number of control-plane nodes by copying certificate authorities
-and service account keys on each node and then running the following as root:
-
-  kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
-    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782 \
-    --control-plane
-
-Then you can join any number of worker nodes by running the following on each as root:
-
-kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
-    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782
-</code></pre>
-
-<h2 id="toc_5">部署CNI网络</h2>
-
-<pre><code class="language-text">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
-</code></pre>
-
-<h2 id="toc_6">接入其他Master节点</h2>
-
-<p>在其他master节点机器上执行</p>
-
-<pre><code class="language-text">  kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
-    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782 \
-    --control-plane
-</code></pre>
-
-<p>如果提示token失效，请利用下面的命令去第一个master节点重新生成token</p>
-
-<pre><code class="language-text">kubeadm token create --print-join-command
-</code></pre>
-
-<h2 id="toc_7">接入其他Node节点</h2>
-
-<pre><code class="language-text">kubeadm join k8s-master:6443 --token vxszss.bboqeevhypvt0sxl \
-    --discovery-token-ca-cert-hash sha256:56205646be3a53103e175d544dcd27cc82317c93042763cab20745334d8cb782
-</code></pre>
-
-<h2 id="toc_8">安装完成</h2>
-
-<p>查看各节点状态</p>
-
-<pre><code class="language-text">ubuntu@ucloud-bj-k8s-master-01:~$ kubectl get nodes -o wide
-NAME                      STATUS   ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-ucloud-bj-k8s-master-01   Ready    master   26d   v1.16.2   10.9.142.180   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-ucloud-bj-k8s-master-02   Ready    master   26d   v1.16.2   10.9.175.27    &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-ucloud-bj-k8s-master-03   Ready    master   26d   v1.16.2   10.9.91.143    &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-ucloud-bj-k8s-node-01     Ready    &lt;none&gt;   26d   v1.16.2   10.9.165.222   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-ucloud-bj-k8s-node-02     Ready    &lt;none&gt;   26d   v1.16.2   10.9.127.58    &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-ucloud-bj-k8s-node-03     Ready    &lt;none&gt;   26d   v1.16.2   10.9.57.4      &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-ucloud-bj-k8s-node-04     Ready    &lt;none&gt;   26d   v1.16.2   10.9.174.192   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2020/01/10</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15786388799784.html">
-                
-                  <h1>k8s-1.16单主节点集群部署</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">机器要求</h2>
-
-<p>单主集群一般用于开发环境，至少需要大于2台机器，一台作为主节点，其余的作为工作节点，机器间可以相互访问即可。</p>
-
-<table>
-<thead>
-<tr>
-<th>Hostname</th>
-<th>Ip</th>
-<th>Role</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>k8s-master</td>
-<td>192.168.122.2</td>
-<td>Master Node</td>
-</tr>
-<tr>
-<td>k8s-node-01</td>
-<td>192.168.122.101</td>
-<td>Worker Node</td>
-</tr>
-<tr>
-<td>k8s-node-02</td>
-<td>192.168.122.102</td>
-<td>Worker Node</td>
-</tr>
-<tr>
-<td>K8s-node-03</td>
-<td>192.168.122.103</td>
-<td>Worker Node</td>
-</tr>
-</tbody>
-</table>
-
-<p>需要注意:</p>
-
-<blockquote>
-<p>如果你使用的是云服务器，服务器只有一块网卡，外网IP通过弹性IP绑定，请不要使用公网IP，使用内网网卡绑定的IP来通信。原因是，k8s只会监听网卡绑定IP的端口。</p>
-</blockquote>
-
-<h2 id="toc_1">安装准备</h2>
-
-<ol>
-<li><p>禁用Swap<br/>
-k8s为了使容器的调度更符合机器的实际资源情况，k8s建议关闭内存交换   </p>
-<pre><code class="language-text">swapoff -a
-</code></pre>
-<p>同时删除<code>/etc/fstab</code>中swap那条记录</p>
-<p>当然，如果你的机器资源确实不多，需要利用swap，那么你可以不关闭swap交换空间，通过如下参数告诉k8s开启swap</p>
-<pre><code class="language-text">kubelet --fail-swap-on=false ...
-</code></pre></li>
-<li><p>关闭防火墙(开发环境)</p>
-<pre><code class="language-text">systemctl stop firewalld
-systemctl disable firewalld
-</code></pre></li>
-<li><p>禁用SELinux(开发环境)</p>
-<pre><code class="language-text">sudo apt install selinux-utils
-setenforce 0
-</code></pre></li>
-<li><p>确认mac地址以及product uuid唯一<br/>
-如果你的服务器是通过虚拟机克隆过来的，请确保这两项唯一</p>
-<pre><code class="language-text">ip link #检查mac地址
-sudo cat /sys/class/dmi/id/product_uuid ##检查uuid
-</code></pre></li>
-</ol>
-
-<h2 id="toc_2">Docker安装(可选)</h2>
-
-<p>由于k8s需要安装指定docker18.06版本，所以如果你的版本不对，可以先卸载重新安装</p>
-
-<pre><code class="language-text">sudo apt-get remove docker docker-engine docker-ce docker.io
-</code></pre>
-
-<p>安装docker</p>
-
-<pre><code class="language-text"># 从 Ubuntu 的存储库安装 Docker：
-apt-get update
-apt-get install -y docker.io
-
-# 或者从 Docker 的 Ubuntu 或 Debian 镜像仓库中安装 Docker CE 18.06：
-
-## 安装环境准备。
-apt-get update &amp;&amp; apt-get install apt-transport-https ca-certificates curl software-properties-common
-
-## 下载 GPG 密钥。
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-
-## 添加 docker apt 镜像仓库。
-add-apt-repository \
-   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable&quot;
-
-## 安装 docker。
-apt-get update &amp;&amp; apt-get install docker-ce=18.06.0~ce~3-0~ubuntu
-
-# 设置守护进程。
-cat &gt; /etc/docker/daemon.json &lt;&lt;EOF
-{
-  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
-  &quot;log-driver&quot;: &quot;json-file&quot;,
-  &quot;log-opts&quot;: {
-    &quot;max-size&quot;: &quot;100m&quot;
-  },
-  &quot;storage-driver&quot;: &quot;overlay2&quot;
-}
-EOF
-
-mkdir -p /etc/systemd/system/docker.service.d
-
-# 重启 docker。
-systemctl daemon-reload
-systemctl restart docker
-</code></pre>
-
-<h2 id="toc_3">开始安装 （切换到root身份）</h2>
-
-<ol>
-<li><p>安装相关工具</p>
-<pre><code class="language-text">apt-get update &amp;&amp; apt-get install -y apt-transport-https curl
-</code></pre></li>
-<li><p>添加k8s软件源</p>
-<p>添加阿里源密钥</p>
-<pre><code class="language-text">curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
-</code></pre>
-<p>添加k8s阿里源</p>
-<pre><code class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
-deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main<br/>
-EOF
-</code></pre></li>
-<li><p>安装 <code>kubelet</code>,<code>kubeadm</code>,<code>kubectl</code></p>
-<pre><code class="language-text">apt-get update
-apt-get install -y kubelet kubeadm kubectl<br/>
-apt-mark hold kubelet kubeadm kubectl
-</code></pre>
-<p>非root用户需要加上sudo</p></li>
-</ol>
-
-<h2 id="toc_4">部署master</h2>
-
-<h3 id="toc_5">初始化master节点</h3>
-
-<pre><code class="language-text">kubeadm init --apiserver-advertise-address=192.168.122.2 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16
-</code></pre>
-
-<p>参数解释：</p>
-
-<ul>
-<li><code>--apiserver-advertise-address</code>: k8s 中的主要服务apiserver的部署地址，填自己的管理节点 ip</li>
-<li><code>--image-repository</code>: 拉取的 docker 镜像源，因为初始化的时候kubeadm会去拉 k8s 的很多组件来进行部署，所以需要指定国内镜像源，下不然会拉取不到镜像。</li>
-<li><code>--pod-network-cidr</code>: 这个是 k8s 采用的节点网络，因为我们将要使用flannel作为 k8s 的网络，所以这里填10.244.0.0/16就好</li>
-<li><code>--kubernetes-version</code>: 这个是用来指定你要部署的 k8s 版本的，一般不用填，不过如果初始化过程中出现了因为版本不对导致的安装错误的话，可以用这个参数手动指定。</li>
-<li><code>--gnore-preflight-errors</code>: 忽略初始化时遇到的错误，比如说我想忽略 cpu 数量不够 2 核引起的错误，就可以用--ignore-preflight-errors=CpuNum。错误名称在初始化错误时会给出来。</li>
-</ul>
-
-<p>执行上面的命令，等待安装完成，知道出现下面的文字表示安装成功</p>
-
-<pre><code class="language-text">Your Kubernetes control-plane has initialized successfully!
-
-To start using your cluster, you need to run the following as a regular user:
-
-  mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-You should now deploy a pod network to the cluster.
-Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
-  https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-Then you can join any number of worker nodes by running the following on each as root:
-
-kubeadm join 192.168.122.2:6443 --token 1gyku3.72jgt8prrp2fdhhx \
-    --discovery-token-ca-cert-hash sha256:9c5bf462c308be3a69b6766e71f367e48e222c4ee019c4ec438e02e089ab4e12
-</code></pre>
-
-<p>复制保存<code>kubeadm join</code>那行的文字，后面添加节点需要使用到，注意，token默认是24小时会过期，可以在master上利用如下命令查看token是否有效</p>
-
-<pre><code class="language-text">kubeadm token list
-</code></pre>
-
-<p>如果没有有效token，可以重新创建一个</p>
-
-<pre><code class="language-text">kubeadm token create
-</code></pre>
-
-<h3 id="toc_6">初始化kubectl工具</h3>
-
-<p>按照kubeadm的指示操作就行，依次执行如下命令，用普通用户的账号</p>
-
-<pre><code class="language-text">mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-</code></pre>
-
-<p>如果你想在root用户下使用</p>
-
-<pre><code class="language-text">export KUBECONFIG=/etc/kubernetes/admin.conf
-</code></pre>
-
-<h3 id="toc_7">部署flannel (Pod Network Adds-on)</h3>
-
-<p>k8s依赖于第三的节点网络，以便各pod节点之间可以相互通信</p>
-
-<pre><code class="language-text">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
-
-</code></pre>
-
-<p><code>如果遇到timeout错误，请使用代理</code></p>
-
-<p>输出以下内容代表安装完成</p>
-
-<pre><code class="language-text">clusterrole.rbac.authorization.k8s.io/flannel created
-clusterrolebinding.rbac.authorization.k8s.io/flannel created
-serviceaccount/flannel created
-configmap/kube-flannel-cfg created
-daemonset.extensions/kube-flannel-ds-amd64 created
-daemonset.extensions/kube-flannel-ds-arm64 created
-daemonset.extensions/kube-flannel-ds-arm created
-daemonset.extensions/kube-flannel-ds-ppc64le created
-daemonset.extensions/kube-flannel-ds-s390x created
-
-</code></pre>
-
-<h3 id="toc_8">添加node节点</h3>
-
-<p>按照最前面的部署安装好k8s相关程序</p>
-
-<pre><code class="language-text">kubeadm join 192.168.122.2:6443 --token 1gyku3.72jgt8prrp2fdhhx \
-    --discovery-token-ca-cert-hash sha256:9c5bf462c308be3a69b6766e71f367e48e222c4ee019c4ec438e02e089ab4e12
-</code></pre>
-
-<blockquote>
-<p>如果join命令忘记了复制，可以去master节点上执行</p>
-</blockquote>
-
-<pre><code class="language-text">kubeadm token create --print-join-command
-</code></pre>
-
-<h3 id="toc_9">详细安装日志</h3>
-
-<p>可以通过在命令后面增加<code>--v=5</code>来查看详细安装日志，例如</p>
-
-<pre><code class="language-text">kubeadm join 192.168.122.2:6443 --token 1gyku3.72jgt8prrp2fdhhx \
-    --discovery-token-ca-cert-hash sha256:9c5bf462c308be3a69b6766e71f367e48e222c4ee019c4ec438e02e089ab4e12 --v=5
-</code></pre>
-
-<h3 id="toc_10">安装完成</h3>
-
-<p>主节点执行<code>kubectl get nodes -o wide</code>，检查各节点是否为<code>Ready状态</code></p>
-
-<pre><code class="language-text">ubuntu@k8s-master:~$ kubectl get nodes -o wide
-NAME          STATUS   ROLES    AGE   VERSION   INTERNAL-IP       EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-k8s-master    Ready    master   23d   v1.16.2   192.168.122.2     &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-k8s-node-01   Ready    &lt;none&gt;   23d   v1.16.2   192.168.122.101   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-k8s-node-02   Ready    &lt;none&gt;   23d   v1.16.2   192.168.122.102   &lt;none&gt;        Ubuntu 16.04.6 LTS   4.4.0-142-generic   docker://18.6.0
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2020/01/10</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15779359388855.html">
-                
-                  <h1>Kubernets特性介绍</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<blockquote>
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Kubernets特性介绍</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2020/01/02</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <blockquote>
 <p>Kubernetes 源于希腊语，意为 “舵手” 或 “飞行员”。它是Google开源的一个容器编排引擎，它支持自动化部署、大规模可伸缩、应用容器化管理,由于Kubernetes单词中，k和s之间的单词数量为8个，所以也简称k8s。</p>
 </blockquote>
 
@@ -1306,228 +800,56 @@ drwxrwxrwx 21 root root 4096 Jan 14 00:51 ../
 
 <p>k8s不仅提供手动的应用程序扩容机制，同时还可以通过监视应用程序的CPU使用率或其他度量增长时自动对应用程序进行扩容，已应用短期的高并发请求。</p>
 
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2020/01/02</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15774160287586.html">
-                
-                  <h1>K8S日志系统EFK</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">elasticsearch</h2>
+    
 
-<pre><code class="language-text">helm install elasticsearch stable/elasticsearch -n share
-</code></pre>
+      </div>
 
-<h2 id="toc_1">fluentd</h2>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="15786388799784.html" 
+          title="Previous Post: k8s-1.16单主节点集群部署">&laquo; k8s-1.16单主节点集群部署</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="15774160287586.html" 
+          title="Next Post: K8S日志系统EFK">K8S日志系统EFK &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
 
-<pre><code class="language-text">helm repo add kiwigrid https://kiwigrid.github.io
-helm repo update
-helm install fluentd  kiwigrid/fluentd-elasticsearch --set elasticsearch.bufferChunkLimit=&quot;20M&quot;,elasticsearch.bufferQueueLimit=20 -n share
-</code></pre>
+          
 
-<p><code>bufferChunkLimit</code> 一次发送数据的最大限制<br/>
-<code>bufferQueueLimit</code> 待发送数据的最大数量限制</p>
-
-<p>bufferChunkLimit * bufferQueueLimit 应小于PC内存</p>
-
-<h2 id="toc_2">kibana</h2>
-
-<pre><code class="language-text">helm install kibana stable/kibana --set ingress.enabled=true,ingress.hosts[0]=kibana.dev.youxuetong.com -n share
-</code></pre>
-
-<p>需要手动修改kibana的configmap，修改其中的elasticsearch.hosts</p>
-
-<pre><code class="language-text">data:
-  kibana.yml: |
-    elasticsearch.hosts: http://elasticsearch-client:9200
-    server.host: &quot;0&quot;
-    server.name: kibana
-</code></pre>
-
-<p>删除正在运行的kibana的pod</p>
-
-<pre><code class="language-text">kubectl delete pod kibana-557d4dc6b9-7dx5j -n share
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2019/12/27</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="15773284865375.html">
-                
-                  <h1>WebDashboard UI部署</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>下载官方文件</p>
-
-<pre><code class="language-text">wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
-</code></pre>
-
-<p>修改文件,去除自建的secret</p>
-
-<pre><code class="language-text">#---
-## 由于证书问题，只能firefox浏览器才能打开，通过修改证书的方式，使得所有浏览器都能打开
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  labels:
-#    k8s-app: kubernetes-dashboard
-#  name: kubernetes-dashboard-certs  #生成证书会用到该名字
-#  namespace: kubernetes-dashboard  #生成证书使用该命名空间
-#type: Opaque
-</code></pre>
-
-<p>修改service为NodePort方式</p>
-
-<pre><code class="language-text">kind: Service
-apiVersion: v1
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard
-  namespace: kubernetes-dashboard
-spec:
-  type: NodePort
-  ports:
-    - port: 443
-      targetPort: 8443
-      nodePort: 32000
-  selector:
-    k8s-app: kubernetes-dashboard
-</code></pre>
-
-<p>创建自签名证书</p>
-
-<pre><code class="language-text"># 创建目录使用证书
-mkdir key &amp;&amp; cd key
-# 查看是否存在namespace为kubernetes-dashboard
-kubectl get namespaces
-# 不存在namespace为创建kubernetes-dashboard创建namespace
-kubectl create namespace kubernetes-dashboard
-# 生成 key
-openssl genrsa -out dashboard.key 2048
-# 生成证书请求
-openssl req -days 36000   -new -out dashboard.csr    -key dashboard.key   -subj &#39;/CN=**192.168.100.10**&#39;
-# 生成自签证书
-openssl x509 -req -in dashboard.csr -signkey dashboard.key -out dashboard.crt
-# 目录结构
-[root@k8smaster key]# ll
-total 12
--rw-r--r-- 1 root root 1001 Oct 23 22:21 dashboard.crt
--rw-r--r-- 1 root root  903 Oct 23 22:20 dashboard.csr
--rw-r--r-- 1 root root 1679 Oct 23 22:20 dashboard.key
-# 使用自签证书创建secret
-kubectl create secret generic kubernetes-dashboard-certs     --from-file=dashboard.key     --from-file=dashboard.crt      -n kubernetes-dashboard
-
-</code></pre>
-
-<p>应用配置文件</p>
-
-<pre><code class="language-text">kubectl create -f recommend.yaml
-</code></pre>
-
-<p>添加管理员并绑定管理员权限</p>
-
-<pre><code class="language-text"># 创建sa
-kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
-# 绑定集群管理员
-kubectl create clusterrolebinding  dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
-</code></pre>
-
-<p>获取登录token</p>
-
-<pre><code class="language-text">kubectl describe secrets  $(kubectl  get secrets -n kubernetes-dashboard | awk  &#39;/dashboard-admin-token/{print $1}&#39; ) -n kubernetes-dashboard |sed -n &#39;/token:.*/p&#39;
-</code></pre>
-
-<p>浏览器访问<a href="https://IP:32000">https://IP:32000</a><br/>
-如果Chrome浏览器仍然显示非安全连接，且详细信息中没有继续前往按钮，请用safari打开该连接，点击详细信息中的继续前往，按照系统只是操作，最后发现该自签名证书会被添加到钥匙串中，之后在用chrome浏览器打卡就不会出现无法访问的情况了。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2019/12/26</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Kubernetes.html'>Kubernetes</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-              
+          
+        </div>
+      </div>
+      <div id="gitalk-container"></div>
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: 'd91ffa1480549c466d2f',
+        clientSecret: '92600b8db63745566efb39c0ad9a15c2462b0008',
+        repo: 'blog',
+        owner: 'mylonly',
+        admin: ['mylonly'],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+      gitalk.render('gitalk-container')
+      </script>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
 
 
-			<div class="row">
-			  <div class="large-6 columns">
-			  <p class="text-left" style="padding-top:25px;">
-			   
-			  </p>
-			  </div>
-			  <div class="large-6 columns">
-			<p class="text-right" style="padding-top:25px;">
-			 <a href="all_1.html">&raquo; Next Page</a> 
-			</p>
-			  </div>
-			</div>
-		</div>
-	</div><!-- large 8 -->
+
 
  <div class="large-4 medium-4 columns">
   <div class="hide-for-small">
