@@ -169,7 +169,7 @@
 
 <h2 id="toc_5">Kubernets的优势</h2>
 
-<p>Kubernetes提供了一个可弹性运行分布式系统的框架，对所有运行在其上的应用进行统一管理调度，他能确保你的应用不会因为意外而停止服务，但其同时也提供了一些扩展机制，允许用户实现自己的应用调度部署，负载均衡或者日志记录等解决方案。</p>
+<p>简化应用程序部署和维护工作，同时最大化利用硬件资源</p>
 
 <h3 id="toc_6">自动修复</h3>
 
@@ -788,6 +788,8 @@ drwxrwxrwx 21 root root 4096 Jan 14 00:51 ../
 
 <p>利用EFK（elasticsearch,fluentd,kibaba）很容易做到对这个集群的日志跟踪。</p>
 
+<p>在k8s里，Fluentd会被安装在每个Node节点上，同时会挂载当前机器的/var/lib/docker/containers目录，由于docker所有的标准输出都会在该目录下记录日志，所以Fluentd可以很容易的做到将整个集群上所允许的应用的日志统一发送到后端。</p>
+
 <h3 id="toc_21">统一监控</h3>
 
 <p>利用Metric-Server可以获取pod集群的资源占用情况的数据，在加上Prometheus和Grafana很容搭建一套集群的监控报警系统。</p>
@@ -1025,6 +1027,15 @@ Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
 
     
 
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?902c93630d3463215e7d2ac5ce0f4003";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 
 
   </body>

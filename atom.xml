@@ -4,7 +4,7 @@
   <title><![CDATA[独自一人]]></title>
   <link href="https://blog.xgtian.com/atom.xml" rel="self"/>
   <link href="https://blog.xgtian.com/"/>
-  <updated>2020-01-13T14:19:23+08:00</updated>
+  <updated>2020-02-24T14:02:51+08:00</updated>
   <id>https://blog.xgtian.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -282,6 +282,10 @@ k8s为了使容器的调度更符合机器的实际资源情况，k8s建议关�
 <pre><code class="language-text">kubelet --fail-swap-on=false ...
 </code></pre></li>
 <li><p>关闭防火墙(开发环境)</p>
+<p>Ubuntu</p>
+<pre><code class="language-text">sudo ufw disable
+</code></pre>
+<p>CentOS</p>
 <pre><code class="language-text">systemctl stop firewalld
 systemctl disable firewalld
 </code></pre></li>
@@ -522,7 +526,7 @@ k8s-node-02   Ready    &lt;none&gt;   23d   v1.16.2   192.168.122.102   &lt;none
 
 <h2 id="toc_5">Kubernets的优势</h2>
 
-<p>Kubernetes提供了一个可弹性运行分布式系统的框架，对所有运行在其上的应用进行统一管理调度，他能确保你的应用不会因为意外而停止服务，但其同时也提供了一些扩展机制，允许用户实现自己的应用调度部署，负载均衡或者日志记录等解决方案。</p>
+<p>简化应用程序部署和维护工作，同时最大化利用硬件资源</p>
 
 <h3 id="toc_6">自动修复</h3>
 
@@ -1140,6 +1144,8 @@ drwxrwxrwx 21 root root 4096 Jan 14 00:51 ../
 <h3 id="toc_20">统一日志</h3>
 
 <p>利用EFK（elasticsearch,fluentd,kibaba）很容易做到对这个集群的日志跟踪。</p>
+
+<p>在k8s里，Fluentd会被安装在每个Node节点上，同时会挂载当前机器的/var/lib/docker/containers目录，由于docker所有的标准输出都会在该目录下记录日志，所以Fluentd可以很容易的做到将整个集群上所允许的应用的日志统一发送到后端。</p>
 
 <h3 id="toc_21">统一监控</h3>
 
